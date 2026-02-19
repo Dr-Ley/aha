@@ -81,14 +81,14 @@ function DestinationsCarousel() {
   return (
     <Section spacing="none">
       <Container>
-        <p className="text-center text-xs font-semibold uppercase tracking-widest text-accent">
+        <p className="text-center text-lg font-semibold uppercase tracking-widest text-accent">
           Where We Go
         </p>
         <h2 className="mt-2 text-center font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
           Popular Destinations
         </h2>
         <div className="mt-8 overflow-x-auto pb-2 scrollbar-thin">
-          <div className="flex gap-4 pb-2 sm:justify-center">
+          <div className="flex gap-4 pb-2 sm:justify-start">
             {destinations.map((d) => (
               <Link
                 key={`${d.name}-${d.country}`}
@@ -128,7 +128,7 @@ function FeaturedToursSection() {
       <Container>
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+            <p className="text-lg font-semibold uppercase tracking-widest text-accent">
               Handpicked Experiences
             </p>
             <h2 className="mt-2 font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
@@ -191,7 +191,7 @@ function WhyChooseSection() {
     <Section variant="secondary">
       <Container>
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+          <p className="text-lg font-semibold uppercase tracking-widest text-accent">
             Why African Home Adventure
           </p>
           <h2 className="mt-2 font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
@@ -244,7 +244,7 @@ function ExperienceSection() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+            <p className="text-lg font-semibold uppercase tracking-widest text-accent">
               The Safari Experience
             </p>
             <h2 className="mt-2 font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
@@ -290,7 +290,7 @@ function TestimonialsSection() {
     <Section variant="secondary">
       <Container>
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+          <p className="text-lg font-semibold uppercase tracking-widest text-accent">
             Traveler Stories
           </p>
           <h2 className="mt-2 font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
