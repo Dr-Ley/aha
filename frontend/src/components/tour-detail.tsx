@@ -85,8 +85,8 @@ export function TourDetail({ tour }: { tour: Tour }) {
         <div className="absolute bottom-0 left-0 right-0 p-6">
           <div className="mx-auto max-w-7xl">
             <div className="mb-3 flex flex-wrap gap-2">
-              <span className="badge badge-primary">{tour.country}</span>
-              <span className="badge badge-ghost bg-base-100/90">
+              <span className="badge badge-primary text-xs px-2">{tour.country}</span>
+              <span className="badge badge-ghost text-xs px-2 bg-base-100/90">
                 {tour.difficulty}
               </span>
             </div>
@@ -272,7 +272,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
                 </div>
 
                 {tour.originalPrice != null && (
-                  <span className="badge badge-accent mb-4 border-none">
+                  <span className="badge badge-accent mb-4 px-2 border-none">
                     Save ${tour.originalPrice - tour.price} per person
                   </span>
                 )}

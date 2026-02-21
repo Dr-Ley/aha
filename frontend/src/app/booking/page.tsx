@@ -1,7 +1,5 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { BookingForm } from "@/components/booking-form";
 import { Container, Section } from "@/components/layout";
-import { tours } from "@/lib/data";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,15 +8,7 @@ export const metadata: Metadata = {
     "Complete your safari booking with African Home Adventure. Secure your East African wildlife adventure today.",
 };
 
-export default async function BookingPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tour?: string }>;
-}) {
-  const params = await searchParams;
-  const tourSlug = params?.tour;
-  const tour = tourSlug ? tours.find((t) => t.slug === tourSlug) : null;
-
+export default function BookingPage() {
   return (
     <>
       <section className="bg-primary py-12 lg:py-16">
@@ -38,28 +28,7 @@ export default async function BookingPage({
 
       <Section>
         <Container>
-          {tour && (
-            <div className="mb-8 rounded-xl border border-base-content/10 bg-base-200 p-6">
-              <p className="text-sm text-base-content/60">Selected tour</p>
-              <p className="font-serif text-lg font-semibold">{tour.title}</p>
-              <p className="text-sm text-base-content/70">
-                From ${tour.price} per person
-              </p>
-            </div>
-          )}
-          <p className="text-base-content/70">
-            Contact us to complete your booking:{" "}
-            <a href="tel:+254722760661" className="link link-primary">
-              +254 722 760 661
-            </a>{" "}
-            or{" "}
-            <a href="mailto:info@africahomeadventure.com" className="link link-primary">
-              info@africahomeadventure.com
-            </a>
-          </p>
-          <Link href="/contact" className="btn btn-primary mt-6 gap-2">
-            Get a Custom Quote <ArrowRight className="h-4 w-4" />
-          </Link>
+          <BookingForm />
         </Container>
       </Section>
     </>
