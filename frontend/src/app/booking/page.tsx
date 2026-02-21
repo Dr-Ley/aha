@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { BookingForm } from "@/components/booking-form";
 import { Container, Section } from "@/components/layout";
 import type { Metadata } from "next";
@@ -7,6 +8,19 @@ export const metadata: Metadata = {
   description:
     "Complete your safari booking with African Home Adventure. Secure your East African wildlife adventure today.",
 };
+
+function BookingFormFallback() {
+  return (
+    <div className="grid gap-10 lg:grid-cols-3">
+      <div className="lg:col-span-2 space-y-4">
+        <div className="h-10 w-48 rounded-lg bg-base-200 animate-pulse" />
+        <div className="h-12 w-full rounded-lg bg-base-200 animate-pulse" />
+        <div className="h-12 w-full rounded-lg bg-base-200 animate-pulse" />
+      </div>
+      <div className="h-64 rounded-xl bg-base-200 animate-pulse" />
+    </div>
+  );
+}
 
 export default function BookingPage() {
   return (
@@ -21,14 +35,16 @@ export default function BookingPage() {
           </h1>
           <p className="mt-3 max-w-xl text-primary-content/70">
             Fill in your details below and our team will confirm your booking
-            within 2 hours. No payment required until confirmation.
+            within 24 hours. No payment required until confirmation.
           </p>
         </Container>
       </section>
 
       <Section>
         <Container>
-          <BookingForm />
+          <Suspense fallback={<BookingFormFallback />}>
+            <BookingForm />
+          </Suspense>
         </Container>
       </Section>
     </>
