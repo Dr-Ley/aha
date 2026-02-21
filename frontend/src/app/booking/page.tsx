@@ -21,7 +21,7 @@ export default function BookingPage() {
           </h1>
           <p className="mt-3 max-w-xl text-primary-content/70">
             Fill in your details below and our team will confirm your booking
-            within 24 hours. No payment required until confirmation.
+            within 2 hours. No payment required until confirmation.
           </p>
         </Container>
       </section>
