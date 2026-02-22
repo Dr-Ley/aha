@@ -9,7 +9,8 @@ export interface Tour {
   days: number;
   price: number;
   originalPrice?: number;
-  image: string;
+  /** Multiple images for tour card (hover on desktop, slideshow on mobile). First image is primary. */
+  image: string[];
   gallery?: string[];
   description: string;
   longDescription: string;
@@ -36,19 +37,39 @@ export interface Testimonial {
 }
 
 const IMG = {
-  masaiMara:
-    "https://i.pinimg.com/736x/5f/b2/3b/5fb23b5347bcd6ff6a44d8a9f3552799.jpg",
+  destination_maasai_mara1: "/destination_maasai_mara1.png",
+  destination_maasai_mara2: "/savannah.png",
+  destination_maasai_mara: "/destination_maasai_mara2.png",
+  destination_maasai_mara3: "/bufalloes.png",
+  destination_maasai_mara4: "/bufalloes-in-african.png",
+  destination_ewc_luxury_tent: "/ewc-luxury-tent.png",
+  destination_maasai_mara5: "/bufalloes-in-african.png",
+  ewc_superior_tent: "/EWC_superior_tent.png",
+  ewc_deluxe_room: "/ewc-deluxe-room.png",
+  masaiMara: "/balloon_safari1.png",
+  lion_feast2: "/lion_feast2.png",
+  amboseli1: "/amboseli1.png",
+  amboseli2: "/amboseli2.png",
+  landcruiser1: "/landcruiser1.png",
+  tour_jeep: "/tour_jeep.png",
+  safari_lions: "/safari_lions.png",
+  hippos: "/hippos.png",
+  fun: "/fun.png",
+  zebras: "/zebras.png",
+  safari: "/safari.png",
+  gamedrive1: "/gamedrive1.png",
+  maasai_village: "/maasai_village.png",
+  superior2_tented_camp: "/superior2-tented-camp.png",
   nakuru:
     "https://i.pinimg.com/1200x/a3/e4/3b/a3e43b613d9e9012465be81f6ea8d20d.jpg",
-  amboseli:
-    "https://i.pinimg.com/736x/bb/91/63/bb91638a953b6271e3e30b011cec8a5c.jpg",
+  amboseli: "/amboseli_elephants.png",
   serengeti:
     "https://i.pinimg.com/1200x/21/22/c4/2122c4de122825863beba78c53078804.jpg",
   ngorongoro:
     "https://i.pinimg.com/736x/71/75/64/717564b36cbc33a6e8c33edce55b2251.jpg",
-  safari1: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80",
-  safari2: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&q=80",
-  safari3: "https://images.unsplash.com/photo-1489392191049-faf32704fe8e?w=800&q=80",
+  elephant_herd: "/elephant_herd.png",
+  mara_river: "/mara_river2.png",
+  safari3: "/van2_safari.png",
 };
 
 export const tours: Tour[] = [
@@ -63,8 +84,8 @@ export const tours: Tour[] = [
     days: 3,
     price: 650,
     originalPrice: 780,
-    image: IMG.masaiMara,
-    gallery: [IMG.masaiMara, IMG.safari1, IMG.safari2, IMG.safari3],
+    image: [IMG.destination_maasai_mara, IMG.destination_ewc_luxury_tent, IMG.destination_maasai_mara4, IMG.hippos],
+    gallery: [IMG.masaiMara, IMG.destination_ewc_luxury_tent, IMG.destination_maasai_mara4, IMG.destination_maasai_mara2],
     description:
       "Experience the iconic Masai Mara, home to the Big Five and the Great Wildebeest Migration. A perfect introduction to African safari.",
     longDescription:
@@ -128,8 +149,8 @@ export const tours: Tour[] = [
     days: 5,
     price: 1050,
     originalPrice: 1250,
-    image: IMG.nakuru,
-    gallery: [IMG.nakuru, IMG.safari1, IMG.masaiMara, IMG.safari2],
+    image: [IMG.nakuru, IMG.elephant_herd, IMG.superior2_tented_camp, IMG.lion_feast2, IMG.mara_river],
+    gallery: [IMG.nakuru, IMG.elephant_herd, IMG.masaiMara, IMG.mara_river],
     description:
       "Explore the flamingo-lined shores of Lake Nakuru, the scenic Lake Naivasha, and the wildlife-rich Masai Mara in one incredible journey.",
     longDescription:
@@ -178,8 +199,8 @@ export const tours: Tour[] = [
     duration: "3 Days / 2 Nights",
     days: 3,
     price: 580,
-    image: IMG.amboseli,
-    gallery: [IMG.amboseli, IMG.safari3, IMG.safari1],
+    image: [IMG.amboseli, IMG.amboseli1, IMG.amboseli2, IMG.ewc_deluxe_room],
+    gallery: [IMG.amboseli, IMG.amboseli1, IMG.amboseli2],
     description:
       "Witness the majestic Mount Kilimanjaro as a backdrop while observing large elephant herds in their natural habitat at Amboseli.",
     longDescription:
@@ -226,8 +247,8 @@ export const tours: Tour[] = [
     days: 6,
     price: 1850,
     originalPrice: 2100,
-    image: IMG.serengeti,
-    gallery: [IMG.serengeti, IMG.ngorongoro, IMG.masaiMara, IMG.safari1, IMG.safari2],
+    image: [IMG.serengeti, IMG.ngorongoro, IMG.maasai_village, IMG.fun, IMG.zebras],
+    gallery: [IMG.serengeti, IMG.ngorongoro, IMG.masaiMara, IMG.fun, IMG.zebras],
     description:
       "Cross the border for the ultimate East African safari experience, from the Ngorongoro Crater to the Serengeti and Masai Mara.",
     longDescription:
@@ -272,8 +293,8 @@ export const tours: Tour[] = [
     days: 8,
     price: 2450,
     originalPrice: 2800,
-    image: IMG.ngorongoro,
-    gallery: [IMG.ngorongoro, IMG.nakuru, IMG.masaiMara, IMG.serengeti, IMG.safari3],
+    image: [IMG.tour_jeep, IMG.ewc_superior_tent, IMG.ngorongoro, IMG.gamedrive1, IMG.nakuru, IMG.safari_lions],
+    gallery: [IMG.tour_jeep, IMG.serengeti, IMG.safari3, IMG.ngorongoro, IMG.nakuru],
     description:
       "The ultimate East Africa safari combining Kenya and Tanzania's finest parks in one unforgettable 8-day journey.",
     longDescription:
@@ -348,5 +369,5 @@ export const destinations = [
   { name: "Lake Nakuru", country: "Kenya", image: IMG.nakuru },
   { name: "Serengeti", country: "Tanzania", image: IMG.serengeti },
   { name: "Ngorongoro", country: "Tanzania", image: IMG.ngorongoro },
-  { name: "Zanzibar", country: "Tanzania", image: "https://images.unsplash.com/photo-1589553416260-f586c8f1514f?w=600&q=80" },
+  { name: "Zanzibar", country: "Tanzania", image: "https://images.unsplash.com/photo-1634646350433-fe03ad698448?q=80&w=1334&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
 ];

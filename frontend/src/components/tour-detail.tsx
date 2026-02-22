@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Star,
   Clock,
@@ -23,7 +23,8 @@ const WHATSAPP_NUMBER = "254722760661";
 
 export function TourDetail({ tour }: { tour: Tour }) {
   const [heroIndex, setHeroIndex] = useState(0);
-  const gallery = tour.gallery ?? [tour.image];
+  const gallery: string[] = tour.gallery ?? tour.image;
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setInterval(
@@ -32,6 +33,17 @@ export function TourDetail({ tour }: { tour: Tour }) {
     );
     return () => clearInterval(t);
   }, [gallery.length]);
+
+  const scrollToImage = (index: number) => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const item = container.children[index] as HTMLElement;
+      if (item) {
+        item.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      }
+    }
+    setHeroIndex(index);
+  };
 
   return (
     <>
@@ -56,7 +68,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
         </div>
       </div>
 
-      <section className="relative h-[40vh] sm:h-[50vh] overflow-hidden">
+      <section className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[72vh] xl:h-[75vh] overflow-hidden">
         <Image
           key={heroIndex}
           src={gallery[heroIndex]}
@@ -68,7 +80,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-base-content/60 via-base-content/20 to-transparent" />
 
-        <div className="absolute bottom-20 left-1/2 flex -translate-x-1/2 gap-2">
+        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
           {gallery.map((_, i) => (
             <button
               key={i}
@@ -100,7 +112,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
       <section className="py-10 lg:py-16">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-10 lg:grid-cols-3">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 min-w-0">
               <div className="flex flex-wrap gap-6 rounded-xl bg-base-200 p-5">
                 <div className="flex items-center gap-2">
                   <Clock className="h-5 w-5 text-primary" />
@@ -226,29 +238,60 @@ export function TourDetail({ tour }: { tour: Tour }) {
                 </div>
               </div>
 
-              {gallery.length > 1 && (
+              {/* REPLACED: Snap Carousel using tour.images */}
+              {tour.image && tour.image.length > 1 && (
                 <>
                   <div className="divider" />
                   <div>
                     <h2 className="font-serif text-2xl font-bold">Gallery</h2>
-                    <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                      {gallery.map((src, i) => (
+                    
+                    {/* Snap Carousel Container */}
+                    <div className="mt-4 relative">
+                      <div 
+                        ref={scrollRef}
+                        className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                      >
+                        {tour.image.map((src, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => {
+                              setHeroIndex(i);
+                              scrollToImage(i);
+                            }}
+                            className={`relative shrink-0 snap-start aspect-[4/3] w-64 sm:w-72 md:w-80 overflow-hidden rounded-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all ${
+                              i === heroIndex ? "ring-2 ring-primary ring-offset-2 scale-95" : "hover:scale-95"
+                            }`}
+                          >
+                            <Image
+                              src={src}
+                              alt={`${tour.title} gallery ${i + 1}`}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
+                              loading="lazy"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      
+                      {/* Scroll hint gradient */}
+                      <div className="absolute right-0 top-0 bottom-4 bg-gradient-to-l from-base-100 to-transparent w-12 pointer-events-none" />
+                    </div>
+                    
+                    {/* Dot indicators */}
+                    <div className="mt-3 flex justify-center gap-2">
+                      {tour.image.map((_, i) => (
                         <button
                           key={i}
                           type="button"
-                          onClick={() => setHeroIndex(i)}
-                          className={`relative aspect-[4/3] overflow-hidden rounded-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                            i === heroIndex ? "ring-2 ring-primary ring-offset-2" : ""
+                          onClick={() => scrollToImage(i)}
+                          className={`h-2 w-2 rounded-full transition-all ${
+                            i === heroIndex ? "bg-primary w-4" : "bg-base-content/30 hover:bg-base-content/50"
                           }`}
-                        >
-                          <Image
-                            src={src}
-                            alt={`${tour.title} gallery ${i + 1}`}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 640px) 50vw, 25vw"
-                          />
-                        </button>
+                          aria-label={`Go to image ${i + 1}`}
+                        />
                       ))}
                     </div>
                   </div>

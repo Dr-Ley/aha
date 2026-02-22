@@ -1,37 +1,108 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import { Clock, MapPin, Star, Users } from "lucide-react";
 import type { Tour } from "@/lib/data";
 
+const SLIDESHOW_INTERVAL_MS = 2500;
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+  return isMobile;
+}
+
 export function TourCard({ tour }: { tour: Tour }) {
+  const images = tour.image?.slice(0, 7) || tour.image;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [slideshowActive, setSlideshowActive] = useState(false);
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (!isMobile || !slideshowActive || images.length <= 1) return;
+    const t = setInterval(
+      () => setActiveIndex((i) => (i + 1) % images.length),
+      SLIDESHOW_INTERVAL_MS
+    );
+    return () => clearInterval(t);
+  }, [isMobile, slideshowActive, images.length]);
+
+  const handleImageClick = useCallback(() => {
+    if (!isMobile) return;
+    setSlideshowActive((on) => !on);
+    if (!slideshowActive) setActiveIndex((i) => (i + 1) % images.length);
+  }, [isMobile, slideshowActive, images.length]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (isMobile) return;
+    if (images.length > 1) setActiveIndex(1);
+  }, [isMobile, images.length]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isMobile) return;
+    setActiveIndex(0);
+  }, [isMobile]);
+
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-shadow hover:shadow-lg">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
-          src={tour.image}
-          alt={tour.title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t to-transparent" />
-        <div className="absolute left-3 top-3 flex gap-2">
-          <span className="badge badge-primary text-xs px-2">{tour.country}</span>
-          {tour.featured && (
-            <span className="badge bg-accent text-xs px-2 text-accent-content border-none">
-              Featured
-            </span>
-          )}
-        </div>
-        {tour.originalPrice != null && (
-          <div className="absolute right-3 top-3">
-            <span className="badge badge-ghost bg-base-100/90 text-xs px-2 font-semibold">
-              Save ${tour.originalPrice - tour.price}
-            </span>
+            <figure
+        className={isMobile ? "relative aspect-[4/3] overflow-hidden cursor-pointer" : "hover-gallery aspect-[4/3]"}
+        onClick={handleImageClick}
+        role={isMobile ? "button" : undefined}
+        tabIndex={isMobile ? 0 : undefined}
+        aria-label={isMobile ? "Start or stop image slideshow" : undefined}
+      >
+        {isMobile ? (
+          // Mobile: Slideshow with opacity transition
+          images.map((src, i) => (
+            <Image
+              key={src}
+              src={src}
+              alt={i === 0 ? tour.title : `${tour.title} - image ${i + 1}`}
+              fill
+              className="object-cover transition-opacity duration-500"
+              style={{ opacity: i === activeIndex ? 1 : 0 }}
+              sizes="100vw"
+              loading="lazy"
+            />
+          ))
+        ) : (
+          // Desktop: DaisyUI hover-gallery (max 4 images)
+          images.map((src, i) => (
+            <Image
+              key={src}
+              src={src}
+              alt={`${tour.title} - image ${i + 1}`}
+              width={400}
+              height={300}
+              className="object-cover w-full h-full"
+              loading={i === 0 ? "eager" : "lazy"}
+            />
+          ))
+        )}
+        
+        {/* Mobile slideshow indicator dots */}
+        {isMobile && images.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {images.map((_, i) => (
+              <span
+                key={i}
+                className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                  i === activeIndex ? "bg-white" : "bg-white/50"
+                }`}
+              />
+            ))}
           </div>
         )}
-      </div>
+      </figure>
 
       <div className="flex flex-1 flex-col p-5">
         <div className="mb-2 flex items-center gap-1">

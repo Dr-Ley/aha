@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
-import Image from "next/image";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -25,6 +24,8 @@ const tourCategories = [
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [toursOpen, setToursOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [gifPlaying, setGifPlaying] = useState(true);
   const toursRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,6 +36,46 @@ export function Navbar() {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  
+  useEffect(() => {
+    let isPlaying = true;
+    
+    const cycleGif = () => {
+      // Play GIF for 5 seconds
+      setGifPlaying(true);
+      isPlaying = true;
+      
+      const stopTimer = setTimeout(() => {
+        setGifPlaying(false);
+        isPlaying = false;
+      }, 6000);
+      
+      return stopTimer;
+    };
+  
+    // Start first cycle immediately
+    let stopTimer = cycleGif();
+  
+    // Repeat every 20 seconds
+    const interval = setInterval(() => {
+      clearTimeout(stopTimer);
+      stopTimer = cycleGif();
+    }, 20000);
+  
+    return () => {
+      clearInterval(interval);
+      clearTimeout(stopTimer);
+    };
   }, []);
 
   return (
@@ -68,19 +109,39 @@ export function Navbar() {
 
       {/* Main nav */}
       <header className="sticky top-0 z-50 border-b border-base-content/10 bg-base-100/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-10 w-10 rounded-full overflow-hidden bg-primary">
-              <Image
-                src="https://aha-africanhomeadventure.s3.eu-north-1.amazonaws.com/aha-logo/AHA_LOGO_2025.png"
-                alt="African Home Adventure Logo"
-                fill
-                className="object-cover"
-                priority
-              />
+        <div
+          className={`mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500 ${
+            scrolled ? "py-0.5" : "py-4"
+          }`}
+        >
+          <Link href="/" className="flex items-center gap-3 overflow-hidden">
+            <div
+              className={`relative rounded-full overflow-hidden transition-all duration-500 ${
+                scrolled ? "h-14 w-22" : "h-12 w-16"
+              }`}
+            >
+              {gifPlaying ? (
+                <img
+                  src="/AHA.gif"
+                  alt="African Home Adventure Logo Animation"
+                  className="h-15 object-contain"
+                />
+              ) : (
+                <img
+                  src="/AHA_STATIC.png" // use a static fallback version of your logo
+                  alt="African Home Adventure Logo"
+                  className="h-15 object-contain"
+                />
+              )}
             </div>
 
-            <div className="flex flex-col">
+            <div
+              className={`flex flex-col transition-all duration-500 ${
+                scrolled
+                  ? "-translate-y-6 opacity-0"
+                  : "translate-y-0 opacity-100"
+              }`}
+            >
               <span className="font-serif text-lg font-bold leading-tight text-base-content">
                 African Home
               </span>
