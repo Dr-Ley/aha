@@ -83,6 +83,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             type="search"
             placeholder="Search safaris..."
             value={search}
+            style={{ outline: "1px solid gray" }}
             onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
@@ -99,12 +100,13 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             <SlidersHorizontal className="h-4 w-4" />
             Filters
             {activeFilters > 0 && (
-              <span className="badge badge-primary badge-sm">{activeFilters}</span>
+              <span className="badge badge-primary badge-sm h-4 w-4">{activeFilters}</span>
             )}
           </button>
           <div className="hidden sm:flex items-center gap-3">
             <select
               value={country}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setCountry(e.target.value);
                 setPage(1);
@@ -119,6 +121,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </select>
             <select
               value={duration}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setDuration(e.target.value);
                 setPage(1);
@@ -133,6 +136,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </select>
             <select
               value={sort}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setSort(e.target.value);
                 setPage(1);

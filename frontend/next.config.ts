@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
         hostname: "i.pinimg.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "aha-africanhomeadventure.s3.eu-north-1.amazonaws.com",
+        pathname: "/**",
+      },
+      
     ],
   },
 };

@@ -156,7 +156,7 @@ export function BookingForm() {
                   <input
                     id="travelDate"
                     type="date"
-                    className="input input-bordered"
+                    className="input input-bordered w-full"
                     style={{ outline: "1px solid gray" }}
                     value={form.travelDate}
                     onChange={(e) => updateField("travelDate", e.target.value)}
@@ -168,7 +168,7 @@ export function BookingForm() {
                   </label>
                   <select
                     id="guests"
-                    className="select select-bordered"
+                    className="select select-bordered w-full"
                     value={form.guests}
                     style={{ outline: "1px solid gray" }}
                     onChange={(e) => updateField("guests", e.target.value)}
@@ -189,7 +189,7 @@ export function BookingForm() {
                   </label>
                   <select
                     id="accommodation"
-                    className="select select-bordered"
+                    className="select select-bordered w-full"
                     style={{ outline: "1px solid gray" }}
                     value={form.accommodation}
                     onChange={(e) => updateField("accommodation", e.target.value)}
@@ -205,7 +205,7 @@ export function BookingForm() {
                   </label>
                   <select
                     id="transport"
-                    className="select select-bordered"
+                    className="select select-bordered w-full"
                     style={{ outline: "1px solid gray" }}
                     value={form.transport}
                     onChange={(e) => updateField("transport", e.target.value)}
@@ -269,7 +269,7 @@ export function BookingForm() {
                   <input
                     id="firstName"
                     type="text"
-                    className="input input-bordered"
+                    className="input input-bordered w-full"
                     placeholder="John"
                     style={{ outline: "1px solid gray" }}
                     value={form.firstName}
@@ -283,7 +283,7 @@ export function BookingForm() {
                   <input
                     id="lastName"
                     type="text"
-                    className="input input-bordered"
+                    className="input input-bordered w-full"
                     style={{ outline: "1px solid gray" }}
                     placeholder="Smith"
                     value={form.lastName}
@@ -315,7 +315,7 @@ export function BookingForm() {
                   <input
                     id="phone"
                     type="tel"
-                    className="input input-bordered"
+                    className="input input-bordered w-full"
                     style={{ outline: "1px solid gray" }}
                     placeholder="+1 234 567 890"
                     value={form.phone}
@@ -329,7 +329,7 @@ export function BookingForm() {
                   <input
                     id="country"
                     type="text"
-                    className="input input-bordered"
+                    className="input input-bordered w-full"
                     style={{ outline: "1px solid gray" }}
                     placeholder="United Kingdom"
                     value={form.country}
@@ -481,7 +481,7 @@ export function BookingForm() {
               </button>
               <button
                 type="button"
-                className="btn btn-primary btn-lg gap-2"
+                className="btn btn-primary gap-2"
                 onClick={handleSubmit}
               >
                 Submit Booking Request <ArrowRight className="h-4 w-4" />

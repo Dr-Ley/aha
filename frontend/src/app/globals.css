@@ -3,9 +3,14 @@
 @plugin "daisyui";
 
 /* Define your custom theme as the ONLY theme */
+@plugin "daisyui" {
+  themes: all;
+}
+
+/* Define your custom theme as the ONLY theme */
 @plugin "daisyui/theme" {
   name: "aha";
-  default: true;  /* <-- Make this the default */
+  default: false;  /* <-- Make this the default */
   prefersdark: false;
   color-scheme: "light";
   --color-base-100: #faf8f5;

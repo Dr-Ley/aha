@@ -15,7 +15,7 @@ export function TourCard({ tour }: { tour: Tour }) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-base-content/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t to-transparent" />
         <div className="absolute left-3 top-3 flex gap-2">
           <span className="badge badge-primary text-xs px-2">{tour.country}</span>
           {tour.featured && (

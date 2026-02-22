@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -69,9 +70,16 @@ export function Navbar() {
       <header className="sticky top-0 z-50 border-b border-base-content/10 bg-base-100/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-content font-serif text-lg font-bold">
-              A
+            <div className="relative h-10 w-10 rounded-full overflow-hidden bg-primary">
+              <Image
+                src="https://aha-africanhomeadventure.s3.eu-north-1.amazonaws.com/aha-logo/AHA_LOGO_2025.png"
+                alt="African Home Adventure Logo"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
+
             <div className="flex flex-col">
               <span className="font-serif text-lg font-bold leading-tight text-base-content">
                 African Home
