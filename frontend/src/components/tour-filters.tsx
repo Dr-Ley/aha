@@ -90,8 +90,17 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
     }
 
     // Country filter (from dropdown or URL)
+    // Country filter (from dropdown or URL)
     if (country !== "All") {
-      result = result.filter((t) => t.country === country);
+      if (country === "Kenya & Tanzania") {
+        // Must have BOTH Kenya AND Tanzania
+        result = result.filter((t) => 
+          t.countries.includes("Kenya") && t.countries.includes("Tanzania")
+        );
+      } else {
+        // Must include the specific country (could be single or multiple)
+        result = result.filter((t) => t.countries.includes(country as "Kenya" | "Tanzania"));
+      }
     }
 
     // Duration filter
@@ -183,7 +192,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
       {(country !== "All" || duration !== "All" || tier || type) && (
         <div className="mb-4 flex flex-wrap gap-2">
           {country !== "All" && (
-            <span className="badge badge-primary gap-1">
+            <span className="badge badge-primary gap-2 px-2">
               {country}
               <button onClick={() => { setCountry("All"); updateUrl("country", null); }} className="ml-1">
                 <X className="h-3 w-3" />
@@ -191,7 +200,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </span>
           )}
           {duration !== "All" && (
-            <span className="badge badge-primary gap-1">
+            <span className="badge badge-primary gap-2 px-2">
               {duration}
               <button onClick={() => { setDuration("All"); updateUrl("duration", null); }} className="ml-1">
                 <X className="h-3 w-3" />
@@ -199,7 +208,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </span>
           )}
           {tier && (
-            <span className="badge badge-primary gap-1">
+            <span className="badge badge-primary gap-2 px-2">
               {TIERS[tier as keyof typeof TIERS]?.label} Safaris
               <button onClick={() => { setTier(null); updateUrl("tier", null); }} className="ml-1">
                 <X className="h-3 w-3" />
@@ -207,7 +216,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </span>
           )}
           {type && (
-            <span className="badge badge-primary gap-1">
+            <span className="badge badge-primary gap-2 px-2">
               {type.charAt(0).toUpperCase() + type.slice(1)}
               <button onClick={() => { setType(null); updateUrl("type", null); }} className="ml-1">
                 <X className="h-3 w-3" />
@@ -224,6 +233,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             type="search"
             placeholder="Search safaris..."
             value={search}
+            style={{ outline: "1px solid gray" }}
             onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
@@ -240,12 +250,13 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             <SlidersHorizontal className="h-4 w-4" />
             Filters
             {activeFilters > 0 && (
-              <span className="badge badge-primary badge-sm">{activeFilters}</span>
+              <span className="badge badge-primary px-1 badge-sm">{activeFilters}</span>
             )}
           </button>
           <div className="hidden sm:flex items-center gap-3">
             <select
               value={country}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setCountry(e.target.value);
                 updateUrl("country", e.target.value === "All" ? null : e.target.value);
@@ -261,6 +272,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </select>
             <select
               value={duration}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setDuration(e.target.value);
                 setPage(1);
@@ -275,6 +287,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </select>
             <select
               value={sort}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setSort(e.target.value);
                 setPage(1);
@@ -292,6 +305,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             <button
               type="button"
               onClick={clearFilters}
+              style={{ outline: "1px solid gray" }}
               className="btn btn-ghost btn-sm hidden sm:flex gap-1"
             >
               <X className="h-3.5 w-3.5" /> Clear
@@ -304,6 +318,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
         <div className="mt-4 flex flex-col gap-3 rounded-xl border border-base-content/10 bg-base-100 p-4 sm:hidden">
           <select
             value={country}
+            style={{ outline: "1px solid gray" }}
             onChange={(e) => {
               setCountry(e.target.value);
               setPage(1);
@@ -316,6 +331,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
           </select>
           <select
             value={duration}
+            style={{ outline: "1px solid gray" }}
             onChange={(e) => {
               setDuration(e.target.value);
               setPage(1);
@@ -328,6 +344,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
           </select>
           <select
             value={sort}
+            style={{ outline: "1px solid gray" }}
             onChange={(e) => {
               setSort(e.target.value);
               setPage(1);

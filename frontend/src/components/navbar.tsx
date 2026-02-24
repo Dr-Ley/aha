@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
+import { useCurrency } from "@/lib/currency-context"
+import { CURRENCIES } from "@/lib/data"
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -31,6 +33,54 @@ const infoCategories = [
   { label: "Seasons & Pricing", href: "/info/seasons" },
 ];
 
+function CurrencyDropdown() {
+  const { currency, setCurrency } = useCurrency()
+  const current = CURRENCIES.find((c) => c.code === currency)!
+
+  return (
+    <div 
+    className="dropdown dropdown-end"
+    >
+      {/* Trigger */}
+      <div
+        tabIndex={0}
+        role="button"
+        className="btn btn-ghost btn-sm border border-border text-xs font-medium"
+      >
+        {current.code}
+        <svg
+          className="ml-1 h-3 w-3 opacity-70"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+
+      {/* Dropdown Content */}
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu bg-base-100 rounded-box z-[1] mt-2 w-56 p-2 shadow"
+      >
+        {CURRENCIES.map((c) => (
+          <li key={c.code}>
+            <button
+              onClick={() => setCurrency(c.code)}
+              className={currency === c.code ? "active font-semibold" : ""}
+            >
+             {c.code} - {c.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export default CurrencyDropdown
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileToursExpanded, setMobileToursExpanded] = useState(false);
@@ -109,6 +159,7 @@ export function Navbar() {
     setActiveDropdown(null);
   };
 
+
   return (
     <>
       {/* Top bar */}
@@ -179,6 +230,8 @@ export function Navbar() {
               </span>
             </div>
           </Link>
+
+
 
           {/* Desktop links */}
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
@@ -296,9 +349,13 @@ export function Navbar() {
               Contact
             </Link>
           </nav>
+          <div>
+            <CurrencyDropdown />
+          </div>  
 
           {/* CTA */}
           <div className="hidden items-center gap-3 md:flex">
+            
             <Link href="/contact" className="btn btn-outline btn-sm">
               Get a Quote
             </Link>
@@ -318,6 +375,7 @@ export function Navbar() {
             {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
+          
 
         {/* Mobile menu - Collapsible dropdowns */}
         {mobileOpen && (

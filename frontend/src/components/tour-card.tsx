@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Clock, MapPin, Star, Users } from "lucide-react";
 import type { Tour } from "@/lib/data";
+import { useCurrency } from "@/lib/currency-context"
+
+  
 
 const SLIDESHOW_INTERVAL_MS = 2000;
 
@@ -22,6 +25,7 @@ function useIsMobile() {
 
 export function TourCard({ tour }: { tour: Tour }) {
   const images = tour.image?.slice(0, 7) || tour.image;
+  const { formatPrice } = useCurrency()
   const [activeIndex, setActiveIndex] = useState(0);
   const [slideshowActive, setSlideshowActive] = useState(false);
   const isMobile = useIsMobile();
@@ -135,16 +139,16 @@ export function TourCard({ tour }: { tour: Tour }) {
           </span>
         </div>
 
-        <div className="mt-auto flex items-end justify-between border-t border-base-content/10 pt-5">
-          <div>
+        <div className="mt-auto flex items-end justify-between border-t border-base-content/10 pt-5 overflow-hidden">
+          <div className="min-w-0">
             <p className="text-xs text-base-content/60">From</p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-base-content">
-                ${tour.price}
+            <div className="flex items-baseline gap-2 min-w-0">
+              <span className="text-lg font-bold text-base-content">
+                {formatPrice(tour.price)}
               </span>
               {tour.originalPrice != null && (
-                <span className="text-sm text-base-content/50 line-through">
-                  ${tour.originalPrice}
+                <span className="text-xs text-base-content/50 line-through truncate">
+                  {formatPrice(tour.originalPrice)}
                 </span>
               )}
             </div>
@@ -152,7 +156,7 @@ export function TourCard({ tour }: { tour: Tour }) {
           </div>
           <Link
             href={`/tours/${tour.slug}`}
-            className="btn btn-primary btn-sm"
+            className="btn btn-primary btn-sm shrink-0"
           >
             View Details
           </Link>

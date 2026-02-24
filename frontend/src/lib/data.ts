@@ -1,10 +1,14 @@
+export type TourType = "private" | "group"
+export type TourTier = "budget" | "luxury"
+
+
 export interface Tour {
   id: string;
   slug: string;
   title: string;
   shortTitle: string;
   destination: string;
-  country: "Kenya" | "Tanzania" | "Kenya & Tanzania";
+  countries: ("Kenya" | "Tanzania")[]
   duration: string;
   days: number;
   price: number;
@@ -22,6 +26,9 @@ export interface Tour {
   reviewCount: number;
   departing: string;
   difficulty: "Easy" | "Moderate" | "Challenging";
+  type: TourType;
+  tier: TourTier;
+  recommended?: boolean;
   groupSize: string;
   featured?: boolean;
 }
@@ -35,6 +42,31 @@ export interface Testimonial {
   text: string;
   tour: string;
 }
+
+export interface CampLodge {
+  id: string
+  slug: string
+  name: string
+  location: string
+  country: "Kenya" | "Tanzania"
+  image: string
+  description: string
+  amenities: string[]
+  priceFrom: number
+  badges: string[]
+  recommended?: boolean
+  type: "lodge" | "tented-camp" | "luxury-cottage"
+}
+
+export const CURRENCIES = [
+  { code: "USD", symbol: "$", label: "US Dollar", rate: 1 },
+  { code: "KES", symbol: "KSh", label: "Kenyan Shilling", rate: 129.5 },
+  { code: "GBP", symbol: "\u00a3", label: "British Pound", rate: 0.79 },
+  { code: "EUR", symbol: "\u20ac", label: "Euro", rate: 0.92 },
+  { code: "JPY", symbol: "\u00a5", label: "Japanese Yen", rate: 149.8 },
+] as const
+
+export type CurrencyCode = (typeof CURRENCIES)[number]["code"]
 
 const IMG = {
   destination_maasai_mara1: "/destination_maasai_mara1.png",
@@ -79,7 +111,7 @@ export const tours: Tour[] = [
     title: "3-Day Masai Mara Safari",
     shortTitle: "Masai Mara Safari",
     destination: "Masai Mara",
-    country: "Kenya",
+    countries: ["Kenya"],
     duration: "3 Days / 2 Nights",
     days: 3,
     price: 650,
@@ -136,6 +168,9 @@ export const tours: Tour[] = [
     departing: "Daily",
     difficulty: "Easy",
     groupSize: "2-7 persons",
+    type: "private",
+    tier: "budget",
+    recommended: true,
     featured: true,
   },
   {
@@ -144,7 +179,7 @@ export const tours: Tour[] = [
     title: "5-Day Nakuru, Naivasha & Masai Mara Safari",
     shortTitle: "Nakuru & Mara Safari",
     destination: "Lake Nakuru, Lake Naivasha, Masai Mara",
-    country: "Kenya",
+    countries: ["Kenya"],
     duration: "5 Days / 4 Nights",
     days: 5,
     price: 1050,
@@ -187,6 +222,8 @@ export const tours: Tour[] = [
     departing: "Daily",
     difficulty: "Easy",
     groupSize: "2-7 persons",
+    type: "private",
+    tier: "budget",
     featured: true,
   },
   {
@@ -195,7 +232,7 @@ export const tours: Tour[] = [
     title: "3-Day Amboseli National Park Safari",
     shortTitle: "Amboseli Safari",
     destination: "Amboseli",
-    country: "Kenya",
+    countries: ["Kenya"],
     duration: "3 Days / 2 Nights",
     days: 3,
     price: 580,
@@ -234,6 +271,8 @@ export const tours: Tour[] = [
     departing: "Daily",
     difficulty: "Easy",
     groupSize: "2-7 persons",
+    type: "group",
+    tier: "budget",
     featured: true,
   },
   {
@@ -242,7 +281,7 @@ export const tours: Tour[] = [
     title: "6-Day Serengeti, Ngorongoro & Masai Mara",
     shortTitle: "Serengeti & Ngorongoro",
     destination: "Ngorongoro, Serengeti, Masai Mara",
-    country: "Kenya & Tanzania",
+    countries: ["Kenya", "Tanzania"],
     duration: "6 Days / 5 Nights",
     days: 6,
     price: 1850,
@@ -280,15 +319,94 @@ export const tours: Tour[] = [
     departing: "Daily",
     difficulty: "Moderate",
     groupSize: "2-7 persons",
+    type: "private",
+    tier: "luxury",
+    recommended: true,
     featured: true,
   },
+
   {
     id: "5",
+    slug: "5-day-amboseli-tsavo-west-tsavo-east",
+    title: "5-Day Amboseli, Tsavo West & Tsavo East Drop-off Mombasa",
+    shortTitle: "Amboseli & Tsavo",
+    destination: "Amboseli, Tsavo West, Tsavo East",
+    countries: ["Kenya"],
+    duration: "5 Days / 4 Nights",
+    days: 5,
+    price: 980,
+    image: [IMG.amboseli, IMG.amboseli1, IMG.amboseli2, IMG.ewc_deluxe_room],
+    description:
+      "Journey from Amboseli through the red earth of Tsavo to the coast, combining safari with beach possibilities in Mombasa.",
+    longDescription:
+      "This 5-day safari takes you from the elephant paradise of Amboseli through the hilly landscapes of Tsavo West, visiting Mzima Springs, and into the vast Tsavo East before dropping you at Mombasa for an optional beach extension. Perfect for those who want safari and beach in one trip.",
+    highlights: [
+      "Mzima Springs underwater viewing",
+      "Red elephants of Tsavo",
+      "Mount Kilimanjaro views",
+      "Drop-off at Mombasa for beach option",
+    ],
+    included: [
+      "Transport in 4x4 Land Cruiser",
+      "Full board accommodation",
+      "All park entrance fees",
+      "Professional driver-guide",
+      "Drop-off at Mombasa",
+    ],
+    excluded: [
+      "International flights",
+      "Travel insurance",
+      "Mombasa beach hotel",
+      "Personal expenses",
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: "Nairobi to Amboseli",
+        description:
+          "Drive to Amboseli with views of Kilimanjaro. Afternoon game drive among elephant herds.",
+      },
+      {
+        day: 2,
+        title: "Amboseli to Tsavo West",
+        description:
+          "Transfer to Tsavo West. Visit Mzima Springs and enjoy an afternoon game drive in the hilly terrain.",
+      },
+      {
+        day: 3,
+        title: "Full Day Tsavo West",
+        description:
+          "Full day exploring Tsavo West, including Shetani lava flows and more wildlife viewing.",
+      },
+      {
+        day: 4,
+        title: "Tsavo West to Tsavo East",
+        description:
+          "Cross into Tsavo East, famous for its red elephants. Afternoon game drive along the Galana River.",
+      },
+      {
+        day: 5,
+        title: "Tsavo East to Mombasa",
+        description:
+          "Morning game drive, then transfer to Mombasa arriving by late afternoon.",
+      },
+    ],
+    rating: 4.6,
+    reviewCount: 98,
+    departing: "Daily",
+    difficulty: "Easy",
+    groupSize: "2-7 persons",
+    type: "group",
+    tier: "budget",
+  },
+
+  {
+    id: "6",
     slug: "8-day-kenya-tanzania-combined",
     title: "8-Day Kenya & Tanzania Combined Safari",
     shortTitle: "Kenya & Tanzania Combined",
     destination: "Nakuru, Masai Mara, Serengeti, Ngorongoro",
-    country: "Kenya & Tanzania",
+    countries: ["Kenya", "Tanzania"],
     duration: "8 Days / 7 Nights",
     days: 8,
     price: 2450,
@@ -329,9 +447,214 @@ export const tours: Tour[] = [
     departing: "Daily",
     difficulty: "Moderate",
     groupSize: "2-7 persons",
+    type: "private",
+    tier: "luxury",
+    recommended: true,
     featured: true,
   },
+
+  {
+    id: "7",
+    slug: "4-day-masai-mara-group-safari",
+    title: "4-Day Masai Mara Group Joining Safari",
+    shortTitle: "Mara Group Safari",
+    destination: "Masai Mara",
+    countries: ["Kenya"],
+    duration: "4 Days / 3 Nights",
+    days: 4,
+    price: 480,
+    image: [IMG.amboseli, IMG.amboseli1, IMG.amboseli2, IMG.ewc_deluxe_room],
+    description:
+      "Join a group of fellow travelers on this budget-friendly Masai Mara safari. All the wildlife, half the cost.",
+    longDescription:
+      "This group joining safari is the most affordable way to experience the legendary Masai Mara. You will share a safari vehicle with other like-minded travelers, keeping costs low while still enjoying world-class game drives and comfortable accommodation.",
+    highlights: [
+      "Budget-friendly group safari",
+      "Big Five game viewing",
+      "Comfortable shared accommodation",
+      "Meet fellow travelers",
+    ],
+    included: [
+      "Transport in safari minivan",
+      "Full board accommodation",
+      "Park entrance fees",
+      "Professional driver-guide",
+    ],
+    excluded: [
+      "International flights",
+      "Travel insurance",
+      "Personal expenses",
+      "Tips and gratuities",
+    ],
+    itinerary: [
+      { day: 1, title: "Nairobi to Masai Mara", description: "Depart Nairobi early morning. Arrive Masai Mara for afternoon game drive." },
+      { day: 2, title: "Full Day Masai Mara", description: "Full day of game drives throughout the reserve." },
+      { day: 3, title: "Full Day Masai Mara", description: "Morning and afternoon game drives in different areas." },
+      { day: 4, title: "Masai Mara to Nairobi", description: "Final morning game drive then return to Nairobi." },
+    ],
+    rating: 4.5,
+    reviewCount: 312,
+    departing: "Monday, Wednesday, Friday",
+    difficulty: "Easy",
+    groupSize: "6-12 persons",
+    type: "group",
+    tier: "budget",
+  },
+  {
+    id: "8",
+    slug: "7-day-luxury-masai-mara-amboseli",
+    title: "7-Day Luxury Masai Mara & Amboseli Experience",
+    shortTitle: "Luxury Mara & Amboseli",
+    destination: "Masai Mara, Amboseli",
+    countries: ["Kenya"],
+    duration: "7 Days / 6 Nights",
+    days: 7,
+    price: 3200,
+    image: [IMG.amboseli, IMG.amboseli1, IMG.amboseli2, IMG.ewc_deluxe_room],
+    description:
+      "The ultimate luxury Kenya safari with premium lodges, private game drives, and exclusive experiences in the Mara and Amboseli.",
+    longDescription:
+      "Indulge in the finest safari experience Kenya has to offer. Stay at premium lodges and tented camps, enjoy private game drives in custom 4x4 Land Cruisers, and experience exclusive bush dinners, sundowners, and cultural encounters. This is safari at its most refined.",
+    highlights: [
+      "Premium luxury lodges throughout",
+      "Private 4x4 game drives",
+      "Exclusive bush dinner under the stars",
+      "Hot air balloon safari included",
+    ],
+    included: [
+      "Private 4x4 Land Cruiser",
+      "Premium lodge accommodation",
+      "All meals and drinks",
+      "Park fees and conservancy fees",
+      "Hot air balloon safari",
+      "Bush dinner experience",
+    ],
+    excluded: [
+      "International flights",
+      "Travel insurance",
+      "Personal shopping",
+      "Spa treatments",
+    ],
+    itinerary: [
+      { day: 1, title: "Nairobi to Masai Mara", description: "VIP transfer to Masai Mara. Check into luxury lodge. Afternoon game drive." },
+      { day: 2, title: "Hot Air Balloon Safari", description: "Pre-dawn balloon flight over the Mara. Champagne bush breakfast. Afternoon game drive." },
+      { day: 3, title: "Full Day Masai Mara", description: "Private game drives. Evening bush dinner under the stars." },
+      { day: 4, title: "Masai Mara Conservancy", description: "Game drives in private conservancy. Walking safari with Masai guides." },
+      { day: 5, title: "Masai Mara to Amboseli", description: "Scenic transfer to Amboseli. Afternoon game drive with Kilimanjaro views." },
+      { day: 6, title: "Full Day Amboseli", description: "Morning and afternoon game drives. Sundowner drinks with Kilimanjaro backdrop." },
+      { day: 7, title: "Amboseli to Nairobi", description: "Final sunrise game drive then VIP transfer to Nairobi." },
+    ],
+    rating: 5.0,
+    reviewCount: 89,
+    departing: "Daily",
+    difficulty: "Easy",
+    groupSize: "2-4 persons",
+    type: "private",
+    tier: "luxury",
+    recommended: true,
+  },
 ];
+
+export const campsLodges: CampLodge[] = [
+  {
+    id: "cl-1",
+    slug: "mara-serena-safari-lodge",
+    name: "Mara Serena Safari Lodge",
+    location: "Masai Mara, Kenya",
+    country: "Kenya",
+    image: "/images/mara-lodge.jpg",
+    description: "Perched on a hill in the heart of the Masai Mara with panoramic views of the savanna. Iconic Maasai-inspired architecture with modern comfort.",
+    amenities: ["Wi-Fi", "Swimming Pool", "Restaurant & Bar", "Ensuite Bathroom", "24h Power", "Spa"],
+    priceFrom: 180,
+    badges: ["Luxury", "Family-Friendly"],
+    recommended: true,
+    type: "lodge",
+  },
+  {
+    id: "cl-2",
+    slug: "governors-camp",
+    name: "Governors' Camp",
+    location: "Masai Mara, Kenya",
+    country: "Kenya",
+    image: "/images/tented-camp.jpg",
+    description: "One of the oldest and most prestigious camps in the Mara, nestled along the Mara River with abundant wildlife right at your doorstep.",
+    amenities: ["Ensuite Bathroom", "Restaurant & Bar", "Guided Walks", "24h Power", "Laundry"],
+    priceFrom: 220,
+    badges: ["Tented Camp", "Eco"],
+    recommended: true,
+    type: "tented-camp",
+  },
+  {
+    id: "cl-3",
+    slug: "amboseli-serena-lodge",
+    name: "Amboseli Serena Lodge",
+    location: "Amboseli, Kenya",
+    country: "Kenya",
+    image: "/images/amboseli.jpg",
+    description: "Set amid landscaped gardens with direct views of Mount Kilimanjaro. A comfortable base for exploring the elephant capital of Kenya.",
+    amenities: ["Swimming Pool", "Wi-Fi", "Restaurant & Bar", "Ensuite Bathroom", "Gift Shop", "24h Power"],
+    priceFrom: 150,
+    badges: ["Luxury", "Family-Friendly"],
+    type: "lodge",
+  },
+  {
+    id: "cl-4",
+    slug: "serengeti-sopa-lodge",
+    name: "Serengeti Sopa Lodge",
+    location: "Serengeti, Tanzania",
+    country: "Tanzania",
+    image: "/images/serengeti.jpg",
+    description: "Located in the southwestern Serengeti with sweeping views across the plains. Ideal for witnessing the Great Migration.",
+    amenities: ["Swimming Pool", "Wi-Fi", "Restaurant & Bar", "Ensuite Bathroom", "24h Power", "Game Drives"],
+    priceFrom: 200,
+    badges: ["Luxury", "Migration Viewing"],
+    type: "lodge",
+  },
+  {
+    id: "cl-5",
+    slug: "ngorongoro-wildlife-lodge",
+    name: "Ngorongoro Wildlife Lodge",
+    location: "Ngorongoro Crater Rim, Tanzania",
+    country: "Tanzania",
+    image: "/images/ngorongoro.jpg",
+    description: "Perched on the rim of the Ngorongoro Crater with breathtaking views into the caldera. Wake up to one of Africa's most dramatic landscapes.",
+    amenities: ["Restaurant & Bar", "Wi-Fi", "Ensuite Bathroom", "Gift Shop", "24h Power", "Fireplace"],
+    priceFrom: 250,
+    badges: ["Premium", "Crater Views"],
+    recommended: true,
+    type: "lodge",
+  },
+]
+
+export const luxuryCottages: CampLodge[] = [
+  {
+    id: "lc-1",
+    slug: "great-rift-valley-cottage",
+    name: "Great Rift Valley Luxury Cottage",
+    location: "Naivasha, Kenya",
+    country: "Kenya",
+    image: "/images/luxury-cottage.jpg",
+    description: "An exclusive private cottage retreat overlooking the Great Rift Valley. Features private infinity pool, personal chef, and butler service.",
+    amenities: ["Private Pool", "Personal Chef", "Butler Service", "Wi-Fi", "Fireplace", "Garden"],
+    priceFrom: 450,
+    badges: ["Ultra-Luxury", "Private"],
+    recommended: true,
+    type: "luxury-cottage",
+  },
+  {
+    id: "lc-2",
+    slug: "karen-blixen-cottage",
+    name: "Karen Blixen Heritage Cottage",
+    location: "Karen, Nairobi, Kenya",
+    country: "Kenya",
+    image: "/images/mara-lodge.jpg",
+    description: "A beautifully restored colonial cottage in the Karen suburb, inspired by the Out of Africa legacy. Perfect for pre- or post-safari stays.",
+    amenities: ["Wi-Fi", "Garden", "Private Terrace", "Ensuite Bathroom", "Breakfast Included", "Airport Transfer"],
+    priceFrom: 320,
+    badges: ["Heritage", "City Retreat"],
+    type: "luxury-cottage",
+  },
+]
 
 export const testimonials: Testimonial[] = [
   {

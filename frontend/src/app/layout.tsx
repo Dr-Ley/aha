@@ -3,6 +3,7 @@ import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { CurrencyProvider } from '@/lib/currency-context'
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -34,15 +35,21 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en" data-theme="aha" className={`${dmSans.variable} ${playfair.variable}`}>
+    <html
+      lang="en"
+      data-theme="aha"
+      className={`${dmSans.variable} ${playfair.variable}`}
+    >
       <body className="font-sans antialiased flex min-h-screen flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <CurrencyProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </CurrencyProvider>
       </body>
     </html>
-  );
+  )
 }

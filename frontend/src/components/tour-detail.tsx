@@ -18,10 +18,12 @@ import {
   MessageCircle,
 } from "lucide-react";
 import type { Tour } from "@/lib/data";
+import { useCurrency } from "@/lib/currency-context"
 
 const WHATSAPP_NUMBER = "254722760661";
 
 export function TourDetail({ tour }: { tour: Tour }) {
+  const { formatPrice } = useCurrency()
   const [heroIndex, setHeroIndex] = useState(0);
   const gallery: string[] = tour.gallery ?? tour.image;
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -97,7 +99,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
         <div className="absolute bottom-0 left-0 right-0 p-6">
           <div className="mx-auto max-w-7xl">
             <div className="mb-3 flex flex-wrap gap-2">
-              <span className="badge badge-primary text-xs px-2">{tour.country}</span>
+              <span className="badge badge-primary text-xs px-2">{tour.countries}</span>
               <span className="badge badge-ghost text-xs px-2 bg-base-100/90">
                 {tour.difficulty}
               </span>
@@ -327,19 +329,19 @@ export function TourDetail({ tour }: { tour: Tour }) {
                 <div className="mb-4">
                   <p className="text-xs text-base-content/60">From</p>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold">${tour.price}</span>
+                    <span className="text-3xl font-bold">{formatPrice(tour.price)}</span>
                     {tour.originalPrice != null && (
                       <span className="text-lg text-base-content/50 line-through">
-                        ${tour.originalPrice}
+                        {formatPrice(tour.originalPrice)}
                       </span>
                     )}
                   </div>
                   <p className="text-xs text-base-content/60">per person</p>
                 </div>
 
-                {tour.originalPrice != null && (
+                {tour.originalPrice != null && tour.originalPrice > tour.price && (
                   <span className="badge badge-accent mb-4 px-2 border-none">
-                    Save ${tour.originalPrice - tour.price} per person
+                    Save {formatPrice(tour.originalPrice - tour.price)} per person
                   </span>
                 )}
 
