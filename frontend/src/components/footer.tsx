@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin, Shield, Award, Users } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 const safariLinks = [
   { label: "3-Day Masai Mara Safari", href: "/tours/3-day-masai-mara-safari" },
@@ -10,11 +11,14 @@ const safariLinks = [
 ];
 
 const companyLinks = [
-  { label: "About Us", href: "/contact" },
-  { label: "All Safaris", href: "/tours" },
+  { label: "Blogs", href: "/blogs" },
+  { label: "Volunteering", href: "https://www.kvcdp.org/index.html" },
   { label: "Contact Us", href: "/contact" },
   { label: "Get a Quote", href: "/contact" },
 ];
+
+// Helper to detect external links
+const isExternal = (href: string) => href.startsWith("http");
 
 export function Footer() {
   return (
@@ -108,9 +112,14 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-primary-content/70 transition-colors hover:text-primary-content"
+                    className="text-sm text-primary-content/70 transition-colors hover:text-primary-content inline-flex items-center gap-1"
+                    target={isExternal(link.href) ? "_blank" : undefined}
+                    rel={isExternal(link.href) ? "noopener noreferrer" : undefined}
                   >
                     {link.label}
+                    {isExternal(link.href) && (
+                      <ExternalLink className="h-3 w-3 opacity-60" />
+                    )}
                   </Link>
                 </li>
               ))}

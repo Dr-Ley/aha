@@ -174,6 +174,8 @@ export function TourDetail({ tour }: { tour: Tour }) {
                 </ul>
               </div>
 
+
+
               <div className="divider" />
 
               <div>
@@ -205,6 +207,27 @@ export function TourDetail({ tour }: { tour: Tour }) {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div className="divider" />
+
+              <div className="rounded-xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
+                <h3 className="mb-3 font-serif text-lg font-bold text-base-content">
+                  Destinations
+                </h3>
+                <div className="relative w-full aspect-video overflow-hidden rounded-lg">
+                  <iframe
+                    src="https://www.google.com/maps/d/embed?mid=1olCMk9JUep2A5solYEyNdncpmTjWUy0&ehbc=2E312F&noprof=1"
+                    className="absolute inset-0 w-full h-full"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    title="African Home Adventure Location"
+                  />
+                </div>
+                <p className="mt-3 text-sm text-base-content/70">
+                  Visit our office in Nairobi, Kenya
+                </p>
               </div>
 
               <div className="divider" />

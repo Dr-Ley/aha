@@ -6,7 +6,6 @@ import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Tours", href: "/tours" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -18,20 +17,42 @@ const tourCategories = [
   { label: "Day Trips", href: "/tours?duration=day" },
   { label: "Kenya Safaris", href: "/tours?country=Kenya" },
   { label: "Tanzania Safaris", href: "/tours?country=Tanzania" },
-  { label: "Combined Safaris", href: "/tours?country=Kenya+%26+Tanzania" },
+  { label: "Balloon Safaris", href: "/tours?type=balloon" },
+];
+
+const campsCategories = [
+  { label: "Camps & Lodges", href: "/camps/lodges" },
+  { label: "Luxury Cottages", href: "/camps/luxury-cottages" },
+];
+
+const infoCategories = [
+  { label: "Flights", href: "/info/flights" },
+  { label: "ETA/Visa", href: "/info/visa" },
+  { label: "Seasons & Pricing", href: "/info/seasons" },
 ];
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [toursOpen, setToursOpen] = useState(false);
+  const [mobileToursExpanded, setMobileToursExpanded] = useState(false);
+  const [mobileCampsExpanded, setMobileCampsExpanded] = useState(false);
+  const [mobileInfoExpanded, setMobileInfoExpanded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [gifPlaying, setGifPlaying] = useState(true);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  
   const toursRef = useRef<HTMLDivElement>(null);
+  const campsRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (toursRef.current && !toursRef.current.contains(event.target as Node)) {
-        setToursOpen(false);
+      if (
+        toursRef.current && !toursRef.current.contains(event.target as Node) &&
+        campsRef.current && !campsRef.current.contains(event.target as Node) &&
+        infoRef.current && !infoRef.current.contains(event.target as Node)
+      ) {
+        setActiveDropdown(null);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -42,41 +63,51 @@ export function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 40);
     };
-  
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
+
+  // GIF cycle effect
   useEffect(() => {
     let isPlaying = true;
-    
     const cycleGif = () => {
-      // Play GIF for 5 seconds
       setGifPlaying(true);
       isPlaying = true;
-      
       const stopTimer = setTimeout(() => {
         setGifPlaying(false);
         isPlaying = false;
       }, 6000);
-      
       return stopTimer;
     };
-  
-    // Start first cycle immediately
+
     let stopTimer = cycleGif();
-  
-    // Repeat every 20 seconds
     const interval = setInterval(() => {
       clearTimeout(stopTimer);
       stopTimer = cycleGif();
     }, 20000);
-  
+
     return () => {
       clearInterval(interval);
       clearTimeout(stopTimer);
     };
   }, []);
+
+  const handleDropdownEnter = (dropdown: string) => {
+    setActiveDropdown(dropdown);
+  };
+
+  const handleDropdownLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const relatedTarget = e.relatedTarget as Node;
+    // Check if we're moving to another dropdown or staying in nav
+    if (
+      toursRef.current?.contains(relatedTarget) ||
+      campsRef.current?.contains(relatedTarget) ||
+      infoRef.current?.contains(relatedTarget)
+    ) {
+      return;
+    }
+    setActiveDropdown(null);
+  };
 
   return (
     <>
@@ -128,7 +159,7 @@ export function Navbar() {
                 />
               ) : (
                 <img
-                  src="/AHA_STATIC.png" // use a static fallback version of your logo
+                  src="/AHA_STATIC.png"
                   alt="African Home Adventure Logo"
                   className="h-15 object-contain"
                 />
@@ -137,9 +168,7 @@ export function Navbar() {
 
             <div
               className={`flex flex-col transition-all duration-500 ${
-                scrolled
-                  ? "-translate-y-6 opacity-0"
-                  : "translate-y-0 opacity-100"
+                scrolled ? "-translate-y-6 opacity-0" : "translate-y-0 opacity-100"
               }`}
             >
               <span className="font-serif text-lg font-bold leading-tight text-base-content">
@@ -160,22 +189,27 @@ export function Navbar() {
               Home
             </Link>
 
-            <div className="relative" ref={toursRef}>
+            {/* Tours Dropdown - Hover */}
+            <div
+              className="relative group"
+              ref={toursRef}
+              onMouseEnter={() => handleDropdownEnter("tours")}
+              onMouseLeave={handleDropdownLeave}
+            >
               <button
                 type="button"
-                className="flex items-center gap-1 text-sm font-medium text-base-content/80 transition-colors hover:text-base-content outline-none"
-                onClick={() => setToursOpen(!toursOpen)}
-                aria-expanded={toursOpen}
+                className="flex items-center gap-1 text-sm font-medium text-base-content/80 transition-colors hover:text-base-content outline-none py-2"
+                aria-expanded={activeDropdown === "tours"}
                 aria-haspopup="true"
               >
-                Tours <ChevronDown className="h-3.5 w-3.5" />
+                Tours <ChevronDown className={`h-3.5 w-3.5 transition-transform ${activeDropdown === "tours" ? "rotate-180" : ""}`} />
               </button>
-              {toursOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-1 w-56 -translate-x-1/2 rounded-lg border border-base-content/10 bg-white dark:bg-base-100 py-1 shadow-lg">
+              <div className="absolute left-0 top-full pt-1 w-56 -translate-x-1/4 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
+                <div className="rounded-lg border border-base-content/10 bg-white dark:bg-base-100 py-1 shadow-lg">
                   <Link
                     href="/tours"
                     className="block px-4 py-2 text-sm hover:bg-base-200"
-                    onClick={() => setToursOpen(false)}
+                    onClick={() => setActiveDropdown(null)}
                   >
                     All Safaris
                   </Link>
@@ -184,13 +218,75 @@ export function Navbar() {
                       key={cat.label}
                       href={cat.href}
                       className="block px-4 py-2 text-sm hover:bg-base-200"
-                      onClick={() => setToursOpen(false)}
+                      onClick={() => setActiveDropdown(null)}
                     >
                       {cat.label}
                     </Link>
                   ))}
                 </div>
-              )}
+              </div>
+            </div>
+
+            {/* Camps Dropdown - Hover */}
+            <div
+              className="relative group"
+              ref={campsRef}
+              onMouseEnter={() => handleDropdownEnter("camps")}
+              onMouseLeave={handleDropdownLeave}
+            >
+              <button
+                type="button"
+                className="flex items-center gap-1 text-sm font-medium text-base-content/80 transition-colors hover:text-base-content outline-none py-2"
+                aria-expanded={activeDropdown === "camps"}
+                aria-haspopup="true"
+              >
+                Camps <ChevronDown className={`h-3.5 w-3.5 transition-transform ${activeDropdown === "camps" ? "rotate-180" : ""}`} />
+              </button>
+              <div className="absolute left-0 top-full pt-1 w-56 -translate-x-1/4 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
+                <div className="rounded-lg border border-base-content/10 bg-white dark:bg-base-100 py-1 shadow-lg">
+                  {campsCategories.map((cat) => (
+                    <Link
+                      key={cat.label}
+                      href={cat.href}
+                      className="block px-4 py-2 text-sm hover:bg-base-200"
+                      onClick={() => setActiveDropdown(null)}
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Info Dropdown - Hover */}
+            <div
+              className="relative group"
+              ref={infoRef}
+              onMouseEnter={() => handleDropdownEnter("info")}
+              onMouseLeave={handleDropdownLeave}
+            >
+              <button
+                type="button"
+                className="flex items-center gap-1 text-sm font-medium text-base-content/80 transition-colors hover:text-base-content outline-none py-2"
+                aria-expanded={activeDropdown === "info"}
+                aria-haspopup="true"
+              >
+                Info <ChevronDown className={`h-3.5 w-3.5 transition-transform ${activeDropdown === "info" ? "rotate-180" : ""}`} />
+              </button>
+              <div className="absolute left-0 top-full pt-1 w-56 -translate-x-1/4 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
+                <div className="rounded-lg border border-base-content/10 bg-white dark:bg-base-100 py-1 shadow-lg">
+                  {infoCategories.map((cat) => (
+                    <Link
+                      key={cat.label}
+                      href={cat.href}
+                      className="block px-4 py-2 text-sm hover:bg-base-200"
+                      onClick={() => setActiveDropdown(null)}
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <Link
@@ -207,7 +303,7 @@ export function Navbar() {
               Get a Quote
             </Link>
             <Link href="/tours" className="btn btn-primary btn-sm">
-              Book Now
+              My Tours
             </Link>
           </div>
 
@@ -223,33 +319,115 @@ export function Navbar() {
           </button>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu - Collapsible dropdowns */}
         {mobileOpen && (
           <div className="border-t border-base-content/10 md:hidden bg-base-100">
             <nav className="flex flex-col gap-0.5 px-6 py-4" aria-label="Mobile navigation">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200 active:bg-base-200/80"
-                  onClick={() => setMobileOpen(false)}
+              
+              {/* Home Link */}
+              <Link
+                href="/"
+                className="rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200 active:bg-base-200/80"
+                onClick={() => setMobileOpen(false)}
+              >
+                Home
+              </Link>
+
+              {/* Tours - Collapsible */}
+              <div className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => setMobileToursExpanded(!mobileToursExpanded)}
+                  className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200"
                 >
-                  {link.label}
-                </Link>
-              ))}
-              <p className="mt-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-base-content/60">
-                Safari categories
-              </p>
-              {tourCategories.map((cat) => (
-                <Link
-                  key={cat.href}
-                  href={cat.href}
-                  className="rounded-md pl-5 py-2.5 text-sm text-base-content/80 transition-colors hover:bg-base-200 hover:text-base-content"
-                  onClick={() => setMobileOpen(false)}
+                  Tours
+                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileToursExpanded ? "rotate-180" : ""}`} />
+                </button>
+                {mobileToursExpanded && (
+                  <div className="flex flex-col pl-4">
+                    <Link
+                      href="/tours"
+                      className="rounded-md px-3 py-2.5 text-sm text-base-content/80 transition-colors hover:bg-base-200 hover:text-base-content"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      All Safaris
+                    </Link>
+                    {tourCategories.map((cat) => (
+                      <Link
+                        key={cat.href}
+                        href={cat.href}
+                        className="rounded-md px-3 py-2.5 text-sm text-base-content/80 transition-colors hover:bg-base-200 hover:text-base-content"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {cat.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Camps - Collapsible */}
+              <div className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => setMobileCampsExpanded(!mobileCampsExpanded)}
+                  className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200"
                 >
-                  {cat.label}
-                </Link>
-              ))}
+                  Camps
+                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileCampsExpanded ? "rotate-180" : ""}`} />
+                </button>
+                {mobileCampsExpanded && (
+                  <div className="flex flex-col pl-4">
+                    {campsCategories.map((cat) => (
+                      <Link
+                        key={cat.href}
+                        href={cat.href}
+                        className="rounded-md px-3 py-2.5 text-sm text-base-content/80 transition-colors hover:bg-base-200 hover:text-base-content"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {cat.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Info - Collapsible */}
+              <div className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => setMobileInfoExpanded(!mobileInfoExpanded)}
+                  className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200"
+                >
+                  Info
+                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileInfoExpanded ? "rotate-180" : ""}`} />
+                </button>
+                {mobileInfoExpanded && (
+                  <div className="flex flex-col pl-4">
+                    {infoCategories.map((cat) => (
+                      <Link
+                        key={cat.href}
+                        href={cat.href}
+                        className="rounded-md px-3 py-2.5 text-sm text-base-content/80 transition-colors hover:bg-base-200 hover:text-base-content"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {cat.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Contact Link */}
+              <Link
+                href="/contact"
+                className="rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200 active:bg-base-200/80"
+                onClick={() => setMobileOpen(false)}
+              >
+                Contact
+              </Link>
+
+              {/* Contact info and CTAs */}
               <div className="mt-3 flex flex-col gap-2 border-t border-base-content/10 pt-4">
                 <a
                   href="tel:+254722760661"

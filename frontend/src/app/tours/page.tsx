@@ -1,5 +1,6 @@
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
+
 import { tours } from "@/lib/data";
 import type { Metadata } from "next";
 
@@ -10,11 +11,12 @@ export const metadata: Metadata = {
 };
 
 export default function ToursPage() {
+
   return (
     <>
       <section className="bg-primary py-16 lg:py-20">
         <Container>
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent">
+          <p className="text-md font-semibold uppercase tracking-widest text-accent">
             Explore East Africa
           </p>
           <h1 className="mt-2 font-serif text-3xl font-bold text-primary-content text-balance sm:text-4xl lg:text-5xl">

@@ -32,13 +32,6 @@ const contactMethods = [
     href: "mailto:info@africahomeadventure.com",
     description: "We respond within 24 hours",
   },
-  {
-    icon: MapPin,
-    label: "Nairobi Office",
-    value: "Nairobi, Kenya",
-    href: undefined,
-    description: "Headquarters & main booking center",
-  },
 ];
 
 export default function ContactPage() {
@@ -60,41 +53,62 @@ export default function ContactPage() {
         </Container>
       </section>
 
+      
       <Section variant="secondary">
         <Container>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {contactMethods.map((method) => (
-              <div
-                key={method.label}
-                className="flex flex-col items-start rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                  <method.icon className="h-5 w-5 text-primary" />
+          <div className="rounded-xl border border-base-content/10 bg-base-100 p-4 m-3 shadow-sm lg:grid lg:grid-cols-2 lg:gap-20 lg:items-center">
+            <div>
+              <h3 className="mb-3 font-serif text-lg font-bold text-base-content">
+                Our Office
+              </h3>
+              <p className="text-sm text-base-content/70 mb-4">
+                Visit our office in Nairobi, Kenya. We're conveniently located in the city center, ready to help you plan your perfect African adventure.
+              </p>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+                  {contactMethods.map((method) => (
+                    <div
+                      key={method.label}
+                      className="flex flex-col items-start rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                        <method.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <h3 className="mt-3 text-sm font-semibold text-base-content">
+                        {method.label}
+                      </h3>
+                      {method.href ? (
+                        <a
+                          href={method.href}
+                          className="mt-1 break-all text-sm font-medium text-primary hover:underline"
+                        >
+                          {method.value}
+                        </a>
+                      ) : (
+                        <p className="mt-1 text-sm font-medium text-base-content">
+                          {method.value}
+                        </p>
+                      )}
+                      <p className="mt-1 text-xs text-base-content/60">
+                        {method.description}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="mt-3 text-sm font-semibold text-base-content">
-                  {method.label}
-                </h3>
-                {method.href ? (
-                  <a
-                    href={method.href}
-                    className="mt-1 break-all text-sm font-medium text-primary hover:underline"
-                  >
-                    {method.value}
-                  </a>
-                ) : (
-                  <p className="mt-1 text-sm font-medium text-base-content">
-                    {method.value}
-                  </p>
-                )}
-                <p className="mt-1 text-xs text-base-content/60">
-                  {method.description}
-                </p>
-              </div>
-            ))}
+            </div>
+            <div className="relative w-full aspect-video overflow-hidden rounded-lg mt-4 lg:mt-0">
+              <iframe
+                src="https://www.google.com/maps/d/u/0/embed?mid=1aOOAW-WQPwFhojd7cO1n8oWB4ltZDiA&ehbc=2E312F&noprof=1"
+                className="absolute inset-0 w-full h-full"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                title="African Home Adventure Location"
+              />
+            </div>
           </div>
         </Container>
       </Section>
-
+      
       <Section>
         <Container>
           <div className="grid gap-10 lg:grid-cols-3 items-start">

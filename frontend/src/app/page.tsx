@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from 'react';
 import {
   Star,
   ArrowRight,
@@ -10,6 +13,7 @@ import {
   Phone,
   Mail,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { Container, Section } from "@/components/layout";
 import { TourCard } from "@/components/tour-card";
@@ -122,6 +126,17 @@ function DestinationsCarousel() {
 
 function FeaturedToursSection() {
   const featuredTours = tours.filter((t) => t.featured);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 320; // Approximate card width + gap
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
     <Section>
@@ -148,10 +163,45 @@ function FeaturedToursSection() {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {featuredTours.map((tour) => (
-            <TourCard key={tour.id} tour={tour} />
-          ))}
+        {/* Horizontal scrollable row */}
+        <div className="mt-12 relative">
+          {/* Navigation arrows */}
+          <button
+            onClick={() => scroll('left')}
+            className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 hidden lg:flex"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          
+          <button
+            onClick={() => scroll('right')}
+            className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 md:flex hidden lg:flex"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+
+          {/* Scrollable container */}
+          <div 
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {featuredTours.map((tour) => (
+              <div 
+                key={tour.id} 
+                className="shrink-0 snap-start w-72 sm:w-80"
+              >
+                <TourCard tour={tour} />
+              </div>
+            ))}
+          </div>
+
+          {/* Scroll hint for mobile */}
+          <div className="lg:hidden mt-2 text-center text-sm text-base-content/50">
+            ← Swipe to explore →
+          </div>
         </div>
       </Container>
     </Section>

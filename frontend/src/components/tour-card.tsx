@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Clock, MapPin, Star, Users } from "lucide-react";
 import type { Tour } from "@/lib/data";
 
-const SLIDESHOW_INTERVAL_MS = 2500;
+const SLIDESHOW_INTERVAL_MS = 2000;
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);

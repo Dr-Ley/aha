@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { TourCard } from "@/components/tour-card";
 import type { Tour } from "@/lib/data";
@@ -16,17 +17,68 @@ const sortOptions: { value: string; label: string }[] = [
   { value: "rating", label: "Highest Rated" },
 ];
 
+// Price tiers
+const TIERS = {
+  budget: { max: 800, label: "Budget" },
+  luxury: { min: 2000, label: "Luxury" },
+  mid: { min: 800, max: 2000, label: "Mid-range" },
+};
+
 export function TourFilters({ tours }: { tours: Tour[] }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Initialize state from URL params
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("All");
   const [duration, setDuration] = useState("All");
   const [sort, setSort] = useState("featured");
+  const [tier, setTier] = useState<string | null>(null);
+  const [type, setType] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
+
+  // Read URL params on mount
+  useEffect(() => {
+  const urlCountry = searchParams.get("country");
+  const urlDuration = searchParams.get("duration");
+  const urlTier = searchParams.get("tier");
+  const urlType = searchParams.get("type");
+  const urlSort = searchParams.get("sort");
+
+  // Check if any category filter is present in URL
+  const hasCategoryFilter = urlCountry || urlTier || urlType || urlDuration;
+
+  if (hasCategoryFilter) {
+    // CLEAR ALL existing filters first
+    setSearch("");
+    setCountry("All");
+    setDuration("All");
+    setTier(null);
+    setType(null);
+    setPage(1);
+    // Keep existing sort or use URL sort
+    setSort(urlSort || "featured");
+
+    // Apply ONLY the URL filter
+    if (urlCountry) setCountry(urlCountry);
+    if (urlDuration) {
+      if (urlDuration === "day") setDuration("1 Day");
+      else setDuration(urlDuration);
+    }
+    if (urlTier) setTier(urlTier);
+    if (urlType) setType(urlType);
+  } else {
+    // No category filters in URL, just update sort if present
+    if (urlSort) setSort(urlSort);
+  }
+}, [searchParams]);
 
   const filtered = useMemo(() => {
     let result = [...tours];
 
+    // Search filter
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -36,12 +88,43 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
           t.description.toLowerCase().includes(q)
       );
     }
-    if (country !== "All") result = result.filter((t) => t.country === country);
+
+    // Country filter (from dropdown or URL)
+    if (country !== "All") {
+      result = result.filter((t) => t.country === country);
+    }
+
+    // Duration filter
     if (duration !== "All") {
       if (duration === "1-3 Days") result = result.filter((t) => t.days <= 3);
       else if (duration === "4-5 Days") result = result.filter((t) => t.days >= 4 && t.days <= 5);
       else if (duration === "6+ Days") result = result.filter((t) => t.days >= 6);
+      else if (duration === "1 Day") result = result.filter((t) => t.days === 1);
     }
+
+    // Price tier filter (from URL: ?tier=budget|luxury)
+    if (tier) {
+      if (tier === "budget") {
+        result = result.filter((t) => t.price <= TIERS.budget.max);
+      } else if (tier === "luxury") {
+        result = result.filter((t) => t.price >= TIERS.luxury.min);
+      } else if (tier === "mid") {
+        result = result.filter((t) => t.price > TIERS.mid.min && t.price < TIERS.mid.max);
+      }
+    }
+
+    // Type filter (from URL: ?type=kilimanjaro|beach)
+    if (type) {
+      const q = type.toLowerCase();
+      result = result.filter(
+        (t) =>
+          t.title.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          t.highlights.some((h) => h.toLowerCase().includes(q))
+      );
+    }
+
+    // Sorting
     switch (sort) {
       case "price-asc":
         result.sort((a, b) => a.price - b.price);
@@ -58,24 +141,82 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
       default:
         result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
+
     return result;
-  }, [tours, search, country, duration, sort]);
+  }, [tours, search, country, duration, sort, tier, type]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-  const activeFilters = [country, duration].filter((f) => f !== "All").length;
+  const activeFilters = [
+    country !== "All" ? country : null,
+    duration !== "All" ? duration : null,
+    tier ? `${TIERS[tier as keyof typeof TIERS]?.label || tier} Safaris` : null,
+    type ? type.charAt(0).toUpperCase() + type.slice(1) : null,
+  ].filter(Boolean).length;
 
   function clearFilters() {
     setSearch("");
     setCountry("All");
     setDuration("All");
     setSort("featured");
+    setTier(null);
+    setType(null);
     setPage(1);
+    router.push(pathname);
   }
+
+  // Update URL when filters change (optional - for shareable links)
+  const updateUrl = (key: string, value: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <div>
+      {/* Active filter badges */}
+      {(country !== "All" || duration !== "All" || tier || type) && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {country !== "All" && (
+            <span className="badge badge-primary gap-1">
+              {country}
+              <button onClick={() => { setCountry("All"); updateUrl("country", null); }} className="ml-1">
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
+          {duration !== "All" && (
+            <span className="badge badge-primary gap-1">
+              {duration}
+              <button onClick={() => { setDuration("All"); updateUrl("duration", null); }} className="ml-1">
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
+          {tier && (
+            <span className="badge badge-primary gap-1">
+              {TIERS[tier as keyof typeof TIERS]?.label} Safaris
+              <button onClick={() => { setTier(null); updateUrl("tier", null); }} className="ml-1">
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
+          {type && (
+            <span className="badge badge-primary gap-1">
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+              <button onClick={() => { setType(null); updateUrl("type", null); }} className="ml-1">
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
+        </div>
+      )}
+
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/50" />
@@ -83,7 +224,6 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             type="search"
             placeholder="Search safaris..."
             value={search}
-            style={{ outline: "1px solid gray" }}
             onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
@@ -100,15 +240,15 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             <SlidersHorizontal className="h-4 w-4" />
             Filters
             {activeFilters > 0 && (
-              <span className="badge badge-primary badge-sm h-4 w-4">{activeFilters}</span>
+              <span className="badge badge-primary badge-sm">{activeFilters}</span>
             )}
           </button>
           <div className="hidden sm:flex items-center gap-3">
             <select
               value={country}
-              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setCountry(e.target.value);
+                updateUrl("country", e.target.value === "All" ? null : e.target.value);
                 setPage(1);
               }}
               className="select select-bordered w-44"
@@ -121,7 +261,6 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </select>
             <select
               value={duration}
-              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setDuration(e.target.value);
                 setPage(1);
@@ -136,7 +275,6 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
             </select>
             <select
               value={sort}
-              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setSort(e.target.value);
                 setPage(1);
