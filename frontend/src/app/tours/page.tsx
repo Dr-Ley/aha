@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 
@@ -11,7 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function ToursPage() {
-
   return (
     <>
       <section className="bg-primary py-16 lg:py-20">
@@ -31,7 +31,15 @@ export default function ToursPage() {
 
       <Section>
         <Container>
-          <TourFilters tours={tours} />
+          <Suspense
+            fallback={
+              <div className="py-10 text-center text-base-content/60">
+                Loading tours...
+              </div>
+            }
+          >
+            <TourFilters tours={tours} />
+          </Suspense>
         </Container>
       </Section>
     </>
