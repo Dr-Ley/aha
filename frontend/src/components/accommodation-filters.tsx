@@ -515,15 +515,15 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
       {/* Results grid */}
       {filtered.length > 0 ? (
         <>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"> */}
             {paginated.map((accommodation) => (
               <AccommodationCard 
                 key={accommodation.id} 
                 accommodation={accommodation}
-                variant="default"
+                variant="horizontal"
               />
             ))}
-          </div>
+          {/* </div> */}
 
           {/* Pagination */}
           {totalPages > 1 && (

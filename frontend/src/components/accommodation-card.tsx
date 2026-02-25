@@ -27,6 +27,7 @@ import {
   Binoculars,      // Boardwalk/Views
 } from "lucide-react";
 import type { Accomodations } from "@/lib/data";
+import { useCurrency } from "@/lib/currency-context"
 
 // Icon mapping in the COMPONENT (not data file)
 const amenityIcons: Record<string, React.ElementType> = {
@@ -89,7 +90,7 @@ export function AccommodationCard({
 
   if (variant === "horizontal") {
     return (
-      <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-all duration-300 hover:shadow-lg sm:flex-row">
+      <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-all duration-300 my-5 hover:shadow-lg sm:flex-row">
         {/* Image Section */}
         <div className="relative sm:w-80 sm:shrink-0">
           <div className="relative aspect-[4/3] sm:aspect-auto sm:h-full">

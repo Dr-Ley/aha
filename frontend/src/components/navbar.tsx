@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
 import { useCurrency } from "@/lib/currency-context"
 import { CURRENCIES } from "@/lib/data"
+import { AuthModal } from "@/components/auth-modal";
+import { useAuth } from "@/lib/auth-context";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -83,6 +85,9 @@ function CurrencyDropdown() {
 export default CurrencyDropdown
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authTab, setAuthTab] = useState<"login" | "signup">("login");
+  const { user, logout } = useAuth();
   const [mobileToursExpanded, setMobileToursExpanded] = useState(false);
   const [mobileCampsExpanded, setMobileCampsExpanded] = useState(false);
   const [mobileInfoExpanded, setMobileInfoExpanded] = useState(false);
@@ -198,7 +203,7 @@ export function Navbar() {
         >
           <Link href="/" className="flex items-center gap-3 overflow-hidden">
             <div
-              className={`relative rounded-full overflow-hidden transition-all duration-500 ${
+              className={`relative rounded-full  transition-all duration-500 ${
                 scrolled ? "h-14 w-22" : "h-12 w-16"
               }`}
             >
@@ -352,17 +357,37 @@ export function Navbar() {
           <div>
             <CurrencyDropdown />
           </div>  
-
-          {/* CTA */}
           <div className="hidden items-center gap-3 md:flex">
-            
-            <Link href="/contact" className="btn btn-outline btn-sm">
-              Get a Quote
-            </Link>
-            <Link href="/tours" className="btn btn-primary btn-sm">
+            {user ? (
+              <div className="dropdown dropdown-end">
+                <button className="btn btn-ghost btn-circle avatar">
+                  <div className="w-10 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
+                    {user.avatar}
+                  </div>
+                </button>
+                <ul className="menu dropdown-content z-50 mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
+                  <li><a>Profile</a></li>
+                  <li><a>My Bookings</a></li>
+                  {user.role === "staff" && <li><a>Staff Dashboard</a></li>}
+                  <li><button onClick={logout}>Logout</button></li>
+                </ul>
+              </div>
+            ) : (
+              <>
+                <button 
+                  onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
+                  className="btn btn-outline btn-sm"
+                >
+                  Sign In
+                </button>
+                <Link href="/tours" className="btn btn-primary btn-sm">
               My Tours
             </Link>
+              </>
+            )}
           </div>
+
+
 
           {/* Mobile toggle */}
           <button
@@ -487,39 +512,95 @@ export function Navbar() {
 
               {/* Contact info and CTAs */}
               <div className="mt-3 flex flex-col gap-2 border-t border-base-content/10 pt-4">
-                <a
-                  href="tel:+254722760661"
-                  className="flex items-center gap-2 px-3 text-sm text-base-content/60"
-                >
-                  <Phone className="h-4 w-4" /> +254 722 760 661
-                </a>
-                <a
-                  href="mailto:info@africahomeadventure.com"
-                  className="flex items-center gap-2 px-3 text-sm text-base-content/60"
-                >
-                  <Mail className="h-4 w-4" /> info@africahomeadventure.com
-                </a>
-                <div className="mt-2 flex gap-2">
-                  <Link
-                    href="/contact"
-                    className="btn btn-outline btn-sm flex-1"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Get a Quote
-                  </Link>
-                  <Link
-                    href="/tours"
-                    className="btn btn-primary btn-sm flex-1"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Book Now
-                  </Link>
-                </div>
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-3 px-3 py-2">
+                      <div className="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
+                        {user.avatar}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-base-content">{user.name}</p>
+                        <p className="text-xs text-base-content/60 capitalize">{user.role}</p>
+                      </div>
+                    </div>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-base-content/80 hover:bg-base-200 rounded-md"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      href="/bookings"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-base-content/80 hover:bg-base-200 rounded-md"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      My Bookings
+                    </Link>
+                    {user.role === "staff" && (
+                      <Link
+                        href="/staff/dashboard"
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-base-content/80 hover:bg-base-200 rounded-md"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Staff Dashboard
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileOpen(false);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-error hover:bg-error/10 rounded-md"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <a
+                      href="tel:+254722760661"
+                      className="flex items-center gap-2 px-3 text-sm text-base-content/60"
+                    >
+                      <Phone className="h-4 w-4" /> +254 722 760 661
+                    </a>
+                    <a
+                      href="mailto:info@africahomeadventure.com"
+                      className="flex items-center gap-2 px-3 text-sm text-base-content/60"
+                    >
+                      <Mail className="h-4 w-4" /> info@africahomeadventure.com
+                    </a>
+                    <div className="mt-2 flex gap-2">
+                      <button
+                        onClick={() => {
+                          setAuthTab("login");
+                          setShowAuthModal(true);
+                          setMobileOpen(false);
+                        }}
+                        className="btn btn-outline btn-sm flex-1"
+                      >
+                        Sign In
+                      </button>
+                      <Link
+                        href="/tours"
+                        className="btn btn-primary btn-sm flex-1"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  </>
+                )}
               </div>
             </nav>
           </div>
         )}
       </header>
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)}
+        defaultTab={authTab}
+      />
     </>
   );
 }

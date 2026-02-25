@@ -1,3 +1,66 @@
+export interface User {
+  id: string;
+  email: string;
+  password: string; // In production, this is hashed!
+  name: string;
+  role: "customer" | "staff" | "admin";
+  avatar?: string;
+  createdAt: string;
+}
+
+// Mock users for testing
+export const mockUsers: User[] = [
+  {
+    id: "user-1",
+    email: "traveller@example.com",
+    password: "password123", // Never store plain text in production!
+    name: "John Traveller",
+    role: "customer",
+    avatar: "JT",
+    createdAt: "2024-01-15",
+  },
+  {
+    id: "user-2",
+    email: "sarah.safari@email.com",
+    password: "safari2024",
+    name: "Sarah Safari",
+    role: "customer",
+    avatar: "SS",
+    createdAt: "2024-02-20",
+  },
+  {
+    id: "staff-1",
+    email: "guide@africahomeadventure.com",
+    password: "staffpass123",
+    name: "Peter Guide",
+    role: "staff",
+    avatar: "PG",
+    createdAt: "2023-06-10",
+  },
+  {
+    id: "admin-1",
+    email: "admin@africahomeadventure.com",
+    password: "adminpass123",
+    name: "Admin User",
+    role: "admin",
+    avatar: "AU",
+    createdAt: "2023-01-01",
+  },
+];
+
+// Helper function to authenticate (mock)
+export function authenticateUser(email: string, password: string): User | null {
+  const user = mockUsers.find(
+    (u) => u.email === email && u.password === password
+  );
+  return user || null;
+}
+
+// Helper to check if email exists
+export function emailExists(email: string): boolean {
+  return mockUsers.some((u) => u.email === email);
+}
+
 export type TourType = "private" | "group"
 export type TourTier = "budget" | "luxury"
 

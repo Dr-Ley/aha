@@ -25,7 +25,7 @@ function useIsMobile() {
 
 export function TourCard({ tour }: { tour: Tour }) {
   const images = tour.image?.slice(0, 7) || tour.image;
-  const { formatPrice } = useCurrency()
+  const { formatPrice } = useCurrency();
   const [activeIndex, setActiveIndex] = useState(0);
   const [slideshowActive, setSlideshowActive] = useState(false);
   const isMobile = useIsMobile();

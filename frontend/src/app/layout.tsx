@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CurrencyProvider } from '@/lib/currency-context'
+import { AuthProvider } from "@/lib/auth-context";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -44,11 +45,13 @@ export default function RootLayout({
       className={`${dmSans.variable} ${playfair.variable}`}
     >
       <body className="font-sans antialiased flex min-h-screen flex-col">
-        <CurrencyProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </CurrencyProvider>
+        <AuthProvider>
+          <CurrencyProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CurrencyProvider>
+        </AuthProvider>
       </body>
     </html>
   )
