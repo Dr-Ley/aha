@@ -57,6 +57,7 @@ export function TourCard({ tour }: { tour: Tour }) {
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-shadow hover:shadow-lg">
+      
             <figure
         className={isMobile ? "relative aspect-[4/3] overflow-hidden cursor-pointer" : "hover-gallery aspect-[4/3]"}
         onClick={handleImageClick}

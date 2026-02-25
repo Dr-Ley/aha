@@ -23,8 +23,8 @@ const tourCategories = [
 ];
 
 const campsCategories = [
-  { label: "Camps & Lodges", href: "/camps/lodges" },
-  { label: "Luxury Cottages", href: "/camps/luxury-cottages" },
+  { label: "Tented Camps", href: "/camps?type=tented-camp" },
+  { label: "Luxury Lodges", href: "/camps?type=lodge" },
 ];
 
 const infoCategories = [

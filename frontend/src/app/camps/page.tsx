@@ -1,31 +1,29 @@
+// app/accommodations/page.tsx
 import { Suspense } from "react";
 import { Container, Section } from "@/components/layout";
-import { TourFilters } from "@/components/tour-filters";
-
-
-import { tours } from "@/lib/data";
+import { AccommodationList } from "@/components/accommodation-list";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Safari Tours | African Home Adventure",
+  title: "Safari Accommodations | African Home Adventure",
   description:
-    "Browse our collection of Kenya and Tanzania safari tours. From 3-day getaways to 12-day expeditions, find your perfect African adventure.",
+    "Browse our curated selection of safari lodges, tented camps, and luxury cottages across Kenya and Tanzania.",
 };
 
-export default function ToursPage() {
+export default function AccommodationsPage() {
   return (
     <>
       <section className="bg-primary py-16 lg:py-20">
         <Container>
           <p className="text-md font-semibold uppercase tracking-widest text-accent">
-            Explore East Africa
+            Stay in the Wild
           </p>
           <h1 className="mt-2 font-serif text-3xl font-bold text-primary-content text-balance sm:text-4xl lg:text-5xl">
-            Safari Tours & Packages
+            Safari Accommodations
           </h1>
           <p className="mt-4 max-w-2xl leading-relaxed text-primary-content/70">
-            Choose from our carefully curated safari experiences across Kenya and Tanzania. Every
-            tour can be customized to your preferences, budget, and schedule.
+            From authentic tented camps to luxury lodges and private cottages, 
+            find your perfect home in the African wilderness.
           </p>
         </Container>
       </section>
@@ -35,13 +33,12 @@ export default function ToursPage() {
           <Suspense
             fallback={
               <div className="py-10 text-center text-base-content/60">
-                Loading tours...
+                Loading accommodations...
               </div>
             }
           >
-            <TourFilters tours={tours} />
+            <AccommodationList />
           </Suspense>
-          
         </Container>
       </Section>
     </>

@@ -163,12 +163,13 @@ function FeaturedToursSection() {
           </Link>
         </div>
 
+
         {/* Horizontal scrollable row */}
         <div className="mt-12 relative">
           {/* Navigation arrows */}
           <button
             onClick={() => scroll('left')}
-            className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 hidden lg:flex"
+            className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 lg:flex"
             aria-label="Scroll left"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -176,13 +177,16 @@ function FeaturedToursSection() {
           
           <button
             onClick={() => scroll('right')}
-            className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 md:flex hidden lg:flex"
+            className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 md:flex lg:flex"
             aria-label="Scroll right"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
 
           {/* Scrollable container */}
+          <div className="mt-2 text-center text-sm mb-5 text-base-content/50 md:hidden lg:hidden">
+            ← Tap to play →
+          </div>
           <div 
             ref={scrollRef}
             className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
@@ -254,23 +258,36 @@ function WhyChooseSection() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="flex flex-col items-start rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                <f.icon className="h-6 w-6 text-primary" />
+        {/* Horizontal scrollable row */}
+        <div className="mt-14 relative">
+          <div 
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {features.map((f) => (
+              <div
+                key={f.title}
+                className="shrink-0 snap-start w-72 sm:w-80"
+              >
+                <div className="flex flex-col items-start rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm h-full">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                    <f.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="mt-4 font-serif text-lg font-semibold text-base-content">
+                    {f.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-base-content/70">
+                    {f.description}
+                  </p>
+                </div>
               </div>
-              <h3 className="mt-4 font-serif text-lg font-semibold text-base-content">
-                {f.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-base-content/70">
-                {f.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
+          
+          {/* Scroll hint for mobile */}
+          <div className="mt-2 text-center text-sm text-base-content/50 lg:hidden">
+            ← Swipe to explore →
+          </div>
         </div>
       </Container>
     </Section>
@@ -348,42 +365,53 @@ function TestimonialsSection() {
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {testimonials.slice(0, 6).map((t) => (
-            <figure
-              key={t.id}
-              className="flex flex-col rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
-            >
-              <div className="mb-3 flex items-center gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-4 w-4 ${
-                      i < t.rating
-                        ? "fill-accent text-accent"
-                        : "fill-base-content/20 text-base-content/20"
-                    }`}
-                  />
-                ))}
-              </div>
-              <blockquote className="flex-1 text-sm leading-relaxed text-base-content/70">
-                &ldquo;{t.text}&rdquo;
-              </blockquote>
-              <figcaption className="mt-4 flex items-center gap-3 border-t border-base-content/10 pt-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
-                  {t.avatar}
+        {/* Horizontal scrollable testimonials */}
+        <div className="mt-12 relative">
+          <div 
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {testimonials.slice(0, 6).map((t) => (
+              <figure
+                key={t.id}
+                className="shrink-0 snap-start w-80 sm:w-96 flex flex-col rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
+              >
+                <div className="mb-3 flex items-center gap-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < t.rating
+                          ? "fill-accent text-accent"
+                          : "fill-base-content/20 text-base-content/20"
+                      }`}
+                    />
+                  ))}
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-base-content">
-                    {t.name}
-                  </p>
-                  <p className="text-xs text-base-content/60">
-                    {t.country} — {t.tour}
-                  </p>
-                </div>
-              </figcaption>
-            </figure>
-          ))}
+                <blockquote className="flex-1 text-sm leading-relaxed text-base-content/70">
+                  &ldquo;{t.text}&rdquo;
+                </blockquote>
+                <figcaption className="mt-4 flex items-center gap-3 border-t border-base-content/10 pt-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-base-content">
+                      {t.name}
+                    </p>
+                    <p className="text-xs text-base-content/60">
+                      {t.country} — {t.tour}
+                    </p>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          
+          {/* Scroll hint for mobile */}
+          <div className="mt-2 text-center text-sm text-base-content/50 lg:hidden">
+            ← Swipe to see more →
+          </div>
         </div>
       </Container>
     </Section>

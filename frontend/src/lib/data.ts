@@ -43,7 +43,7 @@ export interface Testimonial {
   tour: string;
 }
 
-export interface CampLodge {
+export interface Accomodations {
   id: string
   slug: string
   name: string
@@ -555,55 +555,117 @@ export const tours: Tour[] = [
   },
 ];
 
-export const campsLodges: CampLodge[] = [
+export const accommodations: Accomodations[] = [
+
+
   {
-    id: "cl-1",
+    id: "enchoro-wildlife-camp",
+    slug: "enchoro-wildlife-camp",
+    name: "Enchoro Wildlife Camp",
+    location: "Near Oloolaimutia Gate, Maasai Mara",
+    country: "Kenya",
+    image: "/destination_maasai_mara1.png", // Use local image path, not URL
+    description: "Budget-friendly semi‑luxury tented camp a few minutes from Oloolaimutia Gate; 27 en‑suite tents with hot showers and private verandas.",
+    amenities: [
+      "Restaurant",
+      "Bar", 
+      "Hot Shower",
+      "Ensuite Tents",
+      "WiFi",
+      "Parking"
+    ],
+    priceFrom: 60,
+    badges: ["Budget", "Near Gate", "Eco-Friendly"],
+    recommended: true,
+    type: "tented-camp"
+  },
+  {
+    id: "sarova-mara-game-camp",
+    slug: "sarova-mara-game-camp",
+    name: "Sarova Mara Game Camp",
+    location: "Sekenani area, Maasai Mara National Reserve",
+    country: "Kenya",
+    image: "https://i.pinimg.com/1200x/7b/af/43/7baf433b6523cdbb5eec69a53d8e7c8d.jpg",
+    description: "Full‑service luxury tented camp with Club/Deluxe/Family tents, free‑form pool, spa and organic‑garden dining—set in the heart of the reserve.",
+    amenities: [
+      "Swimming Pool",
+      "Spa",
+      "Restaurant",
+      "Bar",
+      "Ensuite Tents",
+      "WiFi",
+      "Mini Golf",
+      "Organic Garden"
+    ],
+    priceFrom: 220,
+    badges: ["Great Migration", "Family-Friendly", "Award-Winning"],
+    recommended: true,
+    type: "tented-camp"
+  },
+  {
+    id: "mara-serena-safari-lodge",
     slug: "mara-serena-safari-lodge",
     name: "Mara Serena Safari Lodge",
-    location: "Masai Mara, Kenya",
+    location: "Mara Triangle (Ol Donyo Oseiya hill)",
     country: "Kenya",
-    image: "/images/mara-lodge.jpg",
-    description: "Perched on a hill in the heart of the Masai Mara with panoramic views of the savanna. Iconic Maasai-inspired architecture with modern comfort.",
-    amenities: ["Wi-Fi", "Swimming Pool", "Restaurant & Bar", "Ensuite Bathroom", "24h Power", "Spa"],
-    priceFrom: 180,
-    badges: ["Luxury", "Family-Friendly"],
-    recommended: true,
-    type: "lodge",
+    image: "https://i.pinimg.com/1200x/07/4d/de/074dde5e0f7b30c3b3a9d7bb2d787d5f.jpg",
+    description: "Iconic hilltop lodge—the only lodge in the Mara Triangle—with sweeping river/plains views, rock‑enclosed pool and Maisha Spa & Gym.",
+    amenities: [
+      "Swimming Pool",
+      "Spa & Gym",
+      "Restaurant",
+      "Bar",
+      "Balcony Views",
+      "WiFi"
+    ],
+    priceFrom: 369,
+    badges: ["Triangle Location", "Panoramic Views", "Family-Friendly"],
+    type: "lodge"
   },
+  {
+    id: "keekorok-lodge",
+    slug: "keekorok-lodge",
+    name: "Muthu Keekorok Lodge",
+    location: "Central Maasai Mara National Reserve",
+    country: "Kenya",
+    image: "https://i.pinimg.com/1200x/7a/ee/fc/7aeefc21561d65056a6f5355988ed303.jpg",
+    description: "Historic first lodge in the Mara (1960s) with pool and famous hippo boardwalk overlooking a resident waterhole.",
+    amenities: [
+      "Swimming Pool",
+      "Restaurant",
+      "Bar",
+      "Hippo Boardwalk",
+      "WiFi",
+      "Kids Playground"
+    ],
+    priceFrom: 180,
+    recommended: true,
+    badges: ["Classic", "Waterhole Views", "Inside Reserve"],
+    type: "lodge"
+  },
+
   {
     id: "cl-2",
     slug: "governors-camp",
     name: "Governors' Camp",
     location: "Masai Mara, Kenya",
     country: "Kenya",
-    image: "/images/tented-camp.jpg",
+    image: "https://i.pinimg.com/1200x/ae/5b/6b/ae5b6bfe47287e137941e41d2ee2d853.jpg",
     description: "One of the oldest and most prestigious camps in the Mara, nestled along the Mara River with abundant wildlife right at your doorstep.",
     amenities: ["Ensuite Bathroom", "Restaurant & Bar", "Guided Walks", "24h Power", "Laundry"],
     priceFrom: 220,
     badges: ["Tented Camp", "Eco"],
-    recommended: true,
+    recommended: false,
     type: "tented-camp",
   },
-  {
-    id: "cl-3",
-    slug: "amboseli-serena-lodge",
-    name: "Amboseli Serena Lodge",
-    location: "Amboseli, Kenya",
-    country: "Kenya",
-    image: "/images/amboseli.jpg",
-    description: "Set amid landscaped gardens with direct views of Mount Kilimanjaro. A comfortable base for exploring the elephant capital of Kenya.",
-    amenities: ["Swimming Pool", "Wi-Fi", "Restaurant & Bar", "Ensuite Bathroom", "Gift Shop", "24h Power"],
-    priceFrom: 150,
-    badges: ["Luxury", "Family-Friendly"],
-    type: "lodge",
-  },
+
   {
     id: "cl-4",
     slug: "serengeti-sopa-lodge",
     name: "Serengeti Sopa Lodge",
     location: "Serengeti, Tanzania",
     country: "Tanzania",
-    image: "/images/serengeti.jpg",
+    image: "https://i.pinimg.com/1200x/b5/16/f0/b516f0c72a5484590fbaaee8c0e48fb1.jpg",
     description: "Located in the southwestern Serengeti with sweeping views across the plains. Ideal for witnessing the Great Migration.",
     amenities: ["Swimming Pool", "Wi-Fi", "Restaurant & Bar", "Ensuite Bathroom", "24h Power", "Game Drives"],
     priceFrom: 200,
@@ -616,45 +678,19 @@ export const campsLodges: CampLodge[] = [
     name: "Ngorongoro Wildlife Lodge",
     location: "Ngorongoro Crater Rim, Tanzania",
     country: "Tanzania",
-    image: "/images/ngorongoro.jpg",
+    image: "https://i.pinimg.com/1200x/46/46/79/46467956da05da016e4c9e84c511b567.jpg",
     description: "Perched on the rim of the Ngorongoro Crater with breathtaking views into the caldera. Wake up to one of Africa's most dramatic landscapes.",
     amenities: ["Restaurant & Bar", "Wi-Fi", "Ensuite Bathroom", "Gift Shop", "24h Power", "Fireplace"],
     priceFrom: 250,
     badges: ["Premium", "Crater Views"],
-    recommended: true,
+    recommended: false,
     type: "lodge",
   },
+
+
 ]
 
-export const luxuryCottages: CampLodge[] = [
-  {
-    id: "lc-1",
-    slug: "great-rift-valley-cottage",
-    name: "Great Rift Valley Luxury Cottage",
-    location: "Naivasha, Kenya",
-    country: "Kenya",
-    image: "/images/luxury-cottage.jpg",
-    description: "An exclusive private cottage retreat overlooking the Great Rift Valley. Features private infinity pool, personal chef, and butler service.",
-    amenities: ["Private Pool", "Personal Chef", "Butler Service", "Wi-Fi", "Fireplace", "Garden"],
-    priceFrom: 450,
-    badges: ["Ultra-Luxury", "Private"],
-    recommended: true,
-    type: "luxury-cottage",
-  },
-  {
-    id: "lc-2",
-    slug: "karen-blixen-cottage",
-    name: "Karen Blixen Heritage Cottage",
-    location: "Karen, Nairobi, Kenya",
-    country: "Kenya",
-    image: "/images/mara-lodge.jpg",
-    description: "A beautifully restored colonial cottage in the Karen suburb, inspired by the Out of Africa legacy. Perfect for pre- or post-safari stays.",
-    amenities: ["Wi-Fi", "Garden", "Private Terrace", "Ensuite Bathroom", "Breakfast Included", "Airport Transfer"],
-    priceFrom: 320,
-    badges: ["Heritage", "City Retreat"],
-    type: "luxury-cottage",
-  },
-]
+
 
 export const testimonials: Testimonial[] = [
   {

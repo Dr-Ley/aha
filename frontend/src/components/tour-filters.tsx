@@ -183,7 +183,7 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
     } else {
       params.delete(key);
     }
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -366,6 +366,9 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
       <p className="mt-6 text-sm text-base-content/60">
         Showing {filtered.length} {filtered.length === 1 ? "safari" : "safaris"}
       </p>
+      <div className="text-center text-sm mt-5 text-base-content/50 md:hidden lg:hidden">
+        ← Tap to play →
+      </div>
 
       {filtered.length > 0 ? (
         <>
