@@ -8,10 +8,17 @@ export async function POST(request: NextRequest) {
     const session = await auth();
     const body = await request.json();
 
-    const [submission] = await db
+    // Convert userId to number if it exists
+    const userId = session?.user?.id 
+      ? typeof session.user.id === 'string' 
+        ? parseInt(session.user.id, 10) 
+        : session.user.id
+      : null;
+
+    await db
       .insert(contactSubmissions)
       .values({
-        userId: session?.user?.id ?? null,
+        userId,
         firstName: body.firstName,
         lastName: body.lastName ?? null,
         email: body.email,
@@ -21,7 +28,7 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
-    return NextResponse.json({ success: true, submission });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Contact form error:", error);
     return NextResponse.json(
