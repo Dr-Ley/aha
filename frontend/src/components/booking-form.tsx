@@ -10,8 +10,10 @@ import {
   ArrowLeft,
   Phone,
   Mail,
+  Loader2,
 } from "lucide-react";
 import { tours } from "@/lib/data";
+import { useAuth } from "@/lib/auth-context";
 
 const steps = [
   { id: 1, label: "Trip Details" },
@@ -22,9 +24,14 @@ const steps = [
 export function BookingForm() {
   const searchParams = useSearchParams();
   const preselectedTour = searchParams?.get("tour") ?? "";
+  const { user } = useAuth();
 
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [bookingRef, setBookingRef] = useState<string | null>(null);
+
   const [form, setForm] = useState({
     tour: preselectedTour,
     travelDate: "",
@@ -32,9 +39,9 @@ export function BookingForm() {
     accommodation: "mid-range",
     transport: "4x4-landcruiser",
     specialRequests: "",
-    firstName: "",
-    lastName: "",
-    email: "",
+    firstName: user?.name?.split(" ")[0] ?? "",
+    lastName: user?.name?.split(" ").slice(1).join(" ") ?? "",
+    email: user?.email ?? "",
     phone: "",
     country: "",
   });
@@ -43,14 +50,67 @@ export function BookingForm() {
     if (preselectedTour) setForm((prev) => ({ ...prev, tour: preselectedTour }));
   }, [preselectedTour]);
 
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        firstName: user.name?.split(" ")[0] ?? prev.firstName,
+        lastName: user.name?.split(" ").slice(1).join(" ") ?? prev.lastName,
+        email: user.email ?? prev.email,
+      }));
+    }
+  }, [user]);
+
   const selectedTour = tours.find((t) => t.slug === form.tour);
 
   function updateField(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSubmit() {
-    setSubmitted(true);
+  async function handleSubmit() {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tourSlug: form.tour,
+          travelDate: form.travelDate,
+          guests: parseInt(form.guests, 10),
+          accommodation: form.accommodation,
+          transport: form.transport,
+          specialRequests: form.specialRequests || null,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone || null,
+          country: form.country || null,
+          pricePerPerson: selectedTour?.price,
+          totalPrice: selectedTour
+            ? selectedTour.price * parseInt(form.guests, 10)
+            : 0,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setBookingRef(
+          data.booking?.id
+            ? `BK-${String(data.booking.id).padStart(6, "0")}`
+            : null
+        );
+        setSubmitted(true);
+      } else {
+        setError(data.error ?? "Failed to submit booking");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -68,6 +128,11 @@ export function BookingForm() {
           <strong className="text-base-content">{form.email}</strong> with a
           detailed confirmation and payment instructions.
         </p>
+        {bookingRef && (
+          <p className="mt-2 text-sm text-base-content/60">
+            Booking Reference: #{bookingRef}
+          </p>
+        )}
         <div className="mt-6 flex items-center justify-center gap-4 text-sm text-base-content/60">
           <a
             href="tel:+254722760661"
@@ -471,6 +536,11 @@ export function BookingForm() {
               </div>
             )}
 
+            {error && (
+              <div className="rounded-lg bg-error/10 p-3 text-sm text-error">
+                {error}
+              </div>
+            )}
             <div className="flex justify-between mt-4">
               <button
                 type="button"
@@ -483,8 +553,17 @@ export function BookingForm() {
                 type="button"
                 className="btn btn-primary gap-2"
                 onClick={handleSubmit}
+                disabled={loading}
               >
-                Submit Booking Request <ArrowRight className="h-4 w-4" />
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" /> Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Booking Request <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </div>
           </div>

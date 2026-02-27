@@ -2,34 +2,37 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   MapPin,
   Star,
   ArrowRight,
   Wifi,
-  Waves,           // Swimming Pool
-  UtensilsCrossed, // Restaurant
-  Bath,            // Ensuite/Spa
-  Zap,             // Power/24h
-  Wine,            // Bar
-  Flower2,         // Garden/Spa
-  User,            // Guided walks/Butler
-  Flame,           // Fireplace
-  Gift,            // Gift shop
-  Plane,           // Airport transfer
-  Coffee,          // Breakfast
+  Waves,
+  UtensilsCrossed,
+  Bath,
+  Zap,
+  Wine,
+  Flower2,
+  User,
+  Flame,
+  Gift,
+  Plane,
+  Coffee,
   ChevronRight,
   Check,
-  Car,             // Parking
-  Dumbbell,        // Gym
-  Baby,            // Kids playground
-  Binoculars,      // Boardwalk/Views
+  Car,
+  Dumbbell,
+  Baby,
+  Binoculars,
 } from "lucide-react";
 import type { Accomodations } from "@/lib/data";
-import { useCurrency } from "@/lib/currency-context"
+import { useCurrency } from "@/lib/currency-context";
+import { LikeButton } from "@/components/like-button";
 
-// Icon mapping in the COMPONENT (not data file)
+const SLIDESHOW_INTERVAL_MS = 3000;
+
+// Icon mapping
 const amenityIcons: Record<string, React.ElementType> = {
   "WiFi": Wifi,
   "Swimming Pool": Waves,
@@ -61,8 +64,20 @@ const amenityIcons: Record<string, React.ElementType> = {
   "Game Drives": User,
 };
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+  return isMobile;
+}
+
 interface AccommodationCardProps {
-  accommodation: Accomodations;
+  accommodation: Accomodations & { id: number; likes?: number };
   variant?: "default" | "horizontal";
 }
 
@@ -70,15 +85,36 @@ export function AccommodationCard({
   accommodation, 
   variant = "default" 
 }: AccommodationCardProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [slideshowActive, setSlideshowActive] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState<Record<number, boolean>>({});
+  const isMobile = useIsMobile();
+  const { formatPrice } = useCurrency();
 
-  // Format price with currency
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(price);
+  const images = Array.isArray(accommodation.image) 
+  ? accommodation.image.slice(0, 4)
+  : typeof accommodation.image === 'string' 
+    ? [accommodation.image]  // Wrap single string in array
+    : [];  // Fallback to empty array
+
+  // Mobile slideshow effect
+  useEffect(() => {
+    if (!isMobile || !slideshowActive || images.length <= 1) return;
+    const t = setInterval(
+      () => setActiveIndex((i) => (i + 1) % images.length),
+      SLIDESHOW_INTERVAL_MS
+    );
+    return () => clearInterval(t);
+  }, [isMobile, slideshowActive, images.length]);
+
+  const handleImageClick = useCallback(() => {
+    if (!isMobile) return;
+    setSlideshowActive((on) => !on);
+    if (!slideshowActive) setActiveIndex((i) => (i + 1) % images.length);
+  }, [isMobile, slideshowActive, images.length]);
+
+  const handleImageLoad = (index: number) => {
+    setImageLoaded((prev) => ({ ...prev, [index]: true }));
   };
 
   // Type label mapping
@@ -88,29 +124,90 @@ export function AccommodationCard({
     "luxury-cottage": "Luxury Cottage",
   };
 
+  // Image Gallery Component (shared logic) - structure matches tour-card for hover-gallery + like button
+  const ImageGallery = ({ className = "", horizontal = false }: { className?: string, horizontal?: boolean }) => {
+    const containerClasses = horizontal
+      ? "relative aspect-[4/3] sm:aspect-auto sm:h-full overflow-hidden"
+      : "relative overflow-hidden";
+
+    return (
+      <div className={`${containerClasses} ${className}`}>
+        {/* LikeButton overlay - outside hover-gallery, same as tour-card; stopPropagation so clicks don't trigger slideshow */}
+        <div
+          className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
+          onClick={(e) => e.stopPropagation()}
+        >
+        <LikeButton
+          accommodationId={accommodation.id}
+          initialLikes={accommodation.likes ?? 0}
+          size="sm"
+        />
+        </div>
+
+        {isMobile ? (
+          // Mobile: Slideshow with opacity transition (figure clickable like tour-card)
+          <figure
+            className="relative aspect-[4/3] overflow-hidden cursor-pointer"
+            onClick={handleImageClick}
+            role="button"
+            tabIndex={0}
+            aria-label="Start or stop image slideshow"
+          >
+            {images.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt={i === 0 ? accommodation.name : `${accommodation.name} - image ${i + 1}`}
+                fill
+                className="object-cover transition-opacity duration-500"
+                style={{ opacity: i === activeIndex ? 1 : 0 }}
+                sizes={horizontal ? "(max-width: 640px) 100vw, 320px" : "100vw"}
+                loading={i === 0 ? "eager" : "lazy"}
+                onLoad={() => handleImageLoad(i)}
+              />
+            ))}
+            {images.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                {images.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                      i === activeIndex ? "bg-white" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </figure>
+        ) : (
+          // Desktop: DaisyUI hover-gallery - use figure + aspect-[4/3] like tour-card; horizontal variant fills container on sm+
+          <figure className={`hover-gallery aspect-[4/3] ${horizontal ? "sm:h-full sm:w-full sm:aspect-auto" : ""}`}>
+            {images.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt={`${accommodation.name} - image ${i + 1}`}
+                width={400}
+                height={300}
+                className="object-cover w-full h-full"
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+            ))}
+          </figure>
+        )}
+      </div>
+    );
+  };
+
   if (variant === "horizontal") {
     return (
       <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-all duration-300 my-5 hover:shadow-lg sm:flex-row">
         {/* Image Section */}
-        <div className="relative sm:w-80 sm:shrink-0">
-          <div className="relative aspect-[4/3] sm:aspect-auto sm:h-full">
-            <Image
-              src={accommodation.image}
-              alt={accommodation.name}
-              fill
-              className={`object-cover transition-all duration-500 group-hover:scale-105 ${
-                imageLoaded ? "opacity-100" : "opacity-0"
-              }`}
-              sizes="(max-width: 640px) 100vw, 320px"
-              onLoad={() => setImageLoaded(true)}
-            />
-            {!imageLoaded && (
-              <div className="absolute inset-0 bg-base-200 animate-pulse" />
-            )}
-          </div>
+        <div className="relative sm:w-80 sm:shrink-0 cursor-pointer">
+          <ImageGallery horizontal />
           
           {/* Badges overlay */}
-          <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+          <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
             {accommodation.badges.slice(0, 2).map((badge) => (
               <span
                 key={badge}
@@ -154,7 +251,7 @@ export function AccommodationCard({
 
           {/* Amenities */}
           <div className="mt-4 flex flex-wrap gap-2">
-            {accommodation.amenities.slice(0, 10).map((amenity) => {
+            {accommodation.amenities.slice(0, 4).map((amenity) => {
               const Icon = amenityIcons[amenity] || Check;
               return (
                 <div
@@ -174,7 +271,7 @@ export function AccommodationCard({
           </div>
 
           {/* Price and CTA */}
-          <div className="mt-4 flex items-end justify-between border-t border-base-content/10 pt-4">
+          <div className="mt-4 flex items-end justify-between border-t border-base-content/10 pt-4 gap-2">
             <div>
               <p className="text-xs text-base-content/60">From</p>
               <p className="text-2xl font-bold text-base-content">
@@ -198,26 +295,14 @@ export function AccommodationCard({
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       {/* Image Section */}
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
-          src={accommodation.image}
-          alt={accommodation.name}
-          fill
-          className={`object-cover transition-all duration-500 group-hover:scale-105 ${
-            imageLoaded ? "opacity-100" : "opacity-0"
-          }`}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          onLoad={() => setImageLoaded(true)}
-        />
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-base-200 animate-pulse" />
-        )}
+      <div className="relative cursor-pointer">
+        <ImageGallery />
         
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-base-content/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-base-content/60 via-transparent to-transparent pointer-events-none z-10" />
         
         {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+        <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
           {accommodation.badges.map((badge) => (
             <span
               key={badge}
@@ -235,14 +320,14 @@ export function AccommodationCard({
         </div>
 
         {/* Country badge */}
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-12 z-20"> {/* Moved left to avoid LikeButton */}
           <span className="badge badge-ghost badge-sm bg-base-100/90 text-base-content">
             {accommodation.country}
           </span>
         </div>
 
         {/* Price badge */}
-        <div className="absolute bottom-3 left-3">
+        <div className="absolute bottom-3 left-3 z-20">
           <div className="rounded-lg bg-base-100/95 backdrop-blur px-3 py-2">
             <p className="text-xs text-base-content/60">From</p>
             <p className="text-lg font-bold text-base-content">
@@ -254,7 +339,7 @@ export function AccommodationCard({
 
         {/* Recommended badge */}
         {accommodation.recommended && (
-          <div className="absolute bottom-3 right-3">
+          <div className="absolute bottom-3 right-3 z-20">
             <div className="flex items-center gap-1 rounded-full bg-primary px-3 py-1.5">
               <Star className="h-3.5 w-3.5 fill-primary-content text-primary-content" />
               <span className="text-xs font-medium text-primary-content">Recommended</span>
@@ -309,13 +394,15 @@ export function AccommodationCard({
         </div>
 
         {/* CTA */}
-        <Link
-          href={`/accommodations/${accommodation.slug}`}
-          className="btn btn-primary btn-block btn-sm gap-2"
-        >
-          View Details
-          <ChevronRight className="h-4 w-4" />
-        </Link>
+        <div className="flex items-center justify-between gap-2 mt-2">
+          <Link
+            href={`/accommodations/${accommodation.slug}`}
+            className="btn btn-primary btn-sm gap-2 flex-1"
+          >
+            View Details
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
     </article>
   );

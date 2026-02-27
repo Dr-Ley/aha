@@ -1,0 +1,895 @@
+help me add database storage for forms and like functionality. Here's the complete implementation:
+
+## 1. Update Database Schema
+
+```typescript
+// lib/schema.ts
+import { 
+  pgTable, 
+  serial, 
+  varchar, 
+  text, 
+  integer, 
+  boolean, 
+  jsonb, 
+  timestamp,
+  pgEnum,
+  primaryKey
+} from 'drizzle-orm/pg-core';
+
+// Enums
+export const userRoleEnum = pgEnum('user_role', ['customer', 'staff', 'admin']);
+export const bookingStatusEnum = pgEnum('booking_status', ['pending', 'confirmed', 'cancelled', 'completed']);
+
+// Users table (extends mock users with password hashing)
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  email: varchar('email', { length: 255 }).notNull().unique(),
+  passwordHash: varchar('password_hash', { length: 255 }).notNull(), // Never store plain text!
+  name: varchar('name', { length: 255 }).notNull(),
+  role: userRoleEnum('role').default('customer').notNull(),
+  avatar: varchar('avatar', { length: 10 }),
+  phone: varchar('phone', { length: 50 }),
+  country: varchar('country', { length: 100 }),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+// Tours table
+export const tours = pgTable('tours', {
+  id: serial('id').primaryKey(),
+  slug: varchar('slug', { length: 255 }).notNull().unique(),
+  title: varchar('title', { length: 255 }).notNull(),
+  shortTitle: varchar('short_title', { length: 255 }).notNull(),
+  destination: varchar('destination', { length: 255 }).notNull(),
+  countries: jsonb('countries').$type<string[]>().notNull(),
+  duration: varchar('duration', { length: 100 }).notNull(),
+  days: integer('days').notNull(),
+  price: integer('price').notNull(),
+  originalPrice: integer('original_price'),
+  image: jsonb('image').$type<string[]>().notNull(),
+  gallery: jsonb('gallery').$type<string[]>(),
+  description: text('description').notNull(),
+  longDescription: text('long_description').notNull(),
+  highlights: jsonb('highlights').$type<string[]>().notNull(),
+  included: jsonb('included').$type<string[]>().notNull(),
+  excluded: jsonb('excluded').$type<string[]>().notNull(),
+  itinerary: jsonb('itinerary').$type<{ day: number; title: string; description: string }[]>().notNull(),
+  rating: integer('rating').notNull(),
+  reviewCount: integer('review_count').notNull(),
+  departing: varchar('departing', { length: 100 }).notNull(),
+  difficulty: varchar('difficulty', { length: 50 }).notNull(),
+  groupSize: varchar('group_size', { length: 100 }).notNull(),
+  type: varchar('type', { length: 50 }).notNull(),
+  tier: varchar('tier', { length: 50 }).notNull(),
+  recommended: boolean('recommended').default(false),
+  featured: boolean('featured').default(false),
+  likes: integer('likes').default(0),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Accommodations table
+export const accommodations = pgTable('accommodations', {
+  id: serial('id').primaryKey(),
+  slug: varchar('slug', { length: 255 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  location: varchar('location', { length: 255 }).notNull(),
+  country: varchar('country', { length: 50 }).notNull(),
+  image: varchar('image', { length: 500 }).notNull(),
+  description: text('description').notNull(),
+  amenities: jsonb('amenities').$type<string[]>().notNull(),
+  priceFrom: integer('price_from').notNull(),
+  badges: jsonb('badges').$type<string[]>().notNull(),
+  recommended: boolean('recommended').default(false),
+  type: varchar('type', { length: 50 }).notNull(),
+  likes: integer('likes').default(0),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Bookings table
+export const bookings = pgTable('bookings', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id),
+  tourId: integer('tour_id').references(() => tours.id),
+  status: bookingStatusEnum('status').default('pending'),
+  
+  // Trip details
+  travelDate: varchar('travel_date', { length: 50 }).notNull(),
+  guests: integer('guests').notNull(),
+  accommodation: varchar('accommodation', { length: 50 }).notNull(),
+  transport: varchar('transport', { length: 50 }).notNull(),
+  specialRequests: text('special_requests'),
+  
+  // Personal info (redundant for guest bookings)
+  firstName: varchar('first_name', { length: 100 }).notNull(),
+  lastName: varchar('last_name', { length: 100 }),
+  email: varchar('email', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 50 }),
+  country: varchar('country', { length: 100 }),
+  
+  // Pricing
+  pricePerPerson: integer('price_per_person'),
+  totalPrice: integer('total_price'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+// Contact form submissions
+export const contactSubmissions = pgTable('contact_submissions', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id),
+  
+  firstName: varchar('first_name', { length: 100 }).notNull(),
+  lastName: varchar('last_name', { length: 100 }),
+  email: varchar('email', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 50 }),
+  subject: varchar('subject', { length: 100 }).notNull(),
+  message: text('message').notNull(),
+  
+  status: varchar('status', { length: 50 }).default('new'), // new, replied, closed
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Likes table (many-to-many with users)
+export const likes = pgTable('likes', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id).notNull(),
+  tourId: integer('tour_id').references(() => tours.id),
+  accommodationId: integer('accommodation_id').references(() => accommodations.id),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  // Ensure user can only like once per item
+  uniqueLike: primaryKey({ columns: [table.userId, table.tourId, table.accommodationId] }),
+}));
+
+// Testimonials
+export const testimonials = pgTable('testimonials', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id),
+  name: varchar('name', { length: 255 }).notNull(),
+  country: varchar('country', { length: 255 }).notNull(),
+  avatar: varchar('avatar', { length: 10 }).notNull(),
+  rating: integer('rating').notNull(),
+  text: text('text').notNull(),
+  tourId: integer('tour_id').references(() => tours.id),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+```
+
+## 2. Create API Routes
+
+```typescript
+// app/api/bookings/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { bookings } from '@/lib/schema';
+import { auth } from '@/lib/auth';
+
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    const body = await request.json();
+    
+    const booking = await db.insert(bookings).values({
+      userId: session?.user?.id,
+      tourId: body.tourId,
+      travelDate: body.travelDate,
+      guests: parseInt(body.guests),
+      accommodation: body.accommodation,
+      transport: body.transport,
+      specialRequests: body.specialRequests,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      phone: body.phone,
+      country: body.country,
+      pricePerPerson: body.pricePerPerson,
+      totalPrice: body.totalPrice,
+    }).returning();
+
+    return NextResponse.json({ success: true, booking: booking[0] });
+  } catch (error) {
+    console.error('Booking error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to create booking' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+```typescript
+// app/api/contact/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { contactSubmissions } from '@/lib/schema';
+import { auth } from '@/lib/auth';
+
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    const body = await request.json();
+    
+    const submission = await db.insert(contactSubmissions).values({
+      userId: session?.user?.id,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      phone: body.phone,
+      subject: body.subject,
+      message: body.message,
+    }).returning();
+
+    return NextResponse.json({ success: true, submission: submission[0] });
+  } catch (error) {
+    console.error('Contact form error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to submit message' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+```typescript
+// app/api/likes/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { likes, tours, accommodations } from '@/lib/schema';
+import { auth } from '@/lib/auth';
+import { eq, and, sql } from 'drizzle-orm';
+
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json(
+        { success: false, error: 'Please sign in to like' },
+        { status: 401 }
+      );
+    }
+
+    const { tourId, accommodationId } = await request.json();
+    
+    // Check if already liked
+    const existingLike = await db.query.likes.findFirst({
+      where: and(
+        eq(likes.userId, session.user.id),
+        tourId ? eq(likes.tourId, tourId) : undefined,
+        accommodationId ? eq(likes.accommodationId, accommodationId) : undefined
+      ),
+    });
+
+    if (existingLike) {
+      // Unlike: remove like and decrement count
+      await db.delete(likes).where(eq(likes.id, existingLike.id));
+      
+      if (tourId) {
+        await db.update(tours)
+          .set({ likes: sql`${tours.likes} - 1` })
+          .where(eq(tours.id, tourId));
+      } else if (accommodationId) {
+        await db.update(accommodations)
+          .set({ likes: sql`${accommodations.likes} - 1` })
+          .where(eq(accommodations.id, accommodationId));
+      }
+
+      return NextResponse.json({ success: true, liked: false });
+    } else {
+      // Like: add like and increment count
+      await db.insert(likes).values({
+        userId: session.user.id,
+        tourId,
+        accommodationId,
+      });
+
+      if (tourId) {
+        await db.update(tours)
+          .set({ likes: sql`${tours.likes} + 1` })
+          .where(eq(tours.id, tourId));
+      } else if (accommodationId) {
+        await db.update(accommodations)
+          .set({ likes: sql`${accommodations.likes} + 1` })
+          .where(eq(accommodations.id, accommodationId));
+      }
+
+      return NextResponse.json({ success: true, liked: true });
+    }
+  } catch (error) {
+    console.error('Like error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to process like' },
+      { status: 500 }
+    );
+  }
+}
+
+// Get likes for current user
+export async function GET(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ likes: [] });
+    }
+
+    const userLikes = await db.query.likes.findMany({
+      where: eq(likes.userId, session.user.id),
+      columns: {
+        tourId: true,
+        accommodationId: true,
+      },
+    });
+
+    return NextResponse.json({ 
+      likes: userLikes.map(l => ({
+        tourId: l.tourId,
+        accommodationId: l.accommodationId,
+      }))
+    });
+  } catch (error) {
+    return NextResponse.json({ likes: [] });
+  }
+}
+```
+
+## 3. Updated Booking Form with API Integration
+
+```typescript
+// components/booking-form.tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import {
+  Check,
+  ChevronRight,
+  Shield,
+  ArrowRight,
+  ArrowLeft,
+  Phone,
+  Mail,
+  Loader2,
+} from "lucide-react";
+import { tours } from "@/lib/data";
+import { useAuth } from "@/lib/auth-context";
+
+const steps = [
+  { id: 1, label: "Trip Details" },
+  { id: 2, label: "Personal Info" },
+  { id: 3, label: "Review & Confirm" },
+];
+
+export function BookingForm() {
+  const searchParams = useSearchParams();
+  const preselectedTour = searchParams?.get("tour") ?? "";
+  const { user } = useAuth();
+
+  const [step, setStep] = useState(1);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  
+  const [form, setForm] = useState({
+    tour: preselectedTour,
+    travelDate: "",
+    guests: "2",
+    accommodation: "mid-range",
+    transport: "4x4-landcruiser",
+    specialRequests: "",
+    firstName: user?.name?.split(' ')[0] || "",
+    lastName: user?.name?.split(' ').slice(1).join(' ') || "",
+    email: user?.email || "",
+    phone: "",
+    country: "",
+  });
+
+  useEffect(() => {
+    if (preselectedTour) setForm((prev) => ({ ...prev, tour: preselectedTour }));
+  }, [preselectedTour]);
+
+  useEffect(() => {
+    if (user) {
+      setForm(prev => ({
+        ...prev,
+        firstName: user.name?.split(' ')[0] || prev.firstName,
+        lastName: user.name?.split(' ').slice(1).join(' ') || prev.lastName,
+        email: user.email || prev.email,
+      }));
+    }
+  }, [user]);
+
+  const selectedTour = tours.find((t) => t.slug === form.tour);
+
+  function updateField(field: string, value: string) {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  async function handleSubmit() {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tourId: selectedTour?.id,
+          travelDate: form.travelDate,
+          guests: parseInt(form.guests),
+          accommodation: form.accommodation,
+          transport: form.transport,
+          specialRequests: form.specialRequests,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          country: form.country,
+          pricePerPerson: selectedTour?.price,
+          totalPrice: selectedTour ? selectedTour.price * parseInt(form.guests) : 0,
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError(data.error || 'Failed to submit booking');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className="mx-auto max-w-lg py-16 rounded-lg border border-base-content/10 bg-base-100 text-center shadow-sm">
+        <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+          <Check className="h-7 w-7 text-primary" />
+        </div>
+        <h2 className="font-serif text-2xl font-bold text-base-content">
+          Booking Request Received!
+        </h2>
+        <p className="mt-4 leading-relaxed text-base-content/70">
+          Thank you, {form.firstName}! Our team will review your booking request
+          and get back to you within 24 hours at{" "}
+          <strong className="text-base-content">{form.email}</strong> with a
+          detailed confirmation and payment instructions.
+        </p>
+        <p className="mt-2 text-sm text-base-content/60">
+          Booking Reference: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+        </p>
+        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-base-content/60">
+          <a
+            href="tel:+254722760661"
+            className="flex items-center gap-2 transition-colors hover:text-base-content"
+          >
+            <Phone className="h-4 w-4" /> Call Us Now
+          </a>
+          <a
+            href="mailto:info@africahomeadventure.com"
+            className="flex items-center gap-2 transition-colors hover:text-base-content"
+          >
+            <Mail className="h-4 w-4" /> Email Us
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // ... rest of the form JSX remains the same, but update submit button:
+  
+  // In Step 3, replace the submit button with:
+  /*
+  <button
+    type="button"
+    className="btn btn-primary gap-2"
+    onClick={handleSubmit}
+    disabled={loading}
+  >
+    {loading ? (
+      <>
+        <Loader2 className="h-4 w-4 animate-spin" /> Submitting...
+      </>
+    ) : (
+      <>
+        Submit Booking Request <ArrowRight className="h-4 w-4" />
+      </>
+    )}
+  </button>
+  */
+  
+  // Add error display:
+  /*
+  {error && (
+    <div className="mb-4 rounded-lg bg-error/10 p-3 text-sm text-error">
+      {error}
+    </div>
+  )}
+  */
+}
+```
+
+## 4. Updated Contact Form with API Integration
+
+```typescript
+// components/contact-form.tsx
+"use client"
+
+import { useState } from "react"
+import { Check, Send, Phone, Mail, Loader2 } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
+
+const subjects = [
+  "General Inquiry",
+  "Custom Safari Quote",
+  "Booking Question",
+  "Group Safari Inquiry",
+  "4x4 Vehicle Hire",
+  "Partnership Inquiry",
+]
+
+export function ContactForm() {
+  const { user } = useAuth()
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  
+  const [form, setForm] = useState({
+    firstName: user?.name?.split(' ')[0] || "",
+    lastName: user?.name?.split(' ').slice(1).join(' ') || "",
+    email: user?.email || "",
+    phone: "",
+    subject: "",
+    message: "",
+  })
+
+  function updateField(field: string, value: string) {
+    setForm((prev) => ({ ...prev, [field]: value }))
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError("")
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setSubmitted(true)
+      } else {
+        setError(data.error || 'Failed to send message')
+      }
+    } catch (err) {
+      setError('Network error. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className="rounded-lg border border-base-content/10 bg-base-100 py-10 text-center shadow-sm">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 mb-4">
+          <Check className="h-7 w-7 text-primary" />
+        </div>
+        <h3 className="font-serif text-xl font-bold text-base-content">Message Sent!</h3>
+        <p className="mt-2 text-sm text-base-content/70">
+          Thank you for reaching out. Our team will get back to you within 24 hours at{" "}
+          <strong className="text-base-content">{form.email}</strong>.
+        </p>
+        <p className="mt-2 text-xs text-base-content/50">
+          Reference: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+        </p>
+        <div className="mt-4 flex items-center justify-center gap-4 text-sm text-base-content/60">
+          <a href="tel:+254722760661" className="flex items-center gap-2 hover:text-base-content transition-colors">
+            <Phone className="h-4 w-4" /> Call Us Now
+          </a>
+          <a
+            href="mailto:info@africahomeadventure.com"
+            className="flex items-center gap-2 hover:text-base-content transition-colors"
+          >
+            <Mail className="h-4 w-4" /> Email Us
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {error && (
+        <div className="rounded-lg bg-error/10 p-3 text-sm text-error">
+          {error}
+        </div>
+      )}
+      
+      {/* ... rest of form fields ... */}
+
+      <button
+        type="submit"
+        className="btn btn-primary btn-lg w-full"
+        disabled={loading || !form.firstName || !form.email || !form.subject || !form.message}
+      >
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin mr-2" /> Sending...
+          </>
+        ) : (
+          <>
+            Send Message <Send className="ml-2 h-4 w-4" />
+          </>
+        )}
+      </button>
+    </form>
+  )
+}
+```
+
+## 5. Like Button Component
+
+```typescript
+// components/like-button.tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { Heart } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
+import { AuthModal } from "./auth-modal";
+
+interface LikeButtonProps {
+  tourId?: number;
+  accommodationId?: number;
+  initialLikes: number;
+  size?: "sm" | "md" | "lg";
+}
+
+export function LikeButton({ 
+  tourId, 
+  accommodationId, 
+  initialLikes,
+  size = "md" 
+}: LikeButtonProps) {
+  const { user } = useAuth();
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(initialLikes);
+  const [loading, setLoading] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const sizeClasses = {
+    sm: "h-4 w-4",
+    md: "h-5 w-5",
+    lg: "h-6 w-6",
+  };
+
+  const btnSizes = {
+    sm: "btn-xs",
+    md: "btn-sm",
+    lg: "btn-md",
+  };
+
+  // Check if user has liked on mount
+  useEffect(() => {
+    if (!user) return;
+    
+    fetch('/api/likes')
+      .then(res => res.json())
+      .then(data => {
+        const hasLiked = data.likes.some((l: any) => 
+          (tourId && l.tourId === tourId) || 
+          (accommodationId && l.accommodationId === accommodationId)
+        );
+        setLiked(hasLiked);
+      });
+  }, [user, tourId, accommodationId]);
+
+  async function handleLike() {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch('/api/likes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tourId, accommodationId }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setLiked(data.liked);
+        setLikes(prev => data.liked ? prev + 1 : prev - 1);
+      }
+    } catch (error) {
+      console.error('Like error:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <>
+      <button
+        onClick={handleLike}
+        disabled={loading}
+        className={`btn ${btnSizes[size]} gap-2 ${
+          liked 
+            ? "btn-error text-error-content" 
+            : "btn-ghost btn-outline"
+        }`}
+      >
+        <Heart 
+          className={`${sizeClasses[size]} ${liked ? "fill-current" : ""} ${
+            loading ? "animate-pulse" : ""
+          }`} 
+        />
+        {likes > 0 && <span>{likes}</span>}
+      </button>
+
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)}
+        defaultTab="login"
+      />
+    </>
+  );
+}
+```
+
+## 6. Usage in Tour Card
+
+use code image-figure.tsx to model the tour and accommodation cards
+(
+"use client"
+
+import { useState, useEffect, useCallback } from "react"
+import Image, { type StaticImageData } from "next/image"
+import { Heart } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+
+interface ImageFigureProps {
+  src: StaticImageData | string
+  alt: string
+  countries: ("Kenya" | "Tanzania" | string)[]
+  recommended?: boolean
+  saved?: boolean
+  tourId?: string
+  onSave?: (next: boolean) => void
+  className?: string
+}
+
+function getStoredSaved(tourId: string): boolean {
+  if (typeof window === "undefined") return false
+  return localStorage.getItem(`savedTours:${tourId}`) === "true"
+}
+
+export function ImageFigure({
+  src,
+  alt,
+  countries,
+  recommended = false,
+  saved: controlledSaved,
+  tourId,
+  onSave,
+  className = "",
+}: ImageFigureProps) {
+  const [internalSaved, setInternalSaved] = useState(false)
+
+  useEffect(() => {
+    if (tourId) setInternalSaved(getStoredSaved(tourId))
+  }, [tourId])
+
+  const isSaved = controlledSaved ?? internalSaved
+
+  const toggleSave = useCallback(() => {
+    const next = !isSaved
+    if (tourId) {
+      localStorage.setItem(`savedTours:${tourId}`, String(next))
+      window.dispatchEvent(new CustomEvent("saved-tours-changed", { detail: { tourId, saved: next } }))
+    }
+    setInternalSaved(next)
+    onSave?.(next)
+  }, [isSaved, tourId, onSave])
+
+  return (
+    <figure
+      className={`relative overflow-hidden rounded-xl aspect-[16/9] md:aspect-[4/3] ${className}`}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent" />
+
+      {/* Country badges — top left */}
+      <div className="absolute left-3 top-3 flex flex-col gap-1.5">
+        <div className="flex flex-wrap gap-1.5">
+          {countries.map((c) => (
+            <Badge
+              key={c}
+              className="bg-primary text-primary-foreground text-xs px-2 py-0.5"
+            >
+              {c === "Kenya" ? "\u{1F1F0}\u{1F1EA}" : c === "Tanzania" ? "\u{1F1F9}\u{1F1FF}" : ""}{" "}
+              {c}
+            </Badge>
+          ))}
+        </div>
+        {recommended && (
+          <Badge className="bg-accent text-accent-foreground text-xs px-2 py-0.5 w-fit">
+            Recommended
+          </Badge>
+        )}
+      </div>
+
+      {/* Save button — top right */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          toggleSave()
+        }}
+        aria-pressed={isSaved}
+        aria-label={isSaved ? "Saved" : "Save to My Tours"}
+        title={isSaved ? "Saved" : "Save to My Tours"}
+        className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-card/80 backdrop-blur-sm text-foreground transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Heart
+          className={`h-5 w-5 transition-colors ${
+            isSaved ? "fill-destructive text-destructive" : "text-foreground"
+          }`}
+        />
+      </button>
+    </figure>
+  )
+}
+
+)
+
+```tsx
+// In your tour-card.tsx or accommodation-card.tsx
+import { LikeButton } from "@/components/like-button";
+
+// Add to card header or footer:
+<div className="flex items-center justify-between">
+  <LikeButton 
+    tourId={tour.id} 
+    initialLikes={tour.likes || 0}
+    size="sm"
+  />
+  {/* ... other actions ... */}
+</div>
+```
+
+## 7. Run Migrations
+
+```bash
+npm run db:generate
+npm run db:push
+```
+
+This gives you:
+- ✅ Bookings stored in database
+- ✅ Contact form submissions stored
+- ✅ User likes with toggle functionality
+- ✅ Authentication required for likes
+- ✅ Optimistic UI updates
+
+Create LikeButton and add to tour-card and accommodation-card
+Run db:generate and db:push

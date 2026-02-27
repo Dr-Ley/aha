@@ -107,18 +107,19 @@ export interface Testimonial {
 }
 
 export interface Accomodations {
-  id: string
+  id: number
   slug: string
   name: string
   location: string
   country: "Kenya" | "Tanzania"
-  image: string
+  image: string[]
   description: string
   amenities: string[]
   priceFrom: number
   badges: string[]
   recommended?: boolean
   type: "lodge" | "tented-camp" | "luxury-cottage"
+  likes?: number; 
 }
 
 export const CURRENCIES = [
@@ -622,12 +623,12 @@ export const accommodations: Accomodations[] = [
 
 
   {
-    id: "enchoro-wildlife-camp",
+    id: 1,
     slug: "enchoro-wildlife-camp",
     name: "Enchoro Wildlife Camp",
     location: "Near Oloolaimutia Gate, Maasai Mara",
     country: "Kenya",
-    image: "/destination_maasai_mara1.png", // Use local image path, not URL
+    image: ["/destination_maasai_mara1.png"], // Use local image path, not URL
     description: "Budget-friendly semi‑luxury tented camp a few minutes from Oloolaimutia Gate; 27 en‑suite tents with hot showers and private verandas.",
     amenities: [
       "Restaurant",
@@ -643,12 +644,12 @@ export const accommodations: Accomodations[] = [
     type: "tented-camp"
   },
   {
-    id: "sarova-mara-game-camp",
+    id: 2,
     slug: "sarova-mara-game-camp",
     name: "Sarova Mara Game Camp",
     location: "Sekenani area, Maasai Mara National Reserve",
     country: "Kenya",
-    image: "https://i.pinimg.com/1200x/7b/af/43/7baf433b6523cdbb5eec69a53d8e7c8d.jpg",
+    image: ["https://i.pinimg.com/1200x/7b/af/43/7baf433b6523cdbb5eec69a53d8e7c8d.jpg"],
     description: "Full‑service luxury tented camp with Club/Deluxe/Family tents, free‑form pool, spa and organic‑garden dining—set in the heart of the reserve.",
     amenities: [
       "Swimming Pool",
@@ -666,12 +667,12 @@ export const accommodations: Accomodations[] = [
     type: "tented-camp"
   },
   {
-    id: "mara-serena-safari-lodge",
+    id: 7,
     slug: "mara-serena-safari-lodge",
     name: "Mara Serena Safari Lodge",
     location: "Mara Triangle (Ol Donyo Oseiya hill)",
     country: "Kenya",
-    image: "https://i.pinimg.com/1200x/07/4d/de/074dde5e0f7b30c3b3a9d7bb2d787d5f.jpg",
+    image: ["https://i.pinimg.com/1200x/07/4d/de/074dde5e0f7b30c3b3a9d7bb2d787d5f.jpg"],
     description: "Iconic hilltop lodge—the only lodge in the Mara Triangle—with sweeping river/plains views, rock‑enclosed pool and Maisha Spa & Gym.",
     amenities: [
       "Swimming Pool",
@@ -686,12 +687,12 @@ export const accommodations: Accomodations[] = [
     type: "lodge"
   },
   {
-    id: "keekorok-lodge",
+    id: 3,
     slug: "keekorok-lodge",
     name: "Muthu Keekorok Lodge",
     location: "Central Maasai Mara National Reserve",
     country: "Kenya",
-    image: "https://i.pinimg.com/1200x/7a/ee/fc/7aeefc21561d65056a6f5355988ed303.jpg",
+    image: ["https://i.pinimg.com/1200x/7a/ee/fc/7aeefc21561d65056a6f5355988ed303.jpg"],
     description: "Historic first lodge in the Mara (1960s) with pool and famous hippo boardwalk overlooking a resident waterhole.",
     amenities: [
       "Swimming Pool",
@@ -708,12 +709,12 @@ export const accommodations: Accomodations[] = [
   },
 
   {
-    id: "cl-2",
+    id: 4,
     slug: "governors-camp",
     name: "Governors' Camp",
     location: "Masai Mara, Kenya",
     country: "Kenya",
-    image: "https://i.pinimg.com/1200x/ae/5b/6b/ae5b6bfe47287e137941e41d2ee2d853.jpg",
+    image: ["https://i.pinimg.com/1200x/ae/5b/6b/ae5b6bfe47287e137941e41d2ee2d853.jpg"],
     description: "One of the oldest and most prestigious camps in the Mara, nestled along the Mara River with abundant wildlife right at your doorstep.",
     amenities: ["Ensuite Bathroom", "Restaurant & Bar", "Guided Walks", "24h Power", "Laundry"],
     priceFrom: 220,
@@ -723,12 +724,12 @@ export const accommodations: Accomodations[] = [
   },
 
   {
-    id: "cl-4",
+    id: 5,
     slug: "serengeti-sopa-lodge",
     name: "Serengeti Sopa Lodge",
     location: "Serengeti, Tanzania",
     country: "Tanzania",
-    image: "https://i.pinimg.com/1200x/b5/16/f0/b516f0c72a5484590fbaaee8c0e48fb1.jpg",
+    image: ["https://i.pinimg.com/1200x/b5/16/f0/b516f0c72a5484590fbaaee8c0e48fb1.jpg"],
     description: "Located in the southwestern Serengeti with sweeping views across the plains. Ideal for witnessing the Great Migration.",
     amenities: ["Swimming Pool", "Wi-Fi", "Restaurant & Bar", "Ensuite Bathroom", "24h Power", "Game Drives"],
     priceFrom: 200,
@@ -736,12 +737,12 @@ export const accommodations: Accomodations[] = [
     type: "lodge",
   },
   {
-    id: "cl-5",
+    id: 6,
     slug: "ngorongoro-wildlife-lodge",
     name: "Ngorongoro Wildlife Lodge",
     location: "Ngorongoro Crater Rim, Tanzania",
     country: "Tanzania",
-    image: "https://i.pinimg.com/1200x/46/46/79/46467956da05da016e4c9e84c511b567.jpg",
+    image: ["https://i.pinimg.com/1200x/46/46/79/46467956da05da016e4c9e84c511b567.jpg"],
     description: "Perched on the rim of the Ngorongoro Crater with breathtaking views into the caldera. Wake up to one of Africa's most dramatic landscapes.",
     amenities: ["Restaurant & Bar", "Wi-Fi", "Ensuite Bathroom", "Gift Shop", "24h Power", "Fireplace"],
     priceFrom: 250,

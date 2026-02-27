@@ -3,7 +3,8 @@
 
 import { useState } from "react";
 import { X, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
-import { authenticateUser, emailExists, mockUsers } from "@/lib/data";
+import { signIn } from "next-auth/react";
+import { emailExists, mockUsers } from "@/lib/data";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -33,21 +34,25 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
     setError("");
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const user = authenticateUser(loginEmail, loginPassword);
-      if (user) {
-        console.log("Logged in:", user);
-        // Store in localStorage or context
-        localStorage.setItem("user", JSON.stringify(user));
-        onClose();
-        // Refresh page or update context
-        window.location.reload();
-      } else {
+    try {
+      const result = await signIn("credentials", {
+        email: loginEmail,
+        password: loginPassword,
+        redirect: false,
+      });
+
+      if (result?.error) {
         setError("Invalid email or password");
+        return;
       }
+      if (result?.ok) {
+        onClose();
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   const handleSignup = async (e: React.FormEvent) => {

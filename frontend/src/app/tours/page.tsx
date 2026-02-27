@@ -1,9 +1,6 @@
 import { Suspense } from "react";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
-
-
-import { tours } from "@/lib/data";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -39,9 +36,8 @@ export default function ToursPage() {
               </div>
             }
           >
-            <TourFilters tours={tours} />
+            <TourFilters />
           </Suspense>
-          
         </Container>
       </Section>
     </>

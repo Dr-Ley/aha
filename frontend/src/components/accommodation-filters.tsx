@@ -51,14 +51,15 @@ const sortOptions = [
   { value: "name-asc", label: "Name: A-Z" },
 ];
 
-interface AccommodationFiltersProps {
-  accommodations: Accomodations[];
-}
-
-export function AccommodationFilters({ accommodations }: AccommodationFiltersProps) {
+export function AccommodationFilters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  // Data state
+  const [accommodations, setAccommodations] = useState<Accomodations[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Filter states
   const [search, setSearch] = useState("");
@@ -69,6 +70,38 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
   const [sort, setSort] = useState("recommended");
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
+
+  // Fetch accommodations from API
+  useEffect(() => {
+    async function fetchAccommodations() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Build query string from filters
+        const params = new URLSearchParams();
+        if (country !== "All") params.set("country", country);
+        if (type !== "all") params.set("type", type);
+        if (search) params.set("search", search);
+
+        const response = await fetch(`/api/accommodations?${params.toString()}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to fetch accommodations");
+        }
+
+        setAccommodations(data.accommodations || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+        console.error("Error fetching accommodations:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAccommodations();
+  }, [country, type]); // Refetch when country or type changes (server-side filters)
 
   // Read URL params on mount
   useEffect(() => {
@@ -81,7 +114,6 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
     const hasUrlFilter = urlCountry || urlType || urlPrice;
 
     if (hasUrlFilter) {
-      // Clear existing and apply URL filters
       setSearch("");
       setCountry(urlCountry || "All");
       setType(urlType || "all");
@@ -94,11 +126,11 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
     }
   }, [searchParams]);
 
-  // Filter logic
+  // Client-side filtering (search, price range, amenities, sort)
   const filtered = useMemo(() => {
     let result = [...accommodations];
 
-    // Search filter
+    // Search filter (client-side for text search)
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -109,17 +141,7 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
       );
     }
 
-    // Country filter
-    if (country !== "All") {
-      result = result.filter((a) => a.country === country);
-    }
-
-    // Type filter
-    if (type !== "all") {
-      result = result.filter((a) => a.type === type);
-    }
-
-    // Price range filter
+    // Price range filter (client-side)
     if (priceRange !== "all") {
       const range = priceRanges.find((r) => r.value === priceRange);
       if (range) {
@@ -157,7 +179,7 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
     }
 
     return result;
-  }, [accommodations, search, country, type, priceRange, selectedAmenities, sort]);
+  }, [accommodations, search, priceRange, selectedAmenities, sort]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
@@ -202,6 +224,30 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
     }
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
+
+  if (loading) {
+    return (
+      <div className="py-10 text-center text-base-content/60">
+        <span className="loading loading-spinner loading-lg"></span>
+        <p className="mt-4">Loading accommodations...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-10 text-center">
+        <p className="text-error">Error: {error}</p>
+        <button 
+          type="button" 
+          onClick={() => window.location.reload()} 
+          className="btn btn-outline mt-4"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -514,16 +560,16 @@ export function AccommodationFilters({ accommodations }: AccommodationFiltersPro
 
       {/* Results grid */}
       {filtered.length > 0 ? (
-        <>
-          {/* <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"> */}
-            {paginated.map((accommodation) => (
-              <AccommodationCard 
-                key={accommodation.id} 
-                accommodation={accommodation}
-                variant="horizontal"
-              />
-            ))}
-          {/* </div> */}
+      <>
+        <div className="mt-6 flex flex-col gap-1">
+          {paginated.map((accommodation) => (
+            <AccommodationCard 
+              key={accommodation.id} 
+              accommodation={accommodation}
+              variant="horizontal"
+            />
+          ))}
+        </div>
 
           {/* Pagination */}
           {totalPages > 1 && (

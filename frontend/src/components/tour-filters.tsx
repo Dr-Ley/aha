@@ -24,7 +24,7 @@ const TIERS = {
   mid: { min: 800, max: 2000, label: "Mid-range" },
 };
 
-export function TourFilters({ tours }: { tours: Tour[] }) {
+export function TourFilters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -38,6 +38,21 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
   const [type, setType] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchTours() {
+      try {
+        const res = await fetch("/api/tours");
+        const data = (await res.json()) as Tour[];
+        setTours(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTours();
+  }, []);
 
   // Read URL params on mount
   useEffect(() => {
@@ -153,6 +168,14 @@ export function TourFilters({ tours }: { tours: Tour[] }) {
 
     return result;
   }, [tours, search, country, duration, sort, tier, type]);
+
+  if (loading && !tours.length) {
+    return (
+      <div className="py-10 text-center text-base-content/60">
+        Loading tours...
+      </div>
+    );
+  }
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);

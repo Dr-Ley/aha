@@ -4,10 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Clock, MapPin, Star, Users } from "lucide-react";
-import type { Tour } from "@/lib/data";
-import { useCurrency } from "@/lib/currency-context"
-
-  
+import { tours, type Tour } from "@/lib/data";
+import { useCurrency } from "@/lib/currency-context";
+import { LikeButton } from "@/components/like-button";
 
 const SLIDESHOW_INTERVAL_MS = 2000;
 
@@ -24,7 +23,7 @@ function useIsMobile() {
 }
 
 export function TourCard({ tour }: { tour: Tour }) {
-  const images = tour.image?.slice(0, 7) || tour.image;
+  const images = tour.image?.slice(0, 4) || tour.image; // Limit to 4 for hover-gallery
   const { formatPrice } = useCurrency();
   const [activeIndex, setActiveIndex] = useState(0);
   const [slideshowActive, setSlideshowActive] = useState(false);
@@ -45,69 +44,74 @@ export function TourCard({ tour }: { tour: Tour }) {
     if (!slideshowActive) setActiveIndex((i) => (i + 1) % images.length);
   }, [isMobile, slideshowActive, images.length]);
 
-  const handleMouseEnter = useCallback(() => {
-    if (isMobile) return;
-    if (images.length > 1) setActiveIndex(1);
-  }, [isMobile, images.length]);
-
-  const handleMouseLeave = useCallback(() => {
-    if (isMobile) return;
-    setActiveIndex(0);
-  }, [isMobile]);
-
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-shadow hover:shadow-lg">
       
-            <figure
-        className={isMobile ? "relative aspect-[4/3] overflow-hidden cursor-pointer" : "hover-gallery aspect-[4/3]"}
-        onClick={handleImageClick}
-        role={isMobile ? "button" : undefined}
-        tabIndex={isMobile ? 0 : undefined}
-        aria-label={isMobile ? "Start or stop image slideshow" : undefined}
-      >
-        {isMobile ? (
-          // Mobile: Slideshow with opacity transition
-          images.map((src, i) => (
-            <Image
-              key={src}
-              src={src}
-              alt={i === 0 ? tour.title : `${tour.title} - image ${i + 1}`}
-              fill
-              className="object-cover transition-opacity duration-500"
-              style={{ opacity: i === activeIndex ? 1 : 0 }}
-              sizes="100vw"
-              loading="lazy"
-            />
-          ))
-        ) : (
-          // Desktop: DaisyUI hover-gallery (max 4 images)
-          images.map((src, i) => (
-            <Image
-              key={src}
-              src={src}
-              alt={`${tour.title} - image ${i + 1}`}
-              width={400}
-              height={300}
-              className="object-cover w-full h-full"
-              loading={i === 0 ? "eager" : "lazy"}
-            />
-          ))
-        )}
+      {/* Wrapper needed for positioning context */}
+      <div className="relative">
         
-        {/* Mobile slideshow indicator dots */}
-        {isMobile && images.length > 1 && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-            {images.map((_, i) => (
-              <span
-                key={i}
-                className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                  i === activeIndex ? "bg-white" : "bg-white/50"
-                }`}
+        {/* LikeButton overlay - outside hover-gallery but positioned over it */}
+        <div className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm">
+          <LikeButton
+            tourId={typeof (tour as unknown as { id?: unknown }).id === "number" ? (tour as unknown as { id: number }).id : undefined}
+            initialLikes={(tour as { likes?: number }).likes ?? 0}
+            size="sm"
+          />
+        </div>
+
+        {isMobile ? (
+          // Mobile: Slideshow
+          <figure
+            className="relative aspect-[4/3] overflow-hidden cursor-pointer"
+            onClick={handleImageClick}
+            role="button"
+            tabIndex={0}
+            aria-label="Start or stop image slideshow"
+          >
+            {images.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt={i === 0 ? tour.title : `${tour.title} - image ${i + 1}`}
+                fill
+                className="object-cover transition-opacity duration-500"
+                style={{ opacity: i === activeIndex ? 1 : 0 }}
+                sizes="100vw"
+                loading="lazy"
               />
             ))}
-          </div>
+            
+            {/* Mobile slideshow indicator dots */}
+            {images.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                {images.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                      i === activeIndex ? "bg-white" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </figure>
+        ) : (
+          // Desktop: DaisyUI hover-gallery with horizontal hover zones
+          <figure className="hover-gallery aspect-[4/3]">
+            {images.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt={`${tour.title} - image ${i + 1}`}
+                width={400}
+                height={300}
+                className="object-cover w-full h-full"
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+            ))}
+          </figure>
         )}
-      </figure>
+      </div>
 
       <div className="flex flex-1 flex-col p-5">
         <div className="mb-2 flex items-center gap-1">
@@ -140,8 +144,8 @@ export function TourCard({ tour }: { tour: Tour }) {
           </span>
         </div>
 
-        <div className="mt-auto flex items-end justify-between border-t border-base-content/10 pt-5 overflow-hidden">
-          <div className="min-w-0">
+        <div className="mt-auto flex items-end justify-between border-t border-base-content/10 pt-5 overflow-hidden gap-2">
+          <div className="min-w-0 flex-1">
             <p className="text-xs text-base-content/60">From</p>
             <div className="flex items-baseline gap-2 min-w-0">
               <span className="text-lg font-bold text-base-content">

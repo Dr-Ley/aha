@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
-import { Check, Send, Phone, Mail } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Check, Send, Phone, Mail, Loader2 } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
 
 const subjects = [
   "General Inquiry",
@@ -13,23 +14,65 @@ const subjects = [
 ]
 
 export function ContactForm() {
+  const { user } = useAuth()
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [refId, setRefId] = useState<string | null>(null)
+
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+    firstName: user?.name?.split(" ")[0] ?? "",
+    lastName: user?.name?.split(" ").slice(1).join(" ") ?? "",
+    email: user?.email ?? "",
     phone: "",
     subject: "",
     message: "",
   })
 
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        firstName: user.name?.split(" ")[0] ?? prev.firstName,
+        lastName: user.name?.split(" ").slice(1).join(" ") ?? prev.lastName,
+        email: user.email ?? prev.email,
+      }))
+    }
+  }, [user])
+
   function updateField(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSubmitted(true)
+    setLoading(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setRefId(
+          data.submission?.id
+            ? `CT-${String(data.submission.id).padStart(6, "0")}`
+            : null
+        )
+        setSubmitted(true)
+      } else {
+        setError(data.error ?? "Failed to send message")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (submitted) {
@@ -43,6 +86,11 @@ export function ContactForm() {
           Thank you for reaching out. Our team will get back to you within 24 hours at{" "}
           <strong className="text-base-content">{form.email}</strong>.
         </p>
+        {refId && (
+          <p className="mt-2 text-xs text-base-content/50">
+            Reference: #{refId}
+          </p>
+        )}
         <div className="mt-4 flex items-center justify-center gap-4 text-sm text-base-content/60">
           <a href="tel:+254722760661" className="flex items-center gap-2 hover:text-base-content transition-colors">
             <Phone className="h-4 w-4" /> Call Us Now
@@ -60,7 +108,11 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Removed mb-3, using space-y-5 from parent */}
+      {error && (
+        <div className="rounded-lg bg-error/10 p-3 text-sm text-error">
+          {error}
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-2 mb-3">
         <div className="form-control">
           <label className="label mb-2" htmlFor="contact-firstName">
@@ -169,10 +221,18 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="btn btn-primary btn-lg"
-        disabled={!form.firstName || !form.email || !form.subject || !form.message}
+        className="btn btn-primary btn-lg w-full"
+        disabled={loading || !form.firstName || !form.email || !form.subject || !form.message}
       >
-        Send Message <Send className="ml-2 h-4 w-4" />
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin mr-2" /> Sending...
+          </>
+        ) : (
+          <>
+            Send Message <Send className="ml-2 h-4 w-4" />
+          </>
+        )}
       </button>
     </form>
   )

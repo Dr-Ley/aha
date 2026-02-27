@@ -1,7 +1,7 @@
-// lib/auth-context.tsx
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
 import type { User } from "@/lib/data";
 
 interface AuthContextType {
@@ -13,34 +13,32 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function sessionToUser(session: { user?: { id?: string | null; email?: string | null; name?: string | null; role?: string; avatar?: string | null } }): User | null {
+  const u = session?.user;
+  if (!u?.id || !u?.email) return null;
+  return {
+    id: String(u.id),
+    email: u.email,
+    password: "", // never expose
+    name: (u.name as string) ?? "",
+    role: (u.role as "customer" | "staff" | "admin") ?? "customer",
+    avatar: u.avatar ?? undefined,
+    createdAt: "",
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: session, status } = useSession();
+  const isLoading = status === "loading";
+  const user = session ? sessionToUser(session) : null;
 
-  useEffect(() => {
-    // Check localStorage on mount
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      setUser(JSON.parse(stored));
-    }
-    setIsLoading(false);
-  }, []);
-
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // In production, this calls your API
-    const { authenticateUser } = await import("@/lib/data");
-    const user = authenticateUser(email, password);
-    if (user) {
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      return true;
-    }
+  const login = async (_email: string, _password: string): Promise<boolean> => {
+    // Login is handled by AuthModal via signIn() from next-auth/react
     return false;
   };
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+    nextAuthSignOut({ callbackUrl: "/" });
   };
 
   return (
