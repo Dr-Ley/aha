@@ -111,7 +111,7 @@ function ProblemSection() {
         <p className="text-lg font-semibold mb-2 uppercase tracking-widest text-accent">
             we've got you covered
           </p>
-          <h2 className="font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
+          <h2 className="font-serif text-3xl font-bold text-base-content backdrop-blur-sm text-balance sm:text-4xl">
             Planning a Safari Shouldn't Feel Like a Gamble
           </h2>
           <p className="mt-4 pt-4 max-w-xl mx-auto text-base-content/80">
