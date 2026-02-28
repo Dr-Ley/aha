@@ -1,10 +1,93 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { TourCard } from "@/components/tour-card";
 import type { Tour } from "@/lib/data";
+import { destinations } from "@/lib/data";
+import { Container, Section } from "@/components/layout";
+import Link from "next/link";
+
+interface DestinationsCarouselProps {
+  selectedDestination?: string | null;
+  onDestinationClick?: (destination: string) => void;
+}
+
+export function DestinationsCarousel({ 
+  selectedDestination, 
+  onDestinationClick 
+}: DestinationsCarouselProps) {
+  // Reorder destinations to put selected one first
+  const orderedDestinations = useMemo(() => {
+    if (!selectedDestination) return destinations;
+    
+    const selected = destinations.find(d => d.name === selectedDestination);
+    const others = destinations.filter(d => d.name !== selectedDestination);
+    
+    return selected ? [selected, ...others] : destinations;
+  }, [selectedDestination]);
+
+  const handleClick = (e: React.MouseEvent, destinationName: string) => {
+    if (onDestinationClick) {
+      e.preventDefault();
+      onDestinationClick(destinationName);
+    }
+  };
+
+  return (
+    <Section spacing="none" className="-mt-18">
+      <Container>
+        <h2 className="-mt-15 font-serif text-2xl font-bold text-center text-base-content text-balance sm:text-2xl">
+          Popular Destinations
+        </h2>
+        <div className="mt-8 overflow-x-auto mb-8 pb-2 scrollbar-thin">
+          <div className="flex gap-4 pb-2 sm:justify-start">
+            {orderedDestinations.map((d) => {
+              const isSelected = d.name === selectedDestination;
+              
+              return (
+                <Link
+                  key={`${d.name}-${d.country}`}
+                  href={`/tours?destination=${encodeURIComponent(d.name)}`}
+                  onClick={(e) => handleClick(e, d.name)}
+                  className={`group relative flex min-w-[160px] h-[180px] flex-col items-center justify-center rounded-xl overflow-hidden shadow-sm transition-all hover:shadow-lg ${
+                    isSelected ? 'ring-inset ring-offset-amber-300 ring-offset-5' : ''
+                  }`}
+                  style={{
+                    backgroundImage: `url(${d.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                >
+                  {/* Dark gradient overlay for text readability */}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 group-hover:from-black/70 group-hover:via-black/30 transition-all ${
+                    isSelected ? 'from-black/60 via-black/30' : ''
+                  }`} />
+                  
+                  {/* Selected indicator */}
+                  {/* {isSelected && (
+                    <div className="absolute top-2 right-2 z-20">
+                      <div className="badge badge-primary badge-sm">Selected</div>
+                    </div>
+                  )} */}
+                  
+                  {/* Text content positioned at bottom */}
+                  <div className="relative z-10 flex flex-col items-center mt-auto mb-4">
+                    <span className="font-serif text-lg font-semibold text-white drop-shadow-lg">
+                      {d.name}
+                    </span>
+                    <span className="text-xs text-white/80 drop-shadow-md">{d.country}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </Container>
+    </Section>
+  );
+}
 
 const ITEMS_PER_PAGE = 6;
 const countries = ["All", "Kenya", "Tanzania", "Kenya & Tanzania"];
@@ -36,10 +119,24 @@ export function TourFilters() {
   const [sort, setSort] = useState("featured");
   const [tier, setTier] = useState<string | null>(null);
   const [type, setType] = useState<string | null>(null);
+  const [destination, setDestination] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Scroll ref for the scrollable row
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 320; // Approximate card width + gap
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
     async function fetchTours() {
@@ -56,42 +153,55 @@ export function TourFilters() {
 
   // Read URL params on mount
   useEffect(() => {
-  const urlCountry = searchParams.get("country");
-  const urlDuration = searchParams.get("duration");
-  const urlTier = searchParams.get("tier");
-  const urlType = searchParams.get("type");
-  const urlSort = searchParams.get("sort");
+    const urlCountry = searchParams.get("country");
+    const urlDuration = searchParams.get("duration");
+    const urlTier = searchParams.get("tier");
+    const urlType = searchParams.get("type");
+    const urlSort = searchParams.get("sort");
+    const urlDestination = searchParams.get("destination");
 
-  // Check if any category filter is present in URL
-  const hasCategoryFilter = urlCountry || urlTier || urlType || urlDuration;
+    // Check if any category filter is present in URL
+    const hasCategoryFilter = urlCountry || urlTier || urlType || urlDuration || urlDestination;
 
-  if (hasCategoryFilter) {
-    // CLEAR ALL existing filters first
-    setSearch("");
-    setCountry("All");
-    setDuration("All");
-    setTier(null);
-    setType(null);
-    setPage(1);
-    // Keep existing sort or use URL sort
-    setSort(urlSort || "featured");
+    if (hasCategoryFilter) {
+      // CLEAR ALL existing filters first
+      setSearch("");
+      setCountry("All");
+      setDuration("All");
+      setTier(null);
+      setType(null);
+      setDestination(null);
+      setPage(1);
+      // Keep existing sort or use URL sort
+      setSort(urlSort || "featured");
 
-    // Apply ONLY the URL filter
-    if (urlCountry) setCountry(urlCountry);
-    if (urlDuration) {
-      if (urlDuration === "day") setDuration("1 Day");
-      else setDuration(urlDuration);
+      // Apply ONLY the URL filter
+      if (urlCountry) setCountry(urlCountry);
+      if (urlDuration) {
+        if (urlDuration === "day") setDuration("1 Day");
+        else setDuration(urlDuration);
+      }
+      if (urlTier) setTier(urlTier);
+      if (urlType) setType(urlType);
+      if (urlDestination) setDestination(urlDestination);
+    } else {
+      // No category filters in URL, just update sort if present
+      if (urlSort) setSort(urlSort);
     }
-    if (urlTier) setTier(urlTier);
-    if (urlType) setType(urlType);
-  } else {
-    // No category filters in URL, just update sort if present
-    if (urlSort) setSort(urlSort);
-  }
-}, [searchParams]);
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     let result = [...tours];
+
+    // Destination filter (from carousel click) - substring search
+    if (destination) {
+      const destLower = destination.toLowerCase();
+      result = result.filter((t) => 
+        t.destination.toLowerCase().includes(destLower) ||
+        t.title.toLowerCase().includes(destLower) ||
+        t.description.toLowerCase().includes(destLower)
+      );
+    }
 
     // Search filter
     if (search) {
@@ -104,7 +214,6 @@ export function TourFilters() {
       );
     }
 
-    // Country filter (from dropdown or URL)
     // Country filter (from dropdown or URL)
     if (country !== "All") {
       if (country === "Kenya & Tanzania") {
@@ -167,7 +276,7 @@ export function TourFilters() {
     }
 
     return result;
-  }, [tours, search, country, duration, sort, tier, type]);
+  }, [tours, search, country, duration, sort, tier, type, destination]);
 
   if (loading && !tours.length) {
     return (
@@ -185,6 +294,7 @@ export function TourFilters() {
     duration !== "All" ? duration : null,
     tier ? `${TIERS[tier as keyof typeof TIERS]?.label || tier} Safaris` : null,
     type ? type.charAt(0).toUpperCase() + type.slice(1) : null,
+    destination ? destination : null,
   ].filter(Boolean).length;
 
   function clearFilters() {
@@ -194,6 +304,7 @@ export function TourFilters() {
     setSort("featured");
     setTier(null);
     setType(null);
+    setDestination(null);
     setPage(1);
     router.push(pathname);
   }
@@ -209,11 +320,38 @@ export function TourFilters() {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  // Handle destination click from carousel
+  const handleDestinationClick = (destinationName: string) => {
+    setDestination(destinationName);
+    updateUrl("destination", destinationName);
+    setPage(1);
+    // Clear other filters when destination is selected
+    setSearch("");
+    setCountry("All");
+    setDuration("All");
+    setTier(null);
+    setType(null);
+  };
+
   return (
     <div>
+      {/* Destination Carousel */}
+      <DestinationsCarousel 
+        selectedDestination={destination}
+        onDestinationClick={handleDestinationClick}
+      />
+
       {/* Active filter badges */}
-      {(country !== "All" || duration !== "All" || tier || type) && (
+      {(country !== "All" || duration !== "All" || tier || type || destination) && (
         <div className="mb-4 flex flex-wrap gap-2">
+          {destination && (
+            <span className="badge badge-primary gap-2 px-2">
+              {destination}
+              <button onClick={() => { setDestination(null); updateUrl("destination", null); }} className="ml-1">
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          )}
           {country !== "All" && (
             <span className="badge badge-primary gap-2 px-2">
               {country}
@@ -392,16 +530,56 @@ export function TourFilters() {
       <div className="text-center text-sm mt-5 text-base-content/50 md:hidden lg:hidden">
         ← Tap to play →
       </div>
+      <div className="text-center text-sm mt-5 text-base-content/50 hidden md:block">
+        ← Hover to play →
+      </div>
 
       {filtered.length > 0 ? (
         <>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {paginated.map((tour) => (
-              <TourCard key={tour.id} tour={tour} />
-            ))}
+          {/* Scrollable row for tours */}
+          <div className="mt-6 relative">
+            {/* Navigation arrows */}
+            <button
+              onClick={() => scroll('left')}
+              className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 hidden md:flex"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            
+            <button
+              onClick={() => scroll('right')}
+              className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 hidden md:flex"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+
+            {/* Mobile scroll hint */}
+
+
+            {/* Scrollable container */}
+            <div 
+              ref={scrollRef}
+              className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {filtered.map((tour) => (
+                <div 
+                  key={tour.id} 
+                  className="shrink-0 snap-start w-72 sm:w-80"
+                >
+                  <TourCard tour={tour} />
+                </div>
+              ))}
+            </div>
+            <div className="md:hidden mb-2 mt-2 text-center text-sm text-base-content/50">
+              ← Swipe to explore →
+            </div>
           </div>
 
-          {totalPages > 1 && (
+          {/* Pagination (optional - can be removed if using infinite scroll style) */}
+          {/* {totalPages > 1 && (
             <div className="mt-10 flex items-center justify-center gap-2">
               <button
                 type="button"
@@ -423,7 +601,7 @@ export function TourFilters() {
                 Next <ChevronRight className="h-4 w-4" />
               </button>
             </div>
-          )}
+          )} */}
         </>
       ) : (
         <div className="mt-12 py-16 text-center">

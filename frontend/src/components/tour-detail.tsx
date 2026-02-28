@@ -286,7 +286,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
                               scrollToImage(i);
                             }}
                             className={`relative shrink-0 snap-start aspect-[4/3] w-64 sm:w-72 md:w-80 overflow-hidden rounded-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all ${
-                              i === heroIndex ? "ring-2 ring-primary ring-offset-2 scale-95" : "hover:scale-95"
+                              i === heroIndex ? "ring-inset ring-offset-emerald-700 ring-offset-5 scale-95" : "hover:scale-95"
                             }`}
                           >
                             <Image

@@ -3,6 +3,7 @@ import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 import type { Metadata } from "next";
 
+
 export const metadata: Metadata = {
   title: "Safari Tours | African Home Adventure",
   description:
@@ -38,6 +39,7 @@ export default function ToursPage() {
           >
             <TourFilters />
           </Suspense>
+          
         </Container>
       </Section>
     </>

@@ -260,7 +260,7 @@ export function Navbar() {
                 aria-expanded={activeDropdown === "tours"}
                 aria-haspopup="true"
               >
-                Tours <ChevronDown className={`h-3.5 w-3.5 transition-transform ${activeDropdown === "tours" ? "rotate-180" : ""}`} />
+                Safaris <ChevronDown className={`h-3.5 w-3.5 transition-transform ${activeDropdown === "tours" ? "rotate-180" : ""}`} />
               </button>
               <div className="absolute left-0 top-full pt-1 w-56 -translate-x-1/4 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
                 <div className="rounded-lg border border-base-content/10 bg-white dark:bg-base-100 py-1 shadow-lg">
@@ -329,7 +329,7 @@ export function Navbar() {
                 aria-expanded={activeDropdown === "info"}
                 aria-haspopup="true"
               >
-                Info <ChevronDown className={`h-3.5 w-3.5 transition-transform ${activeDropdown === "info" ? "rotate-180" : ""}`} />
+                Travel Tips <ChevronDown className={`h-3.5 w-3.5 transition-transform ${activeDropdown === "info" ? "rotate-180" : ""}`} />
               </button>
               <div className="absolute left-0 top-full pt-1 w-56 -translate-x-1/4 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
                 <div className="rounded-lg border border-base-content/10 bg-white dark:bg-base-100 py-1 shadow-lg">
@@ -423,7 +423,7 @@ export function Navbar() {
                   onClick={() => setMobileToursExpanded(!mobileToursExpanded)}
                   className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200"
                 >
-                  Tours
+                  Safaris
                   <ChevronDown className={`h-4 w-4 transition-transform ${mobileToursExpanded ? "rotate-180" : ""}`} />
                 </button>
                 {mobileToursExpanded && (
@@ -482,7 +482,7 @@ export function Navbar() {
                   onClick={() => setMobileInfoExpanded(!mobileInfoExpanded)}
                   className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium text-base-content transition-colors hover:bg-base-200"
                 >
-                  Info
+                  Travel Tips
                   <ChevronDown className={`h-4 w-4 transition-transform ${mobileInfoExpanded ? "rotate-180" : ""}`} />
                 </button>
                 {mobileInfoExpanded && (

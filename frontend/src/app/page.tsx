@@ -80,48 +80,144 @@ function HeroSection() {
   );
 }
 
-
-function DestinationsCarousel() {
+function ProblemSection() {
   return (
-    <Section spacing="none">
-      <Container>
-        <p className="text-center text-lg font-semibold uppercase tracking-widest text-accent">
-          Where We Go
-        </p>
-        <h2 className="mt-2 text-center font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
-          Popular Destinations
-        </h2>
-        <div className="mt-8 overflow-x-auto pb-2 scrollbar-thin">
-          <div className="flex gap-4 pb-2 sm:justify-start">
-            {destinations.map((d) => (
-              <Link
-                key={`${d.name}-${d.country}`}
-                href={`/tours?destination=${encodeURIComponent(d.name)}`}
-                className="group relative flex min-w-[160px] h-[180px] flex-col items-center justify-center rounded-xl overflow-hidden shadow-sm transition-all hover:shadow-lg"
-                style={{
-                  backgroundImage: `url(${d.image})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
-                {/* Dark gradient overlay for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20 group-hover:from-black/70 group-hover:via-black/30 transition-all" />
+    <Section className="relative overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        {/* Mobile */}
+        <Image
+          src="/BACKGROUND_image_mobile.png"
+          alt="Background"
+          fill
+          className="object-cover md:hidden"
+          priority
+        />
+
+        {/* Tablet/Desktop */}
+        <Image
+          src="/BACKGROUND_img.png"
+          alt="Background"
+          fill
+          className="hidden md:block object-cover"
+          priority
+        />
+      </div>
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0" />
+      
+      <Container className="relative z-10">
+        <div className="mx-auto max-w-3xl text-center">
+        <p className="text-lg font-semibold mb-2 uppercase tracking-widest text-accent">
+            we've got you covered
+          </p>
+          <h2 className="font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
+            Planning a Safari Shouldn't Feel Like a Gamble
+          </h2>
+          <p className="mt-4 pt-4 max-w-xl mx-auto text-base-content/80">
+            You've dreamed of seeing the Big Five, but finding a trustworthy operator from abroad feels overwhelming. 
+            Hidden fees, safety concerns, and worrying about sending money overseas to someone you've never met.
+          </p>
+          
+          <div className="mt-8 grid gap-6 sm:grid-cols-3">
+            {[
+              { 
+                title: "Fear of Scams", 
+                desc: "Stories of operators disappearing with deposits",
+                icon: "🚨"
                 
-                {/* Text content positioned at bottom */}
-                <div className="relative z-10 flex flex-col items-center mt-auto mb-4">
-                  <span className="font-serif text-lg font-semibold text-white drop-shadow-lg">
-                    {d.name}
-                  </span>
-                  <span className="text-xs text-white/80 drop-shadow-md">{d.country}</span>
-                </div>
-              </Link>
+              },
+              { 
+                title: "Hidden Costs", 
+                desc: "Park fees and extras that blow your budget",
+                icon: "💸"
+              },
+              { 
+                title: "Complex Planning", 
+                desc: "Too many options, conflicting advice online",
+                icon: "😵‍💫"
+              }
+            ].map((item) => (
+              <div 
+                key={item.title} 
+                className="group rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white/30 hover:-translate-y-1"
+              >
+                <span className="text-3xl">{item.icon}</span>
+                <h3 className="mt-3 font-serif text-lg font-semibold text-gray">{item.title}</h3>
+                <p className="mt-2 text-sm text-gray/70">{item.desc}</p>
+              </div>
             ))}
           </div>
+          
+          <p className="mt-8 text-lg text-gray/90">
+            <strong className=" backdrop-blur-xs text-gray/90">We understand.</strong> For 25 years, we've helped travelers navigate these exact concerns.
+          </p>
         </div>
       </Container>
     </Section>
   );
 }
+
+function PlanSection() {
+  const steps = [
+    {
+      step: "1",
+      title: "Browse & Customize",
+      desc: "Explore our proven itineraries, then customize with our experts via WhatsApp. Get a response within 24 hours."
+    },
+    {
+      step: "2", 
+      title: "Book with Confidence",
+      desc: "Secure your spot with a small deposit. Pay the balance on arrival. Full transparency on pricing—no hidden fees."
+    },
+    {
+      step: "3",
+      title: "Experience & Enjoy",
+      desc: "Arrive to find everything arranged. 24/7 support, expert guides, and the safari you've been dreaming of."
+    }
+  ];
+
+  return (
+    <Section variant="secondary">
+      <Container>
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-lg font-semibold uppercase tracking-widest text-accent">
+            Plan with ease
+          </p>
+          <h2 className="mt-2 font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
+            From Dream to Safari in 3 Easy Steps
+          </h2>
+        </div>
+
+        <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {steps.map((s, i) => (
+            <div key={s.step} className="relative">
+              {i < steps.length - 1 && (
+                <div className="absolute top-8 left-full hidden h-0.5 w-full bg-accent/30 md:block" />
+              )}
+              <div className="flex flex-col items-center text-center">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-2xl font-bold text-white">
+                  {s.step}
+                </span>
+                <h3 className="mt-4 font-serif text-xl font-semibold">{s.title}</h3>
+                <p className="mt-2 text-base-content/70">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-10 text-center">
+          <Link href="/tours" className="btn btn-primary btn-lg">
+            Start Step 1 - Browse Safaris
+          </Link>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+
+
 
 
 function FeaturedToursSection() {
@@ -152,7 +248,7 @@ function FeaturedToursSection() {
             <p className="mt-3 max-w-xl leading-relaxed text-base-content/70">
               Our most popular and highly-rated safari packages, carefully
               designed to showcase the best of East African wildlife and
-              landscapes.
+              landscapes. Choose your adventure, then let us perfect the details for you.
             </p>
           </div>
           <Link
@@ -231,7 +327,7 @@ function WhyChooseSection() {
       icon: Compass,
       title: "Expert Driver Guides",
       description:
-        "Highly trained, experienced, and multilingual guides who are passionate about wildlife and have years of guiding expertise.",
+        "Highly trained, experienced, and multilingual guides who know where to find the wildlife you want to see.",
     },
     {
       icon: Binoculars,
@@ -395,6 +491,7 @@ function TestimonialsSection() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
                     {t.avatar}
                   </div>
+                  
                   <div>
                     <p className="text-sm font-semibold text-base-content">
                       {t.name}
@@ -402,7 +499,9 @@ function TestimonialsSection() {
                     <p className="text-xs text-base-content/60">
                       {t.country} — {t.tour}
                     </p>
+                    
                   </div>
+                  
                 </figcaption>
               </figure>
             ))}
@@ -412,6 +511,71 @@ function TestimonialsSection() {
           <div className="mt-2 text-center text-sm text-base-content/50 lg:hidden">
             ← Swipe to see more →
           </div>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+function StakesSection() {
+  return (
+    <Section className="relative overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        {/* Mobile */}
+        <Image
+          src="/BACKGROUND_image_mobile.png"
+          alt="Background"
+          fill
+          className="object-cover md:hidden"
+          priority
+        />
+
+        {/* Tablet/Desktop */}
+        <Image
+          src="/BACKGROUND_img.png"
+          alt="Background"
+          fill
+          className="hidden md:block object-cover"
+          priority
+        />
+      </div>
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0" />
+      
+      <Container className="relative z-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-lg font-semibold mb-2 uppercase tracking-widest text-accent">
+            Heads up!
+          </p>
+          <h2 className="font-serif pb-4 text-2xl font-bold text-base-content  backdrop-blur-xs sm:text-3xl">
+            Don't Let These Common Safari Mistakes Ruin Your Trip
+          </h2>
+          <div className="mt-6 grid pb-2 gap-4 sm:grid-cols-2">
+            <div className="rounded-lg bg-base-100 p-4 text-left">
+              <p className="text-sm text-base-content/70">
+                ❌ <strong>Booking with unlicensed operators</strong> who disappear with your deposit
+              </p>
+            </div>
+            <div className="rounded-lg bg-base-100 p-4 text-left">
+              <p className="text-sm text-base-content/70">
+                ❌ <strong>Hidden park fees</strong> that double your expected cost on arrival
+              </p>
+            </div>
+            <div className="rounded-lg bg-base-100 p-4 text-left">
+              <p className="text-sm text-base-content/70">
+                ❌ <strong>Wrong season timing</strong>—missing the migration by weeks
+              </p>
+            </div>
+            <div className="rounded-lg bg-base-100 p-4 text-left">
+              <p className="text-sm text-base-content/70">
+                ❌ <strong>Overcrowded group tours</strong> with no flexibility
+              </p>
+            </div>
+          </div>
+          <p className="mt-6 backdrop-blur-xs text-base-content/80">
+            We've seen these mistakes cost travelers thousands. <strong>Our 25 years of experience protects you from them.</strong>
+          </p>
         </div>
       </Container>
     </Section>
@@ -478,11 +642,13 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <DestinationsCarousel />
+      <ProblemSection />
+      <PlanSection />
       <FeaturedToursSection />
       <WhyChooseSection />
       <ExperienceSection />
       <TestimonialsSection />
+      <StakesSection />
       <CTASection />
     </>
   );
