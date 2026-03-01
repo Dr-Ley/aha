@@ -28,7 +28,7 @@ export default function AccommodationsPage() {
         </Container>
       </section>
 
-      <Section>
+      <Section className="-mt-12">
         <Container>
           <Suspense
             fallback={

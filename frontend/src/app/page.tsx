@@ -144,13 +144,13 @@ function ProblemSection() {
               >
                 <span className="text-3xl">{item.icon}</span>
                 <h3 className="mt-3 font-serif text-lg font-semibold text-gray">{item.title}</h3>
-                <p className="mt-2 text-sm text-gray/70">{item.desc}</p>
+                <p className="mt-2 text-sm text-base-content/80">{item.desc}</p>
               </div>
             ))}
           </div>
           
-          <p className="mt-8 text-lg text-gray/90">
-            <strong className=" backdrop-blur-xs text-gray/90">We understand.</strong> For 25 years, we've helped travelers navigate these exact concerns.
+          <p className="mt-8 text-base-content/80">
+            <strong className=" backdrop-blur-xs text-black">We understand.</strong> For 25+ years, we've helped travelers navigate these exact concerns.
           </p>
         </div>
       </Container>

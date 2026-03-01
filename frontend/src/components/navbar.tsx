@@ -8,6 +8,9 @@ import { CURRENCIES } from "@/lib/data"
 import { AuthModal } from "@/components/auth-modal";
 import { useAuth } from "@/lib/auth-context";
 
+
+
+
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Contact", href: "/contact" },
@@ -596,6 +599,7 @@ export function Navbar() {
           </div>
         )}
       </header>
+
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)}

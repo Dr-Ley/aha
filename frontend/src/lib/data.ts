@@ -788,9 +788,16 @@ export const testimonials: Testimonial[] = [
 
 export const destinations = [
   { name: "Masai Mara", country: "Kenya", image: IMG.masaiMara },
+  { name: "Serengeti", country: "Tanzania", image: IMG.serengeti },
   { name: "Amboseli", country: "Kenya", image: IMG.amboseli },
   { name: "Lake Nakuru", country: "Kenya", image: IMG.nakuru },
-  { name: "Serengeti", country: "Tanzania", image: IMG.serengeti },
+  { name: "Kilimanjaro", country: "Tanzania", image: "/mt_kilimanjaro_destination.png" },
+  { name: "Ol Pejeta", country: "Kenya", image: "/ol_pejeta_destination.png" },
+  { name: "Lake Naivasha", country: "Kenya", image: "Lake_Naivasha_destination.png" },
   { name: "Ngorongoro", country: "Tanzania", image: IMG.ngorongoro },
   { name: "Zanzibar", country: "Tanzania", image: "https://images.unsplash.com/photo-1634646350433-fe03ad698448?q=80&w=1334&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { name: "Samburu", country: "Kenya", image: "/samburu_destination.png" },
+  { name: "Mombasa", country: "Kenya", image: "mombasa_destination.png" },
+  { name: "Tsavo W & E", country: "Kenya", image: "/tsavo_destination.png" },
+  { name: "Aberdares", country: "Kenya", image: "/aberdares_destination.png" },  
 ];

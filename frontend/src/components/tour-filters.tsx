@@ -37,7 +37,7 @@ export function DestinationsCarousel({
 
   return (
     <Section spacing="none" className="-mt-18">
-      <Container>
+      {/* <Container className="px-0"> */}
         <h2 className="-mt-15 font-serif text-2xl font-bold text-center text-base-content text-balance sm:text-2xl">
           Popular Destinations
         </h2>
@@ -51,7 +51,7 @@ export function DestinationsCarousel({
                   key={`${d.name}-${d.country}`}
                   href={`/tours?destination=${encodeURIComponent(d.name)}`}
                   onClick={(e) => handleClick(e, d.name)}
-                  className={`group relative flex min-w-[160px] h-[180px] flex-col items-center justify-center rounded-xl overflow-hidden shadow-sm transition-all hover:shadow-lg ${
+                  className={`group relative flex min-w-[140px] h-[150px] flex-col items-center justify-center rounded-xl overflow-hidden shadow-sm transition-all hover:shadow-lg ${
                     isSelected ? 'ring-inset ring-offset-amber-300 ring-offset-5' : ''
                   }`}
                   style={{
@@ -84,7 +84,7 @@ export function DestinationsCarousel({
             })}
           </div>
         </div>
-      </Container>
+      {/* </Container> */}
     </Section>
   );
 }
@@ -340,140 +340,142 @@ export function TourFilters() {
         selectedDestination={destination}
         onDestinationClick={handleDestinationClick}
       />
-
-      {/* Active filter badges */}
-      {(country !== "All" || duration !== "All" || tier || type || destination) && (
-        <div className="mb-4 flex flex-wrap gap-2">
-          {destination && (
-            <span className="badge badge-primary gap-2 px-2">
-              {destination}
-              <button onClick={() => { setDestination(null); updateUrl("destination", null); }} className="ml-1">
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          )}
-          {country !== "All" && (
-            <span className="badge badge-primary gap-2 px-2">
-              {country}
-              <button onClick={() => { setCountry("All"); updateUrl("country", null); }} className="ml-1">
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          )}
-          {duration !== "All" && (
-            <span className="badge badge-primary gap-2 px-2">
-              {duration}
-              <button onClick={() => { setDuration("All"); updateUrl("duration", null); }} className="ml-1">
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          )}
-          {tier && (
-            <span className="badge badge-primary gap-2 px-2">
-              {TIERS[tier as keyof typeof TIERS]?.label} Safaris
-              <button onClick={() => { setTier(null); updateUrl("tier", null); }} className="ml-1">
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          )}
-          {type && (
-            <span className="badge badge-primary gap-2 px-2">
-              {type.charAt(0).toUpperCase() + type.slice(1)}
-              <button onClick={() => { setType(null); updateUrl("type", null); }} className="ml-1">
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          )}
-        </div>
-      )}
-
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/50" />
-          <input
-            type="search"
-            placeholder="Search safaris..."
-            value={search}
-            style={{ outline: "1px solid gray" }}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            className="input input-bordered w-full pl-9"
-          />
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setShowFilters(!showFilters)}
-            className="btn btn-outline btn-sm sm:hidden gap-2"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            Filters
-            {activeFilters > 0 && (
-              <span className="badge badge-primary px-1 badge-sm">{activeFilters}</span>
+        {/* <div className="sticky top-15 py-3 bg-base-100 z-30"> */}
+          {/* Active filter badges */}
+          {(country !== "All" || duration !== "All" || tier || type || destination) && (
+      
+          <div className="mb-4 flex flex-wrap gap-2">
+            {destination && (
+              <span className="badge badge-primary gap-2 px-2">
+                {destination}
+                <button onClick={() => { setDestination(null); updateUrl("destination", null); }} className="ml-1">
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
             )}
-          </button>
-          <div className="hidden sm:flex items-center gap-3">
-            <select
-              value={country}
-              style={{ outline: "1px solid gray" }}
-              onChange={(e) => {
-                setCountry(e.target.value);
-                updateUrl("country", e.target.value === "All" ? null : e.target.value);
-                setPage(1);
-              }}
-              className="select select-bordered w-44"
-            >
-              {countries.map((c) => (
-                <option key={c} value={c}>
-                  {c === "All" ? "All Countries" : c}
-                </option>
-              ))}
-            </select>
-            <select
-              value={duration}
-              style={{ outline: "1px solid gray" }}
-              onChange={(e) => {
-                setDuration(e.target.value);
-                setPage(1);
-              }}
-              className="select select-bordered w-36"
-            >
-              {durations.map((d) => (
-                <option key={d} value={d}>
-                  {d === "All" ? "All Durations" : d}
-                </option>
-              ))}
-            </select>
-            <select
-              value={sort}
-              style={{ outline: "1px solid gray" }}
-              onChange={(e) => {
-                setSort(e.target.value);
-                setPage(1);
-              }}
-              className="select select-bordered w-48"
-            >
-              {sortOptions.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
+            {country !== "All" && (
+              <span className="badge badge-primary gap-2 px-2">
+                {country}
+                <button onClick={() => { setCountry("All"); updateUrl("country", null); }} className="ml-1">
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            )}
+            {duration !== "All" && (
+              <span className="badge badge-primary gap-2 px-2">
+                {duration}
+                <button onClick={() => { setDuration("All"); updateUrl("duration", null); }} className="ml-1">
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            )}
+            {tier && (
+              <span className="badge badge-primary gap-2 px-2">
+                {TIERS[tier as keyof typeof TIERS]?.label} Safaris
+                <button onClick={() => { setTier(null); updateUrl("tier", null); }} className="ml-1">
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            )}
+            {type && (
+              <span className="badge badge-primary gap-2 px-2">
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+                <button onClick={() => { setType(null); updateUrl("type", null); }} className="ml-1">
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            )}
           </div>
-          {activeFilters > 0 && (
+        )}
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/50" />
+            <input
+              type="search"
+              placeholder="Search safaris..."
+              value={search}
+              style={{ outline: "1px solid gray" }}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="input input-bordered w-full pl-9"
+            />
+          </div>
+          <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={clearFilters}
-              style={{ outline: "1px solid gray" }}
-              className="btn btn-ghost btn-sm hidden sm:flex gap-1"
+              onClick={() => setShowFilters(!showFilters)}
+              className="btn btn-outline btn-sm sm:hidden gap-2"
             >
-              <X className="h-3.5 w-3.5" /> Clear
+              <SlidersHorizontal className="h-4 w-4" />
+              Filters
+              {activeFilters > 0 && (
+                <span className="badge badge-primary px-1 badge-sm">{activeFilters}</span>
+              )}
             </button>
-          )}
+            <div className="hidden sm:flex items-center gap-3">
+              <select
+                value={country}
+                style={{ outline: "1px solid gray" }}
+                onChange={(e) => {
+                  setCountry(e.target.value);
+                  updateUrl("country", e.target.value === "All" ? null : e.target.value);
+                  setPage(1);
+                }}
+                className="select select-bordered w-44"
+              >
+                {countries.map((c) => (
+                  <option key={c} value={c}>
+                    {c === "All" ? "All Countries" : c}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={duration}
+                style={{ outline: "1px solid gray" }}
+                onChange={(e) => {
+                  setDuration(e.target.value);
+                  setPage(1);
+                }}
+                className="select select-bordered w-36"
+              >
+                {durations.map((d) => (
+                  <option key={d} value={d}>
+                    {d === "All" ? "All Durations" : d}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={sort}
+                style={{ outline: "1px solid gray" }}
+                onChange={(e) => {
+                  setSort(e.target.value);
+                  setPage(1);
+                }}
+                className="select select-bordered w-48"
+              >
+                {sortOptions.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {activeFilters > 0 && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                style={{ outline: "1px solid gray" }}
+                className="btn btn-ghost btn-sm hidden sm:flex gap-1"
+              >
+                <X className="h-3.5 w-3.5" /> Clear
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+        {/* </div> */}
 
       {showFilters && (
         <div className="mt-4 flex flex-col gap-3 rounded-xl border border-base-content/10 bg-base-100 p-4 sm:hidden">

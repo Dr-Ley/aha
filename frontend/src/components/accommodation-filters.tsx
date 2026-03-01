@@ -317,6 +317,7 @@ export function AccommodationFilters() {
             type="search"
             placeholder="Search accommodations..."
             value={search}
+            style={{ outline: "1px solid gray" }}
             onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
@@ -334,13 +335,14 @@ export function AccommodationFilters() {
             <SlidersHorizontal className="h-4 w-4" />
             Filters
             {activeFilters > 0 && (
-              <span className="badge badge-primary badge-sm">{activeFilters}</span>
+              <span className="badge badge-primary px-1 badge-sm">{activeFilters}</span>
             )}
           </button>
           
           <div className="hidden sm:flex items-center gap-3">
             <select
               value={sort}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setSort(e.target.value);
                 setPage(1);
@@ -474,6 +476,7 @@ export function AccommodationFilters() {
             <label className="label label-text text-xs font-semibold uppercase">Country</label>
             <select
               value={country}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setCountry(e.target.value);
                 setPage(1);
@@ -493,6 +496,7 @@ export function AccommodationFilters() {
             <label className="label label-text text-xs font-semibold uppercase">Price Range</label>
             <select
               value={priceRange}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => {
                 setPriceRange(e.target.value);
                 setPage(1);
@@ -515,6 +519,7 @@ export function AccommodationFilters() {
                 <label key={amenity} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
+                    style={{ outline: "1px solid gray" }}
                     checked={selectedAmenities.includes(amenity)}
                     onChange={() => toggleAmenity(amenity)}
                     className="checkbox checkbox-sm checkbox-primary"
@@ -530,6 +535,7 @@ export function AccommodationFilters() {
             <label className="label label-text text-xs font-semibold uppercase">Sort By</label>
             <select
               value={sort}
+              style={{ outline: "1px solid gray" }}
               onChange={(e) => setSort(e.target.value)}
               className="select select-bordered w-full mt-1"
             >

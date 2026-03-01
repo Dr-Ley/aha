@@ -94,8 +94,8 @@ export function AccommodationCard({
   const images = Array.isArray(accommodation.image) 
   ? accommodation.image.slice(0, 4)
   : typeof accommodation.image === 'string' 
-    ? [accommodation.image]  // Wrap single string in array
-    : [];  // Fallback to empty array
+    ? [accommodation.image]
+    : [];
 
   // Mobile slideshow effect
   useEffect(() => {
@@ -124,7 +124,7 @@ export function AccommodationCard({
     "luxury-cottage": "Luxury Cottage",
   };
 
-  // Image Gallery Component (shared logic) - structure matches tour-card for hover-gallery + like button
+  // Image Gallery Component - LikeButton removed from here
   const ImageGallery = ({ className = "", horizontal = false }: { className?: string, horizontal?: boolean }) => {
     const containerClasses = horizontal
       ? "relative aspect-[4/3] sm:aspect-auto sm:h-full overflow-hidden"
@@ -132,20 +132,8 @@ export function AccommodationCard({
 
     return (
       <div className={`${containerClasses} ${className}`}>
-        {/* LikeButton overlay - outside hover-gallery, same as tour-card; stopPropagation so clicks don't trigger slideshow */}
-        <div
-          className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
-          onClick={(e) => e.stopPropagation()}
-        >
-        <LikeButton
-          accommodationId={accommodation.id}
-          initialLikes={accommodation.likes ?? 0}
-          size="sm"
-        />
-        </div>
-
         {isMobile ? (
-          // Mobile: Slideshow with opacity transition (figure clickable like tour-card)
+          // Mobile: Slideshow with opacity transition
           <figure
             className="relative aspect-[4/3] overflow-hidden cursor-pointer"
             onClick={handleImageClick}
@@ -180,7 +168,7 @@ export function AccommodationCard({
             )}
           </figure>
         ) : (
-          // Desktop: DaisyUI hover-gallery - use figure + aspect-[4/3] like tour-card; horizontal variant fills container on sm+
+          // Desktop: DaisyUI hover-gallery
           <figure className={`hover-gallery aspect-[4/3] ${horizontal ? "sm:h-full sm:w-full sm:aspect-auto" : ""}`}>
             {images.map((src, i) => (
               <Image
@@ -204,6 +192,18 @@ export function AccommodationCard({
       <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-all duration-300 my-5 hover:shadow-lg sm:flex-row">
         {/* Image Section */}
         <div className="relative sm:w-80 sm:shrink-0 cursor-pointer">
+          {/* LikeButton moved outside ImageGallery */}
+          <div
+            className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <LikeButton
+              accommodationId={typeof (accommodation as unknown as { id?: unknown }).id === "number" ? (accommodation as unknown as { id: number }).id : undefined}
+              initialLikes={(accommodation as { likes?: number }).likes ?? 0}
+              size="sm"
+            />
+          </div>
+          
           <ImageGallery horizontal />
           
           {/* Badges overlay */}
@@ -211,7 +211,7 @@ export function AccommodationCard({
             {accommodation.badges.slice(0, 2).map((badge) => (
               <span
                 key={badge}
-                className={`badge badge-sm ${
+                className={`badge px-1 badge-sm ${
                   badge === "Luxury" || badge === "Ultra-Luxury" || badge === "Premium"
                     ? "badge-accent"
                     : badge === "Eco" || badge === "Heritage"
@@ -296,6 +296,18 @@ export function AccommodationCard({
     <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       {/* Image Section */}
       <div className="relative cursor-pointer">
+        {/* LikeButton moved outside ImageGallery */}
+        <div
+          className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <LikeButton
+            accommodationId={typeof (accommodation as unknown as { id?: unknown }).id === "number" ? (accommodation as unknown as { id: number }).id : undefined}
+            initialLikes={(accommodation as { likes?: number }).likes ?? 0}
+            size="sm"
+          />
+        </div>
+        
         <ImageGallery />
         
         {/* Gradient overlay */}
@@ -320,7 +332,7 @@ export function AccommodationCard({
         </div>
 
         {/* Country badge */}
-        <div className="absolute top-3 right-12 z-20"> {/* Moved left to avoid LikeButton */}
+        <div className="absolute top-3 right-12 z-20">
           <span className="badge badge-ghost badge-sm bg-base-100/90 text-base-content">
             {accommodation.country}
           </span>
