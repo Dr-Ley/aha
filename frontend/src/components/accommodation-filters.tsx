@@ -71,20 +71,14 @@ export function AccommodationFilters() {
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
 
-  // Fetch accommodations from API
+  // Fetch accommodations from API (once on mount, like tour-filters)
   useEffect(() => {
     async function fetchAccommodations() {
       try {
         setLoading(true);
         setError(null);
 
-        // Build query string from filters
-        const params = new URLSearchParams();
-        if (country !== "All") params.set("country", country);
-        if (type !== "all") params.set("type", type);
-        if (search) params.set("search", search);
-
-        const response = await fetch(`/api/accommodations?${params.toString()}`);
+        const response = await fetch("/api/accommodations");
         const data = await response.json();
 
         if (!response.ok) {
@@ -101,7 +95,48 @@ export function AccommodationFilters() {
     }
 
     fetchAccommodations();
-  }, [country, type]); // Refetch when country or type changes (server-side filters)
+  }, []); // Fetch once on mount
+
+  // Apply default filters based on SEO category paths (no query params)
+  useEffect(() => {
+    const hasAnyFilter =
+      type !== "all" ||
+      priceRange !== "all" ||
+      country !== "All" ||
+      selectedAmenities.length > 0;
+
+    const urlCountry = searchParams.get("country");
+    const urlType = searchParams.get("type");
+    const urlPrice = searchParams.get("price");
+    const hasUrlCategoryFilter = urlCountry || urlType || urlPrice;
+
+    if (hasAnyFilter || hasUrlCategoryFilter) return;
+
+    // SEO category path filtering (when no URL params present)
+    if (pathname === "/tented-camps") {
+      setType("tented-camp");
+    } else if (pathname === "/luxury-lodges") {
+      setType("lodge");
+    } else if (pathname === "/safari-lodges") {
+      setType("lodge");
+    } else if (pathname === "/budget-camps") {
+      setType("tented-camp");
+      setPriceRange("budget");
+    } else if (pathname === "/kenya-accommodations") {
+      setCountry("Kenya");
+    } else if (pathname === "/tanzania-accommodations") {
+      setCountry("Tanzania");
+    }
+
+    setPage(1);
+  }, [
+    pathname,
+    searchParams,
+    type,
+    priceRange,
+    country,
+    selectedAmenities,
+  ]);
 
   // Read URL params on mount
   useEffect(() => {
@@ -114,21 +149,40 @@ export function AccommodationFilters() {
     const hasUrlFilter = urlCountry || urlType || urlPrice;
 
     if (hasUrlFilter) {
+      // CLEAR ALL existing filters first
       setSearch("");
-      setCountry(urlCountry || "All");
-      setType(urlType || "all");
-      setPriceRange(urlPrice || "all");
-      setSelectedAmenities(urlAmenities ? urlAmenities.split(",") : []);
-      setSort(urlSort || "recommended");
+      setCountry("All");
+      setType("all");
+      setPriceRange("all");
+      setSelectedAmenities([]);
       setPage(1);
-    } else if (urlSort) {
-      setSort(urlSort);
+      // Keep existing sort or use URL sort
+      setSort(urlSort || "recommended");
+
+      // Apply ONLY the URL filter
+      if (urlCountry) setCountry(urlCountry);
+      if (urlType) setType(urlType);
+      if (urlPrice) setPriceRange(urlPrice);
+      if (urlAmenities) setSelectedAmenities(urlAmenities.split(","));
+    } else {
+      // No category filters in URL, just update sort if present
+      if (urlSort) setSort(urlSort);
     }
   }, [searchParams]);
 
-  // Client-side filtering (search, price range, amenities, sort)
+  // Client-side filtering (type, country, search, price range, amenities, sort)
   const filtered = useMemo(() => {
     let result = [...accommodations];
+
+    // Type filter (client-side)
+    if (type !== "all") {
+      result = result.filter((a) => a.type === type);
+    }
+
+    // Country filter (client-side)
+    if (country !== "All") {
+      result = result.filter((a) => a.country === country);
+    }
 
     // Search filter (client-side for text search)
     if (search) {
@@ -179,7 +233,7 @@ export function AccommodationFilters() {
     }
 
     return result;
-  }, [accommodations, search, priceRange, selectedAmenities, sort]);
+  }, [accommodations, type, country, search, priceRange, selectedAmenities, sort]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
@@ -325,7 +379,7 @@ export function AccommodationFilters() {
             className="input input-bordered w-full pl-10 focus:outline-primary"
           />
         </div>
-        
+
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -338,7 +392,7 @@ export function AccommodationFilters() {
               <span className="badge badge-primary px-1 badge-sm">{activeFilters}</span>
             )}
           </button>
-          
+
           <div className="hidden sm:flex items-center gap-3">
             <select
               value={sort}
@@ -563,6 +617,12 @@ export function AccommodationFilters() {
       <p className="mt-6 text-sm text-base-content/60">
         Showing {filtered.length} {filtered.length === 1 ? "property" : "properties"}
       </p>
+      <div className="text-center text-sm mt-5 -mb-3 text-base-content/50 md:hidden lg:hidden">
+        ← Tap to play →
+      </div>
+      <div className="text-center text-sm mt-5 text-base-content/50 hidden md:block">
+        ← Hover to play →
+      </div>
 
       {/* Results grid */}
       {filtered.length > 0 ? (

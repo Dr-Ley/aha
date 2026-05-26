@@ -1,0 +1,279 @@
+Build a **production-grade multi-tenant SaaS dashboard** for a African home adventure using:
+
+* Next.js (App Router)
+* TypeScript
+* Tailwind CSS
+* daisyUI
+
+The system must be scalable, modular, mobile-friendly and follow modern SaaS best practices.
+
+There are **two companies sharing the same system**:
+
+* African Home Adventure
+* Enchoro Wildlife Camp
+
+---
+
+# 🚀 EXECUTION STRATEGY (VERY IMPORTANT)
+
+Build this project in **phases**.
+Do NOT implement everything at once.
+Each phase must be complete, functional, and clean before moving to the next.
+
+---
+
+# 🔐 PHASE 1 — AUTHENTICATION (START HERE)
+
+Create a **staff login page** which opens when one clicks the staff login link in the auth modal.
+
+### Requirements:
+
+* Login page (`/login`)
+* Fields:
+
+  * Email
+  * Password
+* Authentication using NextAuth
+* Redirect authenticated users → `/dashboard`
+* Protect all dashboard routes using middleware
+* Store user role (admin, operations, finance)
+
+### UX:
+
+* Clean, modern login UI
+* Form validation
+* Error messages
+* Loading states
+
+---
+
+# 🧱 PHASE 2 — CORE LAYOUT
+
+Create the main dashboard layout:
+
+### Top Navbar:
+
+* Company logo (left)
+* **Company Switcher Dropdown (IMPORTANT)**
+
+  * Options:
+
+    * African Home Adventure
+    * Enchoro Wildlife Camp
+  * Selecting a company updates global state
+  * Main content updates dynamically based on selected company
+* Search bar
+* Notifications
+* User profile dropdown
+
+### Sidebar (Collapsible):
+
+* Overview
+* Bookings
+* Payments
+* Revenue
+* Expenses
+* Settings
+
+### Main Content Area:
+
+* Route-based rendering (`/dashboard/...`)
+
+---
+
+# 🏢 PHASE 3 — MULTI-TENANT DATA MODEL
+
+The system must support **multiple companies using the same database**.
+
+### Add a Company model:
+
+```ts id="s8dj2k"
+interface Company {
+  id: string;
+  name: "African Home Adventure" | "Enchoro Wildlife Camp";
+}
+```
+
+### Update all core models to include `companyId`:
+
+```ts id="f9k3ls"
+interface Booking {
+  id: string;
+  companyId: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  safariPackage: string;
+  country: "Kenya" | "Tanzania";
+  startDate: string;
+  endDate: string;
+  status: "pending" | "confirmed" | "cancelled";
+  paymentStatus: "paid" | "partial" | "unpaid";
+  totalAmount: number;
+}
+```
+
+Apply the same `companyId` pattern to:
+
+* Payments
+* Expenses
+* Revenue
+
+### Rules:
+
+* All queries must be filtered by selected company
+* Switching company updates all visible data
+* Persist selected company in global state (Zustand or React Context - pick the most preferred for this project)
+
+---
+
+# 📊 PHASE 4 — DASHBOARD OVERVIEW
+
+Build the main dashboard:
+
+### KPI Cards:
+
+* Total Bookings
+* Monthly Revenue
+* Upcoming Trips
+* Unpaid Invoices
+
+### Charts:
+
+* Revenue trend (line)
+* Revenue by country (bar)
+* Safari distribution (pie)
+
+### Activity Feed:
+
+* Recent bookings
+* Payments received
+
+All data must respect **selected company context**
+
+---
+
+# 📦 PHASE 5 — CORE MODULES
+
+### Bookings:
+
+* Table with filters (status, country, date)
+* Search
+* CRUD (modal-based)
+* Inline editing
+
+### Payments:
+
+* Payment tracking
+* Status indicators
+* Link to bookings
+
+### Revenue:
+
+* Monthly reports
+* Trends
+* Top packages
+
+### Expenses:
+
+* Expense logging
+* Category tracking
+* Link to bookings
+
+---
+
+# 🎨 PHASE 6 — DESIGN SYSTEM (IMPORTANT)
+
+Use the **existing themes already defined in the project**.
+
+Requirements:
+
+* Reuse current Tailwind + daisyUI theme configuration
+* Maintain brand consistency
+* Do NOT create a new theme
+
+UI Style:
+
+* Modern SaaS dashboard
+* Rounded cards (2xl)
+* Soft shadows
+* Clean spacing (8px grid)
+* Dark sidebar + light content
+
+---
+
+# ⚡ PHASE 7 — UX ENHANCEMENTS
+
+* Skeleton loaders
+* Toast notifications
+* Empty states
+* Modal forms
+* Smooth transitions
+* Sticky headers
+
+---
+
+# ⚙️ PHASE 8 — STATE MANAGEMENT
+
+Use:
+
+* Zustand OR React Query (pick the most preferred for this project)
+
+Include:
+
+* Global company state
+* API abstraction
+* Caching
+* Optimistic updates
+
+---
+
+# 🔐 PHASE 9 — SECURITY
+
+* Role-based access control
+* Protected routes
+* Input validation (Zod)
+
+---
+
+# 🚀 PHASE 10 — PERFORMANCE
+
+* Lazy load charts
+* Pagination
+* Code splitting
+
+---
+
+# 📁 FOLDER STRUCTURE
+
+Follow:
+
+* /app/login
+* /app/dashboard/*
+* /components/ui/*
+* /components/dashboard/*
+* /lib/api/*
+* /hooks/*
+* /types/*
+* /store/*
+
+---
+
+# 🧠 EXPECTATIONS
+
+* Fully typed TypeScript code
+* Clean, reusable components
+* Production-quality UI
+* No placeholder-level implementation
+* Multi-tenant logic must be correctly implemented
+
+---
+
+# ❗ FINAL INSTRUCTION
+
+Do NOT jump ahead.
+
+Start with:
+👉 **Phase 1: Authentication (Login Page)**
+
+Wait until it is complete and verified before proceeding to the next phase.

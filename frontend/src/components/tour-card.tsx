@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Clock, MapPin, Star, Users } from "lucide-react";
-import { tours, type Tour } from "@/lib/data";
+import type { Tour } from "@/lib/data";
 import { useCurrency } from "@/lib/currency-context";
 import { LikeButton } from "@/components/like-button";
 

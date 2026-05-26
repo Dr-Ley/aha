@@ -7,6 +7,7 @@ import { useCurrency } from "@/lib/currency-context"
 import { CURRENCIES } from "@/lib/data"
 import { AuthModal } from "@/components/auth-modal";
 import { useAuth } from "@/lib/auth-context";
+import { canAccessDashboard } from "@/lib/roles";
 
 
 
@@ -17,35 +18,52 @@ const navLinks = [
 ];
 
 const tourCategories = [
-  { label: "Budget Safaris", href: "/tours?tier=budget" },
-  { label: "Luxury Safaris", href: "/tours?tier=luxury" },
-  { label: "Kilimanjaro Climbing", href: "/tours?type=kilimanjaro" },
-  { label: "Beach Holidays", href: "/tours?type=beach" },
-  { label: "Day Trips", href: "/tours?duration=day" },
-  { label: "Kenya Safaris", href: "/tours?country=Kenya" },
-  { label: "Tanzania Safaris", href: "/tours?country=Tanzania" },
-  { label: "Balloon Safaris", href: "/tours?type=balloon" },
+  { label: "Budget Safaris", href: "/budget-safaris" },
+  { label: "Luxury Safaris", href: "/luxury-safaris" },
+  { label: "Kilimanjaro Climbing", href: "/kilimanjaro-climbing" },
+  { label: "Beach Holidays", href: "/beach-holidays" },
+  { label: "Day Trips", href: "/day-trips" },
+  { label: "Kenya Safaris", href: "/kenya-safaris" },
+  { label: "Tanzania Safaris", href: "/tanzania-safaris" },
+  { label: "Balloon Safaris", href: "/balloon-safaris" },
 ];
 
 const campsCategories = [
-  { label: "Tented Camps", href: "/camps?type=tented-camp" },
-  { label: "Luxury Lodges", href: "/camps?type=lodge" },
+  { label: "Tented Camps", href: "/tented-camps" },
+  { label: "Luxury Lodges", href: "/luxury-lodges" },
 ];
 
 const infoCategories = [
-  { label: "Flights", href: "/info/flights" },
-  { label: "ETA/Visa", href: "/info/visa" },
-  { label: "Seasons & Pricing", href: "/info/seasons" },
+  { label: "Flights", href: "/flights" },
+  { label: "ETA/Visa", href: "/visa" },
+  { label: "Seasons & Pricing", href: "/seasons" },
 ];
+
+const CURRENCY_HINT_STORAGE_KEY = "aha:currency-hint-seen";
 
 function CurrencyDropdown() {
   const { currency, setCurrency } = useCurrency()
   const current = CURRENCIES.find((c) => c.code === currency)!
+  const [showHint, setShowHint] = useState(false);
+
+  useEffect(() => {
+    if (window.localStorage.getItem(CURRENCY_HINT_STORAGE_KEY)) return;
+    setShowHint(true);
+    window.localStorage.setItem(CURRENCY_HINT_STORAGE_KEY, "1");
+    const id = window.setTimeout(() => setShowHint(false), 3000);
+    return () => window.clearTimeout(id);
+  }, []);
 
   return (
     <div 
-    className="dropdown dropdown-end"
+    className="dropdown dropdown-end relative"
     >
+      {showHint ? (
+        <div className="pointer-events-none absolute right-0 top-full z-50 mt-2 animate-pulse whitespace-nowrap rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-content shadow-lg">
+          <span className="absolute -top-1 right-5 h-3 w-3 rotate-45 bg-primary" />
+          choose your currency
+        </div>
+      ) : null}
       {/* Trigger */}
       <div
         tabIndex={0}
@@ -68,7 +86,7 @@ function CurrencyDropdown() {
       {/* Dropdown Content */}
       <ul
         tabIndex={0}
-        className="dropdown-content menu bg-base-100 rounded-box z-[1] mt-2 w-56 p-2 shadow"
+        className="dropdown-content menu bg-base-100 rounded-box z-1 mt-2 w-56 p-2 shadow"
       >
         {CURRENCIES.map((c) => (
           <li key={c.code}>
@@ -97,6 +115,9 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [gifPlaying, setGifPlaying] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [showMobileSafaris, setShowMobileSafaris] = useState(false);
+  const [showMobileCamps, setShowMobileCamps] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
   
   const toursRef = useRef<HTMLDivElement>(null);
   const campsRef = useRef<HTMLDivElement>(null);
@@ -116,6 +137,31 @@ export function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const checkSpace = () => {
+      if (!navRef.current) return;
+  
+      const width = navRef.current.offsetWidth;
+  
+      // rough thresholds for fitting text
+      if (width > 220 && scrolled) {
+        setShowMobileSafaris(true);
+      } else {
+        setShowMobileSafaris(false);
+      }
+  
+      if (width > 320 && scrolled) {
+        setShowMobileCamps(true);
+      } else {
+        setShowMobileCamps(false);
+      }
+    };
+  
+    checkSpace();
+    window.addEventListener("resize", checkSpace);
+    return () => window.removeEventListener("resize", checkSpace);
+  }, [scrolled]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -199,8 +245,9 @@ export function Navbar() {
 
       {/* Main nav */}
       <header className="sticky top-0 z-50 border-b border-base-content/10 bg-base-100/95 backdrop-blur">
-        <div
-          className={`mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500 ${
+      <div
+  ref={navRef}
+  className={`mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500 ${
             scrolled ? "py-0.5" : "py-4"
           }`}
         >
@@ -225,18 +272,19 @@ export function Navbar() {
               )}
             </div>
 
+            {!scrolled && (
             <div
-              className={`flex flex-col transition-all duration-500 ${
-                scrolled ? "-translate-y-6 opacity-0" : "translate-y-0 opacity-100"
-              }`}
-            >
-              <span className="font-serif text-lg font-bold leading-tight text-base-content">
-                African Home
-              </span>
-              <span className="text-xs tracking-widest uppercase text-base-content/60">
-                Adventure
+            className={`flex flex-col overflow-hidden transition-all duration-500 ease-in-out ${
+              scrolled
+                ? "max-w-0 opacity-0 -translate-x-4"
+                : "max-w-xs opacity-100 translate-x-0"
+            }`}
+          >
+              <span className="font-serif text-lg  font-bold leading-tight text-base-content">
+                African Home Adventure
               </span>
             </div>
+            )}
           </Link>
 
 
@@ -357,6 +405,39 @@ export function Navbar() {
               Contact
             </Link>
           </nav>
+
+          {/* Mobile navbar dropdowns when scrolled */}
+{/* <div className="flex items-center gap-3 md:hidden">
+
+{showMobileSafaris && (
+  <div
+    className="relative"
+    ref={toursRef}
+    onMouseEnter={() => handleDropdownEnter("tours")}
+    onMouseLeave={handleDropdownLeave}
+  >
+    <button className="flex items-center text-sm font-medium">
+      Safaris
+      <ChevronDown className="h-3 w-3 ml-1" />
+    </button>
+  </div>
+)}
+
+{showMobileCamps && (
+  <div
+    className="relative"
+    ref={campsRef}
+    onMouseEnter={() => handleDropdownEnter("camps")}
+    onMouseLeave={handleDropdownLeave}
+  >
+    <button className="flex items-center text-sm font-medium">
+      Camps
+      <ChevronDown className="h-3 w-3 ml-1" />
+    </button>
+  </div>
+)}
+
+</div> */}
           <div>
             <CurrencyDropdown />
           </div>  
@@ -371,7 +452,11 @@ export function Navbar() {
                 <ul className="menu dropdown-content z-50 mt-3 w-52 rounded-box bg-base-100 p-2 shadow">
                   <li><a>Profile</a></li>
                   <li><a>My Bookings</a></li>
-                  {user.role === "staff" && <li><a>Staff Dashboard</a></li>}
+                  {canAccessDashboard(user.role) && (
+                    <li>
+                      <Link href="/dashboard">Staff dashboard</Link>
+                    </li>
+                  )}
                   <li><button onClick={logout}>Logout</button></li>
                 </ul>
               </div>
@@ -407,8 +492,8 @@ export function Navbar() {
 
         {/* Mobile menu - Collapsible dropdowns */}
         {mobileOpen && (
-          <div className="border-t border-base-content/10 md:hidden bg-base-100">
-            <nav className="flex flex-col gap-0.5 px-6 py-4" aria-label="Mobile navigation">
+          <div className="border-t border-base-content/10 md:hidden bg-base-100 max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-y-contain [-webkit-overflow-scrolling:touch]">
+            <nav className="flex flex-col gap-0.5 px-6 py-4 pb-8" aria-label="Mobile navigation">
               
               {/* Home Link */}
               <Link
@@ -540,13 +625,13 @@ export function Navbar() {
                     >
                       My Bookings
                     </Link>
-                    {user.role === "staff" && (
+                    {canAccessDashboard(user.role) && (
                       <Link
-                        href="/staff/dashboard"
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-base-content/80 hover:bg-base-200 rounded-md"
+                        href="/dashboard"
+                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-base-content/80 hover:bg-base-200"
                         onClick={() => setMobileOpen(false)}
                       >
-                        Staff Dashboard
+                        Staff dashboard
                       </Link>
                     )}
                     <button

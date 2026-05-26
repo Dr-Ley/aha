@@ -151,6 +151,54 @@ export function TourFilters() {
     fetchTours();
   }, []);
 
+  // Apply default filters based on SEO category paths (no query params)
+  useEffect(() => {
+    const hasAnyFilter =
+      tier ||
+      type ||
+      destination ||
+      country !== "All" ||
+      duration !== "All";
+
+    const urlCountry = searchParams.get("country");
+    const urlDuration = searchParams.get("duration");
+    const urlTier = searchParams.get("tier");
+    const urlType = searchParams.get("type");
+    const urlDestination = searchParams.get("destination");
+    const hasUrlCategoryFilter =
+      urlCountry || urlDuration || urlTier || urlType || urlDestination;
+
+    if (hasAnyFilter || hasUrlCategoryFilter) return;
+
+    if (pathname === "/budget-safaris") {
+      setTier("budget");
+    } else if (pathname === "/luxury-safaris") {
+      setTier("luxury");
+    } else if (pathname === "/kilimanjaro-climbing") {
+      setType("kilimanjaro");
+    } else if (pathname === "/beach-holidays") {
+      setType("beach");
+    } else if (pathname === "/day-trips") {
+      setDuration("1 Day");
+    } else if (pathname === "/kenya-safaris") {
+      setCountry("Kenya");
+    } else if (pathname === "/tanzania-safaris") {
+      setCountry("Tanzania");
+    } else if (pathname === "/balloon-safaris") {
+      setType("balloon");
+    }
+
+    setPage(1);
+  }, [
+    pathname,
+    searchParams,
+    tier,
+    type,
+    destination,
+    country,
+    duration,
+  ]);
+
   // Read URL params on mount
   useEffect(() => {
     const urlCountry = searchParams.get("country");

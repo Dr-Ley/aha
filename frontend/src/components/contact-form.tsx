@@ -9,11 +9,21 @@ const subjects = [
   "Custom Safari Quote",
   "Booking Question",
   "Group Safari Inquiry",
+  "Accommodation Inquiry",
   "4x4 Vehicle Hire",
   "Partnership Inquiry",
+  "Flights Inquiry",
+  "Visa Inquiry",
+  "Other Inquiry",
 ]
 
-export function ContactForm() {
+export function ContactForm({
+  initialSubject = "",
+  initialMessage = "",
+}: {
+  initialSubject?: string;
+  initialMessage?: string;
+}) {
   const { user } = useAuth()
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -25,8 +35,8 @@ export function ContactForm() {
     lastName: user?.name?.split(" ").slice(1).join(" ") ?? "",
     email: user?.email ?? "",
     phone: "",
-    subject: "",
-    message: "",
+    subject: subjects.includes(initialSubject) ? initialSubject : "",
+    message: initialMessage,
   })
 
   useEffect(() => {
@@ -39,6 +49,14 @@ export function ContactForm() {
       }))
     }
   }, [user])
+
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      subject: subjects.includes(initialSubject) ? initialSubject : prev.subject,
+      message: initialMessage || prev.message,
+    }))
+  }, [initialSubject, initialMessage])
 
   function updateField(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }))

@@ -1,0 +1,53 @@
+-- 1. Categories
+CREATE TABLE categories (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- 2. Menu Items (Dishes)
+CREATE TABLE menu_items (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  category_id INT REFERENCES categories(id) ON DELETE SET NULL,
+  selling_price DECIMAL(10,2) NOT NULL,
+  cost_price DECIMAL(10,2),
+  active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Orders (Sales Transactions)
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  order_date DATE NOT NULL,
+  payment_method VARCHAR(50) NOT NULL, -- cash, mpesa, card
+  total_amount DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 4. Order Items (Line items per order)
+CREATE TABLE order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+  menu_item_id INT REFERENCES menu_items(id) ON DELETE SET NULL,
+  quantity INT NOT NULL,
+  price_at_sale DECIMAL(10,2) NOT NULL
+);
+
+-- 5. Expenses
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  expense_date DATE NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  category VARCHAR(100), -- rent, stock, salaries, utilities
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 6. Credits (money owed & paid back)
+CREATE TABLE credits (
+  id SERIAL PRIMARY KEY,
+  credit_date DATE NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  type VARCHAR(20) CHECK (type IN ('given', 'received')),
+  description TEXT
+);

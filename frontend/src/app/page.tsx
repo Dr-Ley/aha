@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useRef } from 'react';
 import {
   Star,
@@ -18,6 +19,11 @@ import {
 import { Container, Section } from "@/components/layout";
 import { TourCard } from "@/components/tour-card";
 import { tours, testimonials, destinations } from "@/lib/data";
+
+const testimonialSources = [
+  { name: "Tripadvisor", logo: "/tripadvisorpartner.png" },
+  // { name: "SafariBookings", logo: "/safaribookingspartners.png" },
+];
 
 function HeroSection() {
   return (
@@ -390,24 +396,139 @@ function WhyChooseSection() {
   );
 }
 
+const safariImages = [
+  {
+    src: "https://i.pinimg.com/1200x/e0/04/a0/e004a036edb305dc40e8bae5fe98257e.jpg",
+    alt: "Safari 4x4 Land Cruiser on game drive in the African savanna",
+  },
+  {
+    src: "/tours1.png",
+    alt: "Elephants at sunset on the African plains",
+  },
+  {
+    src: "/tour_drop_off.png",
+    alt: "Lion in the Maasai Mara grasslands",
+  },
+];
+
+const STACK_ROTATIONS = [0, -12, -24];
+const STACK_SCALES = [1, 0.97, 0.94];
+const STACK_TRANSLATE_Y = [0, 6, 12];
+
+function StackedSlideshow() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const [shufflingOut, setShufflingOut] = useState(false);
+  const animatingRef = useRef(false);
+
+  // Stable interval — no dependency on activeIndex
+  useEffect(() => {
+    const timer = setInterval(() => advance(), 4000);
+    return () => clearInterval(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function advance() {
+    if (animatingRef.current) return;
+    animatingRef.current = true;
+    setAnimating(true);
+    setShufflingOut(true);
+
+    // Phase 1: front card flies off
+    setTimeout(() => {
+      setShufflingOut(false);
+      setActiveIndex((prev) => (prev + 1) % safariImages.length);
+    }, 350);
+
+    // Phase 2: new stack settles, unlock
+    setTimeout(() => {
+      setAnimating(false);
+      animatingRef.current = false;
+    }, 650);
+  }
+
+  const orderedIndices = [
+    activeIndex,
+    (activeIndex + 1) % safariImages.length,
+    (activeIndex + 2) % safariImages.length,
+  ];
+
+  return (
+    <div className="relative flex flex-col items-center gap-6">
+      <div
+        className="relative w-full max-w-md cursor-pointer"
+        style={{ height: "320px" }}
+        onClick={advance}
+        role="button"
+        aria-label="Next slide"
+      >
+        {orderedIndices.map((imgIdx, stackPos) => {
+          const isFront = stackPos === 0;
+
+          const flyOutTransform = `rotate(35deg) translateX(130%) translateY(-20%) scale(0.9)`;
+          const restTransform = `rotate(${STACK_ROTATIONS[stackPos]}deg) scale(${STACK_SCALES[stackPos]}) translateY(${STACK_TRANSLATE_Y[stackPos]}px)`;
+          const advanceTransform = stackPos > 0
+            ? `rotate(${STACK_ROTATIONS[stackPos - 1]}deg) scale(${STACK_SCALES[stackPos - 1]}) translateY(${STACK_TRANSLATE_Y[stackPos - 1]}px)`
+            : restTransform;
+
+          const transform =
+            isFront && shufflingOut
+              ? flyOutTransform
+              : !isFront && shufflingOut
+              ? advanceTransform
+              : restTransform;
+
+          const transition =
+            isFront && shufflingOut
+              ? "transform 0.35s cubic-bezier(0.55, 0, 1, 0.45), opacity 0.35s ease"
+              : shufflingOut
+              ? "transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+              : "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)";
+
+          return (
+            <div
+              key={imgIdx}
+              className="absolute inset-0 overflow-hidden rounded-2xl shadow-2xl"
+              style={{
+                transform,
+                transition,
+                transformOrigin: "center",
+                zIndex: safariImages.length - stackPos,
+                opacity: isFront && shufflingOut ? 0 : 1,
+              }}
+            >
+              <Image
+                src={safariImages[imgIdx].src}
+                alt={safariImages[imgIdx].alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 400px"
+                loading={stackPos === 0 ? "eager" : "lazy"}
+              />
+              {stackPos > 0 && (
+                <div
+                  className="absolute inset-0 bg-black"
+                  style={{ opacity: stackPos * 0.15 }}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ExperienceSection() {
   return (
     <Section>
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
-            <Image
-              src="https://i.pinimg.com/1200x/e0/04/a0/e004a036edb305dc40e8bae5fe98257e.jpg"
-              alt="Safari 4x4 Land Cruiser on game drive in the African savanna"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              loading="lazy"
-            />
-          </div>
+          {/* Stacked Slideshow - Left Side */}
+          <StackedSlideshow />
 
+          {/* Content - Right Side */}
           <div>
-            <p className="text-lg font-semibold uppercase tracking-widest text-accent">
+            <p className="text-lg font-semibold pt-15 uppercase tracking-widest text-accent">
               The Safari Experience
             </p>
             <h2 className="mt-2 font-serif text-3xl font-bold text-base-content text-balance sm:text-4xl">
@@ -467,11 +588,13 @@ function TestimonialsSection() {
             className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {testimonials.slice(0, 6).map((t) => (
-              <figure
-                key={t.id}
-                className="shrink-0 snap-start w-80 sm:w-96 flex flex-col rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
-              >
+            {testimonials.slice(0, 6).map((t, index) => {
+              const source = testimonialSources[index % testimonialSources.length];
+              return (
+                <figure
+                  key={t.id}
+                  className="shrink-0 snap-start w-80 sm:w-96 flex flex-col rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
+                >
                 <div className="mb-3 flex items-center gap-1">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
@@ -487,24 +610,37 @@ function TestimonialsSection() {
                 <blockquote className="flex-1 text-sm leading-relaxed text-base-content/70">
                   &ldquo;{t.text}&rdquo;
                 </blockquote>
-                <figcaption className="mt-4 flex items-center gap-3 border-t border-base-content/10 pt-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
-                    {t.avatar}
+                <figcaption className="mt-4 flex items-center justify-between gap-3 border-t border-base-content/10 pt-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
+                      {t.avatar}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-base-content">
+                        {t.name}
+                      </p>
+                      <p className="truncate text-xs text-base-content/60">
+                        {t.country} — {t.tour}
+                      </p>
+                    </div>
                   </div>
-                  
-                  <div>
-                    <p className="text-sm font-semibold text-base-content">
-                      {t.name}
-                    </p>
-                    <p className="text-xs text-base-content/60">
-                      {t.country} — {t.tour}
-                    </p>
-                    
+                  <div
+                    className="flex h-12 w-24 shrink-0 items-center justify-center rounded-xl border border-base-content/10 bg-white px-2 py-1 shadow-xs"
+                    aria-label={`${source.name} review`}
+                    title={`${source.name} review`}
+                  >
+                    <Image
+                      src={source.logo}
+                      alt={`${source.name} review logo`}
+                      width={88}
+                      height={36}
+                      className="max-h-9 w-auto object-contain"
+                    />
                   </div>
-                  
                 </figcaption>
               </figure>
-            ))}
+              );
+            })}
           </div>
           
           {/* Scroll hint for mobile */}
@@ -574,8 +710,13 @@ function StakesSection() {
             </div>
           </div>
           <p className="mt-6 backdrop-blur-xs text-base-content/80">
-            We've seen these mistakes cost travelers thousands. <strong>Our 25 years of experience protects you from them.</strong>
+            We've seen these mistakes cost travelers thousands. <strong>Our 25+ years of experience protects you from them.</strong>
           </p>
+        </div>
+        <div className="mt-10 text-center">
+          <Link href="/flights" className="btn btn-primary btn-lg">
+            See More Travel Tips
+          </Link>
         </div>
       </Container>
     </Section>

@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { tours } from "@/lib/schema";
+import { getToursFromDb } from "@/lib/tours-db";
 
 export async function GET() {
   try {
-    const allTours = await db.select().from(tours);
+    const allTours = await getToursFromDb();
     return NextResponse.json(allTours);
   } catch (error) {
     console.error("Error fetching tours:", error);

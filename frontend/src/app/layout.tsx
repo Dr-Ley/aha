@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
 import { CurrencyProvider } from '@/lib/currency-context'
 import { SessionProvider } from "@/components/session-provider";
 import { AuthProvider } from "@/lib/auth-context";
 import { LikesProvider } from "@/lib/likes-context";
+import { SiteChrome } from "@/components/site-chrome";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -51,9 +50,7 @@ export default function RootLayout({
           <AuthProvider>
           <LikesProvider>
             <CurrencyProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              <SiteChrome>{children}</SiteChrome>
             </CurrencyProvider>
           </LikesProvider>
           </AuthProvider>

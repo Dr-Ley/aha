@@ -3,7 +3,7 @@ export interface User {
   email: string;
   password: string; // In production, this is hashed!
   name: string;
-  role: "customer" | "staff" | "admin";
+  role: "customer" | "staff" | "admin" | "operations" | "finance";
   avatar?: string;
   createdAt: string;
 }
@@ -33,7 +33,7 @@ export const mockUsers: User[] = [
     email: "guide@africahomeadventure.com",
     password: "staffpass123",
     name: "Peter Guide",
-    role: "staff",
+    role: "operations",
     avatar: "PG",
     createdAt: "2023-06-10",
   },
@@ -94,6 +94,8 @@ export interface Tour {
   recommended?: boolean;
   groupSize: string;
   featured?: boolean;
+  /** Optional per-tour map embed URL. Falls back to destination-based Google Maps embed. */
+  mapEmbedUrl?: string;
 }
 
 export interface Testimonial {
@@ -122,15 +124,77 @@ export interface Accomodations {
   likes?: number; 
 }
 
+/** Dashboard uses KES as base; rates convert TO USD as canonical storage for tours/bookings. Order: KES first in selects. */
 export const CURRENCIES = [
-  { code: "USD", symbol: "$", label: "US Dollar", rate: 1 },
   { code: "KES", symbol: "KSh", label: "Kenyan Shilling", rate: 129.5 },
-  { code: "GBP", symbol: "\u00a3", label: "British Pound", rate: 0.79 },
+  { code: "USD", symbol: "$", label: "US Dollar", rate: 1 },
   { code: "EUR", symbol: "\u20ac", label: "Euro", rate: 0.92 },
+  { code: "GBP", symbol: "\u00a3", label: "British Pound", rate: 0.79 },
   { code: "JPY", symbol: "\u00a5", label: "Japanese Yen", rate: 149.8 },
 ] as const
 
 export type CurrencyCode = (typeof CURRENCIES)[number]["code"]
+
+export function getCurrencyByCode(code: string): (typeof CURRENCIES)[number] {
+  const upper = code.toUpperCase();
+  const hit = CURRENCIES.find((c) => c.code === upper);
+  if (hit) return hit;
+  return CURRENCIES.find((c) => c.code === "USD") ?? CURRENCIES[0];
+}
+
+/** Convert a whole amount in `source` currency to whole USD (canonical storage for tours, bookings, etc.). */
+export function wholeInCurrencyToUsd(amount: number, source: CurrencyCode): number {
+  const c = getCurrencyByCode(source);
+  if (!Number.isFinite(amount)) return 0;
+  if (c.code === "USD") return Math.max(0, Math.round(amount));
+  return Math.max(0, Math.round(amount / c.rate));
+}
+
+/** Convert a whole amount in `source` currency into whole Kenyan shillings for dashboard accounting. */
+export function wholeInCurrencyToKes(amount: number, source: CurrencyCode): number {
+  if (!Number.isFinite(amount)) return 0;
+  const kes = getCurrencyByCode("KES");
+  const usd = amountInCurrencyToUsdFloat(amount, source);
+  return Math.max(0, Math.round(usd * kes.rate));
+}
+
+/** Rate used when converting 1 unit of `source` currency to KES. */
+export function exchangeRateToKes(source: CurrencyCode): number {
+  const c = getCurrencyByCode(source);
+  const kes = getCurrencyByCode("KES");
+  return kes.rate / c.rate;
+}
+
+/** Convert stored USD to whole units in `target` (for form fields and tables). Uses whole USD first to reduce float drift. */
+export function usdToWholeInCurrency(usd: number, target: CurrencyCode): number {
+  if (!Number.isFinite(usd)) return 0;
+  const c = getCurrencyByCode(target);
+  const wholeUsd = Math.round(usd);
+  if (c.code === "USD") return wholeUsd;
+  return Math.round(wholeUsd * c.rate);
+}
+
+/** Format canonical USD (tours, bookings, revenue, etc.) for UI — same rules as dashboard `formatPrice`. */
+export function formatUsdForDisplay(usdAmount: number, target: CurrencyCode): string {
+  const c = getCurrencyByCode(target);
+  const n = usdToWholeInCurrency(usdAmount, target);
+  return `${c.symbol}${n.toLocaleString()}`;
+}
+
+/** Format a dashboard amount already stored in Kenyan shillings without converting it. */
+export function formatKesForDisplay(amount: number): string {
+  const c = getCurrencyByCode("KES");
+  const n = Number.isFinite(amount) ? Math.round(amount) : 0;
+  return `${c.symbol}${n.toLocaleString()}`;
+}
+
+/** Convert any stored amount + its ISO code to USD (floating, for display math). */
+export function amountInCurrencyToUsdFloat(amount: number, fromCode: string): number {
+  const c = getCurrencyByCode(fromCode);
+  if (!Number.isFinite(amount)) return 0;
+  if (c.code === "USD") return amount;
+  return amount / c.rate;
+}
 
 const IMG = {
   destination_maasai_mara1: "/destination_maasai_mara1.png",

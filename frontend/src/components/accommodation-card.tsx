@@ -127,7 +127,7 @@ export function AccommodationCard({
   // Image Gallery Component - LikeButton removed from here
   const ImageGallery = ({ className = "", horizontal = false }: { className?: string, horizontal?: boolean }) => {
     const containerClasses = horizontal
-      ? "relative aspect-[4/3] sm:aspect-auto sm:h-full overflow-hidden"
+      ? "relative aspect-4/3 sm:aspect-auto sm:h-full overflow-hidden"
       : "relative overflow-hidden";
 
     return (
@@ -135,7 +135,7 @@ export function AccommodationCard({
         {isMobile ? (
           // Mobile: Slideshow with opacity transition
           <figure
-            className="relative aspect-[4/3] overflow-hidden cursor-pointer"
+            className="relative aspect-4/3 overflow-hidden cursor-pointer"
             onClick={handleImageClick}
             role="button"
             tabIndex={0}
@@ -169,7 +169,7 @@ export function AccommodationCard({
           </figure>
         ) : (
           // Desktop: DaisyUI hover-gallery
-          <figure className={`hover-gallery aspect-[4/3] ${horizontal ? "sm:h-full sm:w-full sm:aspect-auto" : ""}`}>
+          <figure className={`hover-gallery aspect-4/3 ${horizontal ? "sm:h-full sm:w-full sm:aspect-auto" : ""}`}>
             {images.map((src, i) => (
               <Image
                 key={src}
@@ -191,10 +191,11 @@ export function AccommodationCard({
     return (
       <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-all duration-300 my-5 hover:shadow-lg sm:flex-row">
         {/* Image Section */}
+        
         <div className="relative sm:w-80 sm:shrink-0 cursor-pointer">
           {/* LikeButton moved outside ImageGallery */}
           <div
-            className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
+            className="absolute top-3 right-3 z-20 [&_button]:border-0! [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
             onClick={(e) => e.stopPropagation()}
           >
             <LikeButton
@@ -203,6 +204,7 @@ export function AccommodationCard({
               size="sm"
             />
           </div>
+          
           
           <ImageGallery horizontal />
           
@@ -251,7 +253,7 @@ export function AccommodationCard({
 
           {/* Amenities */}
           <div className="mt-4 flex flex-wrap gap-2">
-            {accommodation.amenities.slice(0, 4).map((amenity) => {
+            {accommodation.amenities.slice(0, 10).map((amenity) => {
               const Icon = amenityIcons[amenity] || Check;
               return (
                 <div
@@ -280,7 +282,7 @@ export function AccommodationCard({
               <p className="text-xs text-base-content/60">per night</p>
             </div>
             <Link
-              href={`/accommodations/${accommodation.slug}`}
+              href={`/contact?subject=${encodeURIComponent("Accommodation Inquiry")}&accommodation=${encodeURIComponent(accommodation.name)}`}
               className="btn btn-primary btn-sm gap-2"
             >
               Enquire <ArrowRight className="h-4 w-4" />
@@ -298,7 +300,7 @@ export function AccommodationCard({
       <div className="relative cursor-pointer">
         {/* LikeButton moved outside ImageGallery */}
         <div
-          className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
+          className="absolute top-3 right-3 z-20 [&_button]:border-0! [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm"
           onClick={(e) => e.stopPropagation()}
         >
           <LikeButton
@@ -311,7 +313,7 @@ export function AccommodationCard({
         <ImageGallery />
         
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-base-content/60 via-transparent to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-linear-to-t from-base-content/60 via-transparent to-transparent pointer-events-none z-10" />
         
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">

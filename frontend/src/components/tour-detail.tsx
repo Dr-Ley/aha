@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import type { Tour } from "@/lib/data";
 import { useCurrency } from "@/lib/currency-context"
+import { cn } from "@/lib/utils";
 
 const WHATSAPP_NUMBER = "254722760661";
 
@@ -27,6 +28,9 @@ export function TourDetail({ tour }: { tour: Tour }) {
   const [heroIndex, setHeroIndex] = useState(0);
   const gallery: string[] = tour.gallery ?? tour.image;
   const scrollRef = useRef<HTMLDivElement>(null);
+  const mapEmbedUrl =
+    tour.mapEmbedUrl ??
+    `https://www.google.com/maps?q=${encodeURIComponent(tour.destination)}&output=embed`;
 
   useEffect(() => {
     const t = setInterval(
@@ -46,6 +50,28 @@ export function TourDetail({ tour }: { tour: Tour }) {
     }
     setHeroIndex(index);
   };
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const [showMobileCTA, setShowMobileCTA] = useState(true);
+
+  useEffect(() => {
+    const el = ctaRef.current;
+    if (!el) return;
+  
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // When real CTA is visible → hide mobile sticky
+        setShowMobileCTA(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      }
+    );
+  
+    observer.observe(el);
+  
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -80,7 +106,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-base-content/60 via-base-content/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-base-content/60 via-base-content/20 to-transparent" />
 
         <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
           {gallery.map((_, i) => (
@@ -219,16 +245,16 @@ export function TourDetail({ tour }: { tour: Tour }) {
                 </h3>
                 <div className="relative w-full aspect-video overflow-hidden rounded-lg">
                   <iframe
-                    src="https://www.google.com/maps/d/embed?mid=1olCMk9JUep2A5solYEyNdncpmTjWUy0&ehbc=2E312F&noprof=1"
+                    src={mapEmbedUrl}
                     className="absolute inset-0 w-full h-full"
                     style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
-                    title="African Home Adventure Location"
+                    title={`${tour.shortTitle} map`}
                   />
                 </div>
                 <p className="mt-3 text-sm text-base-content/70">
-                  Visit our office in Nairobi, Kenya
+                  Route and destination map for {tour.shortTitle}
                 </p>
               </div>
 
@@ -263,8 +289,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
                 </div>
               </div>
 
-              {/* REPLACED: Snap Carousel using tour.images */}
-              {tour.image && tour.image.length > 1 && (
+              {gallery.length > 1 && (
                 <>
                   <div className="divider" />
                   <div>
@@ -277,7 +302,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
                         className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4"
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                       >
-                        {tour.image.map((src, i) => (
+                        {gallery.map((src, i) => (
                           <button
                             key={i}
                             type="button"
@@ -285,7 +310,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
                               setHeroIndex(i);
                               scrollToImage(i);
                             }}
-                            className={`relative shrink-0 snap-start aspect-[4/3] w-64 sm:w-72 md:w-80 overflow-hidden rounded-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all ${
+                            className={`relative shrink-0 snap-start aspect-4/3 w-64 sm:w-72 md:w-80 overflow-hidden rounded-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all ${
                               i === heroIndex ? "ring-inset ring-offset-emerald-700 ring-offset-5 scale-95" : "hover:scale-95"
                             }`}
                           >
@@ -302,12 +327,12 @@ export function TourDetail({ tour }: { tour: Tour }) {
                       </div>
                       
                       {/* Scroll hint gradient */}
-                      <div className="absolute right-0 top-0 bottom-4 bg-gradient-to-l from-base-100 to-transparent w-12 pointer-events-none" />
+                      <div className="absolute right-0 top-0 bottom-4 bg-linear-to-l from-base-100 to-transparent w-12 pointer-events-none" />
                     </div>
                     
                     {/* Dot indicators */}
                     <div className="mt-3 flex justify-center gap-2">
-                      {tour.image.map((_, i) => (
+                      {gallery.map((_, i) => (
                         <button
                           key={i}
                           type="button"
@@ -398,11 +423,30 @@ export function TourDetail({ tour }: { tour: Tour }) {
         )}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+        className="fixed bottom-18 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         aria-label="Chat on WhatsApp"
       >
         <MessageCircle className="h-7 w-7" />
       </a>
+      {showMobileCTA && (
+  <div
+  className={cn(
+    "fixed bottom-0 left-0 right-0 z-40 px-4 md:hidden transition-all duration-300",
+    showMobileCTA ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+  )}
+> <div ref={ctaRef}>
+    <div className="flex gap-3 rounded-xl border border-base-content/10 bg-base-100/90 backdrop-blur p-3 shadow-lg">
+      <Link href={`/booking?tour=${tour.slug}`} className="btn btn-primary flex-1">
+        Book Safari
+      </Link>
+      <Link href="/contact" className="btn btn-outline flex-1">
+        Custom Quote
+      </Link>
+    </div>
+  </div></div>
+)}
+      
     </>
+    
   );
 }

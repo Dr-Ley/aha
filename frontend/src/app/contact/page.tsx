@@ -34,7 +34,23 @@ const contactMethods = [
   },
 ];
 
-export default function ContactPage() {
+type ContactPageProps = {
+  searchParams: Promise<{ subject?: string | string[]; accommodation?: string | string[] }>;
+};
+
+function getFirst(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+}
+
+export default async function ContactPage({ searchParams }: ContactPageProps) {
+  const params = await searchParams;
+  const subject = getFirst(params.subject);
+  const accommodation = getFirst(params.accommodation);
+  const initialMessage =
+    subject === "Accommodation Inquiry" && accommodation
+      ? `I would like to enquire about ${accommodation}.`
+      : "";
+
   return (
     <>
       <section className="bg-primary py-16 lg:py-20">
@@ -68,7 +84,7 @@ export default function ContactPage() {
                 you within 24 hours with a personalized response.
               </p>
               <div className="mt-8">
-                <ContactForm />
+                <ContactForm initialSubject={subject} initialMessage={initialMessage} />
               </div>
             </div>
 

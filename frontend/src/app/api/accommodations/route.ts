@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { accommodations } from "@/lib/schema";
+import { accommodations, likes } from "@/lib/schema";
 import { eq, and, gte, lte, sql } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import {
+  canAccessDashboardFromSession,
+  getEffectiveUserRole,
+  getUserIdFromSession,
+} from "@/lib/permissions-server";
+import { isAdminRole } from "@/lib/roles";
 
 // GET /api/accommodations - Get all accommodations with optional filtering
 export async function GET(request: NextRequest) {
@@ -79,15 +86,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    const userRole = (session as any)?.user?.role;
-    const userId = (session as any)?.user?.id;
-    
-    if (!userId || (userRole !== "staff" && userRole !== "admin")) {
+    const userId = getUserIdFromSession(session);
+    if (!userId || !(await canAccessDashboardFromSession(session))) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }
       );
-    }    
+    }
     
 
     const body = await request.json();
@@ -128,10 +133,8 @@ export async function PATCH(request: NextRequest) {
   try {
     const session = await auth();
     
-    const userRole = (session as any)?.user?.role;
-    const userId = (session as any)?.user?.id;
-    
-    if (!userId || (userRole !== "staff" && userRole !== "admin")) {
+    const userId = getUserIdFromSession(session);
+    if (!userId || !(await canAccessDashboardFromSession(session))) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }
@@ -181,13 +184,13 @@ export async function PATCH(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const session = await auth();
-    
-    // Only admin can delete
-    const userRole = (session as any)?.user?.role;
-    if (userRole !== 'admin') {
-      return NextResponse.json(
-        { error: "Forbidden - Admin only" },
-      );
+    const userId = getUserIdFromSession(session);
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const role = await getEffectiveUserRole(userId, session?.user?.role);
+    if (!isAdminRole(role)) {
+      return NextResponse.json({ error: "Forbidden - Admin only" }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -200,9 +203,21 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    const accommodationId = parseInt(id, 10);
+    if (Number.isNaN(accommodationId)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid accommodation ID" },
+        { status: 400 }
+      );
+    }
+
+    await db
+      .delete(likes)
+      .where(eq(likes.accommodationId, accommodationId));
+
     await db
       .delete(accommodations)
-      .where(eq(accommodations.id, parseInt(id)));
+      .where(eq(accommodations.id, accommodationId));
 
     return NextResponse.json({ 
       success: true, 
@@ -216,6 +231,3 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-
-// Import auth at the top
-import { auth } from "@/lib/auth";

@@ -12,8 +12,9 @@ import {
   Mail,
   Loader2,
 } from "lucide-react";
-import { tours } from "@/lib/data";
+import { tours, usdToWholeInCurrency } from "@/lib/data";
 import { useAuth } from "@/lib/auth-context";
+import { useCurrency, CurrencyFormSelect } from "@/lib/currency-context";
 
 const steps = [
   { id: 1, label: "Trip Details" },
@@ -25,6 +26,7 @@ export function BookingForm() {
   const searchParams = useSearchParams();
   const preselectedTour = searchParams?.get("tour") ?? "";
   const { user } = useAuth();
+  const { formatPrice, currency, setCurrency } = useCurrency();
 
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
@@ -72,13 +74,16 @@ export function BookingForm() {
     setError("");
 
     try {
+      const guestCount = parseInt(form.guests, 10);
+      const originalPricePerPerson = selectedTour ? usdToWholeInCurrency(selectedTour.price, currency) : 0;
+      const originalTotal = selectedTour ? usdToWholeInCurrency(selectedTour.price * guestCount, currency) : 0;
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tourSlug: form.tour,
           travelDate: form.travelDate,
-          guests: parseInt(form.guests, 10),
+          guests: guestCount,
           accommodation: form.accommodation,
           transport: form.transport,
           specialRequests: form.specialRequests || null,
@@ -87,10 +92,10 @@ export function BookingForm() {
           email: form.email,
           phone: form.phone || null,
           country: form.country || null,
-          pricePerPerson: selectedTour?.price,
-          totalPrice: selectedTour
-            ? selectedTour.price * parseInt(form.guests, 10)
-            : 0,
+          originalCurrency: currency,
+          originalAmount: originalTotal,
+          pricePerPerson: originalPricePerPerson,
+          totalPrice: originalTotal,
         }),
       });
 
@@ -523,10 +528,10 @@ export function BookingForm() {
                   Estimated Price
                 </h3>
                 <p className="mt-1 text-2xl font-bold text-base-content">
-                  ${selectedTour.price * Number(form.guests)}
+                  {formatPrice(selectedTour.price * Number(form.guests))}
                   <span className="text-sm font-normal text-base-content/60">
                     {" "}
-                    (${selectedTour.price} x {form.guests} guests)
+                    ({formatPrice(selectedTour.price)} × {form.guests} guests)
                   </span>
                 </p>
                 <p className="mt-1 text-xs text-base-content/60">
@@ -572,9 +577,16 @@ export function BookingForm() {
 
       <aside className="lg:col-span-1">
         <div className="sticky top-24 rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm">
-          <h3 className="font-serif text-lg font-bold text-base-content">
-            Booking Summary
-          </h3>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-serif text-lg font-bold text-base-content">Booking Summary</h3>
+            <CurrencyFormSelect
+              value={currency}
+              onChange={setCurrency}
+              className="select select-bordered select-sm w-[100px]"
+              style={{ outline: "1px solid gray" }}
+              aria-label="Display currency"
+            />
+          </div>
 
           {selectedTour ? (
             <div className="mt-4 space-y-3 text-sm">
@@ -586,7 +598,7 @@ export function BookingForm() {
               <div className="flex justify-between">
                 <span className="text-base-content/60">Price per person</span>
                 <span className="font-semibold text-base-content">
-                  ${selectedTour.price}
+                  {formatPrice(selectedTour.price)}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -601,7 +613,7 @@ export function BookingForm() {
                   Estimated Total
                 </span>
                 <span className="font-bold text-base-content">
-                  ${selectedTour.price * Number(form.guests)}
+                  {formatPrice(selectedTour.price * Number(form.guests))}
                 </span>
               </div>
             </div>

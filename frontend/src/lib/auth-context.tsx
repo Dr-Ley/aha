@@ -3,6 +3,7 @@
 import { createContext, useContext, ReactNode } from "react";
 import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
 import type { User } from "@/lib/data";
+import type { AppUserRole } from "@/lib/roles";
 
 interface AuthContextType {
   user: User | null;
@@ -21,7 +22,7 @@ function sessionToUser(session: { user?: { id?: string | null; email?: string | 
     email: u.email,
     password: "", // never expose
     name: (u.name as string) ?? "",
-    role: (u.role as "customer" | "staff" | "admin") ?? "customer",
+    role: (u.role as AppUserRole) ?? "customer",
     avatar: u.avatar ?? undefined,
     createdAt: "",
   };

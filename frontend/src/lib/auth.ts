@@ -5,11 +5,36 @@ import { users } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
-import type { NextAuthConfig, Session } from "next-auth";
+import { authConfig } from "@/lib/auth.config";
 
-const config = {
-  secret: process.env.AUTH_SECRET || (process.env.NODE_ENV === "development" ? "dev-secret-replace-in-production" : undefined),
+const nextAuth = NextAuth({
+  ...authConfig,
   adapter: DrizzleAdapter(db),
+  callbacks: {
+    ...authConfig.callbacks,
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id as string;
+        token.role =
+          (user as { role?: string }).role != null
+            ? String((user as { role?: string }).role)
+            : undefined;
+        token.avatar = (user as { avatar?: string | null }).avatar ?? undefined;
+      } else if (token.sub && (token.role === undefined || token.role === "")) {
+        const userId = parseInt(String(token.sub), 10);
+        if (!Number.isNaN(userId)) {
+          const [row] = await db
+            .select({ role: users.role })
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
+          if (row?.role != null) token.role = String(row.role);
+        }
+      }
+      return token;
+    },
+    session: authConfig.callbacks.session,
+  },
   providers: [
     Credentials({
       name: "credentials",
@@ -45,35 +70,7 @@ const config = {
       },
     }),
   ],
-  callbacks: {
-    session: ({ session, token }: { session: Session; token: any }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.sub,
-        role: token.role,
-        avatar: token.avatar,
-      },
-    }),
-    jwt: ({ token, user }: { token: any; user: any }) => {
-      if (user) {
-        token.sub = user.id;
-        token.role = user.role;
-        token.avatar = user.avatar;
-      }
-      return token;
-    },
-  },
-  pages: {
-    signIn: "/login",
-  },
-  session: {
-    strategy: "jwt" as const,
-  },
-} satisfies NextAuthConfig;
+});
 
-const nextAuth = NextAuth(config);
-
-// Export handlers as an object with GET and POST
 export const handlers = nextAuth.handlers;
 export const auth = nextAuth.auth;

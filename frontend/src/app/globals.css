@@ -64,3 +64,20 @@ body {
 .text-balance {
   text-wrap: balance;
 }
+
+.partner-logo-marquee {
+  animation: partner-logo-scroll 28s linear infinite;
+}
+
+.partner-logo-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes partner-logo-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

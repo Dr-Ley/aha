@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { X, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { createPortal } from "react-dom";
@@ -321,7 +322,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
           </div>
 
           <label className="flex cursor-pointer items-start gap-2">
-            <input type="checkbox" className="checkbox checkbox-sm checkbox-primary mt-0.5" required />
+            <input type="checkbox" className="checkbox checkbox-sm checkbox-primary mt-0.5" style={{ outline: "1px solid gray" }} required />
             <span className="text-xs text-base-content/70">
               I agree to the{" "}
               <a href="#" className="text-primary hover:underline">Terms of Service</a>
@@ -370,12 +371,13 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
       <div className="mt-6 border-t border-base-content/10 pt-4 text-center">
         <p className="text-xs text-base-content/60">
           Are you a staff member?{" "}
-          <a 
-            href="/staff/login" 
-            className="text-primary hover:underline font-medium"
+          <Link
+            href="/login"
+            onClick={onClose}
+            className="font-medium text-primary hover:underline"
           >
             Staff Account Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -6,25 +6,37 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Load from project root
-dotenv.config({ path: join(__dirname, '../.env.local') });
-dotenv.config({ path: join(__dirname, '../.env') });
+// Load from frontend project root
+dotenv.config({ path: join(__dirname, '../../.env.local') });
+dotenv.config({ path: join(__dirname, '../../.env') });
 
-import { db } from '../lib/db';
-import { 
-  users, 
-  tours, 
-  accommodations, 
-  testimonials, 
-  bookings,
-  contactSubmissions,
-  likes 
-} from "@/lib/schema";
 import { hash } from "bcrypt";
 import { eq, and, sql } from "drizzle-orm";
 
 // Import your mock data
 import { tours as mockTours, accommodations as mockAccommodations, testimonials as mockTestimonials } from "@/lib/data";
+
+const { db } = await import("../lib/db");
+const {
+  users,
+  companies,
+  tours,
+  accommodations,
+  testimonials,
+  bookings,
+  payments,
+  expenses,
+  revenueEntries,
+  contactSubmissions,
+  likes,
+  roomTypes,
+  rooms,
+  restaurantCategories,
+  restaurantItems,
+  barCategories,
+  barItems,
+  userPermissions,
+} = await import("@/lib/schema");
 
 const IMG = {
   destination_maasai_mara1: "/destination_maasai_mara1.png",
@@ -59,12 +71,178 @@ const IMG = {
   safari3: "/van2_safari.png",
 };
 
+async function seedCompanies() {
+  console.log("Seeding companies...");
+  const rows = [
+    { id: "aha", name: "African Home Adventure" },
+    { id: "ewc", name: "Enchoro Wildlife Camp" },
+    { id: "bth", name: "Bondo Travellers Hotel" },
+  ];
+  for (const row of rows) {
+    const existing = await db.select().from(companies).where(eq(companies.id, row.id)).limit(1);
+    if (existing.length === 0) {
+      await db.insert(companies).values(row);
+      console.log(`Created company: ${row.name}`);
+    } else {
+      console.log(`Company exists: ${row.name}`);
+    }
+  }
+}
+
+function inferTripCountryFromTourCountries(countries: string[]): "Kenya" | "Tanzania" {
+  for (let i = countries.length - 1; i >= 0; i--) {
+    const n = countries[i].toLowerCase();
+    if (n.includes("tanzania")) return "Tanzania";
+    if (n.includes("kenya")) return "Kenya";
+  }
+  return "Kenya";
+}
+
+async function seedMultiTenantSamples() {
+  console.log("Seeding multi-tenant sample rows...");
+
+  const tourRows = await db
+    .select({
+      id: tours.id,
+      title: tours.title,
+      days: tours.days,
+      countries: tours.countries,
+    })
+    .from(tours)
+    .limit(2);
+
+  if (tourRows.length === 0) {
+    console.log("No tours found; skipping booking samples.");
+    return;
+  }
+
+  const existingBooking = await db.select({ id: bookings.id }).from(bookings).limit(1);
+  if (existingBooking.length === 0) {
+    const tAha = tourRows[0];
+    const tEwc = tourRows[1] ?? tourRows[0];
+    const startAha = "2026-06-10";
+    const startEwc = "2026-07-05";
+    const endAha = new Date(`${startAha}T12:00:00.000Z`);
+    endAha.setUTCDate(endAha.getUTCDate() + Math.max(0, tAha.days - 1));
+    const endEwc = new Date(`${startEwc}T12:00:00.000Z`);
+    endEwc.setUTCDate(endEwc.getUTCDate() + Math.max(0, tEwc.days - 1));
+
+    await db.insert(bookings).values([
+      {
+        companyId: "aha",
+        tourId: tAha.id,
+        status: "confirmed",
+        travelDate: startAha,
+        guests: 2,
+        accommodation: "mid-range",
+        transport: "4x4-landcruiser",
+        safariPackage: tAha.title,
+        tripCountry: inferTripCountryFromTourCountries(tAha.countries),
+        startDate: startAha,
+        endDate: endAha.toISOString().slice(0, 10),
+        paymentStatus: "partial",
+        firstName: "Morgan",
+        lastName: "Lee",
+        email: "morgan.sample@example.com",
+        phone: "+1 555 0100",
+        country: "United States",
+        totalPrice: 2400,
+      },
+      {
+        companyId: "ewc",
+        tourId: tEwc.id,
+        status: "pending",
+        travelDate: startEwc,
+        guests: 4,
+        accommodation: "mid-range",
+        transport: "4x4-landcruiser",
+        safariPackage: tEwc.title,
+        tripCountry: inferTripCountryFromTourCountries(tEwc.countries),
+        startDate: startEwc,
+        endDate: endEwc.toISOString().slice(0, 10),
+        paymentStatus: "unpaid",
+        firstName: "Amina",
+        lastName: "Kariuki",
+        email: "amina.sample@example.com",
+        phone: "+254 700 000000",
+        country: "Kenya",
+        totalPrice: 1800,
+      },
+    ]);
+    console.log("Created sample bookings for AHA and EWC.");
+  } else {
+    console.log("Bookings already exist; skipping sample booking inserts.");
+  }
+
+  const [payCount] = await db.select({ n: sql<number>`cast(count(*) as int)` }).from(payments);
+  if ((payCount?.n ?? 0) === 0) {
+    await db.insert(payments).values([
+      {
+        companyId: "aha",
+        amount: 1200,
+        currency: "USD",
+        status: "completed",
+        method: "card",
+        notes: "Deposit — sample",
+      },
+      {
+        companyId: "ewc",
+        amount: 650,
+        currency: "USD",
+        status: "completed",
+        method: "mpesa",
+        notes: "Partial payment — sample",
+      },
+    ]);
+    console.log("Created sample payments.");
+  }
+
+  const [expCount] = await db.select({ n: sql<number>`cast(count(*) as int)` }).from(expenses);
+  if ((expCount?.n ?? 0) === 0) {
+    await db.insert(expenses).values([
+      {
+        companyId: "aha",
+        category: "Fuel",
+        amount: 180,
+        description: "Vehicle refuel — sample",
+      },
+      {
+        companyId: "ewc",
+        category: "Supplies",
+        amount: 95,
+        description: "Camp consumables — sample",
+      },
+    ]);
+    console.log("Created sample expenses.");
+  }
+
+  const [revCount] = await db.select({ n: sql<number>`cast(count(*) as int)` }).from(revenueEntries);
+  if ((revCount?.n ?? 0) === 0) {
+    await db.insert(revenueEntries).values([
+      {
+        companyId: "aha",
+        amount: 4200,
+        packageLabel: "Masai Mara private safari",
+        periodMonth: "2026-04",
+      },
+      {
+        companyId: "ewc",
+        amount: 2100,
+        packageLabel: "Mara tented camp stays",
+        periodMonth: "2026-04",
+      },
+    ]);
+    console.log("Created sample revenue entries.");
+  }
+}
+
 async function seedUsers() {
   console.log("Seeding users...");
   
   const hashedPassword = await hash("password123", 10);
   const staffPassword = await hash("staffpass123", 10);
   const adminPassword = await hash("adminpass123", 10);
+  const financePassword = await hash("financepass123", 10);
 
   const usersData = [
     {
@@ -89,7 +267,7 @@ async function seedUsers() {
       email: "guide@africahomeadventure.com",
       passwordHash: staffPassword,
       name: "Peter Guide",
-      role: "staff" as const,
+      role: "operations" as const,
       avatar: "PG",
       phone: "+254722760661",
       country: "Kenya",
@@ -103,6 +281,15 @@ async function seedUsers() {
       phone: "+254722760662",
       country: "Kenya",
     },
+    {
+      email: "finance@africahomeadventure.com",
+      passwordHash: financePassword,
+      name: "Finance Desk",
+      role: "finance" as const,
+      avatar: "FD",
+      phone: "+254722760663",
+      country: "Kenya",
+    },
   ];
 
   for (const user of usersData) {
@@ -113,6 +300,116 @@ async function seedUsers() {
     } else {
       console.log(`User exists: ${user.email}`);
     }
+  }
+
+  await db
+    .update(users)
+    .set({ role: "operations" })
+    .where(eq(users.email, "guide@africahomeadventure.com"));
+}
+
+async function seedDefaultUserPermissions() {
+  const guideRows = await db.select().from(users).where(eq(users.email, "guide@africahomeadventure.com"));
+  const financeRows = await db.select().from(users).where(eq(users.email, "finance@africahomeadventure.com"));
+  const g = guideRows[0];
+  const f = financeRows[0];
+  if (!g || !f) return;
+
+  const existingGuide = await db.select().from(userPermissions).where(eq(userPermissions.userId, g.id)).limit(1);
+  if (existingGuide.length === 0) {
+    const companies = ["aha", "ewc", "bth"] as const;
+    const modules = [
+      "tours",
+      "accommodation",
+      "restaurant",
+      "bar",
+      "bookings",
+      "payments",
+      "expenses",
+    ] as const;
+    const rows: (typeof userPermissions.$inferInsert)[] = [];
+    for (const c of companies) {
+      for (const m of modules) {
+        rows.push({
+          userId: g.id,
+          companyId: c,
+          module: m,
+          canView: true,
+          canEdit: true,
+          updatedAt: new Date(),
+        });
+      }
+    }
+    await db.insert(userPermissions).values(rows);
+    console.log("Seeded default permissions for operations user (all modules, all companies).");
+  }
+
+  const existingFinance = await db.select().from(userPermissions).where(eq(userPermissions.userId, f.id)).limit(1);
+  if (existingFinance.length === 0) {
+    const companies = ["aha", "ewc", "bth"] as const;
+    const rows: (typeof userPermissions.$inferInsert)[] = [];
+    for (const c of companies) {
+      rows.push(
+        {
+          userId: f.id,
+          companyId: c,
+          module: "payments",
+          canView: true,
+          canEdit: true,
+          updatedAt: new Date(),
+        },
+        {
+          userId: f.id,
+          companyId: c,
+          module: "expenses",
+          canView: true,
+          canEdit: true,
+          updatedAt: new Date(),
+        },
+        {
+          userId: f.id,
+          companyId: c,
+          module: "bookings",
+          canView: true,
+          canEdit: false,
+          updatedAt: new Date(),
+        },
+        {
+          userId: f.id,
+          companyId: c,
+          module: "tours",
+          canView: true,
+          canEdit: false,
+          updatedAt: new Date(),
+        },
+        {
+          userId: f.id,
+          companyId: c,
+          module: "accommodation",
+          canView: true,
+          canEdit: false,
+          updatedAt: new Date(),
+        },
+        {
+          userId: f.id,
+          companyId: c,
+          module: "restaurant",
+          canView: true,
+          canEdit: false,
+          updatedAt: new Date(),
+        },
+        {
+          userId: f.id,
+          companyId: c,
+          module: "bar",
+          canView: true,
+          canEdit: false,
+          updatedAt: new Date(),
+        }
+      );
+    }
+    await db.insert(userPermissions).values(rows);
+    console.log("Seeded default permissions for finance user (payments & expenses editable; other modules view-only).");
   }
 }
 
@@ -621,12 +918,90 @@ async function seedLikes() {
   }
 }
 
+/** EWC + BTH: sample rooms and F&B so dashboard panels are usable after first seed. */
+async function seedHotelAndVenueSamples() {
+  const rows = [
+    { company: "bth" as const, roomType: "Deluxe", room: "BTH-201" },
+    { company: "ewc" as const, roomType: "Tented", room: "EWC-7" },
+  ];
+  for (const { company, roomType, room } of rows) {
+    const [existing] = await db
+      .select()
+      .from(rooms)
+      .where(eq(rooms.companyId, company))
+      .limit(1);
+    if (existing) {
+      console.log(`Rooms exist for ${company}, skipping venue sample.`);
+      continue;
+    }
+    const [rt] = await db
+      .insert(roomTypes)
+      .values({
+        companyId: company,
+        name: roomType,
+        description: "Seeded for dashboard",
+        maxOccupancy: 2,
+        baseRate: 8000,
+      })
+      .returning();
+    await db.insert(rooms).values({
+      companyId: company,
+      roomTypeId: rt.id,
+      code: room,
+      name: `Room ${room}`,
+    });
+    console.log(`Seeded room type + room for ${company}`);
+  }
+
+  // BTH restaurant
+  const bth = "bth" as const;
+  const [bthMenu] = await db
+    .select()
+    .from(restaurantItems)
+    .where(eq(restaurantItems.companyId, bth))
+    .limit(1);
+  if (!bthMenu) {
+    const [rc] = await db
+      .insert(restaurantCategories)
+      .values({ companyId: bth, name: "Mains", sortOrder: 0 })
+      .returning();
+    await db.insert(restaurantItems).values([
+      { companyId: bth, categoryId: rc.id, name: "Grilled fish", price: 1200, isAvailable: true },
+      { companyId: bth, categoryId: rc.id, name: "Ugali & greens", price: 600, isAvailable: true },
+    ]);
+    console.log("Seeded BTH restaurant menu (sample).");
+  }
+
+  // BTH + EWC bar
+  for (const company of [bth, "ewc"] as const) {
+    const [bi] = await db
+      .select()
+      .from(barItems)
+      .where(eq(barItems.companyId, company))
+      .limit(1);
+    if (bi) continue;
+    const [bc] = await db
+      .insert(barCategories)
+      .values({ companyId: company, name: "Drinks", sortOrder: 0 })
+      .returning();
+    await db.insert(barItems).values([
+      { companyId: company, categoryId: bc.id, name: "Tusker 500ml", price: 250, isAvailable: true },
+      { companyId: company, categoryId: bc.id, name: "Soda", price: 150, isAvailable: true },
+    ]);
+    console.log(`Seeded bar items for ${company}.`);
+  }
+}
+
 async function main() {
   console.log("🌱 Starting database seed...\n");
 
   try {
+    await seedCompanies();
+    await seedHotelAndVenueSamples();
     await seedUsers();
+    await seedDefaultUserPermissions();
     await seedTours();
+    await seedMultiTenantSamples();
     await seedAccommodations();
     await seedTestimonials();
     await seedLikes();

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone, Mail, MapPin, Shield, Award, Users } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { ExternalLink } from "lucide-react";
 
 const safariLinks = [
@@ -17,48 +17,44 @@ const companyLinks = [
   { label: "Get a Quote", href: "/contact" },
 ];
 
+const partnerLogos = [
+  { src: "/AHA_logo.png", alt: "African Home Adventure" },
+  { src: "/yourafricansafari.svg", alt: "Your African Safari" },
+  { src: "/kvcdp.png", alt: "KVCDP" },
+  { src: "/kato.png", alt: "KATO bonded member" },
+  { src: "/tripadvisorpartner.png", alt: "Tripadvisor" },
+  { src: "/Logo-TRA.png", alt: "Tourism Regulatory Authority" },
+  { src: "/award.png", alt: "Travel award" },
+];
+
 // Helper to detect external links
 const isExternal = (href: string) => href.startsWith("http");
 
 export function Footer() {
   return (
     <footer className="bg-primary text-primary-content">
-      {/* Trust badges */}
-      <div className="border-b border-primary-content/10">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-6 py-10 sm:grid-cols-3">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-content/10">
-              <Shield className="h-6 w-6" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold">KATO Certified</p>
-              <p className="text-xs text-primary-content/60">
-                Member FE/459 bonding scheme protection
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-content/10">
-              <Award className="h-6 w-6" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Licensed Operator</p>
-              <p className="text-xs text-primary-content/60">
-                Ministry of Tourism & Wildlife registered
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-content/10">
-              <Users className="h-6 w-6" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold">25+ Years Experience</p>
-              <p className="text-xs text-primary-content/60">
-                Thousands of happy clients worldwide
-              </p>
-            </div>
-          </div>
+      {/* Partner logos */}
+      <div className="overflow-hidden border-b border-base-content/10 bg-white py-6 text-base-content">
+        <div className="mb-4 text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary/70">
+            Trusted Partners & Certifications
+          </p>
+        </div>
+        <div className="partner-logo-marquee flex w-max items-center gap-14">
+          {Array.from({ length: 2 }).flatMap((_, groupIndex) =>
+            partnerLogos.map((logo) => (
+              <div
+                key={`${groupIndex}-${logo.src}`}
+                className="flex h-24 w-44 shrink-0 items-center justify-center bg-white px-5 sm:h-28 sm:w-52"
+              >
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  className="max-h-20 w-auto max-w-full object-contain sm:max-h-24"
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -68,14 +64,15 @@ export function Footer() {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-content/10 font-serif text-lg font-bold">
-                A
+              <img
+                  src="/AHA.gif"
+                  alt="African Home Adventure Logo Animation"
+                  className="h-15 object-contain"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="font-serif text-lg font-bold leading-tight">
-                  African Home
-                </span>
-                <span className="text-xs tracking-widest uppercase text-primary-content/60">
-                  Adventure
+                  African Home Adventure
                 </span>
               </div>
             </Link>
@@ -147,7 +144,7 @@ export function Footer() {
               </a>
               <div className="flex items-start gap-3 text-sm text-primary-content/70">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                <span>Nairobi, Kenya & Arusha, Tanzania</span>
+                <span>YWCA Parkview Suites, Ground Floor, Nyerere Road, Opposite Central Park</span>
               </div>
             </div>
           </div>
