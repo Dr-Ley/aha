@@ -732,7 +732,7 @@ export function HotelStaysPanel() {
         </table>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <DashboardPagination page={page} pageCount={pageCount} setPage={setPage} />
         <DashboardTableExport title="Hotel stays" rows={displayRows} columns={exportColumns} />
       </div>

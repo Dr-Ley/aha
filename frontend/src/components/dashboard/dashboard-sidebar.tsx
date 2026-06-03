@@ -115,10 +115,19 @@ const navItems: {
 
 type DashboardSidebarProps = {
   collapsed: boolean;
+  isMobile: boolean;
   onToggle: () => void;
+  onNavigate?: () => void;
 };
 
-export function DashboardSidebar({ collapsed, onToggle }: DashboardSidebarProps) {
+const navLinkClass = (isActive: boolean, iconOnly: boolean) =>
+  cn(
+    "flex items-center rounded-lg px-3 py-2 text-sm transition-colors",
+    isActive ? "bg-primary text-primary-content" : "text-neutral-content/80 hover:bg-white/10",
+    iconOnly && "justify-center px-2"
+  );
+
+export function DashboardSidebar({ collapsed, isMobile, onToggle, onNavigate }: DashboardSidebarProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const {
@@ -152,75 +161,112 @@ export function DashboardSidebar({ collapsed, onToggle }: DashboardSidebarProps)
     canViewModule,
   ]);
 
+  const settingsLink = links.find((item) => item.moduleKey === "settings");
+  const navLinks = isMobile ? links.filter((item) => item.moduleKey !== "settings") : links;
+  const mobileHidden = isMobile && collapsed;
+  const iconOnly = collapsed && !isMobile;
+
   return (
     <aside
       className={cn(
-        "sticky top-0 h-screen flex flex-col border-r border-base-content/10 bg-neutral text-neutral-content transition-all duration-200",
-        collapsed ? "w-20" : "w-64"
+        "sticky top-0 flex h-screen flex-col border-r border-base-content/10 bg-neutral text-neutral-content transition-all duration-200",
+        isMobile
+          ? mobileHidden
+            ? "pointer-events-none w-0 overflow-hidden border-0 p-0 opacity-0"
+            : "fixed left-0 top-0 z-40 w-64 shadow-xl"
+          : collapsed
+            ? "w-20"
+            : "w-64"
       )}
+      aria-hidden={mobileHidden}
     >
-      <div className="flex h-16 items-center justify-between border-b border-neutral-content/10 px-4">
-        <span className={cn("font-semibold tracking-wide", collapsed && "sr-only")}>Dashboard</span>
-        <button
-          className="btn btn-ghost btn-sm btn-square text-neutral-content"
-          onClick={onToggle}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-        </button>
+      <div className="flex h-16 shrink-0 items-center justify-between border-b border-neutral-content/10 px-4">
+        <span className={cn("font-semibold tracking-wide", iconOnly && "sr-only")}>Dashboard</span>
+        {!(isMobile && collapsed) && (
+          <button
+            className="btn btn-ghost btn-sm btn-square text-neutral-content"
+            onClick={onToggle}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed && !isMobile ? (
+              <PanelLeftOpen className="h-4 w-4" />
+            ) : (
+              <PanelLeftClose className="h-4 w-4" />
+            )}
+          </button>
+        )}
       </div>
 
-      <nav className="p-3">
+      <nav className="flex-1 overflow-y-auto p-3">
         <ul className="space-y-1">
           {permissionsLoading && (
             <li className="px-3 py-2 text-xs text-neutral-content/60">Loading access…</li>
           )}
-          {!permissionsLoading && links.length === 0 && (
+          {!permissionsLoading && navLinks.length === 0 && (
             <li className="px-3 py-2 text-xs text-neutral-content/60">No modules for this company.</li>
           )}
-          {links.map((item) => {
+          {navLinks.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
             return (
               <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center rounded-lg px-3 py-2 text-sm transition-colors",
-                    isActive ? "bg-primary text-primary-content" : "text-neutral-content/80 hover:bg-white/10"
-                  )}
-                >
+                <Link href={item.href} className={navLinkClass(isActive, iconOnly)} onClick={onNavigate}>
                   <Icon className="h-4 w-4 shrink-0" />
-                  <span className={cn("ml-3", collapsed && "hidden")}>{item.label}</span>
+                  <span className={cn("ml-3", iconOnly && "hidden")}>{item.label}</span>
                 </Link>
               </li>
             );
           })}
+
+          {isMobile && (
+            <>
+              <li>
+                <div className={navLinkClass(false, false)}>
+                  <NotificationBell buttonClassName="btn btn-ghost btn-sm btn-square h-8 min-h-0 w-8 p-0 text-neutral-content" />
+                  <span className="ml-3 text-sm text-neutral-content/80">Alerts</span>
+                </div>
+              </li>
+              {settingsLink && (
+                <li>
+                  <Link
+                    href={settingsLink.href}
+                    className={navLinkClass(pathname === settingsLink.href, false)}
+                    onClick={onNavigate}
+                  >
+                    <Settings className="h-4 w-4 shrink-0" />
+                    <span className="ml-3">{settingsLink.label}</span>
+                  </Link>
+                </li>
+              )}
+            </>
+          )}
         </ul>
       </nav>
-      <div className="mt-auto p-3 md:hidden">
-        <ul className="space-y-1">
-          <li className="flex items-center px-1">
-            <NotificationBell />
-            <span className={cn("ml-2 text-sm text-neutral-content/80", collapsed && "hidden")}>Alerts</span>
-          </li>
 
+      <div className="mt-auto shrink-0 border-t border-neutral-content/10 p-3 md:border-t-0">
+        <ul className="space-y-1">
           <li>
             <div className="dropdown dropdown-top w-full">
-              <button className="flex w-full items-center rounded-lg px-3 py-2 text-sm text-neutral-content/80 transition-colors hover:bg-white/10">
+              <button
+                type="button"
+                className={cn(
+                  "flex w-full items-center rounded-lg px-3 py-2 text-sm text-neutral-content/80 transition-colors hover:bg-white/10",
+                  iconOnly && "justify-center px-2"
+                )}
+              >
                 <span className="avatar placeholder">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-content">
                     {(session?.user?.name ?? "S").slice(0, 1).toUpperCase()}
                   </span>
                 </span>
-                <span className={cn("ml-3", collapsed && "hidden")}>
+                <span className={cn("ml-3", iconOnly && "hidden")}>
                   {session?.user?.name ?? "Staff User"}
                 </span>
               </button>
 
               <ul className="menu dropdown-content z-50 mb-2 w-44 rounded-box border border-base-content/10 bg-base-100 p-2 shadow">
                 <li>
-                  <span className="text-xs text-base-content/60 capitalize">
+                  <span className="text-xs capitalize text-base-content/60">
                     Role: {session?.user?.role ?? "staff"}
                   </span>
                 </li>

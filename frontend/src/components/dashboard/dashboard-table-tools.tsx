@@ -53,22 +53,15 @@ export function DashboardTableExport<T>({
     );
   }
 
-  function exportPdf() {
-    const w = window.open("", "_blank", "noopener,noreferrer");
-    if (!w) return;
-    w.document.write(tableHtml(title, rows, columns));
-    w.document.close();
-    w.focus();
-    w.print();
-  }
-
   return (
-    <div className="flex flex-wrap justify-end gap-2">
-      <button type="button" className="btn btn-outline btn-xs" onClick={exportPdf}>
-        Download PDF
-      </button>
-      <button type="button" className="btn btn-outline btn-xs" onClick={exportXls}>
-        Download XLS
+    <div className="flex min-w-0 max-w-full shrink-0 justify-end">
+      <button
+        type="button"
+        className="btn btn-outline btn-xs min-w-0 max-w-full truncate px-2 sm:px-3"
+        onClick={exportXls}
+      >
+        <span className="sm:hidden">XLS</span>
+        <span className="hidden sm:inline">Download XLS</span>
       </button>
     </div>
   );

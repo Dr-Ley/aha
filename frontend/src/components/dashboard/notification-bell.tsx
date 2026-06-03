@@ -30,7 +30,11 @@ function relTime(iso: string) {
   return `${days}d ago`;
 }
 
-export function NotificationBell() {
+type NotificationBellProps = {
+  buttonClassName?: string;
+};
+
+export function NotificationBell({ buttonClassName }: NotificationBellProps) {
   const { selectedCompanyId } = useCompany();
   const [disabled, setDisabled] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -107,7 +111,7 @@ export function NotificationBell() {
       <div ref={rootRef} className={`relative ${open ? "dropdown-open" : ""}`}>
         <button
           type="button"
-          className="btn btn-ghost btn-sm btn-circle"
+          className={buttonClassName ?? "btn btn-ghost btn-sm btn-circle"}
           aria-label="Notifications"
           aria-expanded={open}
           onClick={(e) => {

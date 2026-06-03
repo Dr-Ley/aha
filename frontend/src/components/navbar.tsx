@@ -20,9 +20,9 @@ const navLinks = [
 const tourCategories = [
   { label: "Budget Safaris", href: "/budget-safaris" },
   { label: "Luxury Safaris", href: "/luxury-safaris" },
-  { label: "Kilimanjaro Climbing", href: "/kilimanjaro-climbing" },
+  // { label: "Kilimanjaro Climbing", href: "/kilimanjaro-climbing" },
   { label: "Beach Holidays", href: "/beach-holidays" },
-  { label: "Day Trips", href: "/day-trips" },
+  // { label: "Day Trips", href: "/day-trips" },
   { label: "Kenya Safaris", href: "/kenya-safaris" },
   { label: "Tanzania Safaris", href: "/tanzania-safaris" },
   { label: "Balloon Safaris", href: "/balloon-safaris" },
