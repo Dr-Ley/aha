@@ -50,7 +50,7 @@ function DashboardMain({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return <div className="min-w-0 flex-1 overflow-x-hidden p-4 md:p-6">{children}</div>;
+  return <div className="min-w-0 flex-1 overflow-x-hidden p-4 pb-20 md:p-6 md:pb-20">{children}</div>;
 }
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {

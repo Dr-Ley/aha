@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import {
@@ -17,6 +17,7 @@ import {
   Bed,
   UtensilsCrossed,
   Wine,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCompany } from "@/store/company-context";
@@ -226,55 +227,99 @@ export function DashboardSidebar({ collapsed, isMobile, onToggle, onNavigate }: 
                   <span className="ml-3 text-sm text-neutral-content/80">Alerts</span>
                 </div>
               </li>
-              {settingsLink && (
-                <li>
-                  <Link
-                    href={settingsLink.href}
-                    className={navLinkClass(pathname === settingsLink.href, false)}
-                    onClick={onNavigate}
-                  >
-                    <Settings className="h-4 w-4 shrink-0" />
-                    <span className="ml-3">{settingsLink.label}</span>
-                  </Link>
-                </li>
-              )}
+              <li>
+                <div className="collapse collapse-arrow rounded-lg bg-transparent p-0">
+                  <input type="checkbox" className="min-h-0 peer" />
+                  <div className="collapse-title flex min-h-0 items-center rounded-lg px-3 py-2 text-sm text-neutral-content/80 hover:bg-white/10">
+                    <span className="avatar placeholder">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-content">
+                        {(session?.user?.name ?? "S").slice(0, 1).toUpperCase()}
+                      </span>
+                    </span>
+                    <span className="ml-3">{session?.user?.name ?? "Staff User"}</span>
+                  </div>
+                  <div className="collapse-content px-3 pb-0">
+                    <ul className="space-y-1 pt-1">
+                      <li>
+                        <span className="block rounded-lg px-3 py-1.5 text-xs capitalize text-neutral-content/50">
+                          Role: {session?.user?.role ?? "staff"}
+                        </span>
+                      </li>
+                      {settingsLink && (
+                        <li>
+                          <Link
+                            href={settingsLink.href}
+                            className={navLinkClass(pathname === settingsLink.href, false)}
+                            onClick={onNavigate}
+                          >
+                            <Settings className="h-4 w-4 shrink-0" />
+                            <span className="ml-3">{settingsLink.label}</span>
+                          </Link>
+                        </li>
+                      )}
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => signOut({ callbackUrl: "/" })}
+                          className="flex w-full items-center rounded-lg px-3 py-2 text-sm text-error/80 transition-colors hover:bg-error/10"
+                        >
+                          <LogOut className="h-4 w-4 shrink-0" />
+                          <span className="ml-3">Log out</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
             </>
           )}
         </ul>
       </nav>
 
-      <div className="mt-auto shrink-0 border-t border-neutral-content/10 p-3 md:border-t-0">
-        <ul className="space-y-1">
-          <li>
-            <div className="dropdown dropdown-top w-full">
-              <button
-                type="button"
-                className={cn(
-                  "flex w-full items-center rounded-lg px-3 py-2 text-sm text-neutral-content/80 transition-colors hover:bg-white/10",
-                  iconOnly && "justify-center px-2"
-                )}
-              >
-                <span className="avatar placeholder">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-content">
-                    {(session?.user?.name ?? "S").slice(0, 1).toUpperCase()}
+      {!isMobile && (
+        <div className="mt-auto shrink-0 border-t border-neutral-content/10 p-3">
+          <ul className="space-y-1">
+            <li>
+              <div className="dropdown dropdown-top w-full">
+                <button
+                  type="button"
+                  className={cn(
+                    "flex w-full items-center rounded-lg px-3 py-2 text-sm text-neutral-content/80 transition-colors hover:bg-white/10",
+                    iconOnly && "justify-center px-2"
+                  )}
+                >
+                  <span className="avatar placeholder">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-content">
+                      {(session?.user?.name ?? "S").slice(0, 1).toUpperCase()}
+                    </span>
                   </span>
-                </span>
-                <span className={cn("ml-3", iconOnly && "hidden")}>
-                  {session?.user?.name ?? "Staff User"}
-                </span>
-              </button>
+                  <span className={cn("ml-3", iconOnly && "hidden")}>
+                    {session?.user?.name ?? "Staff User"}
+                  </span>
+                </button>
 
-              <ul className="menu dropdown-content z-50 mb-2 w-44 rounded-box border border-base-content/10 bg-base-100 p-2 shadow">
-                <li>
-                  <span className="text-xs capitalize text-base-content/60">
-                    Role: {session?.user?.role ?? "staff"}
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div>
+                <ul className="menu dropdown-content z-50 mb-2 w-44 rounded-box border border-base-content/10 bg-base-100 p-2 shadow">
+                  <li>
+                    <span className="text-xs capitalize text-base-content/60">
+                      Role: {session?.user?.role ?? "staff"}
+                    </span>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="text-error text-sm"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Log out
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      )}
     </aside>
   );
 }

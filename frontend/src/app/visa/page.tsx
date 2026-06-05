@@ -27,7 +27,7 @@ type CountryValue = "tanzania" | "kenya";
 const tanzaniaData = {
   name: "Tanzania",
   flag: "🇹🇿",
-  heroImage: "https://images.unsplash.com/photo-1523805009345-7448845a9e53?q=80&w=2072",
+  heroImage: "/mt_kilimanjaro_destination.png",
   heroAlt: "Tanzania landscape with passport",
   description: "Everything you need to know about obtaining your Electronic Travel Authorization and visa for your Tanzanian safari adventure.",
   officialUrl: "https://eservices.immigration.go.tz/visa/",

@@ -199,8 +199,8 @@ export function AccommodationCard({
             onClick={(e) => e.stopPropagation()}
           >
             <LikeButton
-              accommodationId={typeof (accommodation as unknown as { id?: unknown }).id === "number" ? (accommodation as unknown as { id: number }).id : undefined}
-              initialLikes={(accommodation as { likes?: number }).likes ?? 0}
+              accommodationId={accommodation.id}
+              initialLikes={accommodation.likes ?? 0}
               size="sm"
             />
           </div>
@@ -304,8 +304,8 @@ export function AccommodationCard({
           onClick={(e) => e.stopPropagation()}
         >
           <LikeButton
-            accommodationId={typeof (accommodation as unknown as { id?: unknown }).id === "number" ? (accommodation as unknown as { id: number }).id : undefined}
-            initialLikes={(accommodation as { likes?: number }).likes ?? 0}
+            accommodationId={accommodation.id}
+            initialLikes={accommodation.likes ?? 0}
             size="sm"
           />
         </div>

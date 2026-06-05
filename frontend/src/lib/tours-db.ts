@@ -34,6 +34,7 @@ export function mapDbTourToTour(row: DbTour): Tour {
     tier: row.tier as Tour["tier"],
     recommended: row.recommended ?? undefined,
     featured: row.featured ?? undefined,
+    likes: row.likes ?? 0,
   };
 }
 

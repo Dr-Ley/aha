@@ -541,7 +541,7 @@ const countryData = {
   tanzania: {
     name: "Tanzania",
     flag: "🇹🇿",
-    heroImage: "https://images.unsplash.com/photo-1516426122078-c23e76319801?q=80&w=2068",
+    heroImage: "/landcruiser1.png",
     heroAlt: "Wildebeest migration in Serengeti, Tanzania",
     description: "Home to the Serengeti and Ngorongoro Crater, Tanzania offers year-round safari experiences with the world's most spectacular wildlife migration.",
     monthDetails: tanzaniaMonthDetails,
@@ -551,7 +551,7 @@ const countryData = {
   kenya: {
     name: "Kenya",
     flag: "🇰🇪",
-    heroImage: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=2070",
+    heroImage: "/landcruiser1.png",
     heroAlt: "Lion in Maasai Mara, Kenya",
     description: "Famous for the Maasai Mara and the Great Migration river crossings, Kenya delivers iconic safari experiences and incredible Big Five encounters.",
     monthDetails: kenyaMonthDetails,

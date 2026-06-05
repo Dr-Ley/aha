@@ -11,6 +11,7 @@ import {
   Calendar,
   Check,
   X,
+  ChevronLeft,
   ChevronRight,
   ArrowRight,
   Shield,
@@ -23,14 +24,128 @@ import { cn } from "@/lib/utils";
 
 const WHATSAPP_NUMBER = "254722760661";
 
+const KNOWN_PLACES: { name: string; query: string; lat: number; lng: number }[] = [
+  { name: "Nairobi", query: "Nairobi, Kenya", lat: -1.2864, lng: 36.8172 },
+  { name: "Masai Mara", query: "Masai Mara National Reserve, Kenya", lat: -1.5021, lng: 35.1440 },
+  { name: "Maasai Mara", query: "Masai Mara National Reserve, Kenya", lat: -1.5021, lng: 35.1440 },
+  { name: "Amboseli", query: "Amboseli National Park, Kenya", lat: -2.6527, lng: 37.2606 },
+  { name: "Lake Nakuru", query: "Lake Nakuru National Park, Kenya", lat: -0.3667, lng: 36.0880 },
+  { name: "Nakuru", query: "Lake Nakuru National Park, Kenya", lat: -0.3667, lng: 36.0880 },
+  { name: "Lake Naivasha", query: "Lake Naivasha, Kenya", lat: -0.7667, lng: 36.3500 },
+  { name: "Naivasha", query: "Lake Naivasha, Kenya", lat: -0.7667, lng: 36.3500 },
+  { name: "Tsavo West", query: "Tsavo West National Park, Kenya", lat: -3.0200, lng: 38.0000 },
+  { name: "Tsavo East", query: "Tsavo East National Park, Kenya", lat: -2.9667, lng: 38.7667 },
+  { name: "Mombasa", query: "Mombasa, Kenya", lat: -4.0435, lng: 39.6682 },
+  { name: "Serengeti", query: "Serengeti National Park, Tanzania", lat: -2.3333, lng: 34.8333 },
+  { name: "Ngorongoro", query: "Ngorongoro Crater, Tanzania", lat: -3.2000, lng: 35.5833 },
+  { name: "Arusha", query: "Arusha, Tanzania", lat: -3.3869, lng: 36.6830 },
+  { name: "Lake Manyara", query: "Lake Manyara National Park, Tanzania", lat: -3.6167, lng: 35.8167 },
+  { name: "Kilimanjaro", query: "Mount Kilimanjaro, Tanzania", lat: -3.0674, lng: 37.3556 },
+  { name: "Samburu", query: "Samburu National Reserve, Kenya", lat: 0.6167, lng: 37.5333 },
+  { name: "Ol Pejeta", query: "Ol Pejeta Conservancy, Kenya", lat: -0.0167, lng: 36.9167 },
+  { name: "Aberdares", query: "Aberdare National Park, Kenya", lat: -0.4000, lng: 36.7000 },
+  { name: "Diani", query: "Diani Beach, Kenya", lat: -4.3167, lng: 39.5833 },
+  { name: "Zanzibar", query: "Zanzibar, Tanzania", lat: -6.1659, lng: 39.1989 },
+  { name: "Tarangire", query: "Tarangire National Park, Tanzania", lat: -4.0167, lng: 36.0167 },
+  { name: "Great Rift Valley", query: "Great Rift Valley, Kenya", lat: -0.5000, lng: 36.2000 },
+  { name: "Mzima Springs", query: "Mzima Springs, Tsavo West, Kenya", lat: -2.9833, lng: 38.0333 },
+  { name: "Galana River", query: "Galana River, Tsavo East, Kenya", lat: -2.8500, lng: 38.9000 },
+];
+
+function extractTourDestinations(tour: Tour): string[] {
+  const allText = [
+    tour.destination,
+    // tour.description,
+    // tour.longDescription,
+    // ...tour.highlights,
+    ...tour.itinerary.map((d) => `${d.title} ${d.description}`),
+  ].join(" ");
+
+  const seen = new Set<string>();
+  const ordered: string[] = [];
+
+  const itineraryText = tour.itinerary.map((d) => `${d.title} ${d.description}`).join(" ");
+
+  for (const place of KNOWN_PLACES) {
+    const regex = new RegExp(`\\b${place.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+    if (regex.test(allText) && !seen.has(place.query)) {
+      seen.add(place.query);
+      ordered.push(place.query);
+    }
+  }
+
+  // Reorder based on first appearance in itinerary
+  ordered.sort((a, b) => {
+    const nameA = KNOWN_PLACES.find((p) => p.query === a)!.name;
+    const nameB = KNOWN_PLACES.find((p) => p.query === b)!.name;
+    const idxA = itineraryText.search(new RegExp(`\\b${nameA.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i"));
+    const idxB = itineraryText.search(new RegExp(`\\b${nameB.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i"));
+    return (idxA === -1 ? 9999 : idxA) - (idxB === -1 ? 9999 : idxB);
+  });
+
+  return ordered;
+}
+
+function TourMap({ tour }: { tour: Tour }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<unknown>(null);
+
+  useEffect(() => {
+    if (!mapRef.current || mapInstanceRef.current) return;
+
+    const destinations = extractTourDestinations(tour);
+    const coords = destinations
+      .map((d) => KNOWN_PLACES.find((p) => p.query === d))
+      .filter((p): p is (typeof KNOWN_PLACES)[number] => p != null);
+
+    if (coords.length === 0) return;
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    document.head.appendChild(link);
+
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    script.onload = () => {
+      const L = (window as unknown as { L: typeof import("leaflet") }).L;
+      if (!mapRef.current) return;
+
+      const map = L.map(mapRef.current, { scrollWheelZoom: false });
+      mapInstanceRef.current = map;
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18,
+      }).addTo(map);
+
+      const bounds = L.latLngBounds([]);
+      coords.forEach((place) => {
+        const marker = L.marker([place.lat, place.lng]).addTo(map);
+        marker.bindPopup(`<b>${place.name}</b>`);
+        bounds.extend([place.lat, place.lng]);
+      });
+
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      if (mapInstanceRef.current) {
+        (mapInstanceRef.current as { remove: () => void }).remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [tour]);
+
+  return <div ref={mapRef} className="h-full w-full rounded-lg" />;
+}
+
 export function TourDetail({ tour }: { tour: Tour }) {
   const { formatPrice } = useCurrency()
   const [heroIndex, setHeroIndex] = useState(0);
   const gallery: string[] = tour.gallery ?? tour.image;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const mapEmbedUrl =
-    tour.mapEmbedUrl ??
-    `https://www.google.com/maps?q=${encodeURIComponent(tour.destination)}&output=embed`;
 
   useEffect(() => {
     const t = setInterval(
@@ -107,6 +222,27 @@ export function TourDetail({ tour }: { tour: Tour }) {
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-linear-to-t from-base-content/60 via-base-content/20 to-transparent" />
+
+        {gallery.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={() => setHeroIndex((heroIndex - 1 + gallery.length) % gallery.length)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-colors hover:bg-black/50"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setHeroIndex((heroIndex + 1) % gallery.length)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-colors hover:bg-black/50"
+              aria-label="Next image"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </>
+        )}
 
         <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
           {gallery.map((_, i) => (
@@ -244,18 +380,15 @@ export function TourDetail({ tour }: { tour: Tour }) {
                   Destinations
                 </h3>
                 <div className="relative w-full aspect-video overflow-hidden rounded-lg">
-                  <iframe
-                    src={mapEmbedUrl}
-                    className="absolute inset-0 w-full h-full"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    title={`${tour.shortTitle} map`}
-                  />
+                  <TourMap tour={tour} />
                 </div>
-                <p className="mt-3 text-sm text-base-content/70">
-                  Route and destination map for {tour.shortTitle}
-                </p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {extractTourDestinations(tour).map((dest) => (
+                    <span key={dest} className="badge badge-ghost badge-sm">
+                      {KNOWN_PLACES.find((p) => p.query === dest)?.name ?? dest}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               <div className="divider" />

@@ -23,7 +23,7 @@ function useIsMobile() {
 }
 
 export function TourCard({ tour }: { tour: Tour }) {
-  const images = tour.image?.slice(0, 4) || tour.image; // Limit to 4 for hover-gallery
+  const images = tour.image?.slice(0, 10) || tour.image; // Limit to 4 for hover-gallery
   const { formatPrice } = useCurrency();
   const [activeIndex, setActiveIndex] = useState(0);
   const [slideshowActive, setSlideshowActive] = useState(false);
@@ -53,8 +53,8 @@ export function TourCard({ tour }: { tour: Tour }) {
         {/* LikeButton overlay - outside hover-gallery but positioned over it */}
         <div className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm">
           <LikeButton
-            tourId={typeof (tour as unknown as { id?: unknown }).id === "number" ? (tour as unknown as { id: number }).id : undefined}
-            initialLikes={(tour as { likes?: number }).likes ?? 0}
+            tourId={tour.id ? parseInt(String(tour.id), 10) || null : null}
+            initialLikes={tour.likes ?? 0}
             size="sm"
           />
         </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Plane,
@@ -311,44 +312,54 @@ export default function FlightsPage() {
               </ul>
             </div>
 
-            <div className="card bg-base-100 border border-base-300 p-6 shadow-sm">
-              <div className="flex items-start gap-3">
-                <Luggage className="h-6 w-6 shrink-0 text-accent" />
-                <div>
-                  <h3 className="font-serif text-lg font-semibold text-base-content">
-                    Packing Recommendation
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-base-content/70">
-                    Pack neutral-colored clothing (khaki, olive, tan) that can be
-                    layered. Mornings are cool and afternoons are warm.
-                    Quick-dry fabrics work best. Most camps have laundry
-                    service, so you can pack less than you think.
-                  </p>
+            <div className="card relative overflow-hidden border border-base-300 p-6 shadow-sm">
+              <Image
+                src="/flightsheader.png"
+                alt=""
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-black/30" />
+              <div className="relative z-10">
+                <div className="flex items-start gap-3">
+                  <Luggage className="h-6 w-6 shrink-0 text-accent" />
+                  <div>
+                    <h3 className="font-serif text-lg font-semibold text-white">
+                      Packing Recommendation
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/80">
+                      Pack neutral-colored clothing (khaki, olive, tan) that can be
+                      layered. Mornings are cool and afternoons are warm.
+                      Quick-dry fabrics work best. Most camps have laundry
+                      service, so you can pack less than you think.
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mt-6 border-t border-base-300 pt-6">
-                <h4 className="font-semibold text-base-content">
-                  Essential Items
-                </h4>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {[
-                    "Sunscreen",
-                    "Hat",
-                    "Sunglasses",
-                    "Binoculars",
-                    "Camera",
-                    "Light jacket",
-                    "Comfortable shoes",
-                    "Insect repellent",
-                  ].map((item) => (
-                    <span
-                      key={item}
-                      className="badge badge-ghost badge-md"
-                    >
-                      {item}
-                    </span>
-                  ))}
+                <div className="mt-6 border-t border-white/20 pt-6">
+                  <h4 className="font-semibold text-white">
+                    Essential Items
+                  </h4>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {[
+                      "Sunscreen",
+                      "Hat",
+                      "Sunglasses",
+                      "Binoculars",
+                      "Camera",
+                      "Light jacket",
+                      "Comfortable shoes",
+                      "Insect repellent",
+                    ].map((item) => (
+                      <span
+                        key={item}
+                        className="badge badge-ghost badge-md px-2 border-grey/30 text-black text-xs"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { X, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { createPortal } from "react-dom";
-import { emailExists, mockUsers } from "@/lib/data";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -73,31 +72,44 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
 
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      if (emailExists(signupEmail)) {
-        setError("Email already registered");
-        setLoading(false);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: signupName,
+          email: signupEmail,
+          password: signupPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Failed to create account");
         return;
       }
 
-      // Create new user (mock)
-      const newUser = {
-        id: `user-${Date.now()}`,
+      const result = await signIn("credentials", {
         email: signupEmail,
         password: signupPassword,
-        name: signupName,
-        role: "customer" as const,
-        avatar: signupName.split(" ").map(n => n[0]).join("").toUpperCase(),
-        createdAt: new Date().toISOString(),
-      };
-      
-      mockUsers.push(newUser);
-      localStorage.setItem("user", JSON.stringify(newUser));
-      console.log("Signed up:", newUser);
-      onClose();
-      window.location.reload();
-    }, 800);
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Account created but sign-in failed. Please sign in manually.");
+        setActiveTab("login");
+        return;
+      }
+
+      if (result?.ok) {
+        onClose();
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const switchTab = (tab: "login" | "signup") => {

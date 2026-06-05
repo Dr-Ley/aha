@@ -18,7 +18,8 @@ import {
 } from "lucide-react";
 import { Container, Section } from "@/components/layout";
 import { TourCard } from "@/components/tour-card";
-import { tours, testimonials, destinations } from "@/lib/data";
+import { testimonials } from "@/lib/data";
+import type { Tour } from "@/lib/data";
 
 const testimonialSources = [
   { name: "Tripadvisor", logo: "/tripadvisorpartner.png" },
@@ -227,8 +228,19 @@ function PlanSection() {
 
 
 function FeaturedToursSection() {
-  const featuredTours = tours.filter((t) => t.featured);
+  const [featuredTours, setFeaturedTours] = useState<Tour[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/tours")
+      .then((res) => res.json())
+      .then((data: Tour[]) => {
+        if (Array.isArray(data)) {
+          setFeaturedTours(data.filter((t) => t.featured));
+        }
+      })
+      .catch((err) => console.error("Failed to fetch tours:", err));
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
