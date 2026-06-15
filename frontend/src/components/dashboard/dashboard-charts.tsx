@@ -129,7 +129,7 @@ export function DashboardCharts({
       </div>
 
       <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
-        <h3 className="mb-4 text-sm font-semibold text-base-content">Safari distribution</h3>
+        <h3 className="mb-4 text-sm font-semibold text-base-content">Safari duration distribution</h3>
         <div className="h-72 w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

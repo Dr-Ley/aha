@@ -107,13 +107,24 @@ export async function GET(request: NextRequest) {
       amount,
     }));
 
-    const safariMap = new Map<string, number>();
+    const durationMap = new Map<number, number>();
     for (const b of bookingRows) {
       if (b.status === "cancelled") continue;
-      const label = b.safariPackage?.trim() || "Unspecified package";
-      safariMap.set(label, (safariMap.get(label) ?? 0) + 1);
+      const start = b.startDate || b.travelDate;
+      const end = b.endDate;
+      if (!start || !end) continue;
+      const startMs = new Date(start).getTime();
+      const endMs = new Date(end).getTime();
+      if (Number.isNaN(startMs) || Number.isNaN(endMs) || endMs < startMs) continue;
+      const days = Math.max(1, Math.round((endMs - startMs) / (1000 * 60 * 60 * 24)));
+      durationMap.set(days, (durationMap.get(days) ?? 0) + 1);
     }
-    const safariDistribution = [...safariMap.entries()].map(([name, value]) => ({ name, value }));
+    const safariDistribution = [...durationMap.entries()]
+      .sort(([a], [b]) => a - b)
+      .map(([days, count]) => ({
+        name: days === 1 ? "1 Day" : `${days} Days`,
+        value: count,
+      }));
 
     const recentBookings = [...bookingRows]
       .sort((a, b) => {

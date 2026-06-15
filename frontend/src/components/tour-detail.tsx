@@ -108,7 +108,7 @@ function TourMap({ tour }: { tour: Tour }) {
     const script = document.createElement("script");
     script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
     script.onload = () => {
-      const L = (window as unknown as { L: typeof import("leaflet") }).L;
+      const L = (window as unknown as { L: any }).L;
       if (!mapRef.current) return;
 
       const map = L.map(mapRef.current, { scrollWheelZoom: false });

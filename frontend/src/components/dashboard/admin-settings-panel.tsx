@@ -67,7 +67,7 @@ function deriveFromRows(rows: PermRow[]) {
 }
 
 export function AdminSettingsPanel() {
-  const { isAdmin } = useCompany();
+  const { isAdmin, deleteVisibleForAll, setDeleteVisibleForAll } = useCompany();
   const [users, setUsers] = useState<StaffUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -238,7 +238,7 @@ export function AdminSettingsPanel() {
                     <td className="text-center">
                       <input
                         type="checkbox"
-                        className="toggle toggle-primary toggle-sm"
+                        className="toggle toggle-primary toggle-sm border border-base-content/30"
                         checked={enabled}
                         disabled={notifSavingId === u.id}
                         title={enabled ? "Notifications on" : "Notifications off"}
@@ -250,6 +250,24 @@ export function AdminSettingsPanel() {
               })}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
+        <h3 className="text-base font-semibold text-base-content">Delete button visibility</h3>
+        <p className="mt-1 text-sm text-base-content/60">
+          When enabled, non-admin users will also see the delete button and be able to delete entries across panels.
+        </p>
+        <div className="mt-4 flex items-center gap-3">
+          <input
+            type="checkbox"
+            className="toggle toggle-primary toggle-sm"
+            checked={deleteVisibleForAll}
+            onChange={(e) => setDeleteVisibleForAll(e.target.checked)}
+          />
+          <span className="text-sm text-base-content/80">
+            {deleteVisibleForAll ? "All users can see the delete button" : "Only admins can see the delete button"}
+          </span>
         </div>
       </div>
 
@@ -299,7 +317,7 @@ export function AdminSettingsPanel() {
                 <label key={c.id} className="label cursor-pointer gap-2">
                   <input
                     type="checkbox"
-                    className="checkbox checkbox-sm"
+                    className="checkbox checkbox-sm border border-base-content/30"
                     checked={companyAccess[c.id]}
                     disabled={loadingDetail}
                     onChange={(e) =>
@@ -327,40 +345,40 @@ export function AdminSettingsPanel() {
                   {DASHBOARD_MODULE_IDS.map((m) => (
                     <tr key={m}>
                       <td>{MODULE_LABELS[m]}</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-sm"
-                          checked={moduleAccess[m].view}
-                          disabled={loadingDetail}
-                          onChange={(e) =>
-                            setModuleAccess((prev) => ({
-                              ...prev,
-                              [m]: {
-                                view: e.target.checked,
-                                edit: e.target.checked ? prev[m].edit : false,
-                              },
-                            }))
-                          }
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-sm"
-                          checked={moduleAccess[m].edit}
-                          disabled={loadingDetail}
-                          onChange={(e) =>
-                            setModuleAccess((prev) => ({
-                              ...prev,
-                              [m]: {
-                                view: e.target.checked || prev[m].view,
-                                edit: e.target.checked,
-                              },
-                            }))
-                          }
-                        />
-                      </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-sm border border-base-content/30"
+                        checked={moduleAccess[m].view}
+                        disabled={loadingDetail}
+                        onChange={(e) =>
+                          setModuleAccess((prev) => ({
+                            ...prev,
+                            [m]: {
+                              view: e.target.checked,
+                              edit: e.target.checked ? prev[m].edit : false,
+                            },
+                          }))
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-sm border border-base-content/30"
+                        checked={moduleAccess[m].edit}
+                        disabled={loadingDetail}
+                        onChange={(e) =>
+                          setModuleAccess((prev) => ({
+                            ...prev,
+                            [m]: {
+                              view: e.target.checked || prev[m].view,
+                              edit: e.target.checked,
+                            },
+                          }))
+                        }
+                      />
+                    </td>
                     </tr>
                   ))}
                 </tbody>

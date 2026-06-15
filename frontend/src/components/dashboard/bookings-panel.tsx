@@ -84,10 +84,11 @@ function formatOriginalBookingAmount(b: BookingRow): string | null {
 }
 
 export function BookingsPanel() {
-  const { selectedCompanyId } = useCompany();
+  const { selectedCompanyId, deleteVisibleForAll } = useCompany();
   const { data: session } = useSession();
   const role = session?.user?.role;
   const isAdmin = role === "admin";
+  const showDelete = isAdmin || deleteVisibleForAll;
 
   const [rows, setRows] = useState<BookingRow[]>([]);
   const [tours, setTours] = useState<TourRow[]>([]);
@@ -126,7 +127,7 @@ export function BookingsPanel() {
     tourId: "" as string | "",
     status: "pending" as (typeof STATUS_OPTS)[number],
     paymentStatus: "unpaid" as (typeof PAY_OPTS)[number],
-    accommodation: "mid-range" as "budget" | "mid-range" | "luxury",
+    accommodation: "mid-range" as "budget" | "mid-range" | "semi-luxury" | "luxury",
     transport: "4x4-landcruiser" as "4x4-landcruiser" | "safari-van",
     specialRequests: "",
     pricePerPerson: "",
@@ -289,7 +290,7 @@ export function BookingsPanel() {
           companyId: selectedCompanyId,
           firstName: form.firstName,
           lastName: form.lastName || null,
-          email: form.email,
+          email: form.email || null,
           phone: form.phone || null,
           country: form.country || null,
           travelDate: form.travelDate,
@@ -381,7 +382,7 @@ export function BookingsPanel() {
   }
 
   async function removeBooking(id: number) {
-    if (!isAdmin) return;
+    if (!showDelete) return;
     if (!confirm("Delete this booking permanently?")) return;
     const qs = new URLSearchParams({ id: String(id), companyId: selectedCompanyId });
     const res = await fetch(`/api/bookings?${qs}`, { method: "DELETE" });
@@ -705,7 +706,7 @@ export function BookingsPanel() {
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </button>
-                    {isAdmin && (
+                    {showDelete && (
                       <button
                         type="button"
                         className="btn btn-ghost btn-xs btn-square text-error"
@@ -754,12 +755,11 @@ export function BookingsPanel() {
             />
           </label>
           <label className="form-control gap-2 sm:col-span-2">
-            <span className="label-text text-sm px-2 font-medium">Email</span>
+            <span className="label-text text-sm px-2 font-medium">Email (optional)</span>
             <input
               type="email"
               className="input input-bordered input-sm rounded-md w-full"
               style={inputStyle}
-              required
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />

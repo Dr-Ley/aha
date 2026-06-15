@@ -16,6 +16,7 @@ import {
 import type { PermissionMatrix } from "@/lib/permissions-server";
 
 const STORAGE_KEY = "aha:selected-company";
+const DELETE_VISIBLE_KEY = "aha:delete-visible-for-all";
 
 type CompanyContextValue = {
   selectedCompanyId: CompanyId;
@@ -30,6 +31,8 @@ type CompanyContextValue = {
   canViewRevenue: () => boolean;
   canEditRevenue: () => boolean;
   hasOverviewAccess: boolean;
+  deleteVisibleForAll: boolean;
+  setDeleteVisibleForAll: (v: boolean) => void;
 };
 
 const CompanyContext = createContext<CompanyContextValue | undefined>(undefined);
@@ -42,12 +45,15 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
   const [accessibleIds, setAccessibleIds] = useState<CompanyId[]>([]);
   const [selectedCompanyId, setSelectedCompanyIdState] =
     useState<CompanyId>(DEFAULT_COMPANY_ID);
+  const [deleteVisibleForAll, setDeleteVisibleForAllState] = useState(false);
 
   useEffect(() => {
     const cached = window.localStorage.getItem(STORAGE_KEY) as CompanyId | null;
     if (cached && COMPANIES.some((company) => company.id === cached)) {
       setSelectedCompanyIdState(cached);
     }
+    const delVisible = window.localStorage.getItem(DELETE_VISIBLE_KEY);
+    if (delVisible === "true") setDeleteVisibleForAllState(true);
   }, []);
 
   useEffect(() => {
@@ -106,6 +112,11 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     window.localStorage.setItem(STORAGE_KEY, id);
   };
 
+  const setDeleteVisibleForAll = (v: boolean) => {
+    setDeleteVisibleForAllState(v);
+    window.localStorage.setItem(DELETE_VISIBLE_KEY, v ? "true" : "false");
+  };
+
   const canViewModule = useCallback(
     (module: DashboardModuleId): boolean => {
       if (isAdmin) return true;
@@ -160,6 +171,8 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
       canViewRevenue,
       canEditRevenue,
       hasOverviewAccess,
+      deleteVisibleForAll,
+      setDeleteVisibleForAll,
     }),
     [
       selectedCompanyId,
@@ -172,6 +185,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
       canViewRevenue,
       canEditRevenue,
       hasOverviewAccess,
+      deleteVisibleForAll,
     ]
   );
 
