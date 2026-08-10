@@ -170,7 +170,7 @@ function PlanSection() {
     {
       step: "1",
       title: "Browse & Customize",
-      desc: "Explore our proven itineraries, then customize with our experts via WhatsApp. Get a response within 24 hours."
+      desc: "Explore our proven itineraries, then customize with our experts via WhatsApp. Get a response within 2 hours."
     },
     {
       step: "2", 
@@ -283,7 +283,7 @@ function FeaturedToursSection() {
           {/* Navigation arrows */}
           <button
             onClick={() => scroll('left')}
-            className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 lg:flex"
+            className="absolute -left-3 top-1/2 z-10 hidden -translate-y-1/2 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 lg:flex"
             aria-label="Scroll left"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -291,7 +291,7 @@ function FeaturedToursSection() {
           
           <button
             onClick={() => scroll('right')}
-            className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 md:flex lg:flex"
+            className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 btn btn-circle btn-sm bg-base-100 shadow-md hover:bg-base-200 lg:flex"
             aria-label="Scroll right"
           >
             <ChevronRight className="h-4 w-4" />
@@ -465,9 +465,9 @@ function StackedSlideshow() {
   ];
 
   return (
-    <div className="relative flex flex-col items-center gap-6">
+    <div className="relative flex w-full max-w-full flex-col items-center gap-6 overflow-x-clip">
       <div
-        className="relative w-full max-w-md cursor-pointer"
+        className="relative mx-auto w-full max-w-md cursor-pointer"
         style={{ height: "320px" }}
         onClick={advance}
         role="button"
@@ -532,7 +532,7 @@ function StackedSlideshow() {
 
 function ExperienceSection() {
   return (
-    <Section>
+    <Section className="overflow-x-clip">
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2">
           {/* Stacked Slideshow - Left Side */}

@@ -101,7 +101,7 @@ export function ContactForm({
         </div>
         <h3 className="font-serif text-xl font-bold text-base-content">Message Sent!</h3>
         <p className="mt-2 text-sm text-base-content/70">
-          Thank you for reaching out. Our team will get back to you within 24 hours at{" "}
+          Thank you for reaching out. Our team will get back to you within 2 hours at{" "}
           <strong className="text-base-content">{form.email}</strong>.
         </p>
         {refId && (

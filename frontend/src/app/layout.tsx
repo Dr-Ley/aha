@@ -40,12 +40,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
+      <html
       lang="en"
       data-theme="aha"
       className={`${dmSans.variable} ${playfair.variable}`}
     >
-      <body className="font-sans antialiased flex min-h-screen flex-col">
+      <body className="font-sans antialiased flex min-h-screen min-w-0 flex-col">
         <SessionProvider>
           <AuthProvider>
           <LikesProvider>

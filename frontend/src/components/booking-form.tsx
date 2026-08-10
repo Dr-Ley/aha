@@ -129,7 +129,7 @@ export function BookingForm() {
         </h2>
         <p className="mt-4 leading-relaxed text-base-content/70">
           Thank you, {form.firstName}! Our team will review your booking request
-          and get back to you within 24 hours at{" "}
+          and get back to you within 2 hours at{" "}
           <strong className="text-base-content">{form.email}</strong> with a
           detailed confirmation and payment instructions.
         </p>
@@ -632,7 +632,7 @@ export function BookingForm() {
             </div>
             <div className="flex items-center gap-2 text-base-content/60">
               <Check className="h-4 w-4 text-primary" />
-              Confirmation within 24 hours
+              Confirmation within 2 hours
             </div>
             <div className="flex items-center gap-2 text-base-content/60">
               <Check className="h-4 w-4 text-primary" />

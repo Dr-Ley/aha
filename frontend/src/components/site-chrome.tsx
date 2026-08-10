@@ -15,8 +15,10 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      <main className="flex-1">{children}</main>
-      <Footer />
+      <main className="min-w-0 max-w-full flex-1 overflow-x-clip">{children}</main>
+      <div className="max-w-full overflow-x-clip">
+        <Footer />
+      </div>
     </>
   );
 }

@@ -59,7 +59,7 @@ function CurrencyDropdown() {
     className="dropdown dropdown-end relative"
     >
       {showHint ? (
-        <div className="pointer-events-none absolute right-0 top-full z-50 mt-2 animate-pulse whitespace-nowrap rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-content shadow-lg">
+        <div className="pointer-events-none absolute right-0 top-full z-50 mt-2 max-w-[min(12rem,calc(100vw-2rem))] animate-pulse rounded-full bg-primary px-3 py-2 text-center text-xs font-semibold text-primary-content shadow-lg">
           <span className="absolute -top-1 right-5 h-3 w-3 rotate-45 bg-primary" />
           choose your currency
         </div>
@@ -244,43 +244,43 @@ export function Navbar() {
       </div>
 
       {/* Main nav */}
-      <header className="sticky top-0 z-50 border-b border-base-content/10 bg-base-100/95 backdrop-blur">
+      <header className="sticky top-0 z-50 w-full border-b border-base-content/10 bg-base-100/95 backdrop-blur">
       <div
   ref={navRef}
-  className={`mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500 ${
-            scrolled ? "py-0.5" : "py-4"
+  className={`mx-auto flex max-w-7xl min-w-0 items-center justify-between gap-2 px-4 sm:px-6 transition-all duration-500 ${
+            scrolled ? "py-2" : "py-3 sm:py-4"
           }`}
         >
-          <Link href="/" className="flex items-center gap-3 overflow-hidden">
+          <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
             <div
-              className={`relative rounded-full  transition-all duration-500 ${
-                scrolled ? "h-14 w-22" : "h-12 w-16"
+              className={`relative shrink-0 rounded-full transition-all duration-500 ${
+                scrolled ? "h-10 w-14" : "h-12 w-16"
               }`}
             >
               {gifPlaying ? (
                 <img
                   src="/AHA.gif"
                   alt="African Home Adventure Logo Animation"
-                  className="h-15 object-contain"
+                  className={`object-contain transition-all duration-500 ${
+                    scrolled ? "h-10" : "h-12"
+                  }`}
                 />
               ) : (
                 <img
                   src="/AHA_STATIC.png"
                   alt="African Home Adventure Logo"
-                  className="h-15 object-contain"
+                  className={`object-contain transition-all duration-500 ${
+                    scrolled ? "h-10" : "h-12"
+                  }`}
                 />
               )}
             </div>
 
             {!scrolled && (
             <div
-            className={`flex flex-col overflow-hidden transition-all duration-500 ease-in-out ${
-              scrolled
-                ? "max-w-0 opacity-0 -translate-x-4"
-                : "max-w-xs opacity-100 translate-x-0"
-            }`}
+            className="hidden min-w-0 flex-col overflow-hidden transition-all duration-500 ease-in-out sm:flex max-w-xs opacity-100 translate-x-0"
           >
-              <span className="font-serif text-lg  font-bold leading-tight text-base-content">
+              <span className="font-serif text-lg font-bold leading-tight text-base-content truncate">
                 African Home Adventure
               </span>
             </div>
@@ -438,9 +438,8 @@ export function Navbar() {
 )}
 
 </div> */}
-          <div>
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <CurrencyDropdown />
-          </div>  
           <div className="hidden items-center gap-3 md:flex">
             {user ? (
               <div className="dropdown dropdown-end">
@@ -475,18 +474,17 @@ export function Navbar() {
             )}
           </div>
 
-
-
           {/* Mobile toggle */}
           <button
             type="button"
-            className="btn btn-ghost btn-square md:hidden"
+            className="btn btn-ghost btn-square shrink-0 md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
+          </div>
         </div>
           
 

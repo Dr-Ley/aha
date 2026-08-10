@@ -56,9 +56,18 @@
   --spacing-section-lg: 7rem;
 }
 
+/* Clip horizontal overflow at the viewport without breaking sticky headers.
+   Keep overflow on html only — applying it to body can break position: sticky. */
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
+  max-width: 100%;
+  overflow-x: visible;
 }
 
 .text-balance {

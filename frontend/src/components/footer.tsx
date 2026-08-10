@@ -11,7 +11,7 @@ const safariLinks = [
 ];
 
 const companyLinks = [
-  { label: "Blogs", href: "/blogs" },
+  { label: "Blogs", href: "https://africahomeadventure.com/blog.html" },
   { label: "Volunteering", href: "https://www.kvcdp.org/index.html" },
   { label: "Contact Us", href: "/contact" },
   { label: "Get a Quote", href: "/contact" },
@@ -144,7 +144,7 @@ export function Footer() {
               </a>
               <div className="flex items-start gap-3 text-sm text-primary-content/70">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                <span>YWCA Parkview Suites, Ground Floor, Nyerere Road, Opposite Central Park</span>
+                <span>YWCA Parkview Suites, Nairobi, Kenya</span>
               </div>
             </div>
           </div>

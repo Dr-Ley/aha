@@ -30,7 +30,7 @@ const contactMethods = [
     label: "Email",
     value: "info@africahomeadventure.com",
     href: "mailto:info@africahomeadventure.com",
-    description: "We respond within 24 hours",
+    description: "We respond within 2 hours",
   },
 ];
 
@@ -81,7 +81,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               </h2>
               <p className="mt-2 text-base-content/70">
                 Fill in the form below and our safari experts will get back to
-                you within 24 hours with a personalized response.
+                you within 2 hours with a personalized response.
               </p>
               <div className="mt-8">
                 <ContactForm initialSubject={subject} initialMessage={initialMessage} />
@@ -120,7 +120,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                             Quick Response
                           </p>
                           <p className="text-xs leading-relaxed text-base-content/60">
-                            We respond to all inquiries within 24 hours. Urgent
+                            We respond to all inquiries within 2 hours. Urgent
                             requests are handled immediately by phone.
                           </p>
                         </div>
