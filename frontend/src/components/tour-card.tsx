@@ -44,12 +44,15 @@ export function TourCard({ tour }: { tour: Tour }) {
     if (!slideshowActive) setActiveIndex((i) => (i + 1) % images.length);
   }, [isMobile, slideshowActive, images.length]);
 
+  const imageAlt = (index: number) =>
+    index === 0
+      ? `${tour.title} safari in ${tour.destination}`
+      : `${tour.title} safari in ${tour.destination} - image ${index + 1}`;
+
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-base-content/10 bg-base-100 shadow-sm transition-shadow hover:shadow-lg">
-      
       {/* Wrapper needed for positioning context */}
       <div className="relative">
-        
         {/* LikeButton overlay - outside hover-gallery but positioned over it */}
         <div className="absolute top-3 right-3 z-20 [&_button]:!border-0 [&_button]:shadow-lg [&_button]:bg-white/90 [&_button]:backdrop-blur-sm">
           <LikeButton
@@ -59,69 +62,77 @@ export function TourCard({ tour }: { tour: Tour }) {
           />
         </div>
 
-        {isMobile ? (
-          // Mobile: Slideshow
-          <figure
-            className="relative aspect-[4/3] overflow-hidden cursor-pointer"
-            onClick={handleImageClick}
-            role="button"
-            tabIndex={0}
-            aria-label="Start or stop image slideshow"
-          >
-            {images.map((src, i) => (
-              <Image
-                key={src}
-                src={src}
-                alt={i === 0 ? tour.title : `${tour.title} - image ${i + 1}`}
-                fill
-                className="object-cover transition-opacity duration-500"
-                style={{ opacity: i === activeIndex ? 1 : 0 }}
-                sizes="100vw"
-                loading="lazy"
-              />
-            ))}
-            
-            {/* Mobile slideshow indicator dots */}
-            {images.length > 1 && (
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
-                {images.map((_, i) => (
-                  <span
-                    key={i}
-                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                      i === activeIndex ? "bg-white" : "bg-white/50"
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
-          </figure>
-        ) : (
-          // Desktop: DaisyUI hover-gallery with horizontal hover zones
-          <figure className="hover-gallery aspect-[4/3]">
-            {images.map((src, i) => (
-              <Image
-                key={src}
-                src={src}
-                alt={`${tour.title} - image ${i + 1}`}
-                width={400}
-                height={300}
-                className="object-cover w-full h-full"
-                loading={i === 0 ? "eager" : "lazy"}
-              />
-            ))}
-          </figure>
-        )}
+        <figure>
+          {isMobile ? (
+            // Mobile: Slideshow
+            <div
+              className="relative aspect-[4/3] overflow-hidden cursor-pointer"
+              onClick={handleImageClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleImageClick();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="Start or stop image slideshow"
+            >
+              {images.map((src, i) => (
+                <Image
+                  key={src}
+                  src={src}
+                  alt={imageAlt(i)}
+                  fill
+                  className="object-cover transition-opacity duration-500"
+                  style={{ opacity: i === activeIndex ? 1 : 0 }}
+                  sizes="100vw"
+                  loading="lazy"
+                />
+              ))}
+
+              {/* Mobile slideshow indicator dots */}
+              {images.length > 1 && (
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                  {images.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                        i === activeIndex ? "bg-white" : "bg-white/50"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            // Desktop: DaisyUI hover-gallery with horizontal hover zones
+            <div className="hover-gallery aspect-[4/3]">
+              {images.map((src, i) => (
+                <Image
+                  key={src}
+                  src={src}
+                  alt={imageAlt(i)}
+                  width={400}
+                  height={300}
+                  className="object-cover w-full h-full"
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+              ))}
+            </div>
+          )}
+
+          <figcaption className="mb-2 flex items-center gap-1 px-5 pt-5">
+            <Star className="h-4 w-4 fill-accent text-accent" aria-hidden="true" />
+            <span className="text-sm font-medium">{tour.rating}</span>
+            <span className="text-xs text-base-content/60">
+              ({tour.reviewCount} reviews)
+            </span>
+          </figcaption>
+        </figure>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <div className="mb-2 flex items-center gap-1">
-          <Star className="h-4 w-4 fill-accent text-accent" />
-          <span className="text-sm font-medium">{tour.rating}</span>
-          <span className="text-xs text-base-content/60">
-            ({tour.reviewCount} reviews)
-          </span>
-        </div>
-
+      <div className="flex flex-1 flex-col px-5 pb-5">
         <h3 className="relative font-serif text-lg font-semibold leading-snug text-base-content transition-colors group-hover:text-primary">
           <Link href={`/tours/${tour.slug}`} className="after:absolute after:inset-0 after:block">
             {tour.title}
@@ -132,29 +143,41 @@ export function TourCard({ tour }: { tour: Tour }) {
           {tour.description}
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-base-content/60">
-          <span className="flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" /> {tour.duration}
-          </span>
-          <span className="flex items-center gap-1">
-            <MapPin className="h-3.5 w-3.5" /> {tour.destination}
-          </span>
-          <span className="flex items-center gap-1">
-            <Users className="h-3.5 w-3.5" /> {tour.groupSize}
-          </span>
-        </div>
+        <dl className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-base-content/60">
+          <div className="flex items-center gap-1">
+            <dt className="sr-only">Duration</dt>
+            <dd className="m-0 flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" aria-hidden="true" /> {tour.duration}
+            </dd>
+          </div>
+          <div className="flex items-center gap-1">
+            <dt className="sr-only">Destination</dt>
+            <dd className="m-0 flex items-center gap-1">
+              <MapPin className="h-3.5 w-3.5" aria-hidden="true" /> {tour.destination}
+            </dd>
+          </div>
+          <div className="flex items-center gap-1">
+            <dt className="sr-only">Group size</dt>
+            <dd className="m-0 flex items-center gap-1">
+              <Users className="h-3.5 w-3.5" aria-hidden="true" /> {tour.groupSize}
+            </dd>
+          </div>
+        </dl>
 
         <div className="mt-auto flex items-end justify-between border-t border-base-content/10 pt-5 overflow-hidden gap-2">
           <div className="min-w-0 flex-1">
             <p className="text-xs text-base-content/60">From</p>
             <div className="flex items-baseline gap-2 min-w-0">
-              <span className="text-lg font-bold text-base-content">
+              <data value={tour.price} className="text-lg font-bold text-base-content">
                 {formatPrice(tour.price)}
-              </span>
+              </data>
               {tour.originalPrice != null && (
-                <span className="text-xs text-base-content/50 line-through truncate">
+                <data
+                  value={tour.originalPrice}
+                  className="text-xs text-base-content/50 line-through truncate"
+                >
                   {formatPrice(tour.originalPrice)}
-                </span>
+                </data>
               )}
             </div>
             <p className="text-xs text-base-content/60">per person</p>

@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { TourDetail } from "@/components/tour-detail";
+import { JsonLd } from "@/components/json-ld";
 import { getTourBySlug, getTourSlugs } from "@/lib/tours-db";
+import { tourJsonLd } from "@/lib/json-ld";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -33,5 +35,10 @@ export default async function TourDetailPage({
   const tour = await getTourBySlug(slug);
   if (!tour) notFound();
 
-  return <TourDetail tour={tour} />;
+  return (
+    <>
+      <JsonLd data={tourJsonLd(tour)} />
+      <TourDetail tour={tour} />
+    </>
+  );
 }

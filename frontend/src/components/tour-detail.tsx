@@ -342,13 +342,13 @@ export function TourDetail({ tour }: { tour: Tour }) {
 
               <div className="divider" />
 
-              <div>
-                <h2 className="font-serif text-2xl font-bold">
+              <section aria-labelledby="itinerary-heading">
+                <h2 id="itinerary-heading" className="font-serif text-2xl font-bold">
                   Day-by-Day Itinerary
                 </h2>
-                <div className="mt-6 join join-vertical w-full">
+                <ol className="mt-6 join join-vertical w-full list-none p-0">
                   {tour.itinerary.map((day) => (
-                    <div
+                    <li
                       key={day.day}
                       className="collapse collapse-arrow join-item border border-base-content/10 bg-base-100"
                     >
@@ -357,21 +357,24 @@ export function TourDetail({ tour }: { tour: Tour }) {
                         name="itinerary"
                         defaultChecked={day.day === 1}
                       />
-                      <div className="collapse-title flex items-center gap-4 font-medium">
+                      <h3 className="collapse-title flex items-center gap-4 font-medium">
                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-bold">
                           {day.day}
                         </span>
                         {day.title}
-                      </div>
+                        <time dateTime="P1D" className="sr-only">
+                          1 day
+                        </time>
+                      </h3>
                       <div className="collapse-content">
                         <p className="pt-2 text-sm leading-relaxed text-base-content/70">
                           {day.description}
                         </p>
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
-              </div>
+                </ol>
+              </section>
 
               <div className="divider" />
 

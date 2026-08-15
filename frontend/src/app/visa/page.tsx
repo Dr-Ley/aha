@@ -707,23 +707,18 @@ export default function ETAVisaPage() {
             }`}
           >
             {currentData.faqs.map((faq, index) => (
-              <div
+              <details
                 key={index}
                 className="collapse collapse-arrow bg-base-100 border border-base-300 rounded-lg hover:border-primary/50 transition-colors"
+                open={index === 0}
               >
-                <input
-                  type="radio"
-                  name="faq-accordion"
-                  defaultChecked={index === 0}
-                  aria-label={faq.question}
-                />
-                <div className="collapse-title text-left font-medium">
+                <summary className="collapse-title text-left font-medium cursor-pointer">
                   {faq.question}
-                </div>
+                </summary>
                 <div className="collapse-content text-base-content/70">
                   <p>{faq.answer}</p>
                 </div>
-              </div>
+              </details>
             ))}
           </div>
         </Container>

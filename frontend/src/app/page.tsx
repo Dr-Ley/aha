@@ -44,7 +44,8 @@ function HeroSection() {
       <div className="relative mx-auto w-full max-w-7xl px-6 py-32">
         <div className="max-w-2xl">
         <span className="badge badge-accent mb-6 text-xs px-2 font-semibold uppercase tracking-wider">
-          KATO Certified Tour Operator
+          <abbr title="Kenya Association of Tour Operators">KATO</abbr> Certified
+          Tour Operator
         </span>
           <h1 className="font-serif text-4xl font-bold leading-tight text-white text-balance sm:text-5xl lg:text-6xl">
             Your Next Great Adventure Starts in Africa
@@ -332,8 +333,15 @@ function WhyChooseSection() {
     {
       icon: Shield,
       title: "Licensed & Certified",
-      description:
-        "KATO member FE/459 with Ministry of Tourism registration. Your holiday is fully protected under the KATO bonding scheme.",
+      description: (
+        <>
+          <abbr title="Kenya Association of Tour Operators">KATO</abbr> member
+          FE/459 with Ministry of Tourism registration. Your holiday is fully
+          protected under the{" "}
+          <abbr title="Kenya Association of Tour Operators">KATO</abbr> bonding
+          scheme.
+        </>
+      ),
     },
     {
       icon: Car,
@@ -374,19 +382,19 @@ function WhyChooseSection() {
 
         {/* Horizontal scrollable row */}
         <div className="mt-14 relative">
-          <div 
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          <ul
+            className="m-0 flex list-none gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-1 pb-4"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {features.map((f) => (
-              <div
-                key={f.title}
-                className="shrink-0 snap-start w-72 sm:w-80"
-              >
+              <li key={f.title} className="shrink-0 snap-start w-72 sm:w-80">
                 <div className="flex flex-col items-start rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm h-full">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                  <span
+                    className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10"
+                    aria-hidden="true"
+                  >
                     <f.icon className="h-6 w-6 text-primary" />
-                  </div>
+                  </span>
                   <h3 className="mt-4 font-serif text-lg font-semibold text-base-content">
                     {f.title}
                   </h3>
@@ -394,10 +402,10 @@ function WhyChooseSection() {
                     {f.description}
                   </p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
-          
+          </ul>
+
           {/* Scroll hint for mobile */}
           <div className="mt-2 text-center text-sm text-base-content/50 lg:hidden">
             ← Swipe to explore →
@@ -581,6 +589,11 @@ function ExperienceSection() {
   );
 }
 
+const testimonialTourCite: Record<string, string> = {
+  "7-Day Kenya Safari": "7-day-luxury-masai-mara-amboseli",
+  "3-Day Maasai Mara": "3-day-masai-mara-safari",
+};
+
 function TestimonialsSection() {
   return (
     <Section variant="secondary">
@@ -596,65 +609,71 @@ function TestimonialsSection() {
 
         {/* Horizontal scrollable testimonials */}
         <div className="mt-12 relative">
-          <div 
+          <div
             className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {testimonials.slice(0, 6).map((t, index) => {
               const source = testimonialSources[index % testimonialSources.length];
+              const tourSlug = testimonialTourCite[t.tour];
+              const cite = tourSlug
+                ? `https://africanhomeadventure.com/tours/${tourSlug}`
+                : "https://africanhomeadventure.com/tours";
               return (
-                <figure
+                <blockquote
                   key={t.id}
+                  cite={cite}
                   className="shrink-0 snap-start w-80 sm:w-96 flex flex-col rounded-xl border border-base-content/10 bg-base-100 p-6 shadow-sm"
                 >
-                <div className="mb-3 flex items-center gap-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < t.rating
-                          ? "fill-accent text-accent"
-                          : "fill-base-content/20 text-base-content/20"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <blockquote className="flex-1 text-sm leading-relaxed text-base-content/70">
-                  &ldquo;{t.text}&rdquo;
+                  <div className="mb-3 flex items-center gap-1" aria-label={`${t.rating} out of 5 stars`}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        aria-hidden="true"
+                        className={`h-4 w-4 ${
+                          i < t.rating
+                            ? "fill-accent text-accent"
+                            : "fill-base-content/20 text-base-content/20"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className="flex-1 text-sm leading-relaxed text-base-content/70">
+                    &ldquo;{t.text}&rdquo;
+                  </p>
+                  <footer className="mt-4 flex items-center justify-between gap-3 border-t border-base-content/10 pt-4">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
+                        {t.avatar}
+                      </div>
+                      <div className="min-w-0">
+                        <cite className="not-italic truncate text-sm font-semibold text-base-content block">
+                          {t.name}
+                        </cite>
+                        <p className="truncate text-xs text-base-content/60">
+                          {t.country} — {t.tour}
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      className="flex h-12 w-24 shrink-0 items-center justify-center rounded-xl border border-base-content/10 bg-white px-2 py-1 shadow-xs"
+                      aria-label={`${source.name} review`}
+                      title={`${source.name} review`}
+                    >
+                      <Image
+                        src={source.logo}
+                        alt={`${source.name} review logo`}
+                        width={88}
+                        height={36}
+                        className="max-h-9 w-auto object-contain"
+                      />
+                    </div>
+                  </footer>
                 </blockquote>
-                <figcaption className="mt-4 flex items-center justify-between gap-3 border-t border-base-content/10 pt-4">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content text-sm font-semibold">
-                      {t.avatar}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-base-content">
-                        {t.name}
-                      </p>
-                      <p className="truncate text-xs text-base-content/60">
-                        {t.country} — {t.tour}
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    className="flex h-12 w-24 shrink-0 items-center justify-center rounded-xl border border-base-content/10 bg-white px-2 py-1 shadow-xs"
-                    aria-label={`${source.name} review`}
-                    title={`${source.name} review`}
-                  >
-                    <Image
-                      src={source.logo}
-                      alt={`${source.name} review logo`}
-                      width={88}
-                      height={36}
-                      className="max-h-9 w-auto object-contain"
-                    />
-                  </div>
-                </figcaption>
-              </figure>
               );
             })}
           </div>
-          
+
           {/* Scroll hint for mobile */}
           <div className="mt-2 text-center text-sm text-base-content/50 lg:hidden">
             ← Swipe to see more →

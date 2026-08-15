@@ -6,6 +6,8 @@ import { SessionProvider } from "@/components/session-provider";
 import { AuthProvider } from "@/lib/auth-context";
 import { LikesProvider } from "@/lib/likes-context";
 import { SiteChrome } from "@/components/site-chrome";
+import { JsonLd } from "@/components/json-ld";
+import { organizationJsonLd } from "@/lib/json-ld";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -20,6 +22,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://africanhomeadventure.com"),
   title: "African Home Adventure | Kenya & Tanzania Safari Tours",
   description:
     "Premium safari tours in Kenya and Tanzania. Over 25 years of experience creating unforgettable African wildlife adventures. KATO certified tour operator.",
@@ -46,6 +49,7 @@ export default function RootLayout({
       className={`${dmSans.variable} ${playfair.variable}`}
     >
       <body className="font-sans antialiased flex min-h-screen min-w-0 flex-col">
+        <JsonLd data={organizationJsonLd()} />
         <SessionProvider>
           <AuthProvider>
           <LikesProvider>
