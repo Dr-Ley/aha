@@ -72,7 +72,7 @@ export function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="font-serif text-lg font-bold leading-tight">
-                  African Home Adventure
+                  African Home Adventure Safaris
                 </span>
               </div>
             </Link>
@@ -129,11 +129,11 @@ export function Footer() {
             </h3>
             <div className="flex flex-col gap-3">
               <a
-                href="tel:+254722760661"
+                href="tel:+254722760661,tel:+254793852450"
                 className="flex items-center gap-3 text-sm text-primary-content/70 transition-colors hover:text-primary-content"
               >
                 <Phone className="h-4 w-4 shrink-0" />
-                +254 722 760 661
+                +254 722 760 661 / +254 793 852 450 
               </a>
               <a
                 href="mailto:info@africahomeadventure.com"
@@ -144,7 +144,7 @@ export function Footer() {
               </a>
               <div className="flex items-start gap-3 text-sm text-primary-content/70">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                <span>YWCA Parkview Suites, Nairobi, Kenya</span>
+                <span>YWCA Parkview Suites Ground Floor, Nyerere Road, Nairobi, Kenya</span>
               </div>
             </div>
           </div>

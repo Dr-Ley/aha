@@ -541,10 +541,10 @@ export function TourDetail({ tour }: { tour: Tour }) {
                     Need help planning?
                   </p>
                   <a
-                    href="tel:+254722760661"
+                    href="tel:+254722760661,tel:+254793852450"
                     className="flex items-center justify-center gap-2 text-sm font-medium text-primary hover:underline"
                   >
-                    <Phone className="h-4 w-4" /> +254 722 760 661
+                    <Phone className="h-4 w-4" /> +254 722 760 661 / +254 793 852 450
                   </a>
                 </div>
               </div>

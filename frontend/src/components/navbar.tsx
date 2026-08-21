@@ -281,7 +281,7 @@ export function Navbar() {
             className="hidden min-w-0 flex-col overflow-hidden transition-all duration-500 ease-in-out sm:flex max-w-xs opacity-100 translate-x-0"
           >
               <span className="font-serif text-lg font-bold leading-tight text-base-content truncate">
-                African Home Adventure
+                African Home Adventure Safaris
               </span>
             </div>
             )}
