@@ -21,8 +21,8 @@ const contactMethods = [
   {
     icon: Phone,
     label: "Phone",
-    value: ["+254 722 760 661 / +254 793 852 450"],
-    href: ["tel:+254722760661,tel:+254793852450"],
+    value: "+254 722 760 661 / +254 793 852 450",
+    href: "tel:+254722760661",
     description: "Call us directly for immediate assistance",
   },
   {
