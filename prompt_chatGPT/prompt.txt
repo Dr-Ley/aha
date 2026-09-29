@@ -1,0 +1,25 @@
+1. safari bookings and hotel stays should allow multiple guest entries. guests should have their own table with the following columns: first name, last name, email, phone, guest country. let the hotel_bookings allow multiple rooms. let there be a plus button to add another room in the new stay and edit stay forms
+
+2. let the safari bookings and hotel stays include the number of adults and number of children fields. add child discount logic(children park fees and accommodation rates) add child price in javacript grand total
+
+3. notifications should be unique to each user, that is, notifications are sent to users independently. if a user opens a notification and is marked as read, the same notification should not be marked as read by another user.(currently when a user opens a notification it is marked as read by all users)
+
+4. add original amount field
+
+5. calendar that shows bookings/hotel stays which are color coded according to their status(confirmed and paid-green, confirmed and partially paid/unpaid-orange, pending-orange, other statuses-red)
+
+6. add another staff user that can only view modules(cannot download xls, cannot create new entries)
+
+7. i want to connect resend to the dashboard such that i am able to send multiple emails () using webhooks
+
+8. create a safari itinerary generator
+
+9. tours carousel placed strategically in every page
+
+10. search engine optimization. use google and upload sitemap.xml, robots.txt, llms.txt
+
+11. replace mid-range option with semi-luxury in all instances
+
+12. create sql that creates a list of all unique external_company from hotel_bookings table
+
+13. in the bar module, 

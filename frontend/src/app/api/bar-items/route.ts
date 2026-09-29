@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { barCategories, barItems } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkApiPermission, canAccessDashboardFromSession } from "@/lib/permissions-server";
+import { requireTenantContext } from "@/server/tenancy";
 import { and, desc, eq, sql } from "drizzle-orm";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
 import { z } from "zod";
 import { companyIdZod } from "@/lib/schemas/company-id";
-
-function getUserId(session: { user?: { id?: string | null } } | null): number | null {
-  if (!session?.user?.id) return null;
-  return typeof session.user.id === "string" ? parseInt(session.user.id, 10) : session.user.id;
-}
 
 const postSchema = z.object({
   companyId: companyIdZod,
@@ -24,14 +17,12 @@ const postSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const companyId = resolveCompanyId(new URL(request.url).searchParams.get("companyId"));
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), {
+      module: "bar",
+      requireEdit: false,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const list = await db
       .select({
         item: barItems,
@@ -53,18 +44,17 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const body = postSchema.safeParse(await request.json());
     if (!body.success) {
       return NextResponse.json({ error: body.error.flatten().fieldErrors }, { status: 400 });
     }
+    const tenant = await requireTenantContext(body.data.companyId, {
+      module: "bar",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const d = body.data;
-    if (!isValidCompanyId(d.companyId)) {
-      return NextResponse.json({ error: "Invalid company" }, { status: 400 });
-    }
     const normalizedName = d.name.trim().toLowerCase();
     const [existing] = await db
       .select({
@@ -73,7 +63,7 @@ export async function POST(request: NextRequest) {
       })
       .from(barItems)
       .leftJoin(barCategories, eq(barItems.categoryId, barCategories.id))
-      .where(and(eq(barItems.companyId, d.companyId), sql`lower(${barItems.name}) = ${normalizedName}`))
+      .where(and(eq(barItems.companyId, companyId), sql`lower(${barItems.name}) = ${normalizedName}`))
       .limit(1);
     if (existing) {
       return NextResponse.json({
@@ -88,14 +78,14 @@ export async function POST(request: NextRequest) {
       const [defaultCat] = await db
         .select()
         .from(barCategories)
-        .where(and(eq(barCategories.companyId, d.companyId), sql`lower(${barCategories.name}) = ${"uncategorized"}`))
+        .where(and(eq(barCategories.companyId, companyId), sql`lower(${barCategories.name}) = ${"uncategorized"}`))
         .limit(1);
       if (defaultCat) {
         categoryId = defaultCat.id;
       } else {
         const [createdCat] = await db
           .insert(barCategories)
-          .values({ companyId: d.companyId, name: "Uncategorized", sortOrder: 999 })
+          .values({ companyId, name: "Uncategorized", sortOrder: 999 })
           .returning();
         categoryId = createdCat.id;
       }
@@ -104,7 +94,7 @@ export async function POST(request: NextRequest) {
     const [cat] = await db
       .select()
       .from(barCategories)
-      .where(and(eq(barCategories.id, categoryId), eq(barCategories.companyId, d.companyId)))
+      .where(and(eq(barCategories.id, categoryId), eq(barCategories.companyId, companyId)))
       .limit(1);
     if (!cat) {
       return NextResponse.json({ error: "Category not found for this company" }, { status: 400 });
@@ -112,7 +102,7 @@ export async function POST(request: NextRequest) {
     const [row] = await db
       .insert(barItems)
       .values({
-        companyId: d.companyId,
+        companyId,
         categoryId,
         name: d.name.trim(),
         description: d.description ?? null,

@@ -7,8 +7,9 @@ import { Footer } from "@/components/footer";
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isDashboardRoute = pathname.startsWith("/dashboard");
+  const isPrintRoute = pathname.startsWith("/print");
 
-  if (isDashboardRoute) {
+  if (isDashboardRoute || isPrintRoute) {
     return <main className="flex-1">{children}</main>;
   }
 

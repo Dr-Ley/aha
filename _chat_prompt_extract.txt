@@ -1,0 +1,6619 @@
+Perfect. These answers give us enough to formally establish the first architecture document.
+One particularly important clarification from your answer to #4: I recommend that we design the platform so an external tour operator can connect its website to the SaaS without requiring us to rebuild its website. I'll explain that within the document because it will influence our API architecture later.
+Document 1 — System Context & Target Architecture
+Project: Enzi SaaS PlatformPrimary Tenant / First Implementation: African Home AdventurePrimary Domain: africanhomeadventure.comArchitecture Status: Target architectureDocument Owner: CTO / FounderVersion: 1.0
+1. Executive Summary
+The project began as the public website and operational dashboard for African Home Adventure (AHA), a Kenya/Tanzania tour operator.
+The system has since evolved into a broader vision: Enzi, a tourism and hospitality-focused technology company that will develop a scalable SaaS platform capable of supporting multiple companies, industries, countries, websites, and business processes.
+The strategic direction is therefore:
+Build Enzi as a tourism/hospitality-focused SaaS platform, initially validated through African Home Adventure, with AI-powered safari itinerary generation as a major commercial product.
+The platform will become the central source of operational and business information for companies using it.
+The companies' public websites will remain customer-facing systems, while Enzi provides the underlying business infrastructure.
+2. Enzi Business Context
+The high-level business structure is:
+ENZI
+Technology Company
+Highest Revenue Business
+│
+┌─────────────┼─────────────┐
+│             │             │
+▼             ▼             ▼
+AHA          Enchoro        Bondo
+│             │             │
+Tourism      Tourism +      Hospitality
+Hospitality
+│             │             │
+└─────────────┼─────────────┘
+│
+Enzi SaaS Platform
+│
+┌─────────┴─────────┐
+│                   │
+Internal Companies   External Customers
+Enzi is therefore not simply another operating business.
+It is the technology platform and commercial technology company supporting the wider business group.
+Your long-term vision is that Enzi becomes the highest-revenue and highest-margin business in the group.
+3. First Principle: AHA Is the First Tenant
+African Home Adventure should not be treated as the permanent "owner" of the software architecture.
+Instead:
+Enzi SaaS
+│
+└── Tenant
+│
+└── African Home Adventure
+This distinction is critical.
+AHA is effectively our first internal customer and our first environment for validating the platform.
+The development cycle becomes:
+Build
+↓
+Deploy to AHA
+↓
+Use operationally
+↓
+Identify problems
+↓
+Improve platform
+↓
+Standardize capability
+↓
+Offer to external customers
+This gives Enzi a real-world testing environment before selling the SaaS externally.
+4. Current System Context
+Today, the primary application is:
+africanhomeadventure.com
+It contains both:
+Public Website
++
+Internal Dashboard
+Conceptually:
+INTERNET
+│
+▼
+africanhomeadventure.com
+│
+┌───────┴────────┐
+│                │
+▼                ▼
+PUBLIC WEBSITE     DASHBOARD
+│                │
+│                │
+└───────┬────────┘
+▼
+Next.js App
+│
+▼
+API Layer
+│
+▼
+Neon
+PostgreSQL
+We will keep this arrangement initially.
+We will not introduce unnecessary infrastructure merely for architectural purity.
+5. Target System Context
+The target architecture expands the existing system into:
+ENZI SaaS PLATFORM
+│
+┌────────────────────┼────────────────────┐
+│                    │                    │
+▼                    ▼                    ▼
+Platform Core       Industry Modules      Intelligence
+│                    │                    │
+│             ┌──────┼───────┐            │
+│             │      │       │            │
+│          Tourism Hospitality Retail     │
+│             │      │                    │
+└─────────────┴──────┴────────────────────┘
+│
+Multi-Tenant Core
+│
+┌────────────────────┼────────────────────┐
+│                    │                    │
+▼                    ▼                    ▼
+AHA               Enchoro               Bondo
+│                    │                    │
+▼                    ▼                    ▼
+Website              Website              Website
+Later:
+ENZI SaaS
+│
+┌──────────────────┼──────────────────┐
+│                  │                  │
+AHA             Enchoro             Bondo
+│                  │                  │
+Website            Website            Website
+│                  │                  │
+└──────────────────┼──────────────────┘
+│
+External Customers
+│
+┌───────────────┼───────────────┐
+▼               ▼               ▼
+Operator A      Operator B      Operator C
+│               │               │
+Website         Website         Website
+6. What Exactly Is the SaaS?
+This is an important definition.
+Enzi SaaS is not simply a dashboard.
+It is a collection of business capabilities exposed through:
+Web dashboard
+APIs
+Website integrations
+AI services
+Notifications
+Documents
+Reporting and intelligence
+The dashboard is simply one interface to the platform.
+Conceptually:
+ENZI PLATFORM
+│
+┌─────────────┼─────────────┐
+│             │             │
+▼             ▼             ▼
+Dashboard       API        AI Services
+│             │             │
+└─────────────┼─────────────┘
+▼
+Domain Services
+│
+▼
+Database
+This distinction will be extremely important when we eventually allow external websites to connect.
+7. Company/Tenant Architecture
+The fundamental relationship is:
+Enzi Platform
+│
+├── Tenant: African Home Adventure
+│
+├── Tenant: Enchoro Wildlife Camp
+│
+├── Tenant: Bondo Travellers Hotel
+│
+├── Tenant: KVCDP
+│
+└── External SaaS Tenants
+Each tenant owns its own:
+customers
+bookings
+orders
+payments
+employees
+documents
+operational records
+configuration
+reports
+enabled modules
+Tenant data must never accidentally cross into another tenant.
+8. Multi-Country Architecture
+The platform must support companies operating in multiple countries.
+For example:
+African Home Adventure
+│
+├── Kenya
+│   ├── Nairobi
+│   ├── Maasai Mara
+│   ├── Amboseli
+│   └── Other operations
+│
+└── Tanzania
+├── Arusha
+├── Serengeti
+├── Ngorongoro
+└── Other operations
+Eventually:
+Company
+│
+├── Kenya
+├── Tanzania
+└── Uganda
+Therefore country should not be treated as the tenant itself.
+The hierarchy should eventually resemble:
+Platform
+↓
+Company/Tenant
+↓
+Country
+↓
+Branch / Location / Operation
+This will become important for:
+currency
+taxes
+employees
+inventory
+vehicles
+accommodation
+suppliers
+reporting
+regulatory configuration
+9. Website Architecture
+Initially:
+africanhomeadventure.com
+│
+├── Public website
+└── /dashboard
+We retain this.
+However, the target architecture treats the website as a client of the SaaS platform, rather than the SaaS platform being an extension of the website.
+Eventually:
+ENZI PLATFORM
+│
+API Layer
+│
+┌──────┴──────┐
+│             │
+AHA Website      AHA Dashboard
+│             │
+└──────┬──────┘
+│
+AHA
+Tenant
+This is a major architectural principle.
+10. How External Tour Operators Connect Their Websites
+This is the part you were unsure about.
+They don't necessarily need to give us their website.
+Imagine an external tour operator has:
+www.example-safaris.com
+They subscribe to Enzi.
+Their website could communicate with Enzi through an API.
+For example:
+Customer
+↓
+Tour Operator Website
+↓
+Enzi API
+↓
+Tour Operator Tenant
+↓
+Tourism Module
+↓
+Database
+Example
+Customer visits:
+example-safaris.com
+and requests:
+7-day Kenya safari for 2 adults.
+The website sends the request to Enzi:
+POST /api/v1/itineraries
+Enzi generates/returns:
+Itinerary
+Price
+Accommodation
+Transport
+Activities
+Dates
+The website displays the result.
+The customer then submits a booking.
+Website
+↓
+Enzi API
+↓
+Booking
+↓
+Customer
+↓
+Payment
+The external company therefore uses Enzi as its backend business engine.
+11. This Is Why the API Is Strategically Important
+Eventually, the SaaS should not be:
+Website → Dashboard
+It should be:
+ENZI API
+│
+┌──────────────┼───────────────┐
+│              │               │
+▼              ▼               ▼
+AHA Website    Enchoro Website   External Websites
+│              │               │
+└──────────────┼───────────────┘
+│
+▼
+Enzi Platform
+This makes the platform much more valuable.
+A customer isn't paying merely for a dashboard.
+They're paying for:
+business infrastructure that their website, staff and customers can interact with.
+12. Multiple Websites Per Company
+You want companies to potentially have multiple websites as long as doing so does not become expensive or operationally burdensome.
+Therefore the architecture should eventually support:
+Company
+│
+├── Website A
+├── Website B
+└── Website C
+Each website can have configuration such as:
+Website
+├── Domain
+├── Brand
+├── Theme
+├── Enabled products
+├── Content configuration
+├── Tenant
+└── API credentials
+This allows:
+AHA
+│
+├── africanhomeadventure.com
+└── another-brand.com
+without creating another company record.
+13. Platform Core
+The platform core contains capabilities that are broadly reusable across industries.
+Based on our previous architecture work:
+ENZI CORE
+│
+├── Identity & Access Management
+├── Company Management
+├── Tenant Management
+├── User Management
+├── Permissions
+├── Settings
+├── Feature Flags
+├── Notifications
+├── Documents
+├── Search
+├── API & Integrations
+├── Audit Logs
+└── System Configuration
+These capabilities should not be duplicated for every industry.
+14. Commercial Core
+Commercial functionality should also be reusable.
+Commercial
+│
+├── Products
+├── Services
+├── Pricing
+├── Orders
+├── Bookings
+├── Invoices
+├── Payments
+├── Discounts
+└── Financial Records
+Tourism can use it.
+Hospitality can use it.
+Retail can use it.
+Potentially the NGO can use parts of it.
+15. Tourism Module
+Tourism is the first major vertical.
+Tourism
+│
+├── Tour Packages
+├── Destinations
+├── Attractions
+├── Itineraries
+├── Accommodation
+├── Vehicles
+├── Guides
+├── Flights
+├── Park Fees
+├── Transfers
+├── Safari Documents
+└── Safari Pricing
+This becomes the foundation for the AI itinerary product.
+16. AI Itinerary Platform
+The AI itinerary engine should not live inside AHA-specific code.
+Instead:
+Enzi
+│
+└── Tourism
+│
+└── AI Itinerary Engine
+Then:
+AHA
+↓
+AI Itinerary Engine
+and:
+Enchoro
+↓
+AI Itinerary Engine
+and eventually:
+External Tour Operator
+↓
+Subscription
+↓
+AI Itinerary Engine
+This directly supports your strategic focus:
+AI Safari Products
+17. AI Does Not Own the Business Data
+This is an important principle.
+AI should not become the source of truth.
+Instead:
+DATABASE
+Source of Truth
+│
+┌─────────┴─────────┐
+│                   │
+Business             AI
+Logic               Engine
+│                   │
+└─────────┬─────────┘
+▼
+Recommendation
+For example, AI can recommend an accommodation.
+But the authoritative information should come from the platform:
+Accommodation
+Price
+Availability
+Location
+Capacity
+Amenities
+AI interprets the data.
+It doesn't invent it.
+18. Accommodation Architecture
+Your previous decisions give us an important distinction.
+AHA:
+Third-party accommodation
+Enchoro:
+Own accommodation
+Therefore:
+Accommodation
+│
+├── Partner-owned
+└── Tenant-owned
+The same tourism infrastructure can support both.
+This becomes a very valuable capability when the itinerary engine needs real prices and availability.
+19. Vehicle Architecture
+Likewise:
+Vehicle
+│
+├── Company-owned
+└── Outsourced
+AHA currently has:
+3 company vehicles
++
+external vehicles on demand
+The platform therefore needs to distinguish ownership and availability.
+20. User Context
+Initial AHA dashboard users:
+AHA
+│
+├── Owner / Founder
+├── Administrator
+├── Sales Staff
+├── Operations Staff
+├── Tour Guides
+└── Finance / Accounting
+These should become tenant-level roles, rather than being hardcoded into the AHA application.
+For example:
+Finance
+↓
+payments.read
+payments.edit
+invoices.read
+reports.read
+rather than:
+if user.role === "finance"
+everywhere.
+21. External Systems
+The target platform will eventually interact with:
+ENZI
+│
+┌──────────────┼──────────────┐
+│              │              │
+Neon          Resend        Payment APIs
+│              │              │
+PostgreSQL        Email        M-Pesa/Card/etc.
+And later potentially:
+Maps / Geolocation
+AI Providers
+Accommodation Partners
+Flight APIs
+Accounting Systems
+Messaging Platforms
+Analytics
+These should be treated as integrations, not embedded directly into business logic.
+22. Resend Context
+Because africanhomeadventure.com already exists, the first email integration will be tenant-specific to AHA.
+Conceptually:
+Enzi
+│
+└── AHA Tenant
+│
+└── Email Configuration
+│
+▼
+Resend
+│
+▼
+africanhomeadventure.com
+Later:
+Enzi
+│
+├── AHA → AHA domain
+├── Enchoro → Enchoro domain
+├── Bondo → Bondo domain
+└── External Tenant → Their domain
+This is another reason to make email configuration tenant-aware from the beginning.
+23. Security Boundaries
+There will be several important trust boundaries.
+Internet
+│
+▼
+Public Website
+│
+▼
+API
+│
+▼
+Authentication
+│
+▼
+Tenant Authorization
+│
+▼
+Domain Services
+│
+▼
+Database
+The most important rule:
+A client must never be trusted to determine which company's data it is allowed to access.
+The server determines that.
+24. Data Ownership Principle
+Every tenant-owned record should ultimately be traceable to a company.
+For example:
+Booking
+↓
+Company
+Payment
+↓
+Company
+Customer
+↓
+Company
+Vehicle
+↓
+Company
+This provides the foundation for tenant isolation.
+Some global reference data may intentionally be shared, such as:
+Kenya
+Tanzania
+Uganda
+or potentially:
+Maasai Mara
+Serengeti
+Ngorongoro
+But we must explicitly distinguish:
+Global reference data vs tenant-owned operational data.
+25. Architectural Principles
+I recommend we formally adopt these principles.
+Principle 1 — AHA is a tenant, not the platform
+No AHA-specific assumptions should exist in the core architecture.
+Principle 2 — Enzi is the source of truth
+Websites consume platform data.
+Principle 3 — APIs are first-class
+The dashboard and websites should eventually consume the same domain services/API capabilities.
+Principle 4 — Tenant isolation is mandatory
+No cross-company access.
+Principle 5 — Configuration over hardcoding
+Companies should be configured rather than hardcoded.
+Principle 6 — Modules over duplicated applications
+Tourism, hospitality and future industries should be modules.
+Principle 7 — AI assists; it does not become the source of truth
+AI recommendations must be grounded in platform data.
+Principle 8 — Financial data requires strong consistency
+Payments, invoices and financial records require transactional integrity.
+Principle 9 — Build for multiple countries
+Country, currency, tax and location must be configurable.
+Principle 10 — Build incrementally
+Do not rewrite working software without a business reason.
+26. Current → Target Transition
+Our migration looks like this:
+CURRENT
+African Home Adventure
+│
+├── Website
+└── Dashboard
+│
+▼
+AHA Database
+↓
+REFACTOR
+TARGET
+ENZI
+│
+SaaS Platform
+│
+┌─────────┴─────────┐
+│                   │
+Core Platform      Industry Modules
+│                   │
+└─────────┬─────────┘
+│
+Tenant
+│
+AHA
+│
+┌────────┴─────────┐
+│                  │
+Website            Dashboard
+│                  │
+└────────┬─────────┘
+│
+▼
+Enzi API
+│
+▼
+Neon
+27. The Target Architecture in One Diagram
+This is the architecture I want us to carry into the next documents:
+ENZI
+TECHNOLOGY COMPANY
+│
+▼
+┌─────────────────┐
+│  ENZI SaaS CORE  │
+└────────┬────────┘
+│
+┌─────────────────────────┼─────────────────────────┐
+│                         │                         │
+▼                         ▼                         ▼
+PLATFORM CORE            COMMERCIAL CORE            INTELLIGENCE
+│                         │                         │
+┌──────┼──────┐                  │                  ┌──────┼──────┐
+│      │      │                  │                  │      │      │
+IAM   CRM   Documents         Payments            BI     AI   Analytics
+│
+└─────────────────────────┐
+│
+INDUSTRY MODULES
+│
+┌─────────────────────┼─────────────────────┐
+│                     │                     │
+▼                     ▼                     ▼
+TOURISM             HOSPITALITY             RETAIL
+│                     │
+│                     │
+AI ITINERARY ENGINE          │
+│                     │
+└──────────┬──────────┘
+│
+MULTI-TENANT
+│
+┌────────────────┼─────────────────┐
+│                │                 │
+▼                ▼                 ▼
+AHA            ENCHORO            BONDO
+│                │                 │
+▼                ▼                 ▼
+Website          Website           Website
+│                │                 │
+└────────────────┼─────────────────┘
+│
+ENZI API
+│
+▼
+PostgreSQL
+Neon
+28. What This Means for Your AI Itinerary Business
+Your clarification about the AI itinerary generator changes the commercial architecture significantly.
+I would make it a product within Enzi, not merely an AHA feature.
+Eventually:
+ENZI
+│
+Tourism Technology
+│
+┌──────────┴──────────┐
+│                     │
+Business Platform     AI Safari Products
+│
+AI Itinerary Generator
+│
+┌───────────────┼───────────────┐
+│               │               │
+AHA           Enchoro       External Operators
+│               │               │
+Included         Included       Subscription
+This gives you two complementary revenue models:
+Enzi SaaS
+Monthly subscription for business operations.
+AI Safari Product
+Subscription/API/product specifically for itinerary generation.
+That aligns very well with your stated five-year strategic priority.
+29. What We Have Decided
+I would record the following as Architecture Decision Records:
+ID
+Decision
+ADR-001
+Enzi is the technology company and SaaS owner
+ADR-002
+AHA is the first Enzi tenant
+ADR-003
+africanhomeadventure.com remains website + dashboard initially
+ADR-004
+Website and SaaS will eventually be separable
+ADR-005
+Enzi will be tourism/hospitality focused initially
+ADR-006
+Platform will support multiple tenants
+ADR-007
+Platform will support multiple countries
+ADR-008
+Platform will support multiple websites per company
+ADR-009
+External websites will integrate through APIs
+ADR-010
+AI itinerary generation will be an Enzi tourism capability
+ADR-011
+Enzi remains the source of truth
+ADR-012
+AHA-specific assumptions must be removed from the platform core
+ADR-013
+Tenant isolation is enforced server-side
+ADR-014
+AHA will be used as Enzi's internal validation environment
+30. One CTO recommendation before Document 2
+I want to make one strategic recommendation based on everything we've designed so far:
+Don't make "multi-industry" the immediate architectural goal.
+Make this:
+Enzi = tourism & hospitality operating platform + AI tourism technology.
+Then design the architecture so other industries can be added.
+That means:
+ENZI
+│
+Tourism + Hospitality
+│
+┌──────────┴──────────┐
+│                     │
+Core Platform        Tourism Engine
+│                     │
+│              AI Itinerary
+│                     │
+└──────────┬──────────┘
+│
+Future expansion
+│
+┌──────────┼──────────┐
+▼          ▼          ▼
+Retail      NGO       Other
+This keeps the product focused enough to actually build and sell, while preserving the architecture you need for your larger vision.
+Document 1 status: COMPLETE — Draft v1.0
+The next document should be Document 2 — Application Architecture.
+There we will go much deeper into the actual software:
+Next.js
+│
+├── Public Website
+├── Dashboard
+├── API
+├── Authentication
+├── Tenant Context
+├── Authorization
+├── Domain Services
+├── Tourism Engine
+├── AI Itinerary Engine
+├── Email
+├── Payments
+└── Background Jobs
+And we'll decide exactly how your current Next.js application should be reorganized without destroying the working AHA website.
+That is where we'll start translating this business/system architecture into actual folders, modules, services, APIs, and deployment boundaries.
+Absolutely. Document 2 will translate Document 1's business/system context into the actual software architecture.
+Because the current AHA application already exists, I recommend that we design this as a target architecture + migration architecture, rather than pretending we're starting from zero.
+Document 2 — Application Architecture
+Project: Enzi SaaS PlatformPrimary Tenant: African Home AdventureCurrent Domain: africanhomeadventure.comPrimary Stack: Next.js, React, Tailwind CSS, DaisyUI, PostgreSQL, Neon, Drizzle ORMArchitecture Status: Target Architecture v1.0
+1. Purpose
+This document defines how the Enzi software will be structured internally.
+Document 1 answered:
+What is Enzi and how do the systems interact?
+Document 2 answers:
+How should we build the software that implements that system?
+The architecture must achieve five things:
+Preserve the existing AHA website.
+Support the AHA dashboard.
+Establish a genuine multi-tenant SaaS foundation.
+Allow external websites to consume Enzi through APIs.
+Provide a foundation for the AI itinerary product.
+2. Architectural Strategy
+We will initially use a modular monolithic Next.js application.
+That means:
+One deployable application, internally divided into strong business modules and boundaries.
+We will not start with microservices.
+The target is:
+ENZI APPLICATION
+│
+┌──────────────────┼──────────────────┐
+│                  │                  │
+▼                  ▼                  ▼
+Website            Dashboard            API
+│                  │                  │
+└──────────────────┼──────────────────┘
+│
+Application Layer
+│
+Domain / Modules
+│
+Infrastructure
+│
+Neon DB
+This gives us the simplicity of a monolith while preserving boundaries that allow future extraction if necessary.
+3. Why Not Microservices?
+At this stage, microservices would create unnecessary complexity.
+You currently need:
+one small development team
+rapid iteration
+low infrastructure cost
+easy deployment
+easy debugging
+shared business data
+strong transactional consistency
+A modular monolith gives us:
+Low complexity
++
+Clear architecture
++
+Shared database
++
+Fast development
++
+Future extraction capability
+If Enzi eventually has substantial external SaaS traffic, we can extract specific high-load services.
+For example:
+Enzi Application
+│
+├── Core
+├── CRM
+├── Commercial
+├── Tourism
+└── Hospitality
+│
+└── later extracted
+Potential future services:
+AI Itinerary Service
+Email Service
+Payment Service
+Search Service
+Reporting Service
+But not yet.
+4. High-Level Application Architecture
+The application will have six major layers.
+┌───────────────────────────────────────────┐
+│                EXPERIENCE                 │
+│                                           │
+│ Website │ Dashboard │ External Websites   │
+└─────────────────────┬─────────────────────┘
+│
+┌─────────────────────▼─────────────────────┐
+│                    API                    │
+│                                           │
+│ REST API │ Webhooks │ Internal Endpoints  │
+└─────────────────────┬─────────────────────┘
+│
+┌─────────────────────▼─────────────────────┐
+│              APPLICATION                  │
+│                                           │
+│ Use Cases │ Commands │ Queries │ Services │
+└─────────────────────┬─────────────────────┘
+│
+┌─────────────────────▼─────────────────────┐
+│                  DOMAIN                   │
+│                                           │
+│ Core │ CRM │ Commercial │ Tourism │ etc.  │
+└─────────────────────┬─────────────────────┘
+│
+┌─────────────────────▼─────────────────────┐
+│             INFRASTRUCTURE                │
+│                                           │
+│ DB │ Email │ AI │ Payments │ Storage      │
+└───────────────────────────────────────────┘
+This layering is important because it prevents our UI from becoming tightly coupled to database queries.
+5. Experience Layer
+The experience layer contains interfaces through which users interact with Enzi.
+Initially:
+Experience
+│
+├── AHA Public Website
+├── AHA Dashboard
+└── API Consumers
+Eventually:
+Experience
+│
+├── Public Websites
+├── SaaS Dashboard
+├── Customer Portal
+├── External Websites
+├── Mobile Applications
+└── API Consumers
+6. Public Website
+For now, the AHA website remains within the existing Next.js application.
+Conceptually:
+src/app/
+│
+├── (public)/
+│
+│   ├── page.tsx
+│   ├── tours/
+│   ├── destinations/
+│   ├── accommodation/
+│   ├── booking/
+│   └── contact/
+│
+└── dashboard/
+The public website should primarily consume public-facing application services/API functionality.
+It should not directly manipulate business tables from client components.
+7. Dashboard
+The dashboard is a separate experience layer within the same application.
+Conceptually:
+/dashboard
+│
+├── overview
+├── customers
+├── bookings
+├── payments
+├── revenue
+├── expenses
+├── tourism
+├── accommodation
+├── operations
+├── reports
+└── settings
+The dashboard is tenant-aware.
+For example:
+User
+↓
+AHA Membership
+↓
+Dashboard
+↓
+AHA data
+If the same user later belongs to Enchoro:
+User
+↓
+Enchoro Membership
+↓
+Dashboard
+↓
+Enchoro data
+8. Dashboard Must Not Be the Business Logic
+This is a major architectural rule.
+Avoid:
+React Component
+↓
+Drizzle Query
+↓
+Database
+for important business operations.
+Instead:
+React Component
+↓
+API / Server Action
+↓
+Application Service
+↓
+Domain Logic
+↓
+Repository
+↓
+Database
+This means the same business capability can later be used by:
+dashboard
+AHA website
+external websites
+AI
+mobile apps
+9. API Layer
+The API becomes one of the most strategically important components of Enzi.
+Initially:
+Next.js
+│
+└── /api/
+Eventually:
+/api/v1/
+with domain-oriented endpoints.
+For example:
+/api/v1/customers
+/api/v1/bookings
+/api/v1/payments
+/api/v1/tours
+/api/v1/accommodations
+/api/v1/itineraries
+10. API Consumers
+The API should support several types of consumers.
+ENZI API
+│
+┌─────────────┼─────────────┐
+│             │             │
+▼             ▼             ▼
+AHA Site      Dashboard    External Site
+Later:
+ENZI API
+│
+┌────────────────┼────────────────┐
+│                │                │
+Web             Mobile          Partners
+This is what turns Enzi from a dashboard into a platform.
+11. API Versioning
+Because you eventually want external customers, we should not expose an API that we casually change.
+Use:
+/api/v1/
+rather than:
+/api/
+for public/platform APIs.
+Then later:
+/api/v1/
+↓
+/api/v2/
+when breaking changes become necessary.
+12. Application Layer
+The application layer coordinates business operations.
+For example:
+CreateBooking
+GenerateItinerary
+CalculateSafariPrice
+RecordPayment
+CreateInvoice
+CreateCustomer
+SendBookingConfirmation
+Conceptually:
+CreateBooking
+│
+├── validate customer
+├── validate tenant
+├── validate itinerary
+├── calculate price
+├── create booking
+├── create financial records
+└── trigger notification
+The UI shouldn't have to understand all of this.
+13. Domain Layer
+The domain layer contains the actual business concepts.
+The initial structure should be:
+Domain
+│
+├── Identity
+├── Tenancy
+├── CRM
+├── Commercial
+├── Operations
+├── Tourism
+├── Hospitality
+├── Intelligence
+└── Platform
+14. Identity & Tenancy
+This is foundational.
+Identity
+│
+├── User
+├── Authentication
+├── Membership
+├── Role
+├── Permission
+└── Session
+Tenancy:
+Tenancy
+│
+├── Company
+├── Membership
+├── Company Settings
+├── Modules
+├── Websites
+├── Locations
+└── Countries
+15. CRM Module
+CRM
+│
+├── Leads
+├── Customers
+├── Organizations
+├── Contacts
+├── Customer Documents
+├── Communications
+├── Feedback
+└── Loyalty
+This is shared across industries.
+A tour operator needs it.
+A hotel needs it.
+A retailer needs it.
+Therefore CRM belongs in the core platform, not the tourism module.
+16. Commercial Module
+Commercial
+│
+├── Products
+├── Services
+├── Pricing
+├── Orders
+├── Bookings
+├── Invoices
+├── Payments
+└── Discounts
+Again, this should be reusable.
+A safari booking is a commercial transaction.
+A hotel reservation is a commercial transaction.
+A retail order is a commercial transaction.
+17. Tourism Module
+Tourism
+│
+├── Tour Packages
+├── Destinations
+├── Attractions
+├── Itineraries
+├── Accommodation
+├── Vehicles
+├── Guides
+├── Flights
+├── Park Fees
+├── Transfers
+├── Safari Documents
+└── Safari Pricing
+This is the first major vertical module.
+18. Hospitality Module
+Hospitality
+│
+├── Properties
+├── Rooms
+├── Room Types
+├── Reservations
+├── Housekeeping
+├── Restaurant
+├── Bar
+├── POS
+├── Menus
+└── Events
+Enchoro can use both:
+Tourism
++
+Hospitality
+Bondo can primarily use:
+Hospitality
+19. Retail Module
+Later:
+Retail
+│
+├── Products
+├── Categories
+├── Inventory
+├── Suppliers
+├── Orders
+├── Delivery
+├── Returns
+└── Promotions
+This should not affect the architecture of the tourism module.
+20. NGO Module
+Later:
+NGO
+│
+├── Programs
+├── Communities
+├── Beneficiaries
+├── Volunteers
+├── Donors
+├── Grants
+├── Monitoring
+└── Impact Reports
+The module should consume common capabilities such as:
+CRM
+Documents
+Users
+Communications
+Reporting
+rather than rebuilding them.
+21. Intelligence Layer
+Intelligence sits across the business modules.
+Intelligence
+│
+├── Dashboards
+├── Reports
+├── Forecasting
+├── AI Recommendations
+├── Customer Insights
+├── Revenue Analytics
+├── KPI Monitoring
+├── Alerts
+└── Decision Support
+The intelligence layer reads from domain data.
+It should not become the owner of that data.
+22. AI Itinerary Engine
+This deserves its own architectural boundary.
+Tourism
+│
+└── Itinerary
+│
+└── AI Itinerary Engine
+The engine should consume structured tourism data:
+Destination
+Attraction
+Accommodation
+Vehicle
+Park Fee
+Transfer
+Price
+Availability
+Customer Preferences
+Then produce:
+AI-generated itinerary
+The AI engine should not directly write arbitrary data into the database.
+Instead:
+Customer Request
+↓
+Itinerary Service
+↓
+Validated Tourism Data
+↓
+AI Engine
+↓
+Generated Proposal
+↓
+Validation
+↓
+Customer
+23. Safari Pricing Engine
+Pricing should also be separated from the AI engine.
+Tourism
+│
+├── Pricing Engine
+└── AI Itinerary Engine
+Pricing:
+Accommodation
++
+Transport
++
+Park Fees
++
+Transfers
++
+Other Costs
++
+Profit Markup
+↓
+Base Selling Price
+↓
+Round Up
+↓
+Final Price
+The AI can recommend an itinerary.
+The pricing engine determines the authoritative price.
+This separation is extremely important.
+24. Infrastructure Layer
+Infrastructure provides technical implementations for the domain.
+Infrastructure
+│
+├── PostgreSQL / Neon
+├── Drizzle ORM
+├── Authentication
+├── Email / Resend
+├── Payment Providers
+├── AI Providers
+├── File Storage
+├── Search
+├── Caching
+└── Background Jobs
+The domain should not care whether we use Neon, Resend, Stripe, etc.
+For example:
+Domain
+↓
+EmailService
+↓
+ResendAdapter
+rather than:
+Domain
+↓
+Resend API
+directly.
+25. Recommended Folder Structure
+I recommend we move toward a structure approximately like this:
+src/
+│
+├── app/
+│   │
+│   ├── (public)/
+│   │
+│   ├── dashboard/
+│   │
+│   ├── api/
+│   │   └── v1/
+│   │
+│   └── auth/
+│
+├── modules/
+│   │
+│   ├── identity/
+│   ├── tenancy/
+│   ├── crm/
+│   ├── commercial/
+│   ├── operations/
+│   ├── tourism/
+│   ├── hospitality/
+│   ├── retail/
+│   ├── ngo/
+│   └── intelligence/
+│
+├── infrastructure/
+│   │
+│   ├── database/
+│   ├── auth/
+│   ├── email/
+│   ├── payments/
+│   ├── ai/
+│   ├── storage/
+│   └── search/
+│
+├── components/
+│   ├── ui/
+│   ├── dashboard/
+│   └── shared/
+│
+├── lib/
+│   ├── validation/
+│   ├── security/
+│   ├── logging/
+│   └── utils/
+│
+├── types/
+│
+└── config/
+This is a target structure, not a command to immediately move every existing file.
+We migrate toward it incrementally.
+26. Module Structure
+Each major module should have internal boundaries.
+For example:
+modules/tourism/
+│
+├── domain/
+│   ├── tour.ts
+│   ├── itinerary.ts
+│   ├── accommodation.ts
+│   └── pricing.ts
+│
+├── application/
+│   ├── create-tour.ts
+│   ├── generate-itinerary.ts
+│   └── calculate-price.ts
+│
+├── infrastructure/
+│   ├── tour-repository.ts
+│   └── accommodation-repository.ts
+│
+├── api/
+│   └── schemas.ts
+│
+└── index.ts
+This gives us a repeatable pattern.
+27. Repository Pattern
+The domain/application layer should not directly depend on Drizzle queries everywhere.
+Instead:
+Application
+↓
+Repository Interface
+↓
+Drizzle Repository
+↓
+PostgreSQL
+For example:
+AccommodationRepository
+could have:
+findById()
+findAvailable()
+findByCompany()
+The implementation knows how to query PostgreSQL.
+The business logic doesn't need to.
+28. Server Components vs Client Components
+Because this is Next.js, we should use Server Components by default.
+Server Components
+Use for:
+data retrieval
+dashboard pages
+reports
+authenticated views
+public content retrieval
+Client Components
+Use when we genuinely need:
+interactive forms
+modals
+dynamic tables
+filters
+charts
+client-side state
+interactive itinerary builder
+This will reduce unnecessary client-side JavaScript.
+29. Server Actions vs API Routes
+We don't need to choose only one.
+Server Actions
+Good for:
+internal dashboard mutations
+forms
+operations where external clients don't need access
+API
+Required for:
+external websites
+mobile apps
+third-party integrations
+AI itinerary subscriptions
+partner integrations
+Therefore:
+Internal Dashboard
+↓
+Server Actions / Application Services
+External Consumers
+↓
+Versioned API
+Both ultimately call the same application/domain services.
+30. Critical Rule: No Duplicate Business Logic
+We must avoid:
+Dashboard
+↓
+Business Logic A
+Website
+↓
+Business Logic B
+API
+↓
+Business Logic C
+Instead:
+Dashboard ────┐
+Website ──────┤
+External API ─┤
+AI ───────────┤
+▼
+Application Services
+│
+▼
+Domain Logic
+This is one of the most important architectural decisions in the entire project.
+31. Tenant Context
+Every authenticated request should establish a tenant context.
+Conceptually:
+Request
+↓
+Authentication
+↓
+Identify User
+↓
+Identify Tenant Membership
+↓
+Check Permission
+↓
+Tenant Context
+↓
+Business Operation
+The application should never depend on:
+companyId = "aha"
+being supplied by the browser.
+32. Website Tenant Context
+The public AHA website is different because customers aren't necessarily authenticated.
+Therefore:
+africanhomeadventure.com
+↓
+Known Website
+↓
+AHA Tenant
+The domain itself can eventually resolve the tenant.
+For example:
+africanhomeadventure.com
+↓
+Website configuration
+↓
+company_id = AHA
+This is much safer than:
+?companyId=aha
+33. External Website Authentication
+For external websites, we can eventually issue API credentials.
+Conceptually:
+External Website
+↓
+API Key / OAuth / signed credentials
+↓
+Enzi API
+↓
+Tenant
+The exact authentication mechanism will be decided in the API/security architecture document.
+For now, the important decision is:
+External websites must be explicitly registered with a tenant.
+34. Website Configuration
+Eventually:
+Website
+│
+├── id
+├── company_id
+├── domain
+├── status
+├── branding
+├── configuration
+├── API credentials
+└── enabled features
+This allows:
+AHA
+│
+├── Website 1
+└── Website 2
+without creating another tenant.
+35. Background Jobs
+Some operations should not happen synchronously during a web request.
+Examples:
+Send email
+Generate large report
+Generate PDF itinerary
+AI itinerary generation
+Import data
+Process payment webhook
+Send bulk notifications
+Eventually:
+Request
+↓
+Create Job
+↓
+Queue
+↓
+Worker
+↓
+Process
+Initially we can use a relatively simple solution.
+As Enzi grows, we can introduce a dedicated queue infrastructure.
+36. Event-Driven Internal Architecture
+We should introduce the concept of business events, even if we don't build a complicated event bus immediately.
+For example:
+BookingCreated
+PaymentReceived
+InvoiceIssued
+ItineraryGenerated
+CustomerCreated
+Then:
+BookingCreated
+│
+├── Send confirmation
+├── Update dashboard
+├── Create notification
+└── Record audit event
+This will become increasingly valuable as the platform grows.
+37. Observability
+The application should eventually have:
+Logging
+Metrics
+Error Tracking
+Audit Logs
+Performance Monitoring
+Especially because a multi-tenant system needs to answer:
+Which tenant experienced this problem?
+Every important application event should be traceable to:
+tenant
+user
+request
+operation
+timestamp
+where appropriate.
+38. Configuration
+We need to separate:
+Environment configuration
+DATABASE_URL
+AUTH_SECRET
+RESEND_API_KEY
+AI_API_KEY
+from:
+Tenant configuration
+Company name
+Currency
+Timezone
+Branding
+Enabled modules
+Email configuration
+Pricing configuration
+from:
+Application configuration
+Feature flags
+Platform limits
+System defaults
+These are three different concepts.
+39. Security Architecture
+Security should exist at multiple levels.
+Authentication
+↓
+Authorization
+↓
+Tenant Isolation
+↓
+Input Validation
+↓
+Business Rules
+↓
+Database Constraints
+↓
+Audit Logging
+We should also investigate PostgreSQL Row-Level Security as an additional defence layer.
+I don't want RLS to replace application authorization, but for a serious SaaS platform it can become an important defence-in-depth mechanism.
+40. Database Access
+The application should follow:
+Module
+↓
+Repository
+↓
+Drizzle
+↓
+Neon PostgreSQL
+Not:
+Component
+↓
+SQL
+This gives us a clear place to enforce:
+tenant filters
+transactions
+validation
+query optimization
+41. Transactions
+Financial operations should be transactional.
+For example:
+Create Payment
+│
+├── Payment record
+├── Invoice update
+├── Booking balance update
+└── Financial transaction
+These operations should succeed together or fail together.
+This becomes a specific technical requirement for the database architecture.
+42. API Security
+External API endpoints should eventually support:
+Authentication
+Rate Limiting
+Tenant Identification
+Authorization
+Input Validation
+Idempotency
+Audit Logging
+Financial endpoints additionally need:
+Idempotency Keys
+Webhook Verification
+Transaction Handling
+This will matter when we introduce M-Pesa and other payment systems.
+43. Domain Separation
+We need to prevent modules from becoming tightly coupled.
+For example:
+Tourism should be able to use:
+Customer
+Payment
+Invoice
+Product
+without recreating them.
+But Tourism shouldn't directly manipulate:
+restaurant_orders
+unless there is a defined integration.
+The architecture should encourage:
+Core capability
+↑
+Industry module
+rather than:
+Tourism → random database table in Hospitality
+44. AHA Migration Architecture
+We should now migrate the existing application gradually.
+Stage 1
+Existing Next.js
+│
+├── Website
+└── Dashboard
+Stage 2
+Introduce:
+modules/
+infrastructure/
+application services
+without breaking the UI.
+Stage 3
+Move business operations into modules.
+Stage 4
+Move APIs onto application services.
+Stage 5
+Introduce proper tenant context.
+Stage 6
+Expose stable /api/v1.
+Stage 7
+Allow external websites to consume the platform.
+45. Target AHA Request Flow
+A dashboard request should eventually look like:
+User
+│
+▼
+Browser
+│
+▼
+Next.js Dashboard
+│
+▼
+Server Action / API
+│
+▼
+Authentication
+│
+▼
+Tenant Context
+│
+▼
+Permission Check
+│
+▼
+Application Service
+│
+▼
+Domain Logic
+│
+▼
+Repository
+│
+▼
+Drizzle
+│
+▼
+Neon PostgreSQL
+This is the core request pipeline.
+46. Target External Website Flow
+An external tour operator website:
+Customer
+│
+▼
+Tour Operator Website
+│
+▼
+Enzi API
+│
+▼
+API Authentication
+│
+▼
+Tenant Resolution
+│
+▼
+Tourism Application Service
+│
+▼
+Tourism Domain
+│
+├── Accommodation
+├── Transport
+├── Park Fees
+├── Pricing
+└── AI Itinerary
+│
+▼
+Response
+│
+▼
+Customer Website
+This is the architecture that eventually allows you to sell the itinerary engine as a subscription.
+47. Example: AI Itinerary Request
+A customer could eventually enter:
+Destination: Kenya
+Duration: 7 days
+Travellers: 2 adults
+Interests: Wildlife + culture
+Budget: $3,000
+Accommodation: Mid-range
+Starting city: Nairobi
+The website sends:
+POST /api/v1/itineraries/generate
+The application then:
+1. Authenticate request
+2. Resolve tenant
+3. Validate customer request
+4. Retrieve tourism data
+5. Retrieve available accommodation
+6. Retrieve transport options
+7. Calculate costs
+8. Apply markup rules
+9. Round price
+10. Generate itinerary with AI
+11. Validate output
+12. Return itinerary
+Notice that AI is only one component of the process.
+That is the architecture I want.
+48. Future SaaS Subscription Architecture
+Eventually:
+External Operator
+│
+▼
+Enzi Subscription
+│
+▼
+Tenant Created
+│
+├── Users
+├── Website
+├── API Credentials
+└── Enabled Modules
+For example:
+Starter
+└── AI Itinerary Generator
+Professional
+├── AI Itinerary Generator
+├── CRM
+├── Bookings
+├── Payments
+└── Reports
+Enterprise
+├── Everything
+├── API
+├── Multiple Websites
+├── Advanced Analytics
+└── Custom Integrations
+We don't need to implement this billing architecture yet, but the application architecture should not prevent it.
+49. What We Keep From the Existing Project
+From the audit:
+KEEP
+Next.js
+React
+Tailwind
+DaisyUI
+Neon
+PostgreSQL
+Drizzle
+Existing AHA website
+Existing dashboard
+Existing domain
+REFACTOR
+authentication
+tenant resolution
+permissions
+APIs
+schema
+bookings
+payments
+revenue
+accommodations
+customers
+REMOVE/REPLACE
+AHA fallback
+hardcoded company assumptions
+runtime schema mutations
+scattered authorization logic
+ADD
+application/domain boundaries
+tenant context
+module architecture
+versioned API
+email abstraction
+AI abstraction
+background jobs
+observability
+formal migration strategy
+50. Architecture Decision Records
+I would add the following to our architecture decisions.
+ID
+Decision
+ADR-015
+Enzi will initially use a modular monolith
+ADR-016
+Next.js remains the primary application framework
+ADR-017
+Website and dashboard remain in the same application initially
+ADR-018
+Business logic moves out of UI/API handlers into application/domain services
+ADR-019
+External integrations use versioned APIs
+ADR-020
+/api/v1 becomes the public/platform API boundary
+ADR-021
+Modules own business capabilities
+ADR-022
+Core capabilities are reusable across industries
+ADR-023
+Tourism is the first vertical module
+ADR-024
+AI itinerary generation is a separate tourism service
+ADR-025
+Pricing logic remains independent of AI
+ADR-026
+Infrastructure implementations are separated from domain logic
+ADR-027
+Background processing will be introduced for long-running tasks
+ADR-028
+Financial operations require transactional consistency
+ADR-029
+Tenant context is established server-side
+ADR-030
+Multiple websites can belong to one company
+51. Final Target Architecture
+The complete application architecture is therefore:
+ENZI
+│
+Next.js Application
+│
+┌──────────────────────┼──────────────────────┐
+│                      │                      │
+▼                      ▼                      ▼
+WEBSITE                DASHBOARD                API
+│                      │                      │
+└──────────────────────┼──────────────────────┘
+│
+APPLICATION SERVICES
+│
+┌─────────────────┼─────────────────┐
+│                 │                 │
+▼                 ▼                 ▼
+PLATFORM          COMMERCIAL         CRM
+│                 │                 │
+└─────────────────┼─────────────────┘
+│
+┌────────────┼────────────┐
+│            │            │
+▼            ▼            ▼
+TOURISM    HOSPITALITY     RETAIL
+│
+┌───────┴────────┐
+│                │
+▼                ▼
+PRICING ENGINE   AI ITINERARY ENGINE
+│                │
+└───────┬────────┘
+▼
+REPOSITORIES
+│
+▼
+DRIZZLE ORM
+│
+▼
+NEON POSTGRESQL
+Infrastructure:
+────────────────────────────────────────────
+Auth | Resend | Payments | AI | Storage
+Search | Queues | Logging | Monitoring
+52. CTO Conclusion
+The architectural direction is now clear.
+We are not building a collection of websites with dashboards attached to them.
+We are building:
+Enzi — a tourism and hospitality technology platform whose first tenant is African Home Adventure and whose major differentiating product will be AI-powered safari technology.
+The most important architectural consequence is this:
+The dashboard, AHA website, future Enchoro website, Bondo website, and external customer websites should ultimately be clients of the same underlying business platform.
+That gives us a powerful flywheel:
+AHA
+↓
+Real-world usage
+↓
+Platform improvement
+↓
+AI/product improvement
+↓
+Enchoro/Bondo
+↓
+External tour operators
+↓
+SaaS subscriptions
+↓
+More data
+↓
+Better product
+And that is much closer to the financial-freedom objective you established in Phase 1.
+Document 2 status: COMPLETE — Draft v1.0
+The next document should be Document 3 — Domain Architecture & Domain Model.
+This is where we get considerably more granular. We'll define the actual business objects and relationships, including:
+Company → Country → Location → User → Membership → Customer → Product/Service → Tour → Itinerary → Accommodation → Vehicle → Booking → Invoice → Payment → Revenue, and how those entities interact across AHA, Enchoro, Bondo and future SaaS customers.
+Before we finalize Document 3, I recommend we spend some time challenging the domain model because getting these relationships right now will save us significant database refactoring later.
+Perfect. These decisions give us enough to establish the domain model. One particularly important choice is D7 = D: we will start with AHA maintaining partner-accommodation information, but design the model so that Enzi can later become a shared accommodation marketplace/resource layer.
+Document 3 — Domain Architecture & Domain Model
+Project: EnziVersion: 1.0Primary implementation: AHAArchitecture direction: Tourism & Hospitality SaaSDatabase target: PostgreSQL / NeonORM: Drizzle
+1. Purpose
+Document 2 defined how the application is structured.
+Document 3 defines what the application actually understands.
+The key principle is:
+The database should represent the business, not the current UI.
+We therefore model the underlying business entities first and derive the database schema from them.
+2. Core Domain Philosophy
+Enzi has three categories of data:
+A. Platform data
+Owned by Enzi itself.
+Examples:
+users
+companies
+websites
+subscriptions
+platform configuration
+B. Company data
+Owned by an individual business.
+Examples:
+AHA customers
+AHA bookings
+AHA vehicles
+AHA employees
+AHA revenue
+C. Shared/partner data
+Potentially usable by multiple companies.
+Examples:
+accommodation partners
+destinations
+attractions
+park information
+potentially vehicles/providers
+This distinction is fundamental to our long-term SaaS architecture.
+3. Tenant Model
+A Company is the primary tenant.
+Enzi
+│
+├── African Home Adventure
+├── Enchoro Wildlife Camp
+├── Bondo Travellers Hotel
+├── Kenya Voluntary & Community Development Project
+└── Future SaaS Customers
+Each company has its own business data.
+For example:
+AHA
+├── Customers
+├── Bookings
+├── Payments
+├── Vehicles
+└── Revenue
+Enchoro
+├── Customers
+├── Bookings
+├── Rooms
+├── Vehicles
+└── Revenue
+4. Customer Architecture
+You selected:
+Separate customer per company.
+Therefore, a customer relationship belongs to a company.
+For example:
+Global Person
+│
+├── AHA Customer
+│
+└── Enchoro Customer
+However, we should not require a global customer identity in the MVP.
+The immediate model is:
+Company
+│
+└── Customer
+This means AHA and Enchoro can maintain completely independent customer records.
+This also prevents one company from accidentally seeing another company's customers.
+5. Company
+The Company is the central tenant entity.
+Conceptually:
+Company
+├── identity
+├── legal information
+├── contact information
+├── branding
+├── settings
+├── enabled modules
+├── websites
+├── users
+├── customers
+└── financial records
+Examples:
+African Home Adventure
+Enchoro Wildlife Camp
+Bondo Travellers Hotel
+6. Website
+A company can have multiple websites.
+Company
+│
+├── Website
+├── Website
+└── Website
+For example:
+AHA
+├── africanhomeadventure.com
+├── safari-specific website
+└── future landing website
+The website is therefore not the tenant.
+It belongs to the tenant.
+This distinction becomes extremely important for SaaS.
+7. User & Membership
+A user is a person who can access Enzi.
+A membership determines their relationship with a company.
+User
+│
+└── Membership
+│
+└── Company
+This allows:
+User
+├── AHA Membership
+└── Enchoro Membership
+without duplicating the user account.
+8. Roles
+Initial roles:
+Owner / Founder
+Administrator
+Sales Staff
+Operations Staff
+Tour Guide
+Finance / Accounting
+Roles determine what a user can generally do.
+Permissions should then determine the precise actions.
+For example:
+Finance
+├── View payments
+├── Record payments
+├── View revenue
+└── Cannot modify itinerary
+9. CRM Domain
+The CRM is a core Enzi capability.
+CRM
+│
+├── Lead
+├── Customer
+├── Organization
+├── Contact
+├── Communication
+├── Feedback
+├── Loyalty
+└── Customer Document
+10. Lead → Customer
+The normal lifecycle can be:
+Lead
+↓
+Qualified Lead
+↓
+Customer
+For tourism:
+Website visitor
+↓
+Safari enquiry
+↓
+Lead
+↓
+Customer
+↓
+Itinerary
+↓
+Booking
+A lead does not necessarily become a customer.
+11. Commercial Domain
+Commercial functionality should be independent from tourism.
+Commercial
+│
+├── Product
+├── Service
+├── Price
+├── Order
+├── Booking
+├── Quote
+├── Invoice
+├── Payment
+├── Discount
+└── Revenue
+This allows the same commercial engine to support:
+Safari
+Hotel room
+Vehicle hire
+Accommodation-only booking
+Airport transfer
+Retail product
+12. Product vs Service
+We should distinguish these.
+Product
+Something that can be packaged and sold.
+Example:
+7-Day Kenya Safari
+Service
+A component or standalone service.
+Examples:
+Vehicle hire
+Airport transfer
+Accommodation
+Guide
+Airport pickup
+This gives us flexibility.
+A safari package can therefore contain multiple services.
+13. Safari Package
+A predefined safari package is a commercial product.
+For example:
+7-Day Kenya Safari
+It can contain:
+Package
+│
+├── Destinations
+├── Activities
+├── Accommodation
+├── Transport
+├── Park Fees
+├── Transfers
+└── Pricing rules
+It can then be sold directly.
+14. Custom Safari
+A custom safari is different.
+The lifecycle is:
+Customer
+↓
+Requirements
+↓
+Itinerary
+↓
+Pricing
+↓
+Quote
+↓
+Customer approval
+↓
+Booking
+This distinction lets Enzi support both:
+Predefined
+"I want the 7-day Kenya Safari."
+Custom
+"I want 8 days, Maasai Mara, Amboseli and Diani, mid-range hotels."
+15. Itinerary Domain
+An itinerary is a plan for a customer's trip.
+Itinerary
+│
+├── Traveller information
+├── Dates
+├── Destinations
+├── Activities
+├── Accommodation
+├── Transport
+├── Transfers
+├── Park fees
+└── Pricing
+An itinerary is not automatically a booking.
+This distinction is important.
+Itinerary
+↓
+Customer accepts
+↓
+Booking
+16. Itinerary Versions
+You confirmed that versions must be preserved.
+Therefore:
+Itinerary
+│
+├── Version 1
+├── Version 2
+├── Version 3
+└── Current Version
+Example:
+Version 1
+├── Maasai Mara
+├── Amboseli
+└── Lake Naivasha
+Customer requests changes
+↓
+Version 2
+├── Maasai Mara
+├── Amboseli
+└── Lake Nakuru
+Version 1 remains available.
+This gives us:
+auditability
+customer comparison
+staff visibility
+AI iteration history
+safer modifications
+17. Customer-Controlled Changes
+The customer should be able to change:
+accommodation
+park
+activity
+without rebuilding the entire itinerary from scratch.
+Therefore, itinerary components should be modular.
+Itinerary
+│
+├── Day 1
+│   ├── Activity
+│   └── Accommodation
+│
+├── Day 2
+│   ├── Attraction
+│   └── Accommodation
+│
+└── Day 3
+├── Activity
+└── Accommodation
+Changing one component creates a new itinerary version.
+18. AI Itinerary Generation
+The AI engine should work from structured requirements.
+Customer Requirements
+↓
+Itinerary Request
+↓
+Tourism Data
+↓
+AI Engine
+↓
+Draft Itinerary
+↓
+Validation
+↓
+Pricing
+↓
+Customer
+AI should recommend, not become the source of truth for factual business information.
+For example, AI should not invent:
+hotel prices
+park fees
+room availability
+vehicle costs
+Those should come from Enzi's structured data.
+19. Accommodation Domain
+Accommodation is deliberately designed to support two models.
+Model A — Partner accommodation
+AHA sells accommodation belonging to another business.
+AHA
+│
+└── Partner Accommodation
+Model B — Company-owned accommodation
+Enchoro owns its accommodation.
+Enchoro
+│
+└── Property
+│
+├── Room Types
+└── Rooms
+20. Accommodation Architecture
+We therefore need to distinguish:
+Accommodation
+│
+├── ownership
+├── provider
+├── property
+├── room types
+├── rooms
+├── pricing
+├── availability
+└── booking rules
+The fields for detailed partner management should exist architecturally, but they will not all be mandatory initially, as you specified.
+21. Future Shared Accommodation Model
+Our long-term architecture can evolve toward:
+Enzi Accommodation
+│
+├── AHA
+├── Enchoro
+└── Other Tour Operators
+Eventually an accommodation partner could manage its own:
+availability
+prices
+rooms
+policies
+while tour operators consume that information.
+This could become a significant future Enzi capability.
+22. Destination Domain
+A destination is a geographical tourism location.
+Examples:
+Kenya
+├── Maasai Mara
+├── Amboseli
+├── Nairobi
+├── Lake Nakuru
+└── Diani
+Tanzania
+├── Serengeti
+├── Ngorongoro
+└── Zanzibar
+Destinations should not belong exclusively to AHA.
+They are platform tourism data.
+23. Attraction
+An attraction is a specific tourism point/activity.
+For example:
+Destination
+│
+└── Attraction
+This distinction allows us to represent:
+Maasai Mara
+├── Game Drives
+├── Maasai Village
+└── Balloon Safari
+as structured tourism information.
+24. Park Fees
+Park fees should be structured data.
+Park
+│
+├── Entry fee
+├── Visitor category
+├── Nationality/category
+├── Season
+├── Currency
+└── Effective dates
+This is important because pricing changes over time.
+The AI should retrieve the current applicable fee rather than inventing one.
+25. Vehicle Domain
+Vehicles are resources.
+Vehicle
+│
+├── Ownership
+├── Company
+├── Provider
+├── Registration
+├── Type
+├── Capacity
+├── Availability
+├── Driver
+└── Maintenance
+Ownership:
+Vehicle
+├── Company-owned
+└── Outsourced
+26. Vehicle Providers
+Outsourced vehicles should have a provider.
+Vehicle Provider
+│
+└── Vehicles
+This allows Enzi eventually to track:
+supplier
+cost
+availability
+contractual terms
+vehicle type
+27. Guides & Drivers
+Tourism staff/resources should be separate concepts.
+Staff
+│
+├── Tour Guide
+├── Driver
+└── Operations Staff
+A person may potentially have multiple operational capabilities.
+For example:
+Employee
+├── Driver
+└── Tour Guide
+We should therefore avoid making "driver" a completely separate human identity.
+28. Transfers
+Transfers are services.
+Examples:
+Airport → Hotel
+Hotel → Airport
+Hotel → Safari destination
+Safari destination → Airport
+They can become part of:
+package
+itinerary
+booking
+quote
+29. Booking
+A booking represents a confirmed commercial commitment.
+Booking
+│
+├── Customer
+├── Company
+├── Product/Service
+├── Itinerary
+├── Travellers
+├── Dates
+├── Amount
+├── Currency
+├── Status
+└── Payments
+The booking becomes the central operational record for a safari.
+30. Booking Lifecycle
+Recommended lifecycle:
+Draft
+↓
+Quote
+↓
+Pending Confirmation
+↓
+Confirmed
+↓
+In Progress
+↓
+Completed
+Possible alternative states:
+Cancelled
+Expired
+Refunded
+The exact state machine will be defined later.
+31. Quote
+A quote represents an offer to the customer.
+Itinerary
+↓
+Pricing Engine
+↓
+Quote
+The quote should preserve the price presented to the customer.
+This matters because accommodation or transport prices may change later.
+32. Pricing Engine
+You specified the pricing logic:
+Accommodation
++
+Transport
++
+Park Fees
++
+Other Costs
++
+Profit Markup
+↓
+Selling Price
+↓
+Round upward to nearest 10
+Therefore pricing should be a dedicated domain service.
+For example:
+Cost = £1,843
+↓
+Markup
+↓
+£2,211
+↓
+Round upward
+↓
+£2,220
+The actual rounding implementation will be defined in the technical design.
+33. Multi-Currency
+You confirmed:
+KES and USD.
+Every financial amount should therefore contain at least:
+amount
+currency
+Where conversion is required:
+source amount
+source currency
+exchange rate
+base amount
+base currency
+This will allow consolidated reporting later.
+34. Payment
+Payment is separate from booking.
+Booking
+│
+└── Invoice
+│
+└── Payment
+Possible methods include the methods you previously specified:
+M-Pesa
+Cash
+Card
+Bank
+Payment records should capture:
+amount
+currency
+method
+status
+reference
+received_at
+35. Revenue
+Revenue should not simply be:
+"Whatever money came into the bank."
+We need to distinguish commercial records from financial records.
+Conceptually:
+Booking
+↓
+Invoice
+↓
+Payment
+↓
+Financial Records
+↓
+Revenue Reporting
+This gives Finance a proper audit trail.
+36. Hospitality Domain
+Enchoro and Bondo require hospitality capabilities.
+Hospitality
+│
+├── Property
+├── Room Type
+├── Room
+├── Reservation
+├── Housekeeping
+├── Restaurant
+├── Bar
+├── Menu
+└── POS
+37. Property
+A property represents a physical hospitality operation.
+Examples:
+Enchoro Wildlife Camp
+Bondo Travellers Hotel
+A property can contain:
+Property
+├── Rooms
+├── Restaurant
+├── Bar
+└── Other facilities
+38. Room Model
+We distinguish:
+Room Type
+↓
+Room
+Example:
+Deluxe Room
+├── Room 101
+├── Room 102
+└── Room 103
+This allows inventory and reservations to work properly.
+39. Hospitality + Tourism Integration
+This is important for Enchoro.
+Enchoro can use its accommodation as both:
+Hospitality resource
+and:
+Tourism package component
+Therefore:
+Enchoro Property
+│
+└── Accommodation Inventory
+│
+└── Tourism Booking
+We should avoid maintaining separate accommodation records for Tourism and Hospitality.
+There should be one underlying resource.
+40. Retail Domain
+Retail remains a future vertical.
+Retail
+│
+├── Product
+├── Category
+├── Inventory
+├── Supplier
+├── Order
+├── Delivery
+├── Return
+└── Promotion
+It should reuse:
+CRM
+Commercial
+Payments
+Users
+Reporting
+rather than creating duplicate implementations.
+41. NGO Domain
+The NGO module:
+NGO
+│
+├── Program
+├── Community
+├── Beneficiary
+├── Volunteer
+├── Donor
+├── Grant
+├── Monitoring
+└── Impact Report
+Again, it consumes shared platform capabilities.
+42. Core Entity Relationship
+At the highest level:
+Company
+│
+├── Websites
+├── Users/Memberships
+├── Customers
+├── Products
+├── Services
+├── Bookings
+├── Invoices
+├── Payments
+├── Vehicles
+└── Properties
+43. Tourism Relationship
+Customer
+│
+▼
+Itinerary Request
+│
+▼
+Itinerary
+│
+├── Destination
+├── Attraction
+├── Accommodation
+├── Vehicle
+├── Guide
+├── Transfer
+└── Park Fee
+│
+▼
+Pricing Engine
+│
+▼
+Quote
+│
+▼
+Booking
+44. Booking → Finance
+Booking
+│
+▼
+Invoice
+│
+├── Amount
+├── Currency
+└── Due Date
+│
+▼
+Payment
+│
+▼
+Financial Record
+45. AI Itinerary Lifecycle
+Customer
+│
+▼
+Itinerary Request
+│
+├── Destination
+├── Duration
+├── Budget
+├── Interests
+├── Accommodation preference
+└── Activities
+│
+▼
+AI Generation
+│
+▼
+Itinerary Version 1
+│
+▼
+Customer edits
+│
+▼
+Itinerary Version 2
+│
+▼
+Pricing
+│
+▼
+Quote
+46. Important Principle: AI Is Not the Database
+This deserves emphasis.
+We should never make the AI response our authoritative business record.
+Bad architecture:
+AI
+↓
+Save whatever it says
+↓
+Customer
+Better:
+Enzi Data
+↓
+AI
+↓
+Recommendation
+↓
+Validation against Enzi Data
+↓
+Itinerary
+This protects pricing, availability and operational accuracy.
+47. Shared vs Company-Owned Data
+Our initial classification:
+Entity
+Ownership
+Company
+Platform
+User
+Platform
+Membership
+Company
+Customer
+Company
+Website
+Company
+Tour Package
+Company
+Destination
+Shared Platform
+Attraction
+Shared Platform
+Park
+Shared Platform
+Park Fee
+Shared/managed platform
+Accommodation Partner
+Shared-capable
+Accommodation
+Shared-capable
+Vehicle
+Company/Provider
+Guide
+Company
+Itinerary
+Company
+Booking
+Company
+Invoice
+Company
+Payment
+Company
+Revenue
+Company
+Property
+Company
+Room
+Company
+Product
+Company
+AI Model/Configuration
+Platform
+AI Generation
+Company
+48. The Most Important Multi-Tenant Rule
+Every company-owned business entity must have an unambiguous company relationship.
+For example:
+booking.company_id
+customer.company_id
+invoice.company_id
+payment.company_id
+vehicle.company_id
+itinerary.company_id
+We should not rely on indirect relationships such as:
+payment → booking → customer → company
+for primary tenant isolation.
+Direct ownership makes security and querying much safer.
+49. Partner Data Exception
+Shared resources are different.
+For example:
+Accommodation
+│
+├── Provider
+│
+├── AHA relationship
+│
+└── Future Enzi relationships
+This allows us to transition from:
+AHA manages partner accommodation
+to:
+Enzi manages shared accommodation infrastructure
+without rebuilding the domain.
+50. Initial Entity Map
+Our first major entity map is therefore:
+ENZI
+│
+Company
+│
+┌──────────────────┼──────────────────┐
+│                  │                  │
+Users            Websites           Customers
+│                                     │
+│                                     │
+└──────────────────┬──────────────────┘
+│
+Booking
+│
+┌───────────────┼───────────────┐
+│               │               │
+Itinerary         Quote          Invoice
+│                               │
+│                               ▼
+│                            Payment
+│
+┌─────┼─────┬─────────┬─────────┐
+│     │     │         │         │
+Parks  Accom Vehicles Activities Transfers
+│
+└── Park Fees
+Shared Tourism Data
+├── Destinations
+├── Attractions
+├── Parks
+└── Partner Accommodation
+51. What This Means for the Existing AHA Database
+The audit identified several current architectural issues.
+The new domain model gives us a direction for resolving them.
+Current
+users
+bookings
+accommodations
+tours
+payments
+rooms
+...
+with some entities shared globally and some company-scoped inconsistently.
+Target
+Platform
+↓
+Tenancy
+↓
+Core
+↓
+Commercial
+↓
+Tourism
+↓
+Hospitality
+with explicit ownership relationships.
+We should not immediately delete or recreate the existing database.
+Instead, Document 4 will translate this domain model into the actual multi-tenant database architecture and map the existing tables to the target model.
+52. Domain Decisions We Have Now Locked In
+These are important enough to become architectural decisions:
+DD-001: Customers are company-specific.
+DD-002: Partner accommodation supports detailed management, but detailed fields are initially optional.
+DD-003: Predefined safari packages are commercial products.
+DD-004: Custom safaris use itineraries that can become quotes and bookings.
+DD-005: Itineraries are versioned.
+DD-006: Customers can modify accommodation, parks and activities.
+DD-007: Vehicles distinguish company-owned and outsourced resources.
+DD-008: Financial records support KES and USD.
+DD-009: Partner accommodation starts under AHA management but is architected as a future shared Enzi resource.
+DD-010: AI generates recommendations; Enzi's structured data remains authoritative for business facts and pricing.
+Document 3 Status
+Domain Architecture & Domain Model — COMPLETE v1.0
+The next document should now be:
+Document 4 — Multi-Tenant Architecture & Database Architecture
+This is where we get technical.
+We'll design:
+Company/Tenant isolation
+↓
+Users & memberships
+↓
+Roles & permissions
+↓
+Company-owned vs shared data
+↓
+PostgreSQL schema
+↓
+Foreign keys
+↓
+Indexes
+↓
+Transactions
+↓
+Row-Level Security
+↓
+Neon architecture
+↓
+Migration from your existing AHA database
+And importantly, we'll map the audit findings directly into the redesign—especially the current resolveCompanyId() fallback, cross-tenant IDOR risks, global tours/accommodations, lack of customers table, and payment/revenue transaction problems.
+I would make Document 4 the point where we stop making abstract architecture decisions and start designing the actual database foundation that your existing AHA project should migrate toward.
+Document 4 — Multi-Tenant Architecture & Database Architecture
+Project: EnziPrimary implementation: African Home Adventure (AHA)Current application: africanhomeadventure.com — public website + dashboardDatabase: PostgreSQL / NeonORM: Drizzle ORMFrontend/backend: Next.js App RouterDocument status: Draft v1.0
+Purpose: Define the database and multi-tenant architecture that Enzi should move toward, while using the existing AHA schema as the starting point rather than discarding what has already been built.
+1. Architectural Objective
+Enzi should eventually become the system of record for the businesses using it.
+The architecture should therefore support:
+ENZI
+│
+┌────────────┴────────────┐
+│                         │
+Enzi SaaS Platform        Enzi AI Products
+│                         │
+┌───────┼────────┐                │
+│       │        │                │
+AHA    Enchoro   BTH          AI Itinerary
+│       │        │             Generator
+│       │        │
+Websites  Websites  Websites
+Initially, however, we will keep the current arrangement:
+AfricanHomeAdventure.com
+│
+├── Public Website
+│
+└── Dashboard
+We will not prematurely split the website and dashboard into separate applications.
+2. The Fundamental Multi-Tenant Principle
+A Company is a tenant.
+Therefore:
+Company
+│
+├── Users/Memberships
+├── Customers
+├── Websites
+├── Products
+├── Services
+├── Bookings
+├── Payments
+├── Expenses
+├── Revenue
+└── Operational data
+The company is the security boundary for company-owned data.
+For example:
+AHA
+├── Customer A
+├── Booking A
+├── Payment A
+└── Revenue A
+Enchoro
+├── Customer B
+├── Booking B
+├── Payment B
+└── Revenue B
+AHA must never be able to query Enchoro's company-owned records simply by changing a companyId.
+3. Current Database Architecture
+The existing AHA schema already has an important foundation:
+companies
+users
+bookings
+payments
+expenses
+revenue_entries
+room_types
+rooms
+hotel_bookings
+hotel_booking_guests
+hotel_booking_payments
+restaurant_*
+bar_*
+notifications
+user_permissions
+Many operational and financial tables already contain a companyId foreign key to companies.
+This means we do not need to start from zero.
+However, the current model is only partially multi-tenant.
+4. Current Tenant Model
+The existing schema has:
+companies
+with:
+id
+name
+createdAt
+and many business tables reference it.
+For example, bookings, payments, expenses, revenue_entries, room_types, rooms, hotel_bookings, restaurant entities, bar entities and notifications all currently have companyId relationships.
+This is good.
+But there is an important architectural inconsistency:
+Some major entities are still global.
+5. Current Global Entities
+The current schema has:
+users
+tours
+accommodations
+without a company relationship.
+For example, tours currently has a globally unique slug, and accommodations also has a globally unique slug; neither table currently contains companyId.
+This was understandable for the original AHA website.
+It becomes problematic for Enzi.
+6. Target Tenant Classification
+We should divide database entities into four categories.
+Type 1 — Platform-owned
+Owned by Enzi.
+Examples:
+Users
+Companies
+Subscriptions
+Feature flags
+Platform configuration
+AI configuration
+Type 2 — Company-owned
+Belongs to exactly one company.
+Examples:
+Customers
+Bookings
+Invoices
+Payments
+Expenses
+Revenue
+Vehicles
+Employees
+Properties
+Rooms
+Orders
+Company products
+Company websites
+These must contain a direct tenant relationship.
+Type 3 — Shared reference data
+Can be used by multiple companies.
+Examples:
+Countries
+Destinations
+Attractions
+National parks
+Park fee definitions
+These should not be duplicated for every company unnecessarily.
+Type 4 — Partner resources
+Resources that originate outside the company but may be consumed by multiple companies.
+Examples:
+Partner accommodation
+Vehicle providers
+Partner vehicles
+Future activity providers
+This is where the architecture becomes strategically important.
+7. Target Database Architecture
+Conceptually:
+ENZI
+│
+┌────────┴────────┐
+│                 │
+PLATFORM          SHARED DATA
+│                 │
+┌───────┼───────┐    ┌────┼─────────┐
+│       │       │    │    │         │
+Users  Companies  SaaS  Destinations Parks
+│              Attractions
+│
+┌───────┼───────────────┐
+│       │               │
+AHA   Enchoro           BTH
+│       │               │
+Company-owned data
+8. User Architecture — Current vs Target
+Current
+The existing users table contains:
+id
+email
+passwordHash
+name
+role
+...
+and the role is globally attached to the user.
+This works for the current application but does not fully support SaaS.
+Target
+Separate:
+User
+from:
+Company Membership
+The relationship becomes:
+User
+│
+├── Membership → AHA
+│
+└── Membership → Enchoro
+A user can therefore eventually work for multiple companies without creating multiple accounts.
+9. Target User Model
+Conceptually:
+users
+│
+├── id
+├── email
+├── password_hash
+├── name
+└── ...
+Then:
+company_memberships
+│
+├── id
+├── user_id
+├── company_id
+├── role_id
+├── status
+└── ...
+And potentially:
+roles
+permissions
+role_permissions
+This is preferable to putting the business role directly on users.
+10. Why This Matters
+Consider:
+Bradley is the owner of AHA and Enchoro.
+We want:
+User: Bradley
+│
+├── AHA → Owner
+│
+└── Enchoro → Owner
+while:
+John
+│
+└── AHA → Sales Staff
+and:
+Mary
+│
+└── Enchoro → Finance
+The role becomes company-specific.
+11. Tenant Isolation
+The target architecture should enforce tenant isolation at multiple layers.
+Layer 1 — Application
+Every request establishes:
+Authenticated User
+↓
+Company Membership
+↓
+Current Company
+Layer 2 — Query
+Queries explicitly scope:
+WHERE company_id = current_company_id
+Layer 3 — Database
+Eventually PostgreSQL Row-Level Security can provide another protection layer.
+Application security
++
+Database security
+=
+Defence in depth
+12. Fail Closed
+The existing application had a serious architectural issue identified during the audit:
+resolveCompanyId() can fall back to aha.
+The new architecture must never silently select AHA when the company is missing or invalid.
+Target behaviour:
+Missing company
+↓
+400 / 401 / 403
+not:
+Missing company
+↓
+AHA
+This is one of the first changes we should make when implementing the new architecture.
+13. Company Context
+The current frontend can select a company using client-side state / companyId.
+That should not be treated as proof of authorization.
+The target request flow is:
+Request
+↓
+Authenticated User
+↓
+Membership lookup
+↓
+Is user allowed into Company X?
+↓
+YES
+↓
+Company context
+↓
+Database query
+The browser may request:
+companyId = enchoro
+but the server must independently verify:
+Does this user have access to Enchoro?
+14. Direct Tenant Foreign Keys
+Company-owned entities should contain:
+company_id
+directly.
+For example:
+customers.company_id
+bookings.company_id
+payments.company_id
+invoices.company_id
+vehicles.company_id
+itineraries.company_id
+We should not rely exclusively on indirect relationships.
+Bad:
+Payment
+↓
+Booking
+↓
+Customer
+↓
+Company
+Better:
+Payment
+├── company_id
+└── booking_id
+The direct relationship makes authorization much easier to enforce.
+15. Existing Financial Architecture
+The current schema already contains:
+payments
+expenses
+revenue_entries
+and all three contain companyId.
+This is a good starting point.
+However, the current financial model uses:
+referenceType
+referenceId
+for some cross-domain references.
+The schema itself notes that this is polymorphic and does not use a foreign key for the reference.
+That gives flexibility but sacrifices database-level referential integrity.
+16. Target Financial Architecture
+Eventually we should move toward a stronger commercial/financial model:
+Customer
+↓
+Order / Booking
+↓
+Invoice
+↓
+Invoice Lines
+↓
+Payment
+with:
+Revenue
+Expenses
+Refunds
+Adjustments
+represented explicitly.
+The current schema can remain operational while we transition.
+We should not rewrite the financial subsystem prematurely.
+17. Multi-Currency
+The current booking model already stores:
+originalAmount
+originalCurrency
+exchangeRateToKes
+exchangeRateDate
+totalPrice
+and payments have:
+amount
+currency
+The current schema therefore already acknowledges the need for currency conversion.
+Our target architecture formalizes this.
+Every financial amount should have:
+amount
+currency
+and where conversion occurs:
+source_amount
+source_currency
+exchange_rate
+rate_date
+base_amount
+base_currency
+18. Currency Strategy
+For now:
+Supported currencies
+├── KES
+└── USD
+The architecture should not hard-code only these two currencies into the database structure.
+Instead:
+currency = KES
+currency = USD
+with a future possibility of:
+GBP
+EUR
+TZS
+UGX
+...
+This matters because Enzi's future SaaS customers may operate in other countries.
+19. Tourism Data Architecture
+The current tours table combines many concepts:
+tour
+├── marketing information
+├── price
+├── destination
+├── itinerary
+├── images
+├── rating
+├── reviews
+└── package characteristics
+For the current website this is practical.
+For Enzi, we should eventually separate:
+Tour Product
+│
+├── Product information
+├── Pricing
+├── Destinations
+├── Itinerary template
+└── Included services
+This will allow predefined safari packages to become proper commercial products.
+20. Accommodation Architecture
+The current accommodations table is global and primarily represents website presentation data. It contains fields such as:
+name
+location
+country
+image
+description
+amenities
+priceFrom
+badges
+type
+but no company relationship.
+The target model should distinguish:
+Accommodation Provider
+│
+└── Property
+│
+├── Room Types
+└── Rooms
+and relationships between a company and a partner property.
+21. Partner Accommodation
+For AHA initially:
+AHA
+│
+└── Accommodation Partner
+│
+└── Property
+The partner's information should support:
+name
+location
+country
+contact
+pricing
+availability
+room types
+commission
+payment terms
+notes
+But as you specified, these detailed fields should initially be optional.
+We will not force AHA to populate a complex supplier-management system before it is useful.
+22. Future Shared Accommodation
+The architecture should eventually permit:
+Accommodation Property
+│
+├── AHA relationship
+├── Enchoro relationship
+└── Other SaaS customer relationships
+This is the foundation for a future Enzi ecosystem.
+A partner could eventually become a participant in Enzi rather than merely being a record maintained by AHA.
+23. Hospitality Architecture
+The current schema already has a useful beginning:
+room_types
+rooms
+hotel_bookings
+hotel_booking_guests
+hotel_booking_payments
+and restaurant/bar entities are already company-scoped.
+The target architecture retains the basic idea but connects it to the broader commercial system.
+24. One Accommodation Inventory
+We should avoid having:
+Tourism Accommodation
+and separately:
+Hospitality Accommodation
+for the same physical property.
+Instead:
+Property
+│
+└── Accommodation Inventory
+│
+├── Hospitality Reservation
+│
+└── Safari Booking
+This is particularly important for Enchoro.
+25. Enchoro Example
+Enchoro owns a property.
+A room can therefore be:
+Enchoro Property
+│
+└── Room
+│
+├── Direct hotel reservation
+│
+└── Included in AHA/Enchoro safari
+The underlying room inventory should remain the same.
+26. Vehicle Architecture
+The new model will contain:
+Vehicle
+│
+├── Ownership Type
+├── Company
+├── Provider
+├── Vehicle Type
+├── Capacity
+├── Availability
+├── Driver
+└── Maintenance
+Ownership:
+company_owned
+partner_owned
+This directly reflects your current operation:
+AHA has a fleet of three vehicles and outsources vehicles when required.
+27. Shared Tourism Reference Data
+The following should initially be platform-level/shared data:
+Country
+Destination
+Attraction
+Park
+Park Fee
+Activity
+For example:
+Kenya
+└── Maasai Mara
+├── Park
+├── Attractions
+└── Activities
+AHA can use these records without creating duplicate copies.
+28. AI Itinerary Architecture
+The AI itinerary generator should sit above the tourism data.
+Tourism Data
+│
+▼
+Customer Requirements → AI Engine
+│
+▼
+Itinerary Draft
+│
+▼
+Validation Layer
+│
+▼
+Pricing
+The AI should not directly create arbitrary accommodation prices, park fees or transport costs.
+Those values should come from Enzi's structured records.
+29. Itinerary Tenant Ownership
+An itinerary belongs to the company creating it.
+Therefore:
+itineraries
+├── id
+├── company_id
+├── customer_id
+├── status
+└── ...
+This means:
+AHA itinerary
+cannot automatically be viewed by:
+Enchoro staff
+unless we explicitly create a future sharing mechanism.
+30. Itinerary Versions
+The target structure should be approximately:
+itineraries
+│
+└── itinerary_versions
+│
+├── Version 1
+├── Version 2
+└── Version 3
+An itinerary version can contain selected:
+Destinations
+Activities
+Accommodation
+Transport
+Transfers
+Park Fees
+When the customer changes an accommodation or activity:
+Version 1
+↓
+Customer change
+↓
+Version 2
+Version 1 remains immutable.
+31. Why Versioning Matters Financially
+Suppose:
+Version 1 = $2,000
+The customer changes accommodation.
+Version 2 = $2,300
+We must preserve evidence of:
+What was originally offered?
+What did the customer change?
+What was the new price?
+Which version was accepted?
+This becomes extremely important once Enzi handles real money at scale.
+32. Database Security Model
+The target architecture should use defence in depth.
+Authentication
+↓
+Membership
+↓
+Authorization
+↓
+Tenant Context
+↓
+Query Filtering
+↓
+PostgreSQL constraints/RLS
+No single layer should be trusted by itself.
+33. Row-Level Security
+PostgreSQL RLS should be considered a later hardening layer.
+Conceptually:
+company_id = current_setting('app.current_company_id')
+The application establishes the company context and PostgreSQL can enforce that rows outside the context are inaccessible.
+However:
+We should not make RLS the first migration step.
+First we need to make the application's tenant model correct.
+Then we can introduce RLS carefully.
+34. Foreign Keys
+The new schema should use foreign keys wherever ownership is deterministic.
+For example:
+booking.company_id → companies.id
+payment.company_id → companies.id
+customer.company_id → companies.id
+vehicle.company_id → companies.id
+We should avoid polymorphic references where a normal relationship can be represented safely.
+The existing financial referenceType/referenceId pattern should therefore be treated as legacy/flexible architecture, not the default pattern for new tables.
+35. Unique Constraints
+A major consideration for multi-tenancy is uniqueness.
+Current:
+tours.slug UNIQUE
+means no two companies can have the same slug.
+That is unnecessarily restrictive.
+Target:
+UNIQUE(company_id, slug)
+allows:
+AHA
+7-day-kenya-safari
+Enchoro
+7-day-kenya-safari
+without conflict.
+This principle should apply throughout company-owned content.
+36. Indexing Strategy
+Every high-volume company-owned table should generally have indexes around:
+company_id
+company_id + status
+company_id + created_at
+company_id + relevant foreign key
+Examples:
+bookings(company_id, status)
+bookings(company_id, created_at)
+payments(company_id, status)
+payments(company_id, created_at)
+customers(company_id, email)
+The exact indexes will be determined after we map actual query patterns.
+37. Transaction Strategy
+The existing AHA implementation uses Neon/Postgres, but the audit identified that the current Neon HTTP approach does not provide the transaction semantics needed for complex multi-step financial operations.
+This matters for operations such as:
+Booking
+↓
+Invoice
+↓
+Payment
+↓
+Revenue
+We do not want:
+Payment created ✓
+Revenue creation ✗
+leaving inconsistent financial records.
+Therefore, the target architecture must support database transactions for critical workflows.
+38. Critical Transactions
+At minimum:
+Booking confirmation
+Booking
++
+Quote snapshot
++
+Invoice
+Payment recording
+Payment
++
+Invoice balance update
++
+Payment status update
+Revenue recognition
+Payment/Invoice
++
+Revenue entry
+Hotel reservation
+Reservation
++
+Inventory validation
++
+Room allocation
+These should eventually execute atomically where appropriate.
+39. Current Schema → Target Schema
+The migration philosophy is:
+Extend and refactor; do not destroy working business data.
+We therefore classify current tables as:
+Keep and evolve
+companies
+users
+bookings
+payments
+expenses
+revenue_entries
+room_types
+rooms
+hotel_bookings
+hotel_booking_guests
+restaurant_*
+bar_*
+notifications
+user_permissions
+Refactor
+tours
+accommodations
+Introduce
+company_memberships
+customers
+websites
+products
+services
+quotes
+invoices
+invoice_lines
+itineraries
+itinerary_versions
+destinations
+attractions
+parks
+park_fees
+vehicles
+vehicle_providers
+accommodation_providers
+properties
+Some of these are target architecture entities, not necessarily tables we should create immediately.
+40. Customer Table
+One of the biggest missing pieces in the current schema is a proper company-specific customer domain.
+The existing booking stores customer information directly:
+firstName
+lastName
+email
+phone
+country
+and also has an optional userId.
+The target should be:
+customers
+│
+├── customer profile
+│
+├── communications
+├── documents
+├── bookings
+└── feedback
+Then bookings reference:
+booking.customer_id
+rather than duplicating the entire customer identity.
+41. Booking Snapshot Principle
+We should nevertheless preserve certain customer information on the transaction itself.
+For example, an invoice or booking may need to retain:
+customer name at time of transaction
+customer email at time of transaction
+billing information
+This protects historical records if the customer later changes their profile.
+Therefore:
+Customer
+↓
+Booking
+↓
+Historical snapshot
+rather than relying exclusively on the current customer record.
+42. Website Architecture
+A website is a company-owned resource:
+companies
+│
+└── websites
+For AHA:
+AHA
+└── africanhomeadventure.com
+Eventually:
+AHA
+├── africanhomeadventure.com
+├── safari landing site
+└── future domain
+The database should therefore not assume that a company has exactly one website.
+43. Website → Enzi Relationship
+The public website should consume Enzi's business data.
+Conceptually:
+ENZI DATABASE
+│
+┌───────────┴───────────┐
+│                       │
+Dashboard               Website
+│                       │
+Staff/Admin              Customers
+Both interact with the same underlying source of truth.
+44. AHA's Current Domain
+For now:
+africanhomeadventure.com
+remains the public website domain.
+We do not need to buy a separate Enzi domain before the core architecture is ready.
+Later, Enzi can have its own SaaS domain.
+The website can remain:
+africanhomeadventure.com
+while the SaaS eventually becomes something such as:
+app.<enzi-domain>
+or another dedicated SaaS URL.
+45. Resend Architecture
+The domain you've already purchased becomes useful here.
+The eventual architecture is:
+africanhomeadventure.com
+│
+▼
+Resend
+│
+▼
+Customer emails
+The application should not send email directly from random API routes.
+Instead:
+Booking created
+↓
+Application Event
+↓
+Email Service
+↓
+Resend
+↓
+Customer
+This gives us one central email subsystem.
+46. Email Data
+We should eventually have a central mechanism for:
+email templates
+email events
+delivery status
+provider message ID
+company sender identity
+This will become important when:
+AHA
+Enchoro
+BTH
+all use Enzi.
+Each company may eventually have its own sending identity.
+47. SaaS Subscription Architecture
+Because the long-term objective is to sell Enzi's AI itinerary generator, the platform itself needs a SaaS layer.
+Conceptually:
+SaaS Customer
+│
+└── Subscription
+│
+├── Plan
+├── Status
+├── Billing
+└── Entitlements
+This does not need to be implemented in the AHA MVP immediately.
+But the architecture should leave room for it.
+48. Feature Flags vs Permissions
+These should remain separate.
+Feature flag
+Answers:
+Is the module available to this company?
+Example:
+AHA
+AI itinerary = ON
+BTH
+AI itinerary = OFF
+Permission
+Answers:
+Can this particular user perform this action?
+Example:
+AHA
+AI itinerary = ON
+Sales Staff
+→ can create
+Finance
+→ can view pricing
+Tour Guide
+→ can view itinerary
+49. Target Authorization Hierarchy
+Platform
+↓
+Company
+↓
+Subscription / Features
+↓
+Membership
+↓
+Role
+↓
+Permission
+↓
+Resource ownership
+A user must pass all relevant levels.
+50. Database Architecture Principle
+The new database should be designed around business domains, not around the current pages.
+Target conceptual structure:
+Platform
+│
+├── Identity
+├── Tenancy
+├── Configuration
+├── Subscriptions
+│
+├── CRM
+│
+├── Commercial
+│
+├── Finance
+│
+├── Tourism
+│
+├── Hospitality
+│
+├── Retail
+│
+├── NGO
+│
+└── Intelligence / AI
+This aligns the database with the Product Architecture from our previous documents.
+51. Initial Database Domain Map
+PLATFORM
+├── users
+├── companies
+├── company_memberships
+├── roles
+├── permissions
+├── websites
+└── feature_flags
+CRM
+├── customers
+├── leads
+├── organizations
+├── contacts
+├── communications
+├── feedback
+└── customer_documents
+COMMERCIAL
+├── products
+├── services
+├── prices
+├── quotes
+├── bookings
+├── invoices
+├── invoice_lines
+├── payments
+└── discounts
+FINANCE
+├── revenue
+├── expenses
+├── refunds
+└── financial_transactions
+TOURISM
+├── destinations
+├── attractions
+├── parks
+├── park_fees
+├── tour_packages
+├── itineraries
+├── itinerary_versions
+├── accommodations
+├── accommodation_providers
+├── vehicles
+├── vehicle_providers
+├── transfers
+└── guides
+HOSPITALITY
+├── properties
+├── room_types
+├── rooms
+├── reservations
+├── housekeeping
+├── restaurants
+├── menus
+├── bars
+└── POS
+INTELLIGENCE
+├── itinerary_requests
+├── AI generations
+├── recommendations
+├── KPIs
+└── analytics
+52. What We Should NOT Do Yet
+We should not immediately create every table above.
+That would be premature.
+The next implementation should focus on the foundation:
+Companies
+Users
+Memberships
+Roles
+Permissions
+Customers
+Websites
+then establish the core commercial relationships:
+Products
+Services
+Bookings
+Quotes
+Invoices
+Payments
+then tourism:
+Destinations
+Attractions
+Tour Packages
+Accommodation
+Itineraries
+Vehicles
+The other industry modules can follow.
+53. Migration Strategy for AHA
+We should use a staged migration.
+Stage 1 — Protect the existing system
+Fix:
+tenant resolution
+authorization
+cross-company access
+before making structural changes.
+Stage 2 — Introduce foundational entities
+customers
+company_memberships
+websites
+Stage 3 — Refactor existing entities
+tours
+accommodations
+bookings
+payments
+Stage 4 — Introduce commercial model
+products
+services
+quotes
+invoices
+Stage 5 — Introduce AI itinerary model
+itinerary_requests
+itineraries
+itinerary_versions
+Stage 6 — Harden
+indexes
+transactions
+audit logs
+RLS
+observability
+54. Migration Rule
+Do not drop existing tables simply because the target model is cleaner.
+For example, the current bookings table already contains real business information such as:
+company
+user
+tour
+travel dates
+guests
+accommodation
+transport
+pricing
+currency
+exchange rate
+payment status.
+We should migrate that information into the new structure rather than losing it.
+55. First Target Schema — Foundation
+The first new database foundation should approximately look like:
+companies
+│
+├── company_memberships
+│        │
+│        └── users
+│
+├── websites
+│
+└── customers
+Then:
+customers
+│
+└── bookings
+│
+├── quote
+├── invoice
+└── payments
+And tourism:
+booking
+│
+└── itinerary
+│
+├── destinations
+├── activities
+├── accommodation
+├── vehicles
+└── transfers
+56. Architectural Decision Log
+The following decisions are now established.
+ID
+Decision
+DB-001
+Company is the primary tenant
+DB-002
+Company-owned records have direct company_id
+DB-003
+Customer records are company-specific
+DB-004
+Users and company memberships are separate concepts
+DB-005
+Roles belong to company memberships rather than globally to users
+DB-006
+Invalid/missing tenant context must fail closed
+DB-007
+Shared tourism reference data can be platform-owned
+DB-008
+Partner resources are architected for future shared use
+DB-009
+AHA remains the initial implementation tenant
+DB-010
+AHA website and dashboard remain in the same Next.js application initially
+DB-011
+KES and USD are supported currencies
+DB-012
+Financial records preserve transaction currency and conversion information
+DB-013
+Itineraries are company-owned and versioned
+DB-014
+Predefined safari packages are commercial products
+DB-015
+AI is not the authoritative source for business facts
+DB-016
+Database transactions are required for critical financial workflows
+DB-017
+PostgreSQL RLS is a future defence-in-depth layer
+DB-018
+Existing AHA data is migrated rather than discarded
+57. Document 4 — Current Status
+Architecture decision
+Approved direction:
+ENZI
+│
+MULTI-TENANT
+│
+┌────┴────┐
+│         │
+Platform   Companies
+│
+┌──────────┼──────────┐
+│          │          │
+AHA      Enchoro      BTH
+│
+Website
++
+Dashboard
+Current AHA database
+Usable foundation, but not yet a true SaaS database.
+The strongest existing foundations are:
+company-scoped operational tables
+company foreign keys
+existing booking/payment/expense/revenue model
+hotel inventory
+restaurant/bar modules
+permission model.
+The biggest structural changes required are:
+User → Company Membership
+Proper Customer entity
+Company ownership for currently-global business entities
+Shared-vs-tenant data classification
+Commercial model
+Itinerary/version model
+Strong tenant enforcement
+Transactional financial workflows
+One important boundary before we proceed
+I have deliberately not added new business requirements that you haven't approved. The entities such as customers, websites, company_memberships, itinerary_versions, etc. are architectural consequences of the decisions we've already made and of the existing AHA schema.
+Where we need to decide whether something belongs in the new database, you can override it.
+The next document should be:
+Document 5 — Technical Architecture
+That document will take this database architecture and decide how the actual software should communicate with it, including:
+Next.js
+↓
+App Router
+↓
+Server Components
+↓
+Route Handlers / Server Actions
+↓
+Service Layer
+↓
+Authorization
+↓
+Drizzle
+↓
+Neon PostgreSQL
+and then:
+AHA Website
+↓
+Enzi Core
+↓
+AI Itinerary Engine
+↓
+Resend
+↓
+Future SaaS customers
+We can also use Document 5 to decide how an external tour operator's website will eventually connect to Enzi's AI itinerary generator, which is central to your SaaS vision.
+Absolutely. We now move to Document 5 — Technical Architecture.
+This document will translate the business, product, domain, and multi-tenant decisions we've already made into the actual technical blueprint for Enzi.
+Document 5 — Technical Architecture
+Project: EnziInitial implementation: African Home AdventureDomain: africanhomeadventure.comFrontend: Next.jsUI: Tailwind CSS + DaisyUIDatabase: PostgreSQL / NeonORM: Drizzle ORMEmail: ResendPrimary architecture: Multi-tenant SaaSInitial deployment: AHA website + dashboard in one application
+1. Technical Architecture Goal
+The technical architecture must achieve five things simultaneously:
+Keep AHA working
+Allow Enzi to support multiple companies
+Allow Enzi to scale as users and transactions increase
+Make the AI itinerary generator a reusable SaaS product
+Avoid creating unnecessary infrastructure before the business requires it
+The guiding principle is:
+Build the architecture for the future, but implement only what the current business needs.
+We should therefore avoid prematurely introducing microservices, Kubernetes, multiple databases, event brokers, or other infrastructure that adds complexity without providing immediate value.
+2. Target System Architecture
+The initial architecture should look like this:
+INTERNET
+│
+┌──────────────┴──────────────┐
+│                             │
+AHA WEBSITE                    DASHBOARD
+│                             │
+└──────────────┬──────────────┘
+│
+NEXT.JS APP
+│
+┌──────────────┼──────────────┐
+│              │              │
+Presentation     Application     Authentication
+│              │              │
+│         Service Layer       │
+│              │              │
+└──────────────┼──────────────┘
+│
+Authorization
+│
+Tenant Context
+│
+Domain Logic
+│
+Data Access
+│
+Drizzle
+│
+Neon PostgreSQL
+This remains a modular monolith.
+That is the architecture I recommend for Enzi at this stage.
+3. Why a Modular Monolith?
+I do not recommend starting Enzi as microservices.
+Your current situation is:
+one founder
+relatively small team
+several businesses
+one core product
+early SaaS stage
+limited SaaS customer count initially
+Microservices would create unnecessary operational complexity.
+Instead:
+One application
+│
+├── Identity module
+├── CRM module
+├── Commercial module
+├── Finance module
+├── Tourism module
+├── Hospitality module
+├── AI module
+└── Notification module
+These modules are separated logically in code, even though they initially run inside one Next.js application.
+Later, if one module becomes sufficiently large, it can be extracted.
+4. The Evolution Path
+The architecture should be capable of evolving:
+PHASE 1
+Modular Monolith
+│
+▼
+PHASE 2
+Modular Monolith
++ Background Workers
++ Caching
++ Queues
+│
+▼
+PHASE 3
+Selective Services
+│
+▼
+PHASE 4
+Distributed Architecture
+We only move to the next stage when the business and traffic justify it.
+5. Next.js Architecture
+The current Next.js App Router remains the foundation.
+However, the folder structure should evolve from a primarily page-oriented structure toward a domain-oriented structure.
+Instead of thinking:
+app/
+├── bookings/
+├── customers/
+├── payments/
+we should separate:
+app/
+components/
+features/
+lib/
+server/
+types/
+6. Proposed Folder Structure
+A target structure could look like:
+frontend/
+│
+├── src/
+│   │
+│   ├── app/
+│   │   ├── (public)/
+│   │   ├── (auth)/
+│   │   ├── dashboard/
+│   │   ├── api/
+│   │   └── layout.tsx
+│   │
+│   ├── features/
+│   │   │
+│   │   ├── auth/
+│   │   ├── companies/
+│   │   ├── customers/
+│   │   ├── bookings/
+│   │   ├── payments/
+│   │   ├── finance/
+│   │   ├── tourism/
+│   │   ├── hospitality/
+│   │   ├── itineraries/
+│   │   ├── websites/
+│   │   ├── notifications/
+│   │   └── ai/
+│   │
+│   ├── server/
+│   │   ├── auth/
+│   │   ├── authorization/
+│   │   ├── tenancy/
+│   │   ├── database/
+│   │   ├── services/
+│   │   └── integrations/
+│   │
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── forms/
+│   │   ├── tables/
+│   │   └── dashboard/
+│   │
+│   ├── lib/
+│   ├── types/
+│   └── config/
+│
+├── drizzle/
+│
+└── public/
+We do not have to restructure the entire repository immediately.
+This is the target architecture.
+7. Responsibility of Each Layer
+A major principle:
+UI components should not contain business logic.
+For example:
+Button
+↓
+Form
+↓
+Server Action / API
+↓
+Service
+↓
+Authorization
+↓
+Repository / Data Access
+↓
+Database
+Instead of:
+React component
+↓
+SQL
+8. Application Layers
+I recommend five major logical layers.
+┌──────────────────────────────┐
+│ Presentation                 │
+│ Next.js / React              │
+└──────────────┬───────────────┘
+↓
+┌──────────────────────────────┐
+│ Application                  │
+│ Actions / API / Use Cases    │
+└──────────────┬───────────────┘
+↓
+┌──────────────────────────────┐
+│ Domain                       │
+│ Business Rules               │
+└──────────────┬───────────────┘
+↓
+┌──────────────────────────────┐
+│ Data Access                  │
+│ Drizzle / Repositories       │
+└──────────────┬───────────────┘
+↓
+┌──────────────────────────────┐
+│ Infrastructure               │
+│ Neon / Resend / AI / etc.    │
+└──────────────────────────────┘
+This separation will become increasingly important as Enzi grows.
+9. Tenant Resolution Architecture
+Every authenticated dashboard request should establish a tenant context.
+Request
+↓
+Authentication
+↓
+User
+↓
+Requested Company
+↓
+Membership Verification
+↓
+Tenant Context
+↓
+Business Operation
+For example:
+Bradley
+↓
+AHA membership
+↓
+company_id = AHA
+↓
+Create booking
+The application should never trust:
+?companyId=aha
+by itself.
+10. Tenant Context Object
+Conceptually:
+type TenantContext = {
+companyId: string
+userId: string
+membershipId: string
+role: string
+permissions: Permission[]
+}
+Every protected business operation should have access to this context.
+This becomes one of the most important architectural concepts in Enzi.
+11. Authorization
+Authorization should occur at the server.
+The basic rule:
+Authentication
+=
+Who are you?
+Authorization
+=
+What are you allowed to do?
+Tenant isolation
+=
+Which company's data can you access?
+These are separate concerns.
+12. Permission Example
+Suppose:
+Company = AHA
+User = John
+Role = Sales Staff
+John may have:
+Bookings
+view ✓
+create ✓
+edit ✓
+delete ✗
+Payments
+view ✓
+create ✗
+edit ✗
+Expenses
+view ✗
+create ✗
+edit ✗
+The API must enforce this regardless of what the frontend displays.
+13. Service Layer
+Business operations should live in services/use cases.
+Example:
+createBooking()
+confirmBooking()
+calculateBookingPrice()
+recordPayment()
+generateItinerary()
+sendBookingConfirmation()
+rather than embedding the logic inside route handlers.
+Example:
+POST /api/bookings
+↓
+createBooking()
+↓
+authorization
+↓
+validation
+↓
+pricing
+↓
+database transaction
+↓
+booking created
+↓
+notification event
+14. Validation
+All external input should be validated.
+You already use Zod, so we should continue with it.
+For example:
+Browser
+↓
+Zod schema
+↓
+Service
+↓
+Database
+Validation should exist on the server even if the frontend validates the same form.
+15. API Architecture
+The current application uses Next.js Route Handlers.
+We can continue using them.
+But the route handler should become thin:
+Route Handler
+↓
+authenticate
+↓
+resolve tenant
+↓
+authorize
+↓
+validate
+↓
+service
+Not:
+Route Handler
+↓
+1000 lines of business logic
+↓
+SQL
+16. Server Actions vs API Routes
+We can use both.
+Server Actions
+Best for internal dashboard mutations such as:
+Create customer
+Create booking
+Update booking
+Record expense
+Update company settings
+API Routes
+Best for:
+Public website
+External integrations
+Webhooks
+Mobile applications
+Third-party websites
+SaaS API
+This distinction will become particularly important for your future AI itinerary SaaS.
+17. Future External API
+Imagine another tour operator purchases Enzi's itinerary generator.
+Their website could eventually call:
+POST /api/v1/itineraries/generate
+with:
+{
+"destination": "Kenya",
+"duration": 7,
+"attractions": [
+"Maasai Mara",
+"Lake Nakuru"
+],
+"travellers": 4
+}
+Enzi would:
+Authenticate API client
+↓
+Identify SaaS company
+↓
+Check subscription
+↓
+Generate itinerary
+↓
+Calculate pricing
+↓
+Return itinerary
+This is how external websites can eventually connect to Enzi.
+18. Website Integration Models
+There are three possible integration levels.
+Level 1 — Link/redirect
+A company's website sends customers to Enzi.
+Simplest.
+Customer
+↓
+Company website
+↓
+Enzi itinerary generator
+Level 2 — Embedded widget
+The company embeds an Enzi component:
+Company Website
+│
+└── Enzi Widget
+For example:
+<iframe src="https://app.enzi.../itinerary-widget">
+This is easier for customers but less flexible.
+Level 3 — API
+The company website communicates directly with Enzi:
+Customer
+↓
+Company Website
+↓
+Enzi API
+↓
+AI Engine
+↓
+Itinerary
+This provides the strongest long-term SaaS model.
+This is ultimately the model I recommend for Enzi.
+19. AI Itinerary Architecture
+The AI engine should not directly control the database.
+Instead:
+Customer requirements
+↓
+Itinerary service
+↓
+Retrieve structured tourism data
+↓
+AI generation
+↓
+Validation
+↓
+Pricing engine
+↓
+Itinerary
+The AI proposes.
+The application validates.
+The database remains the source of truth.
+20. AI vs Business Rules
+This distinction is extremely important.
+AI can determine:
+Suggested itinerary sequence
+Suggested activities
+Suggested accommodation combinations
+Suggested descriptions
+Suggested alternatives
+Business logic determines:
+Actual accommodation price
+Actual park fee
+Actual transport cost
+Profit margin
+Currency conversion
+Availability
+Final customer price
+The AI should never be allowed to invent:
+Park fee = $50
+when the database says:
+Park fee = $80
+21. Pricing Engine
+Your safari pricing requirement should become a dedicated domain service.
+The flow:
+Accommodation costs
++
+Transport costs
++
+Park fees
++
+Activities
++
+Other costs
++
+Profit markup
+↓
+Base price
+↓
+Round upward to nearest £/KES/USD tens
+↓
+Customer price
+The exact implementation of the rounding rule should be formalized in the pricing domain.
+For example:
+Raw calculated price
+↓
+Pricing policy
+↓
+Rounded selling price
+This should not be implemented inside a React component or AI prompt.
+22. Availability Architecture
+You specified that partner accommodation availability should be managed.
+Therefore, availability should eventually be represented as structured data.
+Property
+↓
+Room Type
+↓
+Inventory
+↓
+Availability
+The AI itinerary engine can then request:
+Accommodation
++ dates
++ number of guests
+and receive valid options.
+This prevents the AI from recommending an unavailable property.
+23. AI Generation Pipeline
+The eventual pipeline:
+Customer Input
+↓
+Requirement Validation
+↓
+Destination Selection
+↓
+Attraction Selection
+↓
+Availability Check
+↓
+Accommodation Selection
+↓
+Transport Selection
+↓
+Cost Calculation
+↓
+Profit Markup
+↓
+Price Rounding
+↓
+AI Narrative Generation
+↓
+Final Validation
+↓
+Itinerary
+This is much safer than:
+Prompt → LLM → Final itinerary
+24. Background Processing
+Some operations should eventually become asynchronous.
+Examples:
+Generate complex itinerary
+Send bulk emails
+Generate PDF itinerary
+Process analytics
+Import supplier inventory
+Generate reports
+Initially, synchronous processing is acceptable where response times are short.
+As traffic grows:
+Request
+↓
+Queue
+↓
+Worker
+↓
+Result
+We can introduce a queue when it becomes necessary.
+25. Email Architecture
+Resend should be treated as an infrastructure integration rather than embedded throughout the application.
+Application
+↓
+Email Service
+↓
+Resend
+For example:
+Booking Confirmed
+↓
+Email Service
+↓
+Booking Confirmation Template
+↓
+Resend
+↓
+Customer
+This means switching email providers later would not require rewriting booking logic.
+26. AHA Email Domain
+Your existing domain:
+africanhomeadventure.com
+can become the initial sending identity.
+For example, conceptually:
+bookings@africanhomeadventure.com
+or:
+hello@africanhomeadventure.com
+We will configure the exact addresses later.
+For Enzi SaaS customers, the architecture should eventually support their own verified domains.
+27. Environment Configuration
+We need to formalize environment variables.
+Target:
+DATABASE_URL=
+AUTH_SECRET=
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=
+NEXT_PUBLIC_APP_URL=
+AI_PROVIDER_API_KEY=
+The exact AI provider is a separate decision.
+Secrets must never be committed to Git.
+28. Environment Separation
+We should have:
+Development
+│
+├── local database/environment
+│
+↓
+Staging
+│
+├── staging database/environment
+│
+↓
+Production
+│
+└── production database/environment
+The biggest rule:
+Never use production credentials locally.
+29. Database Environments
+Neon should eventually have clear separation between:
+Development
+Staging
+Production
+At minimum, production must never be casually used for schema experiments.
+30. Database Migration Strategy
+Drizzle migrations become the authoritative database change mechanism.
+We should move away from:
+runtime ALTER TABLE
+as a normal application behaviour.
+Instead:
+Schema change
+↓
+Drizzle migration
+↓
+Review
+↓
+Apply to staging
+↓
+Test
+↓
+Apply to production
+31. Caching
+We should not introduce caching everywhere immediately.
+First:
+Database
+↓
+Correct queries
+↓
+Indexes
+↓
+Pagination
+Then caching where measured performance requires it.
+Likely future cache candidates:
+Destinations
+Attractions
+Park fees
+Public tourism content
+Company configuration
+AI reference data
+32. Scalability Strategy
+Scaling should happen progressively.
+Stage 1
+Next.js
++
+Neon
++
+Resend
+Stage 2
+Next.js
++
+Neon
++
+Cache
++
+Background jobs
++
+Object storage
+Stage 3
+Next.js
++
+Dedicated AI service
++
+Workers
++
+Queue
++
+Analytics infrastructure
+Only introduce each component when required.
+33. Storage
+Eventually, files should not live directly inside the application server.
+Examples:
+Customer documents
+Safari PDFs
+Invoices
+Receipts
+Vehicle documents
+Company logos
+Tour images
+Accommodation images
+The architecture should eventually use object storage.
+Conceptually:
+Next.js
+↓
+Storage Service
+↓
+Object Storage
+The database stores metadata and URLs, not large files themselves.
+34. Observability
+As Enzi becomes a SaaS, we need to know:
+What failed?
+Where did it fail?
+Which company was affected?
+Which user initiated it?
+How long did it take?
+Therefore, eventually we need:
+Application logs
+Error tracking
+Performance monitoring
+Audit logs
+Database monitoring
+35. Audit Logs
+For business software, auditability is important.
+Eventually:
+audit_logs
+could record:
+who
+what
+when
+company
+resource
+resource_id
+before
+after
+Example:
+Bradley
+changed
+AHA booking #123
+price
+KES 450,000 → KES 480,000
+2026-08-22 18:30
+This becomes particularly valuable for financial operations.
+36. Security Architecture
+The security model becomes:
+HTTPS
+↓
+Authentication
+↓
+Tenant resolution
+↓
+Authorization
+↓
+Input validation
+↓
+Business rules
+↓
+Database constraints
+↓
+Tenant-scoped queries
+↓
+Audit logging
+Public endpoints additionally require:
+Rate limiting
+Spam protection
+Input validation
+Abuse detection
+37. Public Website Security
+The public AHA website must be considered an untrusted environment.
+A customer can manipulate:
+POST body
+query parameters
+cookies
+headers
+browser JavaScript
+Therefore:
+Never trust anything coming from the browser.
+The server determines:
+price
+company
+permissions
+availability
+payment status
+booking ownership
+38. Payments
+The payment architecture should eventually become:
+Booking
+↓
+Invoice
+↓
+Payment Provider / Manual Payment
+↓
+Payment
+↓
+Webhook
+↓
+Payment Verification
+↓
+Financial Ledger
+For your Kenyan market, M-Pesa will be particularly important.
+However, we should not tightly couple Enzi to one payment provider.
+Use a payment abstraction:
+Payment Service
+│
+├── M-Pesa
+├── Card
+├── Bank
+└── Cash
+39. External Integrations
+Every external provider should sit behind an integration layer.
+Enzi
+│
+├── Email Integration
+│      └── Resend
+│
+├── Payment Integration
+│      └── M-Pesa / Card Provider
+│
+├── AI Integration
+│      └── AI Provider
+│
+└── Storage Integration
+└── Object Storage
+This prevents vendor lock-in.
+40. API Versioning
+The future public SaaS API should be versioned:
+/api/v1/
+rather than:
+/api/
+This allows:
+v1
+↓
+v2
+without immediately breaking customer websites.
+This becomes essential once other tour operators depend on Enzi.
+41. API Authentication for SaaS Customers
+External websites should not use normal user passwords to communicate with Enzi.
+Eventually:
+SaaS Company
+↓
+API Credential
+↓
+Enzi API
+↓
+Company/Tenant
+We can later introduce:
+API keys
+OAuth
+webhooks
+signed requests
+depending on the integration requirements.
+42. Domain Architecture
+For now:
+africanhomeadventure.com
+contains:
+/
+├── public website
+│
+└── dashboard
+Later:
+africanhomeadventure.com
+│
+└── public website
+app.enzi...
+│
+└── SaaS application
+and external companies can connect their own websites through:
+Enzi API
+This gives us a clean migration path without disrupting AHA.
+43. Deployment Architecture
+Initial:
+GitHub
+↓
+CI/CD
+↓
+Next.js deployment
+↓
+Production
+↓
+Neon
+We should keep deployment simple.
+Every push should eventually go through:
+Lint
+↓
+Typecheck
+↓
+Tests
+↓
+Build
+↓
+Deploy
+44. Testing Architecture
+Testing should exist at several levels.
+Unit tests
+For:
+Pricing
+Currency conversion
+Permissions
+Tenant resolution
+Business rules
+Integration tests
+For:
+Booking creation
+Payment recording
+Customer creation
+Itinerary generation
+End-to-end tests
+For:
+Customer booking
+Staff workflow
+Login
+Dashboard
+The most important business rules should be tested before we aggressively refactor the existing AHA codebase.
+45. Technical Principle for AI
+One of the most important architectural decisions:
+AI is a capability of Enzi, not the foundation of Enzi.
+The foundation is:
+Reliable data
++
+Business rules
++
+Tenant architecture
++
+Commercial system
++
+AI
+not:
+AI
++
+database
+This distinction will protect the platform from becoming unreliable.
+46. Target Technical Architecture
+Putting everything together:
+USERS
+│
+┌────────────┴────────────┐
+│                         │
+PUBLIC WEBSITES             DASHBOARD
+│                         │
+└────────────┬────────────┘
+│
+NEXT.JS
+│
+┌────────────┼────────────┐
+│            │            │
+Auth/API      UI Layer     Server
+│            │
+│       Tenant Context
+│            │
+│       Authorization
+│            │
+│       Domain Services
+│            │
+│       Data Access
+│            │
+└──────┬─────┘
+│
+DRIZZLE
+│
+NEON POSTGRES
+│
+┌───────────────────────┼───────────────────────┐
+│                       │                       │
+Business                Tourism                  CRM
+│                       │                       │
+Finance                 Itinerary                Customers
+Payments                  AI                     Leads
+Bookings                Pricing                  Contacts
+│                       │
+└───────────────┬───────┘
+│
+INTEGRATION LAYER
+│
+┌─────────────┼──────────────┐
+│             │              │
+Resend       Payments          AI
+47. Document 5 — Architectural Decisions
+ID
+Decision
+TECH-001
+Enzi starts as a modular monolith
+TECH-002
+Next.js remains the application foundation
+TECH-003
+Business logic moves toward domain/service modules
+TECH-004
+API routes remain thin
+TECH-005
+Server Actions may be used for internal mutations
+TECH-006
+Public/external integrations use versioned APIs
+TECH-007
+Tenant context is resolved server-side
+TECH-008
+Browser-supplied companyId is never trusted as authorization
+TECH-009
+AI does not determine authoritative business facts
+TECH-010
+Pricing is a dedicated business service
+TECH-011
+Resend sits behind an email service
+TECH-012
+External integrations use abstraction layers
+TECH-013
+Critical financial operations require database transactions
+TECH-014
+Production, staging and development environments are separated
+TECH-015
+Database migrations are managed through Drizzle
+TECH-016
+Caching is introduced only where justified
+TECH-017
+External SaaS API will eventually use /api/v1
+TECH-018
+External SaaS customers receive API-level authentication
+TECH-019
+Audit logging becomes part of the platform
+TECH-020
+Microservices are deferred until scale justifies them
+48. CTO Recommendation Before Coding
+Do not start implementing all of Document 5 at once.
+The next phase should be a controlled technical migration.
+I recommend this order:
+1. Fix tenant security
+↓
+2. Fix authentication/authorization architecture
+↓
+3. Introduce company memberships
+↓
+4. Introduce Customer domain
+↓
+5. Establish service/domain layer
+↓
+6. Formalize database migrations
+↓
+7. Introduce commercial architecture
+↓
+8. Integrate Resend
+↓
+9. Improve booking/payment workflows
+↓
+10. Build AI itinerary engine
+This keeps AHA operational while turning it into the first real tenant of Enzi.
+The next document after this should be Document 6 — Development Roadmap, where we turn Documents 1–5 into an actual implementation sequence: Phase 0 → Foundation → AHA migration → SaaS foundation → AI itinerary MVP → external SaaS customers → scale.
+Perfect. These answers are enough to lock the roadmap. I would make one important CTO adjustment before we document it:
+We will not treat "make AHA multi-tenant" and "build the AI itinerary generator" as two completely separate projects. We will build the foundational architecture once, then use AHA as the first tenant and the itinerary generator as the first SaaS product.
+That avoids rebuilding the same system twice.
+Document 6 — Enzi Development Roadmap
+Technology Company: EnziReference Business: African Home Adventure (AHA)Initial Product: Tourism & Hospitality SaaSStrategic Product: AI Safari Itinerary GeneratorPrimary SaaS Market: Tour operatorsInitial Geography: Kenya → Tanzania → UgandaDevelopment Model: Founder + AI coding agentsInfrastructure Strategy: Low/moderate cost, scale when justified
+1. Roadmap Objective
+The purpose of this roadmap is to transform the existing AHA project into the foundation of Enzi, while simultaneously producing a commercially usable AI itinerary product.
+The roadmap must achieve two things:
+Business objective
+Create a system that can:
+operate AHA
+support multiple companies
+manage customers
+manage bookings
+calculate prices
+manage payments
+communicate with customers
+generate safari itineraries
+allow customers to modify itineraries
+generate professional PDFs
+convert itineraries into bookings
+serve external tour operators
+generate recurring SaaS revenue
+Technical objective
+Create a foundation that can eventually support:
+AHA
+Enchoro
+Bondo Travellers
+↓
+Enzi
+↓
+External Tour Operators
+↓
+Other Tourism Businesses
+without rebuilding the platform for every company.
+2. Current Starting Position
+AHA is not a greenfield project.
+The current situation is:
+AHA Website
++
+AHA Dashboard
++
+Existing PostgreSQL database
++
+Existing authentication
++
+Existing bookings
++
+Existing payments
++
+Existing tourism functionality
+However, some areas are incomplete and require restructuring.
+Examples include:
+booking forms need additional traveller information
+child counts affect pricing
+authorization requires hardening
+tenant architecture requires formalization
+customer management needs to become a proper domain
+payment architecture needs improvement
+email infrastructure needs to be added
+itinerary generation needs to be built
+SaaS architecture needs to be introduced
+Therefore:
+We improve and refactor the existing AHA system rather than throw it away.
+3. Six-Month Target
+Your six-month definition of success is now our primary roadmap target.
+By the end of the initial major development cycle, we want:
+AHA
+AHA website
+AHA dashboard
+Secure multi-company architecture
+Customer management
+Booking management
+Pricing
+Payments
+Resend emails
+AI Tourism Product
+AI itinerary generator
+Customer itinerary modification
+PDF itinerary generation
+Staff can convert itinerary → booking
+SaaS
+First external tour operator
+SaaS subscription capability
+This is ambitious for six months, but because AHA already exists and you're using AI coding agents, it is a reasonable target, provided we aggressively control scope.
+4. Roadmap Overview
+The roadmap becomes:
+PHASE 0
+Audit + Stabilization
+↓
+PHASE 1
+Enzi Core Foundation
+↓
+PHASE 2
+AHA Commercial & Customer System
+↓
+PHASE 3
+Tourism Engine
+↓
+PHASE 4
+AI Itinerary MVP
+↓
+PHASE 5
+SaaS + External API
+↓
+PHASE 6
+First External Customer
+↓
+PHASE 7
+Scale
+Some phases overlap.
+PHASE 0 — Stabilize the Existing AHA System
+Objective
+Before changing the architecture, make sure we understand exactly what already works.
+Priority
+P0 — Critical
+0.1 Freeze the current baseline
+Create a known working version of:
+AHA Website
+AHA Dashboard
+Database
+Authentication
+Bookings
+Payments
+This becomes:
+AHA Baseline
+We need to know that we can return to this point if a migration introduces a problem.
+0.2 Establish development/staging/production
+We should establish:
+Development
+↓
+Staging
+↓
+Production
+before making major database changes.
+0.3 Fix the audit findings
+Highest priority:
+Tenant isolation
+Authorization
+companyId handling
+Authentication secrets
+API protection
+Public endpoint validation
+Database migrations
+Especially:
+Remove the resolveCompanyId() fallback to AHA.
+Invalid or missing tenant context must fail rather than silently becoming AHA.
+0.4 Add automated checks
+Before major refactoring:
+TypeScript
+Lint
+Build
+Basic tests
+The objective isn't 100% test coverage.
+The objective is:
+Know when we break something.
+PHASE 1 — Enzi Core Foundation
+Objective
+Transform AHA's existing architecture into the foundation of Enzi.
+Priority
+P0 — Critical
+1.1 Company architecture
+Introduce the proper company/tenant model.
+Conceptually:
+Enzi
+│
+├── AHA
+│
+├── Enchoro
+│
+└── Bondo
+Initially, AHA remains the primary tenant.
+We don't need to migrate every business immediately.
+1.2 User membership
+Move toward:
+User
+↓
+Company Membership
+↓
+Role
+↓
+Permissions
+rather than assuming a user globally belongs to one company.
+This enables:
+Bradley
+├── AHA — Owner
+├── Enchoro — Owner
+└── Bondo — Owner
+while another employee might belong only to AHA.
+1.3 Roles
+Initial roles:
+Owner / Founder
+Administrator
+Sales Staff
+Operations Staff
+Tour Guide
+Finance / Accounting
+Permissions remain granular underneath these roles.
+1.4 Tenant-aware database
+All appropriate business entities become:
+company_id
+scoped.
+We will determine exceptions carefully.
+For example, some tourism reference data may eventually be global:
+Kenya
+├── Maasai Mara
+├── Amboseli
+└── Lake Nakuru
+while business-specific data remains tenant-scoped:
+AHA
+├── safari packages
+├── pricing
+├── bookings
+└── customers
+PHASE 2 — AHA Customer + Commercial Engine
+Objective
+Make AHA's operational system commercially reliable.
+Priority
+P0
+2.1 Customer domain
+Create the proper:
+Customer
+Organization
+Contact
+Lead
+architecture.
+Importantly:
+Customers remain separate per company.
+A customer belonging to AHA doesn't automatically become a customer of Enchoro.
+2.2 Traveller information
+The booking system must support information required for accurate safari pricing.
+For example:
+Adults
+Children
+Infants
+Nationality
+Travel dates
+Accommodation preferences
+Room requirements
+Destination
+Activities
+Transport
+However:
+Fields should only become mandatory when the business actually requires them.
+2.3 Flexible booking
+A booking must allow the customer/staff to change:
+Accommodation
+Park
+Activity
+Transport
+Dates
+without rebuilding the entire booking.
+This is especially important for the future AI itinerary system.
+2.4 Pricing engine
+Pricing becomes a dedicated service.
+Example:
+Accommodation
++
+Transport
++
+Park fees
++
+Activities
++
+Other costs
++
+Profit markup
+↓
+Calculated price
+↓
+Round upward
+↓
+Selling price
+The pricing engine becomes reusable by:
+Website
+Dashboard
+AI itinerary generator
+API
+2.5 Payment architecture
+Create a proper payment abstraction:
+Payment
+├── Cash
+├── Bank
+├── Card
+├── M-Pesa
+└── Other
+Initially, we don't need every automated provider.
+The architecture should simply make adding them later easy.
+2.6 Resend
+Integrate Resend after the booking/customer architecture is stable.
+Initial automated emails:
+Booking confirmation
+Enquiry acknowledgement
+Payment acknowledgement
+Itinerary delivery
+Booking updates
+Your existing:
+africanhomeadventure.com
+becomes the initial verified email domain.
+PHASE 3 — Tourism Engine
+Objective
+Create the structured tourism data that will eventually power the AI.
+Priority
+P0/P1
+This phase is extremely important.
+The AI itinerary generator should not be built first.
+The structured tourism system comes first.
+3.1 Destinations
+Destination
+└── Kenya
+├── Maasai Mara
+├── Amboseli
+├── Lake Nakuru
+└── ...
+Eventually:
+Kenya
+Tanzania
+Uganda
+3.2 Attractions
+Each attraction should have structured information such as:
+Name
+Location
+Description
+Activities
+Best time
+Typical duration
+Park
+Pricing
+Restrictions
+3.3 Accommodation
+Support:
+Partner accommodation
+Company-owned accommodation
+This is important because:
+AHA
+Third-party accommodation
+Enchoro
+Own accommodation
++
+Third-party accommodation
+The same architecture must support both.
+3.4 Accommodation availability
+Eventually:
+Property
+↓
+Room Type
+↓
+Inventory
+↓
+Availability
+↓
+Price
+The AI should use this information.
+3.5 Transport
+Support:
+Company vehicles
++
+Outsourced vehicles
+AHA currently has:
+3 vehicles
+with additional vehicles outsourced when necessary.
+The system should therefore distinguish:
+Owned
+External supplier
+3.6 Tour packages
+Support:
+Predefined package
+and:
+Custom safari
+This distinction becomes important for both the dashboard and AI generator.
+PHASE 4 — AI Itinerary MVP
+Objective
+Build the first commercially useful AI itinerary generator.
+Priority
+P0 — Strategic Product
+Target
+Month 2–3
+Because you want this within 1–2 months, we should avoid trying to build the entire ultimate system immediately.
+4.1 MVP customer journey
+The first version should be:
+Customer visits AHA website
+↓
+"Create my safari"
+↓
+Enter requirements
+↓
+AI generates itinerary
+↓
+Customer reviews it
+↓
+Customer modifies it
+↓
+Price recalculated
+↓
+Customer accepts
+↓
+PDF generated
+↓
+Staff receives itinerary
+↓
+Convert itinerary → booking
+That is a complete business loop.
+4.2 Customer input
+Initially:
+Destination
+Travel dates
+Number of adults
+Number of children
+Approximate budget
+Interests
+Accommodation preference
+Activities
+Transport preference
+We can add more later.
+4.3 AI architecture
+The AI should receive structured data, not blindly search the database.
+Customer requirements
+↓
+Itinerary engine
+↓
+Tourism database
+↓
+Available options
+↓
+AI model
+↓
+Structured itinerary
+4.4 Open-source AI
+You want:
+An accurate open-source model.
+We should therefore treat model selection as a separate technical investigation.
+Do not lock the application to a specific model yet.
+Create an abstraction:
+AI Provider
+↓
+Itinerary Generation
+so we can test models without rewriting the application.
+We should evaluate candidates based on:
+reasoning quality
+structured JSON output
+instruction following
+tourism planning quality
+inference cost
+latency
+hardware requirements
+ability to run privately
+licensing
+deployment complexity
+4.5 AI does not own pricing
+This rule should be absolute:
+AI
+↓
+Suggest itinerary
+Pricing Engine
+↓
+Calculate actual price
+AI cannot invent prices.
+4.6 Customer modifications
+The customer should be able to say:
+Change accommodation
+or:
+Remove this activity
+or:
+Add one day
+The system recalculates the itinerary and price.
+This is one of the features that can differentiate the product.
+PHASE 5 — SaaS Product
+Objective
+Turn the itinerary generator into a product other tour operators can subscribe to.
+Priority
+P1
+5.1 SaaS tenant
+Create:
+SaaS Customer
+↓
+Company
+↓
+Subscription
+↓
+Users
+↓
+Usage
+5.2 Subscription
+Initially keep it simple.
+For example:
+Subscription
+├── Plan
+├── Status
+├── Start date
+├── Renewal date
+└── Usage
+Don't build an elaborate billing system before acquiring customers.
+5.3 API
+Create:
+/api/v1/itineraries
+Eventually:
+POST /api/v1/itineraries/generate
+This becomes the bridge between Enzi and external websites.
+5.4 Website integration
+Our progression:
+Version 1
+Login to Enzi
+↓
+Use generator
+then:
+Version 2
+Embedded widget
+then:
+Version 3
+API integration
+This means your SaaS can start selling before the complex integration infrastructure exists.
+PHASE 6 — First External Tour Operator
+Objective
+Get one paying external customer.
+This is more important than getting 100 features completed.
+What we learn
+The first customer will tell us:
+What they actually need
+Which itinerary inputs matter
+Which outputs matter
+What they are willing to pay
+What integrations they require
+How often they use the generator
+What AI errors occur
+What support they need
+This feedback becomes the foundation for the next product iteration.
+PHASE 7 — Scale
+Only after the product has demonstrated demand do we introduce more infrastructure.
+Potential additions:
+Background workers
+Queues
+Caching
+Object storage
+Advanced analytics
+Dedicated AI inference
+Usage metering
+Advanced billing
+API management
+Webhooks
+Observability
+And eventually:
+Enzi
+├── Tourism SaaS
+├── Hospitality SaaS
+├── AI products
+└── Other industry modules
+5. Critical Dependencies
+This is the part I want us to follow very carefully.
+Secure tenancy
+↓
+Customer architecture
+↓
+Booking architecture
+↓
+Pricing engine
+↓
+Tourism data
+↓
+Itinerary engine
+↓
+AI
+↓
+PDF
+↓
+Booking conversion
+↓
+SaaS API
+↓
+External customer
+Do not reverse this order simply because AI is exciting.
+6. What We Should NOT Build Yet
+This is just as important as what we build.
+For the first six months, I recommend not building:
+❌ Microservices
+Not yet.
+❌ Mobile apps
+Not necessary for the MVP.
+❌ Complex CRM automation
+Basic CRM first.
+❌ Full accounting software
+Track financial data properly, but don't try to replace QuickBooks/Xero/accounting systems immediately.
+❌ Advanced AI agents
+Start with itinerary generation.
+❌ Every possible industry
+AHA is our reference implementation.
+❌ Multiple AI models running simultaneously
+Create the abstraction first; select and optimize the best model afterward.
+❌ Elaborate SaaS billing
+Get the first paying customer first.
+❌ Perfect UI
+Prioritize reliable workflows.
+7. Priority Classification
+We'll use four priority levels.
+Priority
+Meaning
+P0
+Must exist for the product/business to work
+P1
+Important for MVP/commercialization
+P2
+Valuable after validation
+P3
+Future/optional
+For example:
+P0
+Authentication
+Tenant isolation
+Customers
+Bookings
+Pricing
+Tourism data
+AI itinerary generation
+P1
+Resend
+PDF
+Payment integrations
+SaaS subscriptions
+Public API
+P2
+Advanced analytics
+Usage-based billing
+Widgets
+Advanced AI
+P3
+Mobile apps
+Other industries
+Microservices
+Global expansion
+8. The Six-Month Strategic Sequence
+I would manage the project approximately like this:
+MONTH 1
+────────────────────────────
+AHA stabilization
++
+Security
++
+Multi-tenancy
++
+Customer architecture
++
+Booking/pricing foundation
+MONTH 2
+────────────────────────────
+Tourism data
++
+Accommodation
++
+Availability
++
+AI research
++
+Itinerary engine
+MONTH 3
+────────────────────────────
+AI itinerary MVP
++
+Customer modifications
++
+Pricing
++
+PDF
++
+Resend
+MONTH 4
+────────────────────────────
+AHA end-to-end workflow
++
+Itinerary → Booking
++
+Payments
++
+Production hardening
+MONTH 5
+────────────────────────────
+SaaS architecture
++
+Subscriptions
++
+API v1
++
+External integration
+MONTH 6
+────────────────────────────
+First external tour operator
++
+Feedback
++
+Product refinement
++
+Commercial validation
+These aren't rigid calendar commitments; they are execution priorities.
+9. The Most Important Product Loop
+The entire roadmap ultimately revolves around this:
+TRAFFIC
+↓
+CUSTOMER
+↓
+ITINERARY
+↓
+PRICE
+↓
+BOOKING
+↓
+PAYMENT
+↓
+SERVICE DELIVERY
+↓
+CUSTOMER SATISFACTION
+↓
+DATA
+↓
+BETTER RECOMMENDATIONS
+↓
+MORE SALES
+This is where your business strategy and technology strategy meet.
+10. Enzi's First Flywheel
+Your long-term SaaS flywheel can become:
+More Tour Operators
+↓
+More Itinerary Usage
+↓
+More Tourism Data
+↓
+Better Recommendations
+↓
+Better Customer Experience
+↓
+Higher Conversion
+↓
+More SaaS Customers
+↓
+More Revenue
+↓
+More Investment in Enzi
+↓
+Better Product
+That is much more strategically valuable than simply building "an AI chatbot that creates itineraries."
+11. Definition of Done for the First Major Release
+I would not call the first Enzi milestone complete until this works end-to-end:
+Customer
+↓
+AHA Website
+↓
+Safari Requirements
+↓
+AI Itinerary
+↓
+Customer Changes Itinerary
+↓
+Real Pricing
+↓
+Customer Accepts
+↓
+PDF
+↓
+AHA Dashboard
+↓
+Staff Reviews
+↓
+Convert to Booking
+↓
+Payment
+↓
+Confirmation Email
+If we can demonstrate that flow with a real customer, we have something much more valuable than a collection of completed modules.
+12. CTO Decision
+Based on everything you've told me, I recommend we now stop expanding the architecture documents and move into implementation planning.
+We've established:
+Document 1 — Business Architecture
+Document 2 — Product Architecture
+Document 3 — Domain Model
+Document 4 — Multi-Tenant Architecture
+Document 5 — Technical Architecture
+Document 6 — Development Roadmap
+The next step should therefore be Document 7 — Implementation Backlog / Engineering Plan.
+That will be much more concrete. We'll take Phase 0 and Phase 1 and break them down into actual engineering work:
+EPIC
+↓
+Feature
+↓
+Task
+↓
+Database change
+↓
+API/service change
+↓
+UI change
+↓
+Testing
+↓
+Acceptance criteria
+And importantly, we should start from your actual AHA repository rather than designing imaginary code.
+For the first engineering sprint, I recommend we tackle the existing AHA security/tenant foundation first, because every subsequent feature—customers, bookings, AI itineraries, SaaS customers—depends on getting that foundation right.
+Absolutely. Document 7 should be the Engineering Implementation Plan / Backlog.
+Unlike Documents 1–6, this document should be much more operational. It will become the bridge between the architecture and the actual work we do in your AHA repository.
+Document 7 — Engineering Implementation Plan
+Technology Company: EnziReference Implementation: African Home AdventureCurrent Application: AHA website + dashboardStack: Next.js + Tailwind CSS + DaisyUI + PostgreSQL/Neon + DrizzleDevelopment Model: You + AI coding agentsPrimary Objective: Transform AHA into the first production-grade tenant of Enzi.
+1. Purpose of Document 7
+The purpose of this document is to answer:
+"What exactly do we build, in what order, and how do we know each piece is finished?"
+The engineering hierarchy will be:
+Strategic Goal
+↓
+Phase
+↓
+Epic
+↓
+Feature
+↓
+Engineering Task
+↓
+Implementation
+↓
+Testing
+↓
+Acceptance Criteria
+We should not give an AI coding agent a giant prompt saying:
+"Convert my application into Enzi."
+That creates uncontrolled changes.
+Instead, we give the agent small, auditable engineering objectives.
+2. Engineering Principles
+These rules apply to the entire implementation.
+Rule 1 — Don't rebuild working functionality unnecessarily
+AHA already has working pieces.
+We preserve them unless there is a clear architectural reason to change them.
+Rule 2 — Security before features
+We don't build sophisticated AI functionality on top of insecure tenant architecture.
+The order is:
+Security
+↓
+Tenancy
+↓
+Data
+↓
+Business logic
+↓
+UI
+↓
+AI
+Rule 3 — Database is the source of truth
+The frontend does not determine:
+company
+price
+payment status
+permissions
+availability
+booking ownership
+Rule 4 — Every business rule gets a home
+For example:
+Pricing rules
+→ Pricing Service
+Tenant rules
+→ Tenant Service
+Authorization
+→ Authorization Service
+Booking rules
+→ Booking Service
+Not scattered throughout components.
+Rule 5 — Every major change must be testable
+An AI agent should not simply say:
+"Done."
+It must demonstrate:
+Changed files
+Database changes
+Tests performed
+Build result
+Potential risks
+3. Engineering Workstreams
+The project will be divided into these workstreams:
+E1 — Security & Authentication
+E2 — Multi-Tenancy
+E3 — Database Architecture
+E4 — Customer Management
+E5 — Booking Management
+E6 — Pricing Engine
+E7 — Payments & Finance
+E8 — Tourism Engine
+E9 — Notifications & Email
+E10 — AI Itinerary Engine
+E11 — Itinerary → Booking
+E12 — SaaS & Subscriptions
+E13 — External API
+E14 — Testing & Quality
+E15 — Infrastructure & Observability
+4. EPIC E1 — Security & Authentication
+Objective
+Make the existing authentication and authorization system safe enough to become the foundation of Enzi.
+Priority
+P0
+E1.1 Authentication configuration
+Tasks:
+Remove production fallback AUTH_SECRET
+Require AUTH_SECRET
+Validate required environment variables
+Create .env.example
+Document environment configuration
+Acceptance criteria
+Missing AUTH_SECRET
+→ Application fails safely
+Valid AUTH_SECRET
+→ Authentication works
+E1.2 API authentication
+Every protected API route must explicitly establish authentication.
+We should create a reusable pattern rather than manually implementing it differently in every route.
+Conceptually:
+requireAuthenticatedUser()
+E1.3 Authorization
+Create a standard authorization flow:
+User authenticated?
+↓
+Tenant resolved?
+↓
+User belongs to tenant?
+↓
+Permission sufficient?
+↓
+Operation allowed
+E1.4 Remove insecure tenant fallback
+Current audit finding:
+resolveCompanyId()
+↓
+invalid/missing company
+↓
+AHA fallback
+This must become:
+resolveCompanyId()
+↓
+invalid/missing
+↓
+400 / 403
+Never silently select AHA.
+E1.5 Public endpoint protection
+Review:
+registration
+contact
+public booking
+other public POST endpoints
+Add:
+Zod validation
+rate limiting
+abuse protection where appropriate
+5. EPIC E2 — Multi-Tenancy
+Objective
+Transform the current fixed-company implementation into the foundation of a true SaaS tenant architecture.
+Priority
+P0
+E2.1 Company model
+The system must support:
+Enzi
+├── AHA
+├── Enchoro
+└── Bondo
+without hardcoded company assumptions.
+E2.2 Company membership
+Target:
+users
+companies
+company_memberships
+roles
+permissions
+A user can belong to multiple companies.
+Example:
+Bradley
+├── AHA — Owner
+├── Enchoro — Owner
+└── Bondo — Owner
+E2.3 Tenant-scoped queries
+Review every business table and determine:
+Should this data belong to a company?
+If yes:
+company_id
+must be enforced.
+E2.4 Shared/global data
+Not everything should necessarily be tenant-specific.
+For example, tourism reference data may eventually be shared:
+Kenya
+└── Maasai Mara
+while company-specific pricing remains tenant-owned.
+We will explicitly classify every table as:
+GLOBAL
+TENANT
+USER
+SYSTEM
+rather than guessing during implementation.
+6. EPIC E3 — Database Architecture
+Objective
+Make PostgreSQL the reliable foundation for Enzi.
+Priority
+P0
+E3.1 Schema inventory
+Create a definitive inventory of the current schema:
+Table
+Purpose
+Tenant scope
+Relationships
+Foreign keys
+Indexes
+Status
+Classify tables as:
+ACTIVE
+PARTIAL
+DEPRECATED
+SHARED
+TENANT
+E3.2 Migration system
+Move toward:
+Schema change
+↓
+Drizzle migration
+↓
+Review
+↓
+Staging
+↓
+Production
+Remove unnecessary runtime schema modifications.
+E3.3 Database constraints
+Where appropriate:
+foreign keys
+unique constraints
+not-null constraints
+check constraints
+indexes
+The database should help enforce business integrity.
+7. EPIC E4 — Customer Management
+Objective
+Create the proper customer domain.
+Priority
+P0
+E4.1 Customer entity
+Customer belongs to a company:
+Company
+│
+└── Customer
+E4.2 Customer information
+Initial structure should support:
+Name
+Email
+Phone
+Nationality
+Country
+Notes
+Preferences
+Traveller-specific information should not unnecessarily pollute the core customer record.
+E4.3 Customer ↔ bookings
+Customer
+│
+├── Booking
+├── Booking
+└── Booking
+E4.4 Leads
+Eventually:
+Lead
+↓
+Customer
+↓
+Booking
+This will be particularly useful for AHA sales staff.
+8. EPIC E5 — Booking Management
+Objective
+Make booking management flexible enough to support both predefined and customized safaris.
+Priority
+P0
+E5.1 Booking types
+Support:
+Predefined Safari
+Customized Safari
+Accommodation Only
+Airport Transfer
+Vehicle Hire
+E5.2 Traveller information
+Booking should support:
+Adults
+Children
+Infants
+plus the other information required for pricing.
+These fields should only be mandatory where necessary.
+E5.3 Booking components
+A booking should be composed of components rather than one rigid package.
+For example:
+Booking
+├── Accommodation
+├── Park
+├── Activity
+├── Transport
+├── Airport Transfer
+└── Other Services
+This makes customer modifications much easier.
+E5.4 Customer modifications
+The system must allow:
+Change accommodation
+Change park
+Change activity
+Change transport
+Change dates
+and recalculate affected pricing.
+9. EPIC E6 — Pricing Engine
+Objective
+Create one authoritative pricing engine.
+Priority
+P0
+This becomes one of the most important pieces of Enzi.
+E6.1 Pricing inputs
+Accommodation
+Transport
+Park fees
+Activities
+Number of travellers
+Children
+Transfers
+Other costs
+E6.2 Profit markup
+Total costs
++
+Profit markup
+=
+Selling price
+E6.3 Rounding
+The final price must be rounded upward to the nearest ten, according to the pricing policy established earlier.
+This must be implemented in the pricing service, not in the UI or AI prompt.
+E6.4 Central pricing service
+Everything should use the same service:
+Website
+Dashboard
+AI itinerary
+API
+No duplicated pricing calculations.
+10. EPIC E7 — Payments & Finance
+Objective
+Create reliable financial records.
+Priority
+P0/P1
+E7.1 Payment record
+Payment should reference the appropriate business transaction.
+Support:
+Cash
+Bank
+Card
+M-Pesa
+E7.2 Payment status
+For example:
+Pending
+Partially Paid
+Paid
+Failed
+Refunded
+E7.3 Financial integrity
+Payment operations must be transaction-safe.
+We should not have:
+Payment created
+but
+Revenue missing
+because one database operation failed halfway through.
+E7.4 Provider abstraction
+Eventually:
+PaymentService
+├── ManualPayment
+├── MPesaProvider
+└── CardProvider
+11. EPIC E8 — Tourism Engine
+Objective
+Create the structured tourism knowledge base required by both AHA and the AI generator.
+Priority
+P0
+E8.1 Destinations
+Country
+↓
+Region
+↓
+Destination
+E8.2 Attractions
+Structured data for:
+attractions
+activities
+location
+duration
+suitability
+pricing
+restrictions
+E8.3 Accommodation
+Support:
+Partner properties
+Company-owned properties
+E8.4 Rooms and availability
+Eventually:
+Property
+↓
+Room type
+↓
+Inventory
+↓
+Availability
+↓
+Price
+E8.5 Vehicles
+Vehicle
+├── Owned
+└── Outsourced
+E8.6 Guides
+Guide
+├── Company employee
+└── External contractor
+12. EPIC E9 — Notifications & Resend
+Objective
+Make customer communication reliable.
+Priority
+P1
+E9.1 Email service
+Create:
+EmailService
+rather than calling Resend directly throughout the codebase.
+E9.2 Initial templates
+Booking confirmation
+Payment confirmation
+Enquiry acknowledgement
+Itinerary generated
+Itinerary updated
+Booking update
+E9.3 Domain
+Initial sending domain:
+africanhomeadventure.com
+Later Enzi can support verified domains for SaaS customers.
+13. EPIC E10 — AI Itinerary Engine
+Objective
+Create the first AI-powered product.
+Priority
+P0
+E10.1 AI abstraction
+Do not hardcode one AI provider throughout the application.
+Create:
+AIService
+with an implementation underneath it.
+E10.2 Model evaluation
+Because you've decided you want an open-source model, we'll evaluate models based on:
+Accuracy
+Reasoning
+JSON/structured output
+Latency
+Cost
+Hardware requirements
+Licensing
+Deployment complexity
+This should be a dedicated technical spike before production integration.
+E10.3 Itinerary generation
+Inputs:
+Destination
+Dates
+Travellers
+Children
+Budget
+Interests
+Activities
+Accommodation
+Transport
+Outputs structured itinerary data.
+E10.4 Validation
+AI output must be validated before being shown as a final itinerary.
+AI
+↓
+Schema validation
+↓
+Business validation
+↓
+Availability validation
+↓
+Pricing
+↓
+Customer
+14. EPIC E11 — Itinerary → Booking
+Objective
+Turn AI output into real commercial activity.
+Priority
+P0
+The system should support:
+AI itinerary
+↓
+Customer accepts
+↓
+Staff review
+↓
+Convert to booking
+This should reuse the existing booking domain.
+Do not create a second booking system for AI itineraries.
+15. EPIC E12 — SaaS & Subscriptions
+Objective
+Allow external tour operators to subscribe to Enzi.
+Priority
+P1
+E12.1 SaaS company onboarding
+Company
+↓
+Subscription
+↓
+Admin user
+↓
+Users
+E12.2 Subscription state
+Initially:
+Trial
+Active
+Past Due
+Cancelled
+E12.3 Usage
+Eventually track:
+Itineraries generated
+API requests
+Users
+Storage
+But we should only implement the metrics required for the first commercial model.
+16. EPIC E13 — External API
+Objective
+Allow external tour operators to connect their websites to Enzi.
+Priority
+P1
+E13.1 Versioned API
+Start with:
+/api/v1/
+E13.2 Itinerary endpoint
+Conceptually:
+POST /api/v1/itineraries/generate
+E13.3 API authentication
+External companies should have dedicated API credentials.
+E13.4 Integration progression
+Stage 1
+Enzi dashboard
+↓
+Stage 2
+Embedded widget
+↓
+Stage 3
+External website API
+17. EPIC E14 — Testing & Quality
+This is not a final phase.
+Testing happens throughout development.
+Minimum requirements
+Unit tests
+For:
+Pricing
+Rounding
+Permissions
+Tenant resolution
+Integration tests
+For:
+Customer creation
+Booking creation
+Payment
+Itinerary generation
+E2E tests
+For the critical customer journey:
+Website
+↓
+Itinerary
+↓
+Modification
+↓
+Price
+↓
+Booking
+↓
+Email
+18. EPIC E15 — Infrastructure
+Priority
+P1/P2
+Initial:
+Next.js
+Neon
+Resend
+Later:
+Caching
+Background jobs
+Object storage
+Monitoring
+Error tracking
+AI inference infrastructure
+We add infrastructure based on actual bottlenecks.
+19. First Engineering Sprint
+I recommend not starting with Customer Management or AI.
+Our first sprint should be:
+Sprint 1 — Secure the Foundation
+Task 1
+Audit current authentication implementation.
+Task 2
+Remove AUTH_SECRET fallback.
+Task 3
+Create environment variable validation.
+Task 4
+Create .env.example.
+Task 5
+Create standard authenticated API helper.
+Task 6
+Create standard tenant-resolution helper.
+Task 7
+Remove silent AHA fallback.
+Task 8
+Audit every API route for:
+Authentication
+Authorization
+Tenant isolation
+Input validation
+Task 9
+Fix identified cross-tenant access vulnerabilities.
+Task 10
+Create tests for tenant isolation.
+Task 11
+Run:
+npm run lint
+npm run typecheck
+npm run build
+and the relevant test suite.
+20. Sprint 1 Acceptance Criteria
+We do not move to Sprint 2 until:
+Security
+☑ Unauthenticated users cannot access protected APIs
+☑ Invalid company IDs are rejected
+☑ Users cannot access another company's data
+☑ Permissions are enforced server-side
+☑ No AHA fallback exists
+Environment
+☑ AUTH_SECRET is mandatory
+☑ .env.example exists
+☑ Secrets aren't committed
+Quality
+☑ TypeScript passes
+☑ Lint passes
+☑ Build passes
+☑ Security tests pass
+21. How We Will Work With the AI Coding Agent
+This is especially important because you + AI agents are our development team.
+Don't give the agent the entire Document 7.
+Instead, each task should receive a controlled prompt.
+For example:
+You are working on Sprint 1, Task 7: Remove the silent AHA tenant fallback.
+First inspect the existing tenant-resolution implementation and all usages.
+Do not modify unrelated functionality.
+Identify every place where resolveCompanyId() is used.
+Replace silent fallback behaviour with explicit failure when the company cannot be resolved.
+Ensure valid existing AHA requests continue working.
+Add/update tests covering:
+valid company
+missing company
+invalid company
+unauthorized company
+Run the relevant tests, TypeScript check, lint and build.
+Before making changes, explain the files you intend to modify.
+After implementation, provide:
+files changed
+database changes
+tests performed
+results
+remaining risks
+Do not refactor unrelated code.
+This is the level of specificity I want us to use going forward.
+22. Definition of Done
+A feature isn't "done" merely because the UI works.
+Every feature must pass:
+┌──────────────────────────┐
+│ Requirements             │
+├──────────────────────────┤
+│ Database                 │
+├──────────────────────────┤
+│ Authorization            │
+├──────────────────────────┤
+│ Validation               │
+├──────────────────────────┤
+│ Business logic           │
+├──────────────────────────┤
+│ UI                       │
+├──────────────────────────┤
+│ Error handling           │
+├──────────────────────────┤
+│ Testing                  │
+├──────────────────────────┤
+│ Security                 │
+├──────────────────────────┤
+│ Documentation            │
+└──────────────────────────┘
+23. Our Immediate Execution Path
+From this point, I recommend we stop creating increasingly abstract documents and start executing.
+The sequence is:
+DOCUMENT 7
+Engineering Plan
+↓
+SPRINT 1
+Security + Tenant Foundation
+↓
+SPRINT 2
+Database + Company Membership
+↓
+SPRINT 3
+Customer Domain
+↓
+SPRINT 4
+Booking + Pricing
+↓
+SPRINT 5
+Payments + Resend
+↓
+SPRINT 6
+Tourism Engine
+↓
+SPRINT 7
+AI Itinerary MVP
+↓
+SPRINT 8
+Itinerary → Booking
+↓
+SPRINT 9
+SaaS/API
+↓
+SPRINT 10
+First External Customer
+One important CTO rule from here
+We should not make large batches of changes to your repository.
+We'll work one sprint/task at a time, inspect what the agent actually changed, test it, and only then move forward.
+That is particularly important because your current AHA codebase is already partially functional. We want to evolve it into Enzi without accidentally destroying working AHA functionality.
+The natural next action is therefore Sprint 1 — Security + Tenant Foundation, starting with a read-only audit of the current repository state before the first code modification.

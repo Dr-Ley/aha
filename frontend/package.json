@@ -13,11 +13,14 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "test:tenant": "tsx --test src/lib/tenant.test.ts src/lib/rate-limit.test.ts src/lib/membership.test.ts src/lib/table-tenancy.test.ts src/lib/customer-identity.test.ts src/lib/travellers.test.ts src/lib/pricing.test.ts src/lib/email/email.test.ts src/lib/payment-service.test.ts src/lib/documents/documents.test.ts src/lib/invoice-balance.test.ts src/server/tenancy/tenant-context.test.ts src/server/services/payments/payment-service.test.ts src/server/services/email/email-service.test.ts src/features/tourism/tourism.test.ts src/server/services/itinerary/itinerary.test.ts src/server/services/ai/factory.test.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.1",
     "@neondatabase/serverless": "^1.0.2",
+    "@react-pdf/renderer": "^4.9.0",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "clsx": "^2.1.1",
@@ -28,6 +31,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "recharts": "^3.8.1",
+    "resend": "^6.24.0",
     "swr": "^2.4.0",
     "tailwind-merge": "^3.4.1",
     "zod": "^3.25.76"

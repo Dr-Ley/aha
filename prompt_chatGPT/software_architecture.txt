@@ -1,0 +1,468 @@
+From what you've described, I actually think you've stumbled into a much stronger product than you originally intended.
+
+You didn't start by building "a SaaS." You started by solving a real operational problem for one business (African Home Adventure), then realized the same operational platform could power your other companies. That's how many successful vertical SaaS products evolve.
+
+The key now is to **avoid turning the dashboard into a copy of the website backend**. Instead, think of the website as just one "client" of a much larger business platform.
+
+## I would separate the project into three products
+
+```
+                    Your Ecosystem
+
+                    ┌─────────────────────┐
+                    │   SaaS Platform     │
+                    │     (Core)          │
+                    └─────────┬───────────┘
+                              │
+        ┌─────────────────────┼──────────────────────┐
+        │                     │                      │
+        ▼                     ▼                      ▼
+ African Home          Enchoro Camp          Future Company
+ Adventure                Dashboard             Dashboard
+
+        ▲                     ▲                      ▲
+        │                     │                      │
+        └────────────── Websites ────────────────────┘
+```
+
+The dashboard becomes the **source of truth**.
+
+The websites become consumers of that data.
+
+---
+
+## Don't think of it as a dashboard
+
+Think of it as an ERP.
+
+Your dashboard is already becoming something much larger.
+
+For a safari company, the modules might look like
+
+```
+Core Platform
+
+├── Authentication
+├── Companies
+├── Users
+├── Roles
+├── Permissions
+├── Notifications
+├── Activity Logs
+├── Settings
+├── Billing (future)
+
+Business Modules
+
+├── CRM
+├── Leads
+├── Clients
+├── Bookings
+├── Payments
+├── Revenue
+├── Invoices
+├── Suppliers
+├── Vehicles
+├── Drivers
+├── Guides
+├── Hotels
+├── Safari Packages
+├── Quotes
+├── Tasks
+├── Documents
+├── Reports
+
+Website Modules
+
+├── Tours
+├── Destinations
+├── Blog
+├── Reviews
+├── FAQs
+├── Media
+├── SEO
+├── Contact Forms
+├── Newsletter
+```
+
+Notice that **Website** is just one module.
+
+---
+
+# Then think about company-specific modules
+
+Not every company needs everything.
+
+Example
+
+```
+African Home Adventure
+
+✓ Tours
+✓ Bookings
+✓ Safari Packages
+✓ CRM
+✓ Revenue
+✓ Quotes
+
+-----------------------
+
+Enchoro Wildlife Camp
+
+✓ Rooms
+✓ Reservations
+✓ Housekeeping
+✓ Revenue
+✓ Staff
+✓ Inventory
+
+-----------------------
+
+Future Car Hire Company
+
+✓ Fleet
+✓ Drivers
+✓ Maintenance
+✓ Reservations
+✓ Payments
+```
+
+Notice how
+
+```
+Revenue
+
+Payments
+
+Users
+
+Reports
+
+CRM
+
+Notifications
+```
+
+are shared.
+
+While
+
+```
+Rooms
+
+Fleet
+
+Tours
+
+Inventory
+```
+
+are company-specific.
+
+---
+
+# This means your architecture changes slightly
+
+Instead of
+
+```
+Company A
+
+Dashboard
+
+Company B
+
+Dashboard
+```
+
+you should think
+
+```
+Platform
+
+└── Modules
+
+    CRM
+
+    Revenue
+
+    Bookings
+
+    Tours
+
+    Hotels
+
+    Camp
+
+    Fleet
+
+    Inventory
+
+    Reports
+```
+
+Companies simply enable the modules they need.
+
+Exactly like Notion, Shopify or Odoo.
+
+---
+
+# Your database should reflect this
+
+Instead of
+
+```
+bookings
+
+payments
+
+revenue
+```
+
+Think
+
+```
+companies
+
+users
+
+memberships
+
+roles
+
+permissions
+
+modules
+
+company_modules
+
+bookings
+
+payments
+
+tours
+
+vehicles
+
+rooms
+
+reports
+```
+
+Every table has
+
+```
+companyId
+```
+
+except global tables.
+
+---
+
+# Website Integration
+
+This is where I think you'll save yourself months later.
+
+Instead of the website having its own logic...
+
+```
+Website
+
+↓
+
+Database
+```
+
+Do
+
+```
+Website
+
+↓
+
+Dashboard API
+
+↓
+
+Database
+```
+
+Example
+
+Website requests
+
+```
+GET /api/tours
+
+GET /api/destinations
+
+GET /api/blog
+
+GET /api/reviews
+```
+
+The dashboard owns everything.
+
+Your website simply displays it.
+
+If one day you build a mobile app...
+
+```
+Website
+
+Mobile App
+
+Partner Portal
+
+Travel Agent Portal
+
+↓
+
+Dashboard API
+
+↓
+
+Database
+```
+
+No duplicated logic.
+
+---
+
+# Then think in terms of Packages
+
+Instead of
+
+```
+Admin
+
+Staff
+```
+
+Think
+
+```
+Starter
+
+Professional
+
+Enterprise
+```
+
+Modules become feature flags.
+
+Example
+
+Starter
+
+✓ CRM
+
+✓ Bookings
+
+✓ Revenue
+
+Professional
+
+✓ Reports
+
+✓ Suppliers
+
+✓ Guides
+
+✓ Vehicles
+
+Enterprise
+
+✓ API
+
+✓ Multi-location
+
+✓ Audit Logs
+
+✓ Custom Roles
+
+---
+
+No code changes.
+
+Just enable modules.
+
+---
+
+# The biggest mistake to avoid
+
+Right now your dashboard is probably tightly coupled to African Home Adventure.
+
+Eventually you'll find things like
+
+```
+Tour
+
+Safari
+
+Guide
+
+Destination
+```
+
+hardcoded everywhere.
+
+Instead, abstract them where possible.
+
+For example
+
+Instead of
+
+```
+TourRevenue
+```
+
+consider
+
+```
+Revenue
+```
+
+Instead of
+
+```
+SafariBooking
+```
+
+consider
+
+```
+Booking
+```
+
+Then attach different booking types through relationships or module-specific extensions.
+
+Domain-specific names are fine within a module (e.g., Tours), but shared infrastructure should use generic concepts so it can support camps, transport, or future businesses without refactoring core code.
+
+---
+
+# What I would do before buying a domain
+
+If I were acting as your CTO, I would pause feature development for a short period and carry out an architecture review focused on long-term scalability. Specifically, I would:
+
+1. **Define the platform boundaries.** Clearly identify what belongs to the core platform (authentication, companies, permissions, billing, notifications, reports) versus what belongs to business modules (Tours, Camp Management, Fleet, Inventory, etc.).
+
+2. **Review the database schema.** Confirm that all shared tables are tenant-safe, properly normalized, and ready to support multiple companies without data leakage.
+
+3. **Establish a module system.** Decide how modules are registered, enabled per company, and how navigation and permissions adapt based on enabled features.
+
+4. **Design the public API layer.** Treat the dashboard as the backend for your websites and any future mobile apps or partner portals, avoiding duplicated business logic.
+
+5. **Plan the integrations.** Once the architecture is stable, proceed with infrastructure decisions like purchasing your domain, configuring Resend, adding Stripe, analytics, and monitoring.
+
+This sequence minimizes the risk of building on architectural assumptions that you'll later need to undo.
+
+## One observation
+
+Based on our previous conversations, I've seen you evolve this project from:
+
+* a marketing website,
+* to an internal admin dashboard,
+* to a multi-company management system.
+
+That's a significant shift in scope. Before adding more features, it's worth making sure the **architecture now matches the product you've actually decided to build**. A well-designed multi-tenant foundation will make every future feature—from email and billing to additional companies—much easier to implement and maintain.

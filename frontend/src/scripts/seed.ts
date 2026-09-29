@@ -73,10 +73,12 @@ const IMG = {
 
 async function seedCompanies() {
   console.log("Seeding companies...");
+  const { ensureCompanyLogoColumn, DEFAULT_COMPANY_LOGOS } = await import("../lib/ensure-company-logo");
+  await ensureCompanyLogoColumn();
   const rows = [
-    { id: "aha", name: "African Home Adventure" },
-    { id: "ewc", name: "Enchoro Wildlife Camp" },
-    { id: "bth", name: "Bondo Travellers Hotel" },
+    { id: "aha", name: "African Home Adventure", logo: DEFAULT_COMPANY_LOGOS.aha ?? null },
+    { id: "ewc", name: "Enchoro Wildlife Camp", logo: DEFAULT_COMPANY_LOGOS.ewc ?? null },
+    { id: "bth", name: "Bondo Travellers Hotel", logo: DEFAULT_COMPANY_LOGOS.bth ?? null },
   ];
   for (const row of rows) {
     const existing = await db.select().from(companies).where(eq(companies.id, row.id)).limit(1);
@@ -84,7 +86,12 @@ async function seedCompanies() {
       await db.insert(companies).values(row);
       console.log(`Created company: ${row.name}`);
     } else {
-      console.log(`Company exists: ${row.name}`);
+      if (!existing[0].logo?.trim() && row.logo) {
+        await db.update(companies).set({ logo: row.logo }).where(eq(companies.id, row.id));
+        console.log(`Updated company logo: ${row.name}`);
+      } else {
+        console.log(`Company exists: ${row.name}`);
+      }
     }
   }
 }
@@ -411,6 +418,10 @@ async function seedDefaultUserPermissions() {
     await db.insert(userPermissions).values(rows);
     console.log("Seeded default permissions for finance user (payments & expenses editable; other modules view-only).");
   }
+
+  const { backfillCompanyMemberships } = await import("../lib/membership");
+  await backfillCompanyMemberships();
+  console.log("Backfilled company memberships from users and permissions.");
 }
 
 async function seedTours() {
@@ -713,7 +724,7 @@ async function seedAccommodations() {
       image: ["/destination_maasai_mara1.png"],
       description: "Budget-friendly semi‑luxury tented camp a few minutes from Oloolaimutia Gate; 27 en‑suite tents with hot showers and private verandas.",
       amenities: ["Restaurant", "Bar", "Hot Shower", "Ensuite Tents", "WiFi", "Parking"],
-      priceFrom: 60,
+      priceFrom: 100,
       badges: ["Budget", "Near Gate", "Eco-Friendly"],
       recommended: true,
       type: "tented-camp",
@@ -806,7 +817,10 @@ async function seedAccommodations() {
   ];
 
   for (const acc of accommodationsData) {
-    const existing = await db.select().from(accommodations).where(eq(accommodations.slug, acc.slug));
+    const existing = await db
+      .select()
+      .from(accommodations)
+      .where(and(eq(accommodations.companyId, "aha"), eq(accommodations.slug, acc.slug)));
     if (existing.length === 0) {
       await db.insert(accommodations).values(acc);
       console.log(`Created accommodation: ${acc.name}`);
@@ -918,39 +932,34 @@ async function seedLikes() {
   }
 }
 
-/** EWC + BTH: sample rooms and F&B so dashboard panels are usable after first seed. */
+/** BTH: one real Deluxe type if the property has no rooms yet. EWC types come from inventory SQL. */
 async function seedHotelAndVenueSamples() {
-  const rows = [
-    { company: "bth" as const, roomType: "Deluxe", room: "BTH-201" },
-    { company: "ewc" as const, roomType: "Tented", room: "EWC-7" },
-  ];
-  for (const { company, roomType, room } of rows) {
-    const [existing] = await db
-      .select()
-      .from(rooms)
-      .where(eq(rooms.companyId, company))
-      .limit(1);
-    if (existing) {
-      console.log(`Rooms exist for ${company}, skipping venue sample.`);
-      continue;
-    }
+  const [existingBth] = await db.select().from(rooms).where(eq(rooms.companyId, "bth")).limit(1);
+  if (existingBth) {
+    console.log("Rooms exist for bth, skipping venue sample.");
+  } else {
     const [rt] = await db
       .insert(roomTypes)
       .values({
-        companyId: company,
-        name: roomType,
-        description: "Seeded for dashboard",
+        companyId: "bth",
+        name: "Deluxe",
+        description: "Deluxe guest room",
         maxOccupancy: 2,
         baseRate: 8000,
       })
       .returning();
     await db.insert(rooms).values({
-      companyId: company,
+      companyId: "bth",
       roomTypeId: rt.id,
-      code: room,
-      name: `Room ${room}`,
+      code: "BTH-201",
+      name: "Room BTH-201",
     });
-    console.log(`Seeded room type + room for ${company}`);
+    console.log("Seeded BTH Deluxe room type + room.");
+  }
+
+  const [existingEwc] = await db.select().from(rooms).where(eq(rooms.companyId, "ewc")).limit(1);
+  if (existingEwc) {
+    console.log("Rooms exist for ewc, skipping venue sample.");
   }
 
   // BTH restaurant
@@ -1003,6 +1012,8 @@ async function main() {
     await seedTours();
     await seedMultiTenantSamples();
     await seedAccommodations();
+    const { seedTourismEngine } = await import("../features/tourism/seed");
+    await seedTourismEngine();
     await seedTestimonials();
     await seedLikes();
 

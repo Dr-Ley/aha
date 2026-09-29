@@ -1,19 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { barItems, barOrderItems, barOrders } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkApiPermission, canAccessDashboardFromSession } from "@/lib/permissions-server";
+import { requireTenantContext } from "@/server/tenancy";
 import { and, desc, eq, inArray } from "drizzle-orm";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
 import { z } from "zod";
 import { companyIdZod } from "@/lib/schemas/company-id";
 import { createNotification } from "@/lib/notify";
 import { ensureBarRestaurantOrderStatusVarchar } from "@/lib/ensure-bar-restaurant-order-status";
-
-function getUserId(session: { user?: { id?: string | null } } | null): number | null {
-  if (!session?.user?.id) return null;
-  return typeof session.user.id === "string" ? parseInt(session.user.id, 10) : session.user.id;
-}
 
 const lineSchema = z.object({
   itemId: z.coerce.number().int().positive(),
@@ -42,17 +35,11 @@ const patchSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     await ensureBarRestaurantOrderStatusVarchar();
-    const session = await auth();
-    if (!getUserId(session)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const companyId = resolveCompanyId(new URL(request.url).searchParams.get("companyId"));
-
-    const viewDenied = await checkApiPermission(session, companyId, "bar", false);
-    if (viewDenied) return viewDenied;
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId") ?? new URL(request.url).searchParams.get("companyId"), {
+      module: "bar",
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
     const orderRows = await db
       .select()
@@ -64,8 +51,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: true, orders: [] as unknown[] });
     }
     const lines = await db
-      .select()
+      .select({
+        orderId: barOrderItems.orderId,
+        quantity: barOrderItems.quantity,
+        unitPrice: barOrderItems.unitPrice,
+        lineTotal: barOrderItems.lineTotal,
+        notes: barOrderItems.notes,
+        itemName: barItems.name,
+      })
       .from(barOrderItems)
+      .leftJoin(barItems, eq(barOrderItems.itemId, barItems.id))
       .where(inArray(barOrderItems.orderId, ids));
     const byOrder: Record<number, (typeof lines)[number][]> = {};
     for (const line of lines) {
@@ -74,9 +69,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       orders: orderRows.map((o) => {
-        const itemLines = byOrder[o.id] || [];
+        const itemLines = (byOrder[o.id] || []).map((line) => ({
+          itemName: line.itemName ?? "Product",
+          quantity: line.quantity,
+          unitPrice: line.unitPrice,
+          lineTotal: line.lineTotal,
+          notes: line.notes,
+        }));
         const total = itemLines.reduce((s, l) => s + l.lineTotal, 0);
-        return { ...o, lineItems: itemLines, total };
+        const itemsSold = itemLines.reduce((s, l) => s + l.quantity, 0);
+        return { ...o, lineItems: itemLines, total, itemsSold };
       }),
     });
   } catch (e) {
@@ -88,22 +90,17 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     await ensureBarRestaurantOrderStatusVarchar();
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const parsed = postSchema.safeParse(await request.json());
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const tenant = await requireTenantContext(parsed.data.companyId, {
+      module: "bar",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const d = parsed.data;
-    const companyId = resolveCompanyId(d.companyId);
-    if (!isValidCompanyId(companyId)) {
-      return NextResponse.json({ error: "Invalid company" }, { status: 400 });
-    }
-
-    const postDenied = await checkApiPermission(session, companyId, "bar", true);
-    if (postDenied) return postDenied;
 
     const lineRows: (Omit<typeof barOrderItems.$inferInsert, "orderId">)[] = [];
     for (const line of d.items) {
@@ -180,21 +177,17 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     await ensureBarRestaurantOrderStatusVarchar();
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const parsed = patchSchema.safeParse(await request.json());
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const tenant = await requireTenantContext(parsed.data.companyId, {
+      module: "bar",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const d = parsed.data;
-    const companyId = resolveCompanyId(d.companyId);
-    if (!isValidCompanyId(companyId)) {
-      return NextResponse.json({ error: "Invalid company" }, { status: 400 });
-    }
-    const patchDenied = await checkApiPermission(session, companyId, "bar", true);
-    if (patchDenied) return patchDenied;
     const updates: Record<string, unknown> = { updatedAt: new Date() };
     if (d.status !== undefined) updates.status = d.status;
     if (d.tableLabel !== undefined) updates.tableLabel = d.tableLabel;
@@ -251,18 +244,16 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const id = new URL(request.url).searchParams.get("id");
-    const rawCompany = new URL(request.url).searchParams.get("companyId");
-    const companyId = resolveCompanyId(rawCompany);
-    if (!id || !isValidCompanyId(companyId)) {
+    const id = request.nextUrl.searchParams.get("id") ?? new URL(request.url).searchParams.get("id");
+    if (!id) {
       return NextResponse.json({ error: "id and companyId required" }, { status: 400 });
     }
-    const delDenied = await checkApiPermission(session, companyId, "bar", true);
-    if (delDenied) return delDenied;
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId") ?? new URL(request.url).searchParams.get("companyId"), {
+      module: "bar",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const oid = parseInt(id, 10);
     const [existing] = await db
       .select({ id: barOrders.id })

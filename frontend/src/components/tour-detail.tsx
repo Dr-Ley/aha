@@ -261,7 +261,7 @@ export function TourDetail({ tour }: { tour: Tour }) {
         <div className="absolute bottom-0 left-0 right-0 p-6">
           <div className="mx-auto max-w-7xl">
             <div className="mb-3 flex flex-wrap gap-2">
-              <span className="badge badge-primary text-xs px-2">{tour.countries}</span>
+              <span className="badge badge-primary text-xs px-2">{tour.countries.join(" & ")}</span>
               <span className="badge badge-ghost text-xs px-2 bg-base-100/90">
                 {tour.difficulty}
               </span>
@@ -497,7 +497,19 @@ export function TourDetail({ tour }: { tour: Tour }) {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-base-content/60">per person</p>
+                  <p className="text-xs text-base-content/60">per adult</p>
+                  {tour.childPrice != null ? (
+                    <p className="mt-1 text-sm text-base-content/70">
+                      Child {formatPrice(tour.childPrice)}
+                    </p>
+                  ) : null}
+                  {tour.infantPrice != null && tour.infantPrice > 0 ? (
+                    <p className="text-sm text-base-content/70">
+                      Infant {formatPrice(tour.infantPrice)}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-base-content/50">Infants complimentary</p>
+                  )}
                 </div>
 
                 {tour.originalPrice != null && tour.originalPrice > tour.price && (

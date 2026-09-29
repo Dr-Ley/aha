@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { userPermissions, users } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkAdminApi, getUserIdFromSession } from "@/lib/permissions-server";
+import { requireStaffUser } from "@/server/tenancy";
+import { checkAdminApi } from "@/lib/permissions-server";
 import { isDashboardModuleId, type DashboardModuleId } from "@/lib/dashboard-modules";
 import { isValidCompanyId } from "@/lib/tenant";
 import { ensureOverviewPermissionModuleEnum } from "@/lib/ensure-permission-module-enum";
+import {
+  MEMBERSHIP_ROLES,
+  MEMBERSHIP_STATUSES,
+  listMembershipsForUser,
+  syncMembershipsFromPermissionCompanies,
+} from "@/lib/membership";
 
 const roleSchema = z.enum(["admin", "staff", "operations", "finance", "customer"]);
+
+const membershipSchema = z.object({
+  companyId: z.string().min(1).max(32),
+  role: z.enum(MEMBERSHIP_ROLES),
+  status: z.enum(MEMBERSHIP_STATUSES),
+});
 
 const putSchema = z.object({
   userId: z.coerce.number().int().positive(),
@@ -22,12 +34,14 @@ const putSchema = z.object({
       canEdit: z.boolean(),
     })
   ),
+  memberships: z.array(membershipSchema).optional(),
 });
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    const denied = await checkAdminApi(session);
+    const staff = await requireStaffUser();
+    if (!staff.ok) return staff.response;
+    const denied = await checkAdminApi(staff.session);
     if (denied) return denied;
 
     const userId = new URL(request.url).searchParams.get("userId");
@@ -49,10 +63,13 @@ export async function GET(request: NextRequest) {
       .from(userPermissions)
       .where(eq(userPermissions.userId, uid));
 
+    const memberships = await listMembershipsForUser(uid);
+
     return NextResponse.json({
       success: true,
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
       permissions: rows,
+      memberships,
     });
   } catch (e) {
     console.error("admin/user-permissions GET", e);
@@ -63,16 +80,17 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     await ensureOverviewPermissionModuleEnum();
-    const session = await auth();
-    const denied = await checkAdminApi(session);
+    const staff = await requireStaffUser();
+    if (!staff.ok) return staff.response;
+    const denied = await checkAdminApi(staff.session);
     if (denied) return denied;
-    const actingId = getUserIdFromSession(session);
+    const actingId = staff.userId;
 
     const parsed = putSchema.safeParse(await request.json());
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-    const { userId, role, permissions } = parsed.data;
+    const { userId, role, permissions, memberships } = parsed.data;
 
     if (actingId === userId) {
       return NextResponse.json({ error: "Cannot change your own access here" }, { status: 400 });
@@ -89,6 +107,12 @@ export async function PUT(request: NextRequest) {
       }
       if (!isDashboardModuleId(p.module)) {
         return NextResponse.json({ error: `Invalid module: ${p.module}` }, { status: 400 });
+      }
+    }
+
+    for (const m of memberships ?? []) {
+      if (!isValidCompanyId(m.companyId)) {
+        return NextResponse.json({ error: `Invalid company: ${m.companyId}` }, { status: 400 });
       }
     }
 
@@ -110,6 +134,19 @@ export async function PUT(request: NextRequest) {
         }))
       );
     }
+
+    const memberCompanies = [
+      ...new Set(
+        permissions.filter((p) => p.canView || p.canEdit).map((p) => p.companyId)
+      ),
+    ];
+    const [updatedUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+    await syncMembershipsFromPermissionCompanies(
+      userId,
+      memberCompanies,
+      updatedUser?.role ?? role ?? target.role,
+      memberships?.filter((m) => memberCompanies.includes(m.companyId))
+    );
 
     return NextResponse.json({ success: true });
   } catch (e) {

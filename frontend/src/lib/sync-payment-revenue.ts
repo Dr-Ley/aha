@@ -2,14 +2,22 @@ import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { isPostgresDuplicateOrAlreadyExists } from "@/lib/pg-error";
 import { revenueEntries } from "@/lib/schema";
+import {
+  buildRevenueFieldsFromPayment,
+  paymentCountsAsRevenue,
+} from "@/lib/payment-revenue-pure";
 
-/** Payment rows that count toward recognized revenue (finance-confirmed receipts only). */
-const REVENUE_STATUSES = new Set(["completed"]);
+export {
+  buildRevenueFieldsFromPayment,
+  packageLabelForPayment,
+  paymentCountsAsRevenue,
+  periodMonthFromDate,
+} from "@/lib/payment-revenue-pure";
 
 let paymentEnumEnsured = false;
 
 /** Adds `payment` to `financial_reference_type` if the DB predates that value. */
-async function ensurePaymentReferenceEnumValue(): Promise<void> {
+export async function ensurePaymentReferenceEnumValue(): Promise<void> {
   if (paymentEnumEnsured) return;
   const check = await db.execute(sql`
     SELECT 1 AS ok
@@ -32,11 +40,7 @@ async function ensurePaymentReferenceEnumValue(): Promise<void> {
   paymentEnumEnsured = true;
 }
 
-function periodMonthFromDate(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-
-type PaymentLike = {
+export type PaymentLike = {
   id: number;
   companyId: string;
   amount: number;
@@ -48,12 +52,23 @@ type PaymentLike = {
   recordedAt: Date | null;
 };
 
-async function deleteLegacySourceRevenueForPayment(payment: PaymentLike): Promise<void> {
+/** HTTP `db` or a finance transaction client. */
+export type RevenueExecutor = {
+  select: typeof db.select;
+  insert: typeof db.insert;
+  update: typeof db.update;
+  delete: typeof db.delete;
+};
+
+async function deleteLegacySourceRevenueForPayment(
+  payment: PaymentLike,
+  executor: RevenueExecutor
+): Promise<void> {
   const sourceType = String(payment.referenceType ?? "").toLowerCase();
   if (sourceType === "tour") {
     const sourceId = payment.referenceId ?? payment.bookingId;
     if (sourceId == null) return;
-    await db
+    await executor
       .delete(revenueEntries)
       .where(
         and(
@@ -65,15 +80,11 @@ async function deleteLegacySourceRevenueForPayment(payment: PaymentLike): Promis
     return;
   }
 
-  if (
-    sourceType !== "hotel" &&
-    sourceType !== "bar" &&
-    sourceType !== "restaurant"
-  ) {
+  if (sourceType !== "hotel" && sourceType !== "bar" && sourceType !== "restaurant") {
     return;
   }
   if (payment.referenceId == null) return;
-  await db
+  await executor
     .delete(revenueEntries)
     .where(
       and(
@@ -84,35 +95,19 @@ async function deleteLegacySourceRevenueForPayment(payment: PaymentLike): Promis
     );
 }
 
-function packageLabelForPayment(p: PaymentLike): string {
-  if (p.referenceType === "hotel" && p.referenceId != null) {
-    return `Hotel stay #${p.referenceId} — payment #${p.id}`;
-  }
-  if (p.referenceType === "bar" && p.referenceId != null) {
-    return `Bar order #${p.referenceId} — payment #${p.id}`;
-  }
-  if (p.referenceType === "restaurant" && p.referenceId != null) {
-    return `Restaurant order #${p.referenceId} — payment #${p.id}`;
-  }
-  if (p.referenceType === "tour" && p.referenceId != null) {
-    return `Safari booking #${p.referenceId} — payment #${p.id}`;
-  }
-  if (p.bookingId != null) {
-    return `Safari booking #${p.bookingId} — payment #${p.id}`;
-  }
-  return `Payment #${p.id} (${p.currency})`;
-}
-
 /**
  * Keeps `revenue_entries` in sync with dashboard payments (dashboard base: KES integer amounts).
+ * Throws on DB failure so callers can roll back a wrapping transaction.
  */
-export async function syncRevenueFromPayment(payment: PaymentLike): Promise<void> {
+export async function syncRevenueFromPayment(
+  payment: PaymentLike,
+  executor: RevenueExecutor = db
+): Promise<void> {
   await ensurePaymentReferenceEnumValue();
-  await deleteLegacySourceRevenueForPayment(payment);
-  const status = String(payment.status).toLowerCase();
-  const eligible = REVENUE_STATUSES.has(status);
+  await deleteLegacySourceRevenueForPayment(payment, executor);
+  const eligible = paymentCountsAsRevenue(payment.status);
 
-  const existing = await db
+  const existing = await executor
     .select({ id: revenueEntries.id })
     .from(revenueEntries)
     .where(
@@ -126,45 +121,46 @@ export async function syncRevenueFromPayment(payment: PaymentLike): Promise<void
 
   if (!eligible) {
     if (existing.length > 0) {
-      await db.delete(revenueEntries).where(eq(revenueEntries.id, existing[0].id));
+      await executor.delete(revenueEntries).where(eq(revenueEntries.id, existing[0].id));
     }
     return;
   }
 
-  const recAt = payment.recordedAt ?? new Date();
-  const periodMonth = periodMonthFromDate(recAt);
-  const packageLabel = packageLabelForPayment(payment);
-  const amount = Math.max(1, Math.round(payment.amount));
+  const fields = buildRevenueFieldsFromPayment(payment);
 
   if (existing.length > 0) {
-    await db
+    await executor
       .update(revenueEntries)
       .set({
-        amount,
-        packageLabel,
-        periodMonth,
-        bookingId: payment.bookingId ?? null,
-        recognizedAt: recAt,
+        amount: fields.amount,
+        packageLabel: fields.packageLabel,
+        periodMonth: fields.periodMonth,
+        bookingId: fields.bookingId,
+        recognizedAt: fields.recognizedAt,
       })
       .where(eq(revenueEntries.id, existing[0].id));
     return;
   }
 
-  await db.insert(revenueEntries).values({
+  await executor.insert(revenueEntries).values({
     companyId: payment.companyId,
-    amount,
-    packageLabel,
-    periodMonth,
-    bookingId: payment.bookingId ?? null,
+    amount: fields.amount,
+    packageLabel: fields.packageLabel,
+    periodMonth: fields.periodMonth,
+    bookingId: fields.bookingId,
     referenceType: "payment",
     referenceId: payment.id,
-    recognizedAt: recAt,
+    recognizedAt: fields.recognizedAt,
   });
 }
 
-export async function deleteRevenueForPayment(companyId: string, paymentId: number): Promise<void> {
+export async function deleteRevenueForPayment(
+  companyId: string,
+  paymentId: number,
+  executor: RevenueExecutor = db
+): Promise<void> {
   await ensurePaymentReferenceEnumValue();
-  await db
+  await executor
     .delete(revenueEntries)
     .where(
       and(

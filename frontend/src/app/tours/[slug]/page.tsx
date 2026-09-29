@@ -4,11 +4,12 @@ import { JsonLd } from "@/components/json-ld";
 import { getTourBySlug, getTourSlugs } from "@/lib/tours-db";
 import { tourJsonLd } from "@/lib/json-ld";
 import type { Metadata } from "next";
+import { DEFAULT_COMPANY_ID } from "@/types/company";
 
 export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
-  const slugs = await getTourSlugs();
+  const slugs = await getTourSlugs(DEFAULT_COMPANY_ID);
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -18,7 +19,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const tour = await getTourBySlug(slug);
+  const tour = await getTourBySlug(slug, DEFAULT_COMPANY_ID);
   if (!tour) return { title: "Tour Not Found" };
   return {
     title: `${tour.title} | African Home Adventure`,
@@ -32,7 +33,7 @@ export default async function TourDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const tour = await getTourBySlug(slug);
+  const tour = await getTourBySlug(slug, DEFAULT_COMPANY_ID);
   if (!tour) notFound();
 
   return (

@@ -1,33 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { contactSubmissions } from "@/lib/schema";
-import { auth } from "@/lib/auth";
 import { createNotification } from "@/lib/notify";
-import { DEFAULT_COMPANY_ID } from "@/types/company";
-import { canAccessDashboardFromSession, checkApiPermission, getUserIdFromSession } from "@/lib/permissions-server";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
+import { enforceRateLimit } from "@/lib/rate-limit";
+import { contactBodySchema } from "@/lib/schemas/public";
+import { ensureEnquiryNotificationEnum } from "@/lib/ensure-notification-entity-enum";
+import { ensurePendingTenantColumns } from "@/lib/ensure-pending-tenant";
+import { maybeSendEnquiryAcknowledgement } from "@/lib/email/enquiry-acknowledgement";
+import { requireAuthenticatedUser, requireTenantContext } from "@/server/tenancy";
 
-let enquiryNotificationEnumEnsured = false;
-
-async function ensureEnquiryNotificationEnum(): Promise<void> {
-  if (enquiryNotificationEnumEnsured) return;
-  await db.execute(sql`ALTER TYPE "notification_entity" ADD VALUE IF NOT EXISTS 'enquiry'`);
-  enquiryNotificationEnumEnsured = true;
-}
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = getUserIdFromSession(session);
-    if (!userId || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const denied = await checkApiPermission(session, DEFAULT_COMPANY_ID, "enquiries", false);
-    if (denied) return denied;
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), {
+      module: "enquiries",
+    });
+    if (!tenant.ok) return tenant.response;
+    await ensurePendingTenantColumns();
 
     const rows = await db
       .select()
       .from(contactSubmissions)
+      .where(eq(contactSubmissions.companyId, tenant.ctx.companyId))
       .orderBy(desc(contactSubmissions.createdAt));
 
     return NextResponse.json({ success: true, enquiries: rows });
@@ -39,20 +33,25 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    const body = await request.json();
+    const limited = enforceRateLimit(request, "contact", 8);
+    if (limited) return limited;
 
-    // Convert userId to number if it exists
-    const userId = session?.user?.id 
-      ? typeof session.user.id === 'string' 
-        ? parseInt(session.user.id, 10) 
-        : session.user.id
-      : null;
+    const authResult = await requireAuthenticatedUser();
+    const parsed = contactBodySchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, error: "Please check the form fields and try again." },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
+    await ensurePendingTenantColumns();
 
     const [submission] = await db
       .insert(contactSubmissions)
       .values({
-        userId,
+        companyId: body.companyId,
+        userId: authResult.ok ? authResult.userId : null,
         firstName: body.firstName,
         lastName: body.lastName ?? null,
         email: body.email,
@@ -64,7 +63,7 @@ export async function POST(request: NextRequest) {
 
     await ensureEnquiryNotificationEnum();
     await createNotification({
-      companyId: DEFAULT_COMPANY_ID,
+      companyId: body.companyId,
       type: "enquiry",
       action: "created",
       referenceId: submission.id,
@@ -73,6 +72,15 @@ export async function POST(request: NextRequest) {
         email: submission.email,
         subject: submission.subject,
       },
+    });
+
+    void maybeSendEnquiryAcknowledgement({
+      id: submission.id,
+      email: submission.email,
+      firstName: submission.firstName,
+      lastName: submission.lastName,
+      subject: submission.subject,
+      companyId: body.companyId,
     });
 
     return NextResponse.json({ success: true, submission });
@@ -87,15 +95,14 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = getUserIdFromSession(session);
-    if (!userId || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const denied = await checkApiPermission(session, DEFAULT_COMPANY_ID, "enquiries", true);
-    if (denied) return denied;
-
     const body = await request.json();
+    const tenant = await requireTenantContext(body.companyId ?? null, {
+      module: "enquiries",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    await ensurePendingTenantColumns();
+
     const id = Number(body.id);
     const status = String(body.status ?? "replied");
     if (!Number.isInteger(id) || id < 1) {
@@ -108,7 +115,7 @@ export async function PATCH(request: NextRequest) {
     const [row] = await db
       .update(contactSubmissions)
       .set({ status })
-      .where(eq(contactSubmissions.id, id))
+      .where(and(eq(contactSubmissions.id, id), eq(contactSubmissions.companyId, tenant.ctx.companyId)))
       .returning();
 
     if (!row) return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });

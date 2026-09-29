@@ -12,9 +12,16 @@ import {
   Mail,
   Loader2,
 } from "lucide-react";
-import { tours, usdToWholeInCurrency } from "@/lib/data";
+import { usdToWholeInCurrency } from "@/lib/data";
+import type { Tour } from "@/lib/data";
 import { useAuth } from "@/lib/auth-context";
 import { useCurrency, CurrencyFormSelect } from "@/lib/currency-context";
+import {
+  normalizeTravellerCounts,
+  travellerCountsLabel,
+  travellerHeadcount,
+} from "@/lib/travellers";
+import { priceLineLabel, quoteTourSafariPackage } from "@/lib/pricing";
 
 const steps = [
   { id: 1, label: "Trip Details" },
@@ -26,7 +33,25 @@ export function BookingForm() {
   const searchParams = useSearchParams();
   const preselectedTour = searchParams?.get("tour") ?? "";
   const { user } = useAuth();
-  const { formatPrice, currency, setCurrency } = useCurrency();
+  const { formatPrice, formatMoney, currency, setCurrency } = useCurrency();
+
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [toursLoading, setToursLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchTours() {
+      try {
+        const response = await fetch("/api/tours?companyId=aha");
+        const data = await response.json();
+        if (Array.isArray(data)) setTours(data);
+      } catch {
+        /* tours dropdown stays empty on failure */
+      } finally {
+        setToursLoading(false);
+      }
+    }
+    void fetchTours();
+  }, []);
 
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
@@ -37,7 +62,9 @@ export function BookingForm() {
   const [form, setForm] = useState({
     tour: preselectedTour,
     travelDate: "",
-    guests: "2",
+    adults: "2",
+    children: "0",
+    infants: "0",
     accommodation: "mid-range",
     transport: "4x4-landcruiser",
     specialRequests: "",
@@ -64,6 +91,15 @@ export function BookingForm() {
   }, [user]);
 
   const selectedTour = tours.find((t) => t.slug === form.tour);
+  const travellerCounts = normalizeTravellerCounts({
+    adults: Number(form.adults),
+    children: Number(form.children),
+    infants: Number(form.infants),
+  });
+  const travellerLabel = travellerCountsLabel(travellerCounts);
+  const quote = selectedTour
+    ? quoteTourSafariPackage(selectedTour, travellerCounts, currency)
+    : null;
 
   function updateField(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -74,16 +110,26 @@ export function BookingForm() {
     setError("");
 
     try {
-      const guestCount = parseInt(form.guests, 10);
-      const originalPricePerPerson = selectedTour ? usdToWholeInCurrency(selectedTour.price, currency) : 0;
-      const originalTotal = selectedTour ? usdToWholeInCurrency(selectedTour.price * guestCount, currency) : 0;
+      if (travellerHeadcount(travellerCounts) < 1) {
+        setError("Add at least one adult, child, or infant.");
+        setLoading(false);
+        return;
+      }
+      const originalPricePerPerson =
+        quote?.lines.find((line) => line.kind === "adult")?.unitAmount ??
+        (selectedTour ? usdToWholeInCurrency(selectedTour.price, currency) : 0);
+      const originalTotal = quote?.sellingPrice ?? 0;
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tourSlug: form.tour,
+          companyId: "aha",
           travelDate: form.travelDate,
-          guests: guestCount,
+          guests: Math.max(1, travellerHeadcount(travellerCounts)),
+          adults: travellerCounts.adults,
+          children: travellerCounts.children,
+          infants: travellerCounts.infants,
           accommodation: form.accommodation,
           transport: form.transport,
           specialRequests: form.specialRequests || null,
@@ -208,8 +254,11 @@ export function BookingForm() {
                   style={{ outline: "1px solid gray" }}
                   value={form.tour}
                   onChange={(e) => updateField("tour", e.target.value)}
+                  disabled={toursLoading}
                 >
-                  <option value="">Select a safari tour</option>
+                  <option value="">
+                    {toursLoading ? "Loading tours..." : "Select a safari tour"}
+                  </option>
                   {tours.map((t) => (
                     <option key={t.slug} value={t.slug}>
                       {t.title} — ${t.price}/pp
@@ -232,25 +281,57 @@ export function BookingForm() {
                     onChange={(e) => updateField("travelDate", e.target.value)}
                   />
                 </div>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-3">
                 <div className="form-control">
-                  <label htmlFor="guests" className="label">
-                    <span className="label-text mb-2">Number of Guests</span>
+                  <label htmlFor="adults" className="label">
+                    <span className="label-text mb-2">Adults</span>
                   </label>
-                  <select
-                    id="guests"
-                    className="select select-bordered w-full"
-                    value={form.guests}
+                  <input
+                    id="adults"
+                    type="number"
+                    min={0}
+                    max={99}
+                    className="input input-bordered w-full"
                     style={{ outline: "1px solid gray" }}
-                    onChange={(e) => updateField("guests", e.target.value)}
-                  >
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
-                      <option key={n} value={String(n)}>
-                        {n} {n === 1 ? "Guest" : "Guests"}
-                      </option>
-                    ))}
-                  </select>
+                    value={form.adults}
+                    onChange={(e) => updateField("adults", e.target.value)}
+                  />
+                </div>
+                <div className="form-control">
+                  <label htmlFor="children" className="label">
+                    <span className="label-text mb-2">Children</span>
+                  </label>
+                  <input
+                    id="children"
+                    type="number"
+                    min={0}
+                    max={99}
+                    className="input input-bordered w-full"
+                    style={{ outline: "1px solid gray" }}
+                    value={form.children}
+                    onChange={(e) => updateField("children", e.target.value)}
+                  />
+                </div>
+                <div className="form-control">
+                  <label htmlFor="infants" className="label">
+                    <span className="label-text mb-2">Infants</span>
+                  </label>
+                  <input
+                    id="infants"
+                    type="number"
+                    min={0}
+                    max={99}
+                    className="input input-bordered w-full"
+                    style={{ outline: "1px solid gray" }}
+                    value={form.infants}
+                    onChange={(e) => updateField("infants", e.target.value)}
+                  />
                 </div>
               </div>
+              <p className="text-xs text-base-content/60">
+                Adult, child, and infant rates come from the tour. Infants are complimentary unless a rate is set. Estimated totals round up to the nearest 10.
+              </p>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="form-control">
@@ -461,9 +542,9 @@ export function BookingForm() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-base-content/60">Guests</dt>
+                    <dt className="text-base-content/60">Travellers</dt>
                     <dd className="font-medium text-base-content">
-                      {form.guests}
+                      {travellerLabel}
                     </dd>
                   </div>
                   <div>
@@ -522,24 +603,33 @@ export function BookingForm() {
               </div>
             </div>
 
-            {selectedTour && (
+            {selectedTour && quote ? (
               <div className="rounded-xl border border-accent/30 bg-accent/5 p-5">
                 <h3 className="text-sm font-semibold text-base-content">
                   Estimated Price
                 </h3>
-                <p className="mt-1 text-2xl font-bold text-base-content">
-                  {formatPrice(selectedTour.price * Number(form.guests))}
-                  <span className="text-sm font-normal text-base-content/60">
-                    {" "}
-                    ({formatPrice(selectedTour.price)} × {form.guests} guests)
-                  </span>
+                <ul className="mt-2 space-y-1 text-sm text-base-content/70">
+                  {quote.lines.map((line) => (
+                    <li key={line.kind} className="flex justify-between gap-3">
+                      <span>{priceLineLabel(line)}</span>
+                      <span>{formatMoney(line.amount, quote.currency)}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-2 text-2xl font-bold text-base-content">
+                  {formatMoney(quote.sellingPrice, quote.currency)}
                 </p>
+                {quote.roundedUpBy > 0 ? (
+                  <p className="mt-1 text-xs text-base-content/60">
+                    Rounded up from {formatMoney(quote.subtotal, quote.currency)} to the nearest 10.
+                  </p>
+                ) : null}
                 <p className="mt-1 text-xs text-base-content/60">
                   Final price will be confirmed by our team based on
                   accommodation and date selection.
                 </p>
               </div>
-            )}
+            ) : null}
 
             {error && (
               <div className="rounded-lg bg-error/10 p-3 text-sm text-error">
@@ -596,24 +686,37 @@ export function BookingForm() {
               <p className="text-base-content/60">{selectedTour.duration}</p>
               <div className="divider my-2" />
               <div className="flex justify-between">
-                <span className="text-base-content/60">Price per person</span>
+                <span className="text-base-content/60">Adult rate</span>
                 <span className="font-semibold text-base-content">
                   {formatPrice(selectedTour.price)}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-base-content/60">Guests</span>
-                <span className="font-semibold text-base-content">
-                  {form.guests}
-                </span>
-              </div>
+              {quote
+                ? quote.lines.map((line) => (
+                    <div key={line.kind} className="flex justify-between">
+                      <span className="text-base-content/60">{priceLineLabel(line)}</span>
+                      <span className="font-semibold text-base-content">
+                        {formatMoney(line.amount, quote.currency)}
+                      </span>
+                    </div>
+                  ))
+                : (
+                    <div className="flex justify-between">
+                      <span className="text-base-content/60">Travellers</span>
+                      <span className="font-semibold text-base-content">
+                        {travellerLabel}
+                      </span>
+                    </div>
+                  )}
               <div className="divider my-2" />
               <div className="flex justify-between text-base">
                 <span className="font-semibold text-base-content">
                   Estimated Total
                 </span>
                 <span className="font-bold text-base-content">
-                  {formatPrice(selectedTour.price * Number(form.guests))}
+                  {quote
+                    ? formatMoney(quote.sellingPrice, quote.currency)
+                    : formatPrice(selectedTour.price)}
                 </span>
               </div>
             </div>

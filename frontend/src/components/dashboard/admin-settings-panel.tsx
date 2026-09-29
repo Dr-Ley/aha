@@ -4,6 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCompany } from "@/store/company-context";
 import { COMPANIES, type CompanyId } from "@/types/company";
 import { DASHBOARD_MODULE_IDS, type DashboardModuleId } from "@/lib/dashboard-modules";
+import {
+  MEMBERSHIP_ROLES,
+  MEMBERSHIP_STATUSES,
+  mapGlobalRoleToMembershipRole,
+  type MembershipRole,
+  type MembershipStatus,
+} from "@/lib/membership-role";
 
 const MODULE_LABELS: Record<DashboardModuleId, string> = {
   overview: "Overview",
@@ -23,6 +30,12 @@ type StaffUser = {
   name: string | null;
   role: string;
   dashboardNotificationsEnabled?: boolean;
+};
+
+type MembershipRow = {
+  companyId: string;
+  role: MembershipRole;
+  status: MembershipStatus;
 };
 
 type PermRow = {
@@ -78,6 +91,13 @@ export function AdminSettingsPanel() {
     bth: false,
   });
   const [moduleAccess, setModuleAccess] = useState(() => emptyModuleState());
+  const [membershipByCompany, setMembershipByCompany] = useState<
+    Record<CompanyId, { role: MembershipRole; status: MembershipStatus }>
+  >({
+    aha: { role: "operations", status: "active" },
+    ewc: { role: "operations", status: "active" },
+    bth: { role: "operations", status: "active" },
+  });
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -115,6 +135,18 @@ export function AdminSettingsPanel() {
       const { companyAccess: ca, moduleAccess: ma } = deriveFromRows(j.permissions ?? []);
       setCompanyAccess(ca);
       setModuleAccess(ma);
+      const defaultRole = mapGlobalRoleToMembershipRole(j.user?.role);
+      const nextMembership: Record<CompanyId, { role: MembershipRole; status: MembershipStatus }> = {
+        aha: { role: defaultRole, status: "active" },
+        ewc: { role: defaultRole, status: "active" },
+        bth: { role: defaultRole, status: "active" },
+      };
+      for (const row of (j.memberships ?? []) as MembershipRow[]) {
+        if (row.companyId === "aha" || row.companyId === "ewc" || row.companyId === "bth") {
+          nextMembership[row.companyId] = { role: row.role, status: row.status };
+        }
+      }
+      setMembershipByCompany(nextMembership);
     } catch (e) {
       setMessage(e instanceof Error ? e.message : "Failed to load");
     } finally {
@@ -160,6 +192,11 @@ export function AdminSettingsPanel() {
           userId: selectedId,
           role,
           permissions: payload,
+          memberships: COMPANIES.filter((c) => companyAccess[c.id]).map((c) => ({
+            companyId: c.id,
+            role: membershipByCompany[c.id].role,
+            status: membershipByCompany[c.id].status,
+          })),
         }),
       });
       const j = await r.json();
@@ -208,8 +245,8 @@ export function AdminSettingsPanel() {
       <div>
         <h2 className="text-lg font-semibold text-base-content">Access control</h2>
         <p className="mt-1 text-sm text-base-content/60">
-          Assign dashboard role, company access, and per-module view or edit rights. Admins always have full access and
-          are not limited by this matrix.
+          Dashboard login role is still global. Company membership (role and status) is per company. Suspended members
+          cannot use that company even if module permissions remain.
         </p>
       </div>
 
@@ -293,7 +330,7 @@ export function AdminSettingsPanel() {
         <>
           <div className="form-control">
             <label className="label pt-0" htmlFor="staff-role">
-              <span className="label-text font-medium">Role</span>
+              <span className="label-text font-medium">Dashboard login role</span>
             </label>
             <select
               id="staff-role"
@@ -311,21 +348,62 @@ export function AdminSettingsPanel() {
           </div>
 
           <div>
-            <p className="mb-2 font-medium">Company access</p>
-            <div className="flex flex-wrap gap-4">
+            <p className="mb-2 font-medium">Company membership</p>
+            <div className="space-y-3">
               {COMPANIES.map((c) => (
-                <label key={c.id} className="label cursor-pointer gap-2">
-                  <input
-                    type="checkbox"
-                    className="checkbox checkbox-sm border border-base-content/30"
-                    checked={companyAccess[c.id]}
-                    disabled={loadingDetail}
+                <div
+                  key={c.id}
+                  className="flex flex-col gap-2 rounded-xl border border-base-content/10 p-3 sm:flex-row sm:items-center"
+                >
+                  <label className="label cursor-pointer gap-2 sm:w-56">
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-sm border border-base-content/30"
+                      checked={companyAccess[c.id]}
+                      disabled={loadingDetail}
+                      onChange={(e) =>
+                        setCompanyAccess((prev) => ({ ...prev, [c.id]: e.target.checked }))
+                      }
+                    />
+                    <span className="label-text font-medium">{c.name}</span>
+                  </label>
+                  <select
+                    className="select select-bordered select-sm w-full sm:max-w-[10rem]"
+                    disabled={loadingDetail || !companyAccess[c.id]}
+                    value={membershipByCompany[c.id].role}
                     onChange={(e) =>
-                      setCompanyAccess((prev) => ({ ...prev, [c.id]: e.target.checked }))
+                      setMembershipByCompany((prev) => ({
+                        ...prev,
+                        [c.id]: { ...prev[c.id], role: e.target.value as MembershipRole },
+                      }))
                     }
-                  />
-                  <span className="label-text">{c.name}</span>
-                </label>
+                    aria-label={`${c.name} membership role`}
+                  >
+                    {MEMBERSHIP_ROLES.map((r) => (
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="select select-bordered select-sm w-full sm:max-w-[10rem]"
+                    disabled={loadingDetail || !companyAccess[c.id]}
+                    value={membershipByCompany[c.id].status}
+                    onChange={(e) =>
+                      setMembershipByCompany((prev) => ({
+                        ...prev,
+                        [c.id]: { ...prev[c.id], status: e.target.value as MembershipStatus },
+                      }))
+                    }
+                    aria-label={`${c.name} membership status`}
+                  >
+                    {MEMBERSHIP_STATUSES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               ))}
             </div>
           </div>

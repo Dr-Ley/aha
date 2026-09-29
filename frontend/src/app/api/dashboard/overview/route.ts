@@ -1,23 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { bookings, payments, revenueEntries } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkOverviewApi, canAccessDashboardFromSession } from "@/lib/permissions-server";
-import { resolveCompanyId } from "@/lib/tenant";
-import { desc, eq } from "drizzle-orm";
-
-function getUserId(session: { user?: { id?: string | null } } | null): number | null {
-  if (!session?.user?.id) return null;
-  return typeof session.user.id === "string" ? parseInt(session.user.id, 10) : session.user.id;
-}
+import {
+  barItems,
+  barOrderItems,
+  barOrders,
+  bookings,
+  hotelBookings,
+  payments,
+  restaurantItems,
+  restaurantOrderItems,
+  restaurantOrders,
+  revenueEntries,
+} from "@/lib/schema";
+import { requireTenantContext } from "@/server/tenancy";
+import { desc, eq, inArray } from "drizzle-orm";
+import { ensureBookingCustomerColumn } from "@/lib/customers";
+import {
+  companyUsesBar,
+  companyUsesHotelStays,
+  companyUsesRestaurant,
+  companyUsesSafariTours,
+  type CompanyId,
+} from "@/types/company";
+import { formatWeekPeriod, parseWeekPeriod } from "@/lib/weekly-bar";
+import { nairobiYmd } from "@/lib/nairobi-date";
 
 function monthKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
+function monthKeyFromYmd(value: string | null | undefined): string | null {
+  const ymd = String(value ?? "").slice(0, 10);
+  return /^\d{4}-\d{2}/.test(ymd) ? ymd.slice(0, 7) : null;
+}
+
 function monthLabel(ym: string): string {
   const [y, m] = ym.split("-").map(Number);
   return new Date(y, m - 1, 1).toLocaleString("en-US", { month: "short", year: "numeric" });
+}
+
+function lastSixMonthKeys(now = new Date()): string[] {
+  const keys: string[] = [];
+  for (let i = 5; i >= 0; i--) {
+    keys.push(monthKey(new Date(now.getFullYear(), now.getMonth() - i, 1)));
+  }
+  return keys;
 }
 
 function parseTripStart(b: {
@@ -33,33 +60,72 @@ function parseTripStart(b: {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    const tenant = await requireTenantContext(
+      request.nextUrl.searchParams.get("companyId") ?? new URL(request.url).searchParams.get("companyId"),
+      { overview: true }
+    );
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId as CompanyId;
 
-    const { searchParams } = new URL(request.url);
-    const companyId = resolveCompanyId(searchParams.get("companyId"));
+    await ensureBookingCustomerColumn();
 
-    const overviewDenied = await checkOverviewApi(session, companyId);
-    if (overviewDenied) return overviewDenied;
+    const showSafari = companyUsesSafariTours(companyId);
+    const showHotel = companyUsesHotelStays(companyId);
+    const showBar = companyUsesBar(companyId);
+    const showRestaurant = companyUsesRestaurant(companyId);
 
-    const [bookingRows, revenueRows, recentPaymentRows] = await Promise.all([
-      db.select().from(bookings).where(eq(bookings.companyId, companyId)),
-      db.select().from(revenueEntries).where(eq(revenueEntries.companyId, companyId)),
-      db
-        .select()
-        .from(payments)
-        .where(eq(payments.companyId, companyId))
-        .orderBy(desc(payments.recordedAt))
-        .limit(8),
+    const [bookingRows, revenueRows, recentPaymentRows, hotelRows, barOrderRows, restaurantOrderRows] =
+      await Promise.all([
+        showSafari ? db.select().from(bookings).where(eq(bookings.companyId, companyId)) : Promise.resolve([]),
+        db.select().from(revenueEntries).where(eq(revenueEntries.companyId, companyId)),
+        db
+          .select()
+          .from(payments)
+          .where(eq(payments.companyId, companyId))
+          .orderBy(desc(payments.recordedAt))
+          .limit(8),
+        showHotel
+          ? db.select().from(hotelBookings).where(eq(hotelBookings.companyId, companyId))
+          : Promise.resolve([]),
+        showBar ? db.select().from(barOrders).where(eq(barOrders.companyId, companyId)) : Promise.resolve([]),
+        showRestaurant
+          ? db.select().from(restaurantOrders).where(eq(restaurantOrders.companyId, companyId))
+          : Promise.resolve([]),
+      ]);
+
+    const barIds = barOrderRows.map((o) => o.id);
+    const restaurantIds = restaurantOrderRows.map((o) => o.id);
+    const [barLines, restaurantLines] = await Promise.all([
+      barIds.length
+        ? db
+            .select({
+              orderId: barOrderItems.orderId,
+              quantity: barOrderItems.quantity,
+              lineTotal: barOrderItems.lineTotal,
+              itemName: barItems.name,
+            })
+            .from(barOrderItems)
+            .leftJoin(barItems, eq(barOrderItems.itemId, barItems.id))
+            .where(inArray(barOrderItems.orderId, barIds))
+        : Promise.resolve([]),
+      restaurantIds.length
+        ? db
+            .select({
+              orderId: restaurantOrderItems.orderId,
+              quantity: restaurantOrderItems.quantity,
+              lineTotal: restaurantOrderItems.lineTotal,
+              itemName: restaurantItems.name,
+            })
+            .from(restaurantOrderItems)
+            .leftJoin(restaurantItems, eq(restaurantOrderItems.itemId, restaurantItems.id))
+            .where(inArray(restaurantOrderItems.orderId, restaurantIds))
+        : Promise.resolve([]),
     ]);
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const todayYmd = nairobiYmd();
+    const currentYm = monthKey(new Date());
 
     const totalBookings = bookingRows.length;
     const upcomingTrips = bookingRows.filter((b) => {
@@ -75,17 +141,12 @@ export async function GET(request: NextRequest) {
         b.status !== "cancelled" && (b.paymentStatus === "unpaid" || b.paymentStatus === "partial")
     ).length;
 
-    const currentYm = monthKey(new Date());
     const monthlyRevenue = revenueRows
       .filter((r) => r.periodMonth === currentYm)
       .reduce((s, r) => s + (r.amount ?? 0), 0);
 
     const trendMap = new Map<string, number>();
-    const now = new Date();
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      trendMap.set(monthKey(d), 0);
-    }
+    for (const key of lastSixMonthKeys()) trendMap.set(key, 0);
     for (const r of revenueRows) {
       if (!r.periodMonth || !trendMap.has(r.periodMonth)) continue;
       trendMap.set(r.periodMonth, (trendMap.get(r.periodMonth) ?? 0) + r.amount);
@@ -142,6 +203,118 @@ export async function GET(request: NextRequest) {
         paymentStatus: b.paymentStatus,
       }));
 
+    const hotelStayMap = new Map<string, number>();
+    for (const key of lastSixMonthKeys()) hotelStayMap.set(key, 0);
+    let hotelStays = 0;
+    let hotelRevenueMonth = 0;
+    let upcomingArrivals = 0;
+    for (const stay of hotelRows) {
+      if (stay.status === "cancelled") continue;
+      hotelStays += 1;
+      const checkIn = String(stay.checkInDate).slice(0, 10);
+      const ym = monthKeyFromYmd(checkIn);
+      if (ym && hotelStayMap.has(ym)) {
+        hotelStayMap.set(ym, (hotelStayMap.get(ym) ?? 0) + (stay.totalAmount ?? 0));
+      }
+      if (ym === currentYm) hotelRevenueMonth += stay.totalAmount ?? 0;
+      if (checkIn >= todayYmd && stay.status !== "checked_out") upcomingArrivals += 1;
+    }
+    const hotelStayTrend = [...hotelStayMap.entries()].map(([month, amount]) => ({
+      month,
+      label: monthLabel(month),
+      amount,
+    }));
+
+    const recentStays = [...hotelRows]
+      .sort((a, b) => String(b.checkInDate).localeCompare(String(a.checkInDate)))
+      .slice(0, 8)
+      .map((s) => ({
+        id: s.id,
+        guest: s.primaryGuestName || "Guest",
+        checkInDate: s.checkInDate,
+        status: s.status,
+        paymentStatus: s.paymentStatus,
+        totalAmount: s.totalAmount,
+      }));
+
+    const barByOrder = new Map<number, { quantity: number; sales: number; name: string }[]>();
+    for (const line of barLines) {
+      const current = barByOrder.get(line.orderId) ?? [];
+      current.push({
+        name: line.itemName ?? "Product",
+        quantity: line.quantity,
+        sales: line.lineTotal,
+      });
+      barByOrder.set(line.orderId, current);
+    }
+
+    const weeklyPoints = barOrderRows
+      .map((order) => {
+        const lines = barByOrder.get(order.id) ?? [];
+        const period = parseWeekPeriod(order.tableLabel);
+        const sales = lines.reduce((sum, line) => sum + line.sales, 0);
+        return { period, sales, createdAt: order.createdAt };
+      })
+      .filter((row) => row.sales > 0);
+    const useWeeklyBarPoints = weeklyPoints.some((row) => row.period);
+    const barWeekly = useWeeklyBarPoints
+      ? weeklyPoints
+          .filter((row) => row.period)
+          .map((row) => ({
+            start: row.period!.start,
+            label: formatWeekPeriod(row.period!),
+            amount: row.sales,
+          }))
+          .sort((a, b) => a.start.localeCompare(b.start))
+      : lastSixMonthKeys().map((month) => ({
+          start: month,
+          label: monthLabel(month),
+          amount: weeklyPoints
+            .filter((row) => monthKeyFromYmd(row.createdAt?.toISOString()) === month)
+            .reduce((sum, row) => sum + row.sales, 0),
+        }));
+
+    const barProductMap = new Map<string, { name: string; quantity: number; amount: number }>();
+    for (const line of barLines) {
+      if ((line.quantity ?? 0) <= 0 && (line.lineTotal ?? 0) <= 0) continue;
+      const name = line.itemName ?? "Product";
+      const current = barProductMap.get(name) ?? { name, quantity: 0, amount: 0 };
+      current.quantity += line.quantity ?? 0;
+      current.amount += line.lineTotal ?? 0;
+      barProductMap.set(name, current);
+    }
+    const barProductSales = [...barProductMap.values()].sort((a, b) => b.quantity - a.quantity);
+    const barSales = barLines.reduce((sum, line) => sum + (line.lineTotal ?? 0), 0);
+    const weeklyBarRecords = barOrderRows.length;
+
+    const restaurantMonthMap = new Map<string, number>();
+    for (const key of lastSixMonthKeys()) restaurantMonthMap.set(key, 0);
+    for (const order of restaurantOrderRows) {
+      const ym = monthKeyFromYmd(order.createdAt?.toISOString());
+      if (!ym || !restaurantMonthMap.has(ym)) continue;
+      const lines = restaurantLines.filter((line) => line.orderId === order.id);
+      restaurantMonthMap.set(
+        ym,
+        (restaurantMonthMap.get(ym) ?? 0) + lines.reduce((sum, line) => sum + (line.lineTotal ?? 0), 0)
+      );
+    }
+    const restaurantSalesTrend = [...restaurantMonthMap.entries()].map(([month, amount]) => ({
+      month,
+      label: monthLabel(month),
+      amount,
+    }));
+    const restaurantProductMap = new Map<string, { name: string; quantity: number; amount: number }>();
+    for (const line of restaurantLines) {
+      if ((line.quantity ?? 0) <= 0 && (line.lineTotal ?? 0) <= 0) continue;
+      const name = line.itemName ?? "Product";
+      const current = restaurantProductMap.get(name) ?? { name, quantity: 0, amount: 0 };
+      current.quantity += line.quantity ?? 0;
+      current.amount += line.lineTotal ?? 0;
+      restaurantProductMap.set(name, current);
+    }
+    const restaurantProductSales = [...restaurantProductMap.values()].sort((a, b) => b.quantity - a.quantity);
+    const restaurantSales = restaurantLines.reduce((sum, line) => sum + (line.lineTotal ?? 0), 0);
+
     const recentPayments = recentPaymentRows.map((p) => ({
       id: p.id,
       amount: p.amount,
@@ -154,16 +327,31 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       companyId,
+      mode: showHotel || showBar || showRestaurant ? (showSafari ? "mixed" : "hospitality") : "safari",
       kpis: {
         totalBookings,
         monthlyRevenue,
         upcomingTrips,
         unpaidInvoices,
       },
+      hospitalityKpis: {
+        hotelStays,
+        hotelRevenueMonth,
+        upcomingArrivals,
+        barSales,
+        weeklyBarRecords,
+        restaurantSales,
+      },
       revenueTrend,
       revenueByCountry,
       safariDistribution,
+      hotelStayTrend,
+      barWeeklySales: barWeekly.map(({ label, amount }) => ({ label, amount })),
+      barProductSales,
+      restaurantSalesTrend,
+      restaurantProductSales,
       recentBookings,
+      recentStays,
       recentPayments,
     });
   } catch (error) {

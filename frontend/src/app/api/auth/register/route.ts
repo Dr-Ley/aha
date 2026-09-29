@@ -3,30 +3,28 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { hash } from "bcrypt";
+import { enforceRateLimit } from "@/lib/rate-limit";
+import { registerBodySchema } from "@/lib/schemas/public";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, password } = body;
+    const limited = enforceRateLimit(request, "register", 5);
+    if (limited) return limited;
 
-    if (!name || !email || !password) {
+    const parsed = registerBodySchema.safeParse(await request.json());
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Name, email, and password are required" },
+        { error: "Invalid registration details" },
         { status: 400 }
       );
     }
-
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
-        { status: 400 }
-      );
-    }
+    const { name, email, password } = parsed.data;
+    const normalizedEmail = email.toLowerCase();
 
     const existing = await db
       .select({ id: users.id })
       .from(users)
-      .where(eq(users.email, email.toLowerCase().trim()))
+      .where(eq(users.email, normalizedEmail))
       .limit(1);
 
     if (existing.length > 0) {
@@ -41,14 +39,13 @@ export async function POST(request: NextRequest) {
     const [newUser] = await db
       .insert(users)
       .values({
-        name: name.trim(),
-        email: email.toLowerCase().trim(),
+        name,
+        email: normalizedEmail,
         passwordHash,
         role: "customer",
         avatar: name
-          .trim()
           .split(" ")
-          .map((n: string) => n[0])
+          .map((n) => n[0])
           .join("")
           .toUpperCase()
           .slice(0, 2),

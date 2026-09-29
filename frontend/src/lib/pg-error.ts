@@ -22,3 +22,15 @@ export function isPostgresDuplicateOrAlreadyExists(e: unknown): boolean {
   }
   return false;
 }
+
+/** Postgres unique_violation (e.g. duplicate idempotency key). */
+export function isPostgresUniqueViolation(e: unknown): boolean {
+  let cur: unknown = e;
+  const seen = new Set<unknown>();
+  while (cur != null && typeof cur === "object" && !seen.has(cur)) {
+    seen.add(cur);
+    if ((cur as { code?: string }).code === "23505") return true;
+    cur = (cur as { cause?: unknown }).cause;
+  }
+  return false;
+}

@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { roomTypes, rooms } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkApiPermission, canAccessDashboardFromSession } from "@/lib/permissions-server";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
+import { requireTenantContext } from "@/server/tenancy";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { companyIdZod } from "@/lib/schemas/company-id";
-
-function getUserId(session: { user?: { id?: string | null } } | null): number | null {
-  if (!session?.user?.id) return null;
-  return typeof session.user.id === "string" ? parseInt(session.user.id, 10) : session.user.id;
-}
 
 const postSchema = z.object({
   companyId: companyIdZod,
@@ -24,22 +17,28 @@ const postSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const companyId = resolveCompanyId(new URL(request.url).searchParams.get("companyId"));
+    const tenant = await requireTenantContext(new URL(request.url).searchParams.get("companyId"), {
+      module: "accommodation",
+      requireEdit: false,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
+    const { ensureEnchoroRates2026 } = await import("@/server/database/ensure-enchoro-rates");
+    await ensureEnchoroRates2026();
+    const activeOnly = new URL(request.url).searchParams.get("activeOnly") !== "0";
     const list = await db
       .select({
         room: rooms,
-        roomType: { id: roomTypes.id, name: roomTypes.name, maxOccupancy: roomTypes.maxOccupancy },
+        roomType: {
+          id: roomTypes.id,
+          name: roomTypes.name,
+          maxOccupancy: roomTypes.maxOccupancy,
+          baseRate: roomTypes.baseRate,
+        },
       })
       .from(rooms)
       .leftJoin(roomTypes, eq(rooms.roomTypeId, roomTypes.id))
-      .where(eq(rooms.companyId, companyId))
+      .where(activeOnly ? and(eq(rooms.companyId, companyId), eq(rooms.isActive, true)) : eq(rooms.companyId, companyId))
       .orderBy(desc(rooms.createdAt));
     return NextResponse.json({
       success: true,
@@ -53,18 +52,17 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const body = postSchema.safeParse(await request.json());
     if (!body.success) {
       return NextResponse.json({ error: body.error.flatten().fieldErrors }, { status: 400 });
     }
     const d = body.data;
-    if (!isValidCompanyId(d.companyId)) {
-      return NextResponse.json({ error: "Invalid company" }, { status: 400 });
-    }
+    const tenant = await requireTenantContext(d.companyId, {
+      module: "accommodation",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const normalizedCode = d.code.trim().toLowerCase();
     const [existing] = await db
       .select({
@@ -73,7 +71,7 @@ export async function POST(request: NextRequest) {
       })
       .from(rooms)
       .leftJoin(roomTypes, eq(rooms.roomTypeId, roomTypes.id))
-      .where(and(eq(rooms.companyId, d.companyId), sql`lower(${rooms.code}) = ${normalizedCode}`))
+      .where(and(eq(rooms.companyId, companyId), sql`lower(${rooms.code}) = ${normalizedCode}`))
       .limit(1);
     if (existing) {
       return NextResponse.json({
@@ -88,23 +86,21 @@ export async function POST(request: NextRequest) {
       const [defaultType] = await db
         .select()
         .from(roomTypes)
-        .where(and(eq(roomTypes.companyId, d.companyId), sql`lower(${roomTypes.name}) = ${"standard"}`))
+        .where(eq(roomTypes.companyId, companyId))
         .limit(1);
-      if (defaultType) {
-        roomTypeId = defaultType.id;
-      } else {
-        const [createdType] = await db
-          .insert(roomTypes)
-          .values({ companyId: d.companyId, name: "Standard", maxOccupancy: 2 })
-          .returning();
-        roomTypeId = createdType.id;
+      if (!defaultType) {
+        return NextResponse.json(
+          { error: "No room type exists for this company. Add a room type first." },
+          { status: 400 }
+        );
       }
+      roomTypeId = defaultType.id;
     }
 
     const [rt] = await db
       .select()
       .from(roomTypes)
-      .where(and(eq(roomTypes.id, roomTypeId), eq(roomTypes.companyId, d.companyId)))
+      .where(and(eq(roomTypes.id, roomTypeId), eq(roomTypes.companyId, companyId)))
       .limit(1);
     if (!rt) {
       return NextResponse.json({ error: "Room type not found for this company" }, { status: 400 });
@@ -112,8 +108,9 @@ export async function POST(request: NextRequest) {
     const [row] = await db
       .insert(rooms)
       .values({
-        companyId: d.companyId,
+        companyId,
         roomTypeId,
+        propertyId: rt.propertyId,
         code: d.code.trim(),
         name: d.name ?? null,
         floor: d.floor ?? null,

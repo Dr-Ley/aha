@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { mapDbAccommodationToAccommodation } from "@/lib/accommodations-db";
 import { accommodations, likes } from "@/lib/schema";
-import { eq, and, gte, lte, sql } from "drizzle-orm";
-import { auth } from "@/lib/auth";
-import {
-  canAccessDashboardFromSession,
-  getEffectiveUserRole,
-  getUserIdFromSession,
-} from "@/lib/permissions-server";
-import { isAdminRole } from "@/lib/roles";
+import { eq, and, gte, lte } from "drizzle-orm";
+import { ensureCatalogCompanyColumns } from "@/lib/catalog-company";
+import { requireCompanyId } from "@/lib/tenant";
+import { requireTenantContext } from "@/server/tenancy";
+import { accommodationPatchSchema, accommodationQuerySchema, accommodationWriteSchema } from "@/lib/schemas/public";
 
 // GET /api/accommodations - Get all accommodations with optional filtering
 export async function GET(request: NextRequest) {
@@ -16,15 +14,27 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     // Parse query parameters
-    const country = searchParams.get("country");
-    const type = searchParams.get("type");
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
-    const search = searchParams.get("search");
-    const recommended = searchParams.get("recommended");
+    const parsedQuery = accommodationQuerySchema.safeParse({
+      country: searchParams.get("country") || undefined,
+      type: searchParams.get("type") || undefined,
+      minPrice: searchParams.get("minPrice") || undefined,
+      maxPrice: searchParams.get("maxPrice") || undefined,
+      search: searchParams.get("search") || undefined,
+      recommended: searchParams.get("recommended") || undefined,
+    });
+    if (!parsedQuery.success) {
+      return NextResponse.json(
+        { success: false, error: "Invalid filters" },
+        { status: 400 }
+      );
+    }
+    const { country, type, minPrice, maxPrice, search, recommended } = parsedQuery.data;
 
-    // Build query conditions
-    let conditions = [];
+    await ensureCatalogCompanyColumns();
+    const company = requireCompanyId(searchParams.get("companyId"));
+    if (!company.ok) return company.response;
+    const companyId = company.companyId;
+    const conditions = [eq(accommodations.companyId, companyId)];
 
     if (country && country !== "All") {
       conditions.push(eq(accommodations.country, country));
@@ -34,29 +44,23 @@ export async function GET(request: NextRequest) {
       conditions.push(eq(accommodations.type, type));
     }
 
-    if (minPrice) {
-      conditions.push(gte(accommodations.priceFrom, parseInt(minPrice)));
+    if (minPrice != null) {
+      conditions.push(gte(accommodations.priceFrom, minPrice));
     }
 
-    if (maxPrice) {
-      conditions.push(lte(accommodations.priceFrom, parseInt(maxPrice)));
+    if (maxPrice != null) {
+      conditions.push(lte(accommodations.priceFrom, maxPrice));
     }
 
     if (recommended === "true") {
       conditions.push(eq(accommodations.recommended, true));
     }
 
-    // Execute query
-    let allAccommodations;
-    
-    if (conditions.length > 0) {
-      allAccommodations = await db
-        .select()
-        .from(accommodations)
-        .where(and(...conditions));
-    } else {
-      allAccommodations = await db.select().from(accommodations);
-    }
+    // Execute query — company_id is always in conditions
+    let allAccommodations = await db
+      .select()
+      .from(accommodations)
+      .where(and(...conditions));
 
     // Client-side search for text fields (name, location, description)
     if (search) {
@@ -69,9 +73,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      accommodations: allAccommodations 
+    return NextResponse.json({
+      success: true,
+      accommodations: allAccommodations.map(mapDbAccommodationToAccommodation),
     });
   } catch (error) {
     console.error("Error fetching accommodations:", error);
@@ -85,21 +89,26 @@ export async function GET(request: NextRequest) {
 // POST /api/accommodations - Create new accommodation (staff only)
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = getUserIdFromSession(session);
-    if (!userId || !(await canAccessDashboardFromSession(session))) {
+    const parsed = accommodationWriteSchema.safeParse(await request.json());
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
+        { success: false, error: "Invalid accommodation data" },
+        { status: 400 }
       );
     }
-    
+    const body = parsed.data;
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), {
+      module: "accommodation",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
-    const body = await request.json();
-    
+    await ensureCatalogCompanyColumns();
     const [accommodation] = await db
       .insert(accommodations)
       .values({
+        companyId,
         slug: body.slug,
         name: body.name,
         location: body.location,
@@ -115,9 +124,9 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
-    return NextResponse.json({ 
-      success: true, 
-      accommodation 
+    return NextResponse.json({
+      success: true,
+      accommodation: mapDbAccommodationToAccommodation(accommodation),
     });
   } catch (error) {
     console.error("Error creating accommodation:", error);
@@ -131,33 +140,33 @@ export async function POST(request: NextRequest) {
 // PATCH /api/accommodations - Update accommodation (staff only)
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
-    
-    const userId = getUserIdFromSession(session);
-    if (!userId || !(await canAccessDashboardFromSession(session))) {
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), {
+      module: "accommodation",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
+
+    const parsed = accommodationPatchSchema.safeParse(await request.json());
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
+        { success: false, error: "Invalid accommodation update" },
+        { status: 400 }
       );
     }
+    const { id, ...updateData } = parsed.data;
 
-    const body = await request.json();
-    const { id, ...updateData } = body;
-
-    if (!id) {
+    if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
-        { success: false, error: "Missing accommodation ID" },
+        { success: false, error: "No fields to update" },
         { status: 400 }
       );
     }
 
     const [updatedAccommodation] = await db
       .update(accommodations)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(accommodations.id, id))
+      .set(updateData)
+      .where(and(eq(accommodations.id, id), eq(accommodations.companyId, companyId)))
       .returning();
 
     if (!updatedAccommodation) {
@@ -167,9 +176,9 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      accommodation: updatedAccommodation 
+    return NextResponse.json({
+      success: true,
+      accommodation: mapDbAccommodationToAccommodation(updatedAccommodation),
     });
   } catch (error) {
     console.error("Error updating accommodation:", error);
@@ -180,20 +189,17 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-// DELETE /api/accommodations - Delete accommodation (admin only)
+// DELETE /api/accommodations - Delete accommodation (staff with accommodation edit)
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = getUserIdFromSession(session);
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const role = await getEffectiveUserRole(userId, session?.user?.role);
-    if (!isAdminRole(role)) {
-      return NextResponse.json({ error: "Forbidden - Admin only" }, { status: 403 });
-    }
-
     const { searchParams } = new URL(request.url);
+    const tenant = await requireTenantContext(searchParams.get("companyId"), {
+      module: "accommodation",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
+
     const id = searchParams.get("id");
 
     if (!id) {
@@ -213,11 +219,19 @@ export async function DELETE(request: NextRequest) {
 
     await db
       .delete(likes)
-      .where(eq(likes.accommodationId, accommodationId));
+      .where(and(eq(likes.accommodationId, accommodationId), eq(likes.companyId, companyId)));
 
-    await db
+    const deleted = await db
       .delete(accommodations)
-      .where(eq(accommodations.id, accommodationId));
+      .where(and(eq(accommodations.id, accommodationId), eq(accommodations.companyId, companyId)))
+      .returning({ id: accommodations.id });
+
+    if (deleted.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "Accommodation not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ 
       success: true, 

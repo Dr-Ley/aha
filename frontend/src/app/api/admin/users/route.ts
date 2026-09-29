@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq, ne, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users } from "@/lib/schema";
-import { auth } from "@/lib/auth";
+import { requireStaffUser } from "@/server/tenancy";
 import { checkAdminApi } from "@/lib/permissions-server";
 import { z } from "zod";
 
@@ -24,8 +24,9 @@ async function ensureDashboardNotificationsColumn(): Promise<void> {
 
 export async function GET() {
   try {
-    const session = await auth();
-    const denied = await checkAdminApi(session);
+    const staff = await requireStaffUser();
+    if (!staff.ok) return staff.response;
+    const denied = await checkAdminApi(staff.session);
     if (denied) return denied;
 
     await ensureDashboardNotificationsColumn();
@@ -50,8 +51,9 @@ export async function GET() {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
-    const denied = await checkAdminApi(session);
+    const staff = await requireStaffUser();
+    if (!staff.ok) return staff.response;
+    const denied = await checkAdminApi(staff.session);
     if (denied) return denied;
 
     const parsed = patchSchema.safeParse(await request.json());

@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, CheckCircle, Bed, Calendar, AlertTriangle } from "lucide-react";
+import { Plus, Pencil, Trash2, CheckCircle, Bed, Calendar, AlertTriangle, Printer, ChevronDown } from "lucide-react";
+import { InvoicePrintButton } from "@/components/documents/invoice-print-button";
 import { useCompany } from "@/store/company-context";
 import { companyUsesHotelStays } from "@/types/company";
 import { DashboardModal } from "@/components/dashboard/dashboard-modal";
-import { TypeaheadCreateSelect } from "@/components/dashboard/typeahead-create-select";
 import { EntityViewModal } from "@/components/dashboard/entity-view-modal";
 import {
   DashboardPagination,
@@ -14,8 +14,17 @@ import {
   useDashboardPagination,
 } from "@/components/dashboard/dashboard-table-tools";
 import type { CurrencyCode } from "@/lib/data";
-import { formatKesForDisplay } from "@/lib/data";
+import { formatAmountForDisplay } from "@/lib/data";
 import { nairobiYmd } from "@/lib/nairobi-date";
+import { isGuestEmail, parseOccupantGuests, type OccupantGuest } from "@/lib/travellers";
+import { calcStayNights, quoteAllocatedStay } from "@/lib/pricing";
+import {
+  accommodationSeasonForDate,
+  enchoroTentNightlyRate,
+  GUEST_CATEGORIES,
+  guestCategoryCurrency,
+  type GuestCategory,
+} from "@/lib/enchoro-rates-2026";
 import {
   hotelReservationBadgeClass,
   hotelReservationSelectAccentClass,
@@ -23,18 +32,29 @@ import {
   paymentStatusSelectAccentClass,
 } from "@/lib/dashboard-status-badges";
 import { cn } from "@/lib/utils";
+import { stayGuestName, stayRoomCount, stayRoomsLabel, staySourceLabel, uniqueStayRoomNames } from "@/lib/stay-labels";
 
 type RoomRow = {
   id: number;
   code: string;
   name: string | null;
   roomTypeId: number;
-  roomType?: { name: string } | null;
+  isActive?: boolean;
+  roomType?: { name: string; baseRate?: number | null; maxOccupancy?: number | null } | null;
+};
+
+type AllocatedRoom = {
+  id: number;
+  code: string;
+  name: string | null;
+  quantity?: number;
+  roomTypeName: string | null;
 };
 
 type HotelBookingRow = {
   id: number;
   roomId: number;
+  rooms?: AllocatedRoom[];
   checkInDate: string;
   checkOutDate: string;
   nights: number;
@@ -42,26 +62,39 @@ type HotelBookingRow = {
   amountPaid: number;
   paymentStatus: string;
   status: string;
+  pricingSource?: string | null;
   externalCompany: string | null;
   mealType: string | null;
+  customerId: number | null;
+  customerName?: string | null;
+  primaryGuestName: string | null;
+  primaryGuestPhone: string | null;
+  primaryGuestEmail: string | null;
+  additionalOccupants: OccupantGuest[] | unknown;
+  adults: number;
+  children: number;
+  infants: number;
+  guestCategory?: string | null;
+  currency?: string | null;
   room: { id: number; code: string; name: string | null; roomTypeName: string | null } | null;
-  guests: {
-    fullName: string;
-    email: string | null;
-    phone: string | null;
-    country: string | null;
-    isPrimary: boolean;
-  }[];
+};
+
+type RoomLine = {
+  typeKey: string;
+  quantity: number;
 };
 
 const RES_STATUS = ["pending", "confirmed", "cancelled", "checked_out"] as const;
 const PAY_STATUS = ["unpaid", "partial", "paid"] as const;
 const MEAL_TYPES = ["full_board", "half_board", "bed_only"] as const;
+const ROOM_QTY_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+const MAX_ROOM_LINES = 12;
+const emptyRoomLine = (): RoomLine => ({ typeKey: "", quantity: 1 });
 
 const exportColumns: ExportColumn<HotelBookingRow>[] = [
-  { key: "id", header: "ID", value: (b) => b.id },
-  { key: "room", header: "Room", value: (b) => b.room?.code ?? b.roomId },
-  { key: "guest", header: "Guest", value: stayGuestSummary },
+  { key: "room", header: "Room", value: (b) => stayRoomsLabel(b) },
+  { key: "roomCount", header: "Number of rooms", value: (b) => stayRoomCount(b) },
+  { key: "guest", header: "Guest", value: (b) => stayGuestName(b) || stayPartyCountsLabel(b) },
   { key: "checkIn", header: "Check in", value: (b) => b.checkInDate },
   { key: "checkOut", header: "Check out", value: (b) => b.checkOutDate },
   { key: "nights", header: "Nights", value: (b) => b.nights },
@@ -72,9 +105,17 @@ const exportColumns: ExportColumn<HotelBookingRow>[] = [
   { key: "mealType", header: "Meal type", value: (b) => b.mealType },
 ];
 
-function stayGuestSummary(b: HotelBookingRow): string {
-  const names = b.guests.map((g) => g.fullName).filter(Boolean);
-  return names.length ? names.join(", ") : "—";
+function stayRoomLabel(b: HotelBookingRow): string {
+  return stayRoomsLabel(b);
+}
+
+function stayPartyCountsLabel(b: HotelBookingRow): string {
+  const adults = b.adults ?? 0;
+  const children = b.children ?? 0;
+  const parts: string[] = [];
+  if (adults) parts.push(`${adults} adult${adults === 1 ? "" : "s"}`);
+  if (children) parts.push(`${children} child${children === 1 ? "" : "ren"}`);
+  return parts.join(", ") || "—";
 }
 
 function checkInYmd(b: HotelBookingRow): string {
@@ -104,14 +145,15 @@ export function HotelStaysPanel() {
   const [checkInFromF, setCheckInFromF] = useState("");
   const [checkInToF, setCheckInToF] = useState("");
   const [checkInSort, setCheckInSort] = useState<"asc" | "desc">("desc");
-
   const [form, setForm] = useState({
-    roomId: "",
+    roomLines: [emptyRoomLine()] as RoomLine[],
     checkInDate: "",
     checkOutDate: "",
     totalAmount: "",
     amountPaid: "0",
     stayPriceCurrency: "KES" as CurrencyCode,
+    pricingSource: "rate" as "rate" | "manual",
+    guestCategory: "resident" as GuestCategory,
     paymentMethod: "",
     paymentStatus: "unpaid" as (typeof PAY_STATUS)[number],
     status: "pending" as (typeof RES_STATUS)[number],
@@ -120,7 +162,10 @@ export function HotelStaysPanel() {
     guestName: "",
     guestEmail: "",
     guestPhone: "",
-    guestCountry: "",
+    occupants: [] as OccupantGuest[],
+    adults: "1",
+    children: "0",
+    infants: "0",
     notes: "",
   });
 
@@ -139,7 +184,7 @@ export function HotelStaysPanel() {
     try {
       const qs = new URLSearchParams({ companyId: selectedCompanyId });
       const [rRes, hRes] = await Promise.all([
-        fetch(`/api/rooms?${qs}`),
+        fetch(`/api/rooms?${qs}&activeOnly=0`),
         fetch(`/api/hotel-bookings?${qs}`),
       ]);
       const rJson = await rRes.json();
@@ -162,20 +207,104 @@ export function HotelStaysPanel() {
 
   const rowSource = useMemo(() => [...rows], [rows]);
 
-  const roomOptions = useMemo(
+  const roomOptions = useMemo(() => {
+    const names = new Set<string>();
+    for (const room of rooms) {
+      if (room.isActive === false) continue;
+      const name = room.roomType?.name || room.code;
+      if (name) names.add(name);
+    }
+    return [...names].sort((a, b) => a.localeCompare(b)).map((name) => ({ id: name, label: name }));
+  }, [rooms]);
+
+  function roomTypeKey(room: RoomRow): string {
+    return String(room.roomTypeId || room.roomType?.name || room.code);
+  }
+
+  const uniqueRoomTypes = useMemo(() => {
+    const selectedKeys = new Set(form.roomLines.map((line) => line.typeKey).filter(Boolean));
+    const byType = new Map<string, RoomRow>();
+    for (const room of rooms) {
+      const key = roomTypeKey(room);
+      const selected = selectedKeys.has(key);
+      if (room.isActive === false && !selected) continue;
+      const existing = byType.get(key);
+      if (!existing || selected) byType.set(key, room);
+    }
+    return [...byType.values()].sort((a, b) => {
+      const left = a.roomType?.name || a.code;
+      const right = b.roomType?.name || b.code;
+      return left.localeCompare(right);
+    });
+  }, [rooms, form.roomLines]);
+
+  function roomForTypeKey(typeKey: string): RoomRow | undefined {
+    if (!typeKey) return undefined;
+    return uniqueRoomTypes.find((room) => roomTypeKey(room) === typeKey);
+  }
+
+  const selectedAllocations = useMemo(() => {
+    const merged = new Map<number, { room: RoomRow; quantity: number }>();
+    for (const line of form.roomLines) {
+      const room = roomForTypeKey(line.typeKey);
+      if (!room) continue;
+      const qty = Math.max(1, Math.min(ROOM_QTY_OPTIONS[ROOM_QTY_OPTIONS.length - 1], line.quantity || 1));
+      const existing = merged.get(room.id);
+      merged.set(room.id, { room, quantity: (existing?.quantity ?? 0) + qty });
+    }
+    return [...merged.values()];
+  }, [form.roomLines, uniqueRoomTypes]);
+
+  const stayNights = useMemo(
     () =>
-      rooms.map((r) => ({
-        id: r.id,
-        label: `${r.code}${r.name ? ` — ${r.name}` : ""}${
-          r.roomType ? ` (${r.roomType.name})` : ""
-        }`,
-      })),
-    [rooms]
+      form.checkInDate && form.checkOutDate
+        ? calcStayNights(form.checkInDate, form.checkOutDate)
+        : 0,
+    [form.checkInDate, form.checkOutDate]
   );
+
+  const rateQuote = useMemo(() => {
+    if (selectedAllocations.length === 0 || stayNights < 1) return null;
+    return quoteAllocatedStay({
+      companyId: selectedCompanyId,
+      checkInDate: form.checkInDate,
+      checkOutDate: form.checkOutDate,
+      guestCategory: form.guestCategory,
+      adults: parseInt(form.adults, 10) || 0,
+      children: parseInt(form.children, 10) || 0,
+      rooms: selectedAllocations.map(({ room, quantity }) => ({
+        nightlyRate: room.roomType?.baseRate,
+        roomTypeName: room.roomType?.name || room.code,
+        maxOccupancy: room.roomType?.maxOccupancy,
+        quantity,
+      })),
+    });
+  }, [
+    selectedAllocations,
+    stayNights,
+    selectedCompanyId,
+    form.checkInDate,
+    form.checkOutDate,
+    form.guestCategory,
+    form.adults,
+    form.children,
+  ]);
+
+  const stayCurrency: CurrencyCode =
+    isEwc && form.guestCategory === "non_resident" ? "USD" : "KES";
+
+  useEffect(() => {
+    if (form.pricingSource !== "rate" || !rateQuote) return;
+    setForm((prev) => {
+      const next = String(rateQuote.sellingPrice);
+      if (prev.totalAmount === next && prev.pricingSource === "rate") return prev;
+      return { ...prev, totalAmount: next, pricingSource: "rate" };
+    });
+  }, [form.pricingSource, rateQuote]);
 
   const displayRows = useMemo(() => {
     const f = rowSource.filter((b) => {
-      if (roomF && String(b.roomId) !== roomF) return false;
+      if (roomF && !uniqueStayRoomNames(b).includes(roomF)) return false;
       if (payHF && b.paymentStatus !== payHF) return false;
       if (resF && b.status !== resF) return false;
       const ci = checkInYmd(b);
@@ -228,112 +357,180 @@ export function HotelStaysPanel() {
   function openCreate() {
     setEditId(null);
     setForm({
-      roomId: "",
+      roomLines: [emptyRoomLine()],
       checkInDate: "",
       checkOutDate: "",
       totalAmount: "",
       amountPaid: "0",
-      stayPriceCurrency: "KES",
+      stayPriceCurrency: isEwc ? guestCategoryCurrency("resident") : "KES",
+      pricingSource: "rate",
+      guestCategory: "resident",
       paymentMethod: "",
       paymentStatus: "unpaid",
       status: "pending",
       externalCompany: "",
-      mealType: "",
+      mealType: isEwc ? "full_board" : "",
       guestName: "",
       guestEmail: "",
       guestPhone: "",
-      guestCountry: "",
+      occupants: [],
+      adults: "1",
+      children: "0",
+      infants: "0",
       notes: "",
     });
     setModal("create");
   }
 
-  async function createRoom(code: string) {
-    const existing = rooms.find((r) => r.code.trim().toLowerCase() === code.trim().toLowerCase());
-    if (existing) {
-      return {
-        id: String(existing.id),
-        label: `${existing.code}${existing.name ? ` - ${existing.name}` : ""}`,
-        description: existing.roomType?.name ?? "Room",
-      };
-    }
+  function typeKeyFromAllocated(room: AllocatedRoom): string {
+    const full = rooms.find((row) => row.id === room.id);
+    if (full) return roomTypeKey(full);
+    return room.roomTypeName || String(room.id);
+  }
 
-    const res = await fetch("/api/rooms", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        companyId: selectedCompanyId,
-        code,
-        name: null,
-        isActive: true,
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok || !data.room) {
-      showToast(typeof data.error === "string" ? data.error : "Could not create room", "error");
-      return null;
+  function closeDropdown(el: HTMLElement) {
+    const details = el.closest("details");
+    if (details) details.open = false;
+  }
+
+  function updateRoomLine(index: number, patch: Partial<RoomLine>) {
+    setForm((f) => ({
+      ...f,
+      roomLines: f.roomLines.map((line, i) => (i === index ? { ...line, ...patch } : line)),
+    }));
+  }
+
+  function addRoomLine() {
+    setForm((f) =>
+      f.roomLines.length >= MAX_ROOM_LINES ? f : { ...f, roomLines: [...f.roomLines, emptyRoomLine()] }
+    );
+  }
+
+  function removeRoomLine(index: number) {
+    setForm((f) => ({
+      ...f,
+      roomLines: f.roomLines.length <= 1 ? [emptyRoomLine()] : f.roomLines.filter((_, i) => i !== index),
+    }));
+  }
+
+  function roomLineRateLabel(room: RoomRow): string | null {
+    if (isEwc) {
+      const season = form.checkInDate ? accommodationSeasonForDate(form.checkInDate) : "low";
+      const amount = enchoroTentNightlyRate({
+        guestCategory: form.guestCategory,
+        season,
+        roomTypeName: room.roomType?.name || room.code,
+        maxOccupancy: room.roomType?.maxOccupancy,
+      });
+      return `${formatAmountForDisplay(amount, stayCurrency)} / night`;
     }
-    const room = data.room as RoomRow;
-    setRooms((current) => {
-      const withoutDuplicate = current.filter((r) => r.id !== room.id);
-      return [room, ...withoutDuplicate];
-    });
-    showToast(data.existing ? "Existing room selected" : "Room created", "success");
-    return {
-      id: String(room.id),
-      label: `${room.code}${room.name ? ` - ${room.name}` : ""}`,
-      description: room.roomType?.name ?? "Room",
-    };
+    if (room.roomType?.baseRate != null) {
+      return `${formatAmountForDisplay(room.roomType.baseRate, "KES")} / night`;
+    }
+    return null;
+  }
+
+  function allocationsPayload() {
+    return selectedAllocations.map(({ room, quantity }) => ({
+      roomId: room.id,
+      quantity: Math.max(1, Math.min(20, quantity)),
+    }));
   }
 
   function openEdit(b: HotelBookingRow) {
     setEditId(b.id);
+    const source =
+      b.rooms && b.rooms.length > 0
+        ? b.rooms
+        : [
+            {
+              id: b.roomId,
+              code: b.room?.code ?? "",
+              name: b.room?.name ?? null,
+              quantity: 1,
+              roomTypeName: b.room?.roomTypeName ?? null,
+            },
+          ];
     setForm({
-      roomId: String(b.roomId),
+      roomLines: source.map((room) => ({
+        typeKey: typeKeyFromAllocated(room),
+        quantity: Math.max(1, room.quantity ?? 1),
+      })),
       checkInDate: String(b.checkInDate).slice(0, 10),
       checkOutDate: String(b.checkOutDate).slice(0, 10),
       totalAmount: String(b.totalAmount),
       amountPaid: String(b.amountPaid),
-      stayPriceCurrency: "KES",
+      stayPriceCurrency:
+        isEwc && b.guestCategory === "non_resident" ? "USD" : "KES",
+      pricingSource: b.pricingSource === "rate" ? "rate" : "manual",
+      guestCategory: b.guestCategory === "non_resident" ? "non_resident" : "resident",
       paymentMethod: "",
       paymentStatus: b.paymentStatus as (typeof PAY_STATUS)[number],
       status: b.status as (typeof RES_STATUS)[number],
       externalCompany: b.externalCompany ?? "",
       mealType: (b.mealType as (typeof MEAL_TYPES)[number] | null) ?? "",
-      guestName: b.guests[0]?.fullName ?? "",
-      guestEmail: b.guests[0]?.email ?? "",
-      guestPhone: b.guests[0]?.phone ?? "",
-      guestCountry: b.guests[0]?.country ?? "",
+      guestName: b.primaryGuestName ?? "",
+      guestEmail: b.primaryGuestEmail ?? "",
+      guestPhone: b.primaryGuestPhone ?? "",
+      occupants: parseOccupantGuests(b.additionalOccupants),
+      adults: String(b.adults ?? 1),
+      children: String(b.children ?? 0),
+      infants: String(b.infants ?? 0),
       notes: "",
     });
     setModal("edit");
   }
 
+  function additionalGuestsPayload(): OccupantGuest[] | null {
+    const guests = form.occupants
+      .map((guest) => ({ name: guest.name.trim(), email: guest.email.trim() }))
+      .filter((guest) => guest.name || guest.email);
+    if (guests.some((guest) => !guest.name || !guest.email)) {
+      showToast("Each additional guest needs a name and email", "error");
+      return null;
+    }
+    if (guests.some((guest) => !isGuestEmail(guest.email))) {
+      showToast("Enter a valid email for each additional guest", "error");
+      return null;
+    }
+    return guests;
+  }
+
+  function partyPayload(occupants: OccupantGuest[]) {
+    return {
+      primaryGuestName: form.guestName.trim() || null,
+      primaryGuestEmail: form.guestEmail.trim() || null,
+      primaryGuestPhone: form.guestPhone.trim() || null,
+      additionalOccupants: occupants,
+      adults: parseInt(form.adults, 10) || 0,
+      children: parseInt(form.children, 10) || 0,
+      infants: parseInt(form.infants, 10) || 0,
+    };
+  }
+
   async function submitCreate(e: React.FormEvent) {
     e.preventDefault();
+    const roomsPayload = allocationsPayload();
+    if (roomsPayload.length === 0) {
+      showToast("Select at least one room type", "error");
+      return;
+    }
+    const occupants = additionalGuestsPayload();
+    if (!occupants) return;
     setSaving(true);
     try {
-      const guests =
-        form.guestName.trim().length > 0
-          ? [
-              {
-                fullName: form.guestName.trim(),
-                email: form.guestEmail.trim() || null,
-                phone: form.guestPhone.trim() || null,
-                country: form.guestCountry.trim() || null,
-                isPrimary: true,
-              },
-            ]
-          : [];
       const res = await fetch("/api/hotel-bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           companyId: selectedCompanyId,
-          roomId: parseInt(form.roomId, 10),
+          rooms: roomsPayload,
           checkInDate: form.checkInDate,
           checkOutDate: form.checkOutDate,
           totalAmount: parseInt(form.totalAmount, 10),
+          pricingSource: form.pricingSource,
+          guestCategory: form.guestCategory,
+          currency: stayCurrency,
           amountPaid: parseInt(form.amountPaid, 10) || 0,
           paymentMethod: form.paymentMethod || null,
           paymentStatus: form.paymentStatus,
@@ -341,7 +538,7 @@ export function HotelStaysPanel() {
           externalCompany: isEwc && form.externalCompany ? form.externalCompany : null,
           mealType: showMealType && form.mealType ? form.mealType : null,
           notes: form.notes || null,
-          guests,
+          ...partyPayload(occupants),
         }),
       });
       const data = await res.json();
@@ -359,36 +556,34 @@ export function HotelStaysPanel() {
   async function submitEdit(e: React.FormEvent) {
     e.preventDefault();
     if (editId == null) return;
+    const roomsPayload = allocationsPayload();
+    if (roomsPayload.length === 0) {
+      showToast("Select at least one room type", "error");
+      return;
+    }
+    const occupants = additionalGuestsPayload();
+    if (!occupants) return;
     setSaving(true);
     try {
-      const guests =
-        form.guestName.trim().length > 0
-          ? [
-              {
-                fullName: form.guestName.trim(),
-                email: form.guestEmail.trim() || null,
-                phone: form.guestPhone.trim() || null,
-                country: form.guestCountry.trim() || null,
-                isPrimary: true,
-              },
-            ]
-          : [];
       const res = await fetch("/api/hotel-bookings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: editId,
           companyId: selectedCompanyId,
-          roomId: parseInt(form.roomId, 10),
+          rooms: roomsPayload,
           checkInDate: form.checkInDate,
           checkOutDate: form.checkOutDate,
           totalAmount: parseInt(form.totalAmount, 10),
+          pricingSource: form.pricingSource,
+          guestCategory: form.guestCategory,
+          currency: stayCurrency,
           amountPaid: parseInt(form.amountPaid, 10) || 0,
           paymentStatus: form.paymentStatus,
           status: form.status,
           externalCompany: isEwc && form.externalCompany ? form.externalCompany : null,
           mealType: showMealType && form.mealType ? form.mealType : null,
-          guests,
+          ...partyPayload(occupants),
         }),
       });
       const data = await res.json();
@@ -465,9 +660,9 @@ export function HotelStaysPanel() {
         </button>
       </div>
 
-      {roomOptions.length === 0 && !loading && (
+      {rooms.length === 0 && !loading && (
         <p className="text-sm text-warning">
-          No rooms yet. Search in the room field to create the first one.
+          No active rooms are available for this property. Add room types in the database first.
         </p>
       )}
 
@@ -499,11 +694,10 @@ export function HotelStaysPanel() {
                 {todayHotel.today.map((b) => (
                   <li key={b.id} className="rounded-lg border border-base-content/10 bg-base-100 px-3 py-2">
                     <a href={`#hotel-stay-${b.id}`} className="font-medium text-primary hover:underline">
-                      Stay #{b.id}
+                      {staySourceLabel(b)}
                     </a>
-                    <span className="text-base-content/50"> · {b.room?.code ?? `Room ${b.roomId}`}</span>
                     <div className="text-xs text-base-content/60">
-                      {stayGuestSummary(b)} · {checkInYmd(b)} → {String(b.checkOutDate).slice(0, 10)} ·{" "}
+                      {stayPartyCountsLabel(b)} · {checkInYmd(b)} → {String(b.checkOutDate).slice(0, 10)} ·{" "}
                       {b.paymentStatus}
                     </div>
                   </li>
@@ -520,11 +714,10 @@ export function HotelStaysPanel() {
                 {todayHotel.upcoming.map((b) => (
                   <li key={b.id} className="rounded-lg border border-base-content/10 bg-base-100 px-3 py-2">
                     <a href={`#hotel-stay-${b.id}`} className="font-medium text-primary hover:underline">
-                      Stay #{b.id}
+                      {staySourceLabel(b)}
                     </a>
-                    <span className="text-base-content/50"> · {b.room?.code ?? `Room ${b.roomId}`}</span>
                     <div className="text-xs text-base-content/60">
-                      {stayGuestSummary(b)} · Check-in {checkInYmd(b)} · {b.nights} nights
+                      {stayPartyCountsLabel(b)} · Check-in {checkInYmd(b)} · {b.nights} nights
                     </div>
                   </li>
                 ))}
@@ -563,18 +756,17 @@ export function HotelStaysPanel() {
         <table className="table table-sm">
           <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
             <tr>
-              <th className="align-top">ID</th>
               <th className="align-top normal-case font-normal">
                 <label className="flex min-w-32 flex-col gap-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
                   <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
-                    Room
+                    Room type
                     <select
                       className="select select-bordered select-xs max-w-40 rounded-md font-normal normal-case"
                       style={inputStyle}
                       value={roomF}
                       onChange={(e) => setRoomF(e.target.value)}
                     >
-                      <option value="">All rooms</option>
+                      <option value="">All room types</option>
                       {roomOptions.map((o) => (
                         <option key={o.id} value={String(o.id)}>
                           {o.label}
@@ -584,6 +776,8 @@ export function HotelStaysPanel() {
                   </span>
                 </label>
               </th>
+              <th className="align-top">Number of rooms</th>
+              <th className="align-top">Guest</th>
               <th className="align-top normal-case font-normal">
                 <label className="flex min-w-40 flex-col gap-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
                   <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
@@ -650,14 +844,14 @@ export function HotelStaysPanel() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={showMealType ? 9 : 8} className="py-12 text-center">
+                <td colSpan={showMealType ? 10 : 9} className="py-12 text-center">
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
             ) : displayRows.length === 0 ? (
               <tr>
                 <td
-                  colSpan={showMealType ? 9 : 8}
+                  colSpan={showMealType ? 10 : 9}
                   className="py-10 text-center text-sm text-base-content/50"
                 >
                   {rows.length === 0
@@ -673,16 +867,20 @@ export function HotelStaysPanel() {
                   className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
                   onClick={() => setViewId(b.id)}
                 >
-                  <td className="font-mono text-xs">{b.id}</td>
+                  <td className="text-sm">{stayRoomLabel(b)}</td>
+                  <td className="tabular-nums">{stayRoomCount(b) || "—"}</td>
                   <td className="text-sm">
-                    {b.room?.code ?? b.roomId}
-                    {b.room?.roomTypeName ? (
-                      <span className="text-base-content/50"> — {b.room.roomTypeName}</span>
-                    ) : null}
+                    <div>{stayGuestName(b) || "—"}</div>
+                    <div className="text-xs text-base-content/50">{stayPartyCountsLabel(b)}</div>
                   </td>
                   <td className="text-sm">{String(b.checkInDate).slice(0, 10)}</td>
                   <td className="tabular-nums">{b.nights}</td>
-                  <td className="tabular-nums font-medium">{formatKesForDisplay(b.totalAmount)}</td>
+                  <td className="tabular-nums font-medium">
+                    {formatAmountForDisplay(
+                      b.totalAmount,
+                      (b.currency === "USD" ? "USD" : "KES") as CurrencyCode
+                    )}
+                  </td>
                   <td>
                     <span className={cn("badge badge-sm", paymentStatusBadgeClass(b.paymentStatus))}>
                       {b.paymentStatus}
@@ -702,6 +900,22 @@ export function HotelStaysPanel() {
                     </td>
                   )}
                   <td className="flex gap-1">
+                    <a
+                      className="btn btn-ghost btn-xs btn-square"
+                      href={`/print/hotel-service-voucher/${b.id}?companyId=${encodeURIComponent(selectedCompanyId)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="Print service voucher"
+                      title="Print service voucher"
+                    >
+                      <Printer className="h-3.5 w-3.5" />
+                    </a>
+                    <InvoicePrintButton
+                      companyId={selectedCompanyId}
+                      referenceType="hotel"
+                      referenceId={b.id}
+                    />
                     <button
                       type="button"
                       className="btn btn-ghost btn-xs btn-square"
@@ -744,121 +958,269 @@ export function HotelStaysPanel() {
       >
         <form
           onSubmit={modal === "create" ? submitCreate : submitEdit}
-          className="grid gap-3 max-w-md"
+          className="flex w-full flex-col gap-4"
         >
+          <fieldset className="form-control w-full">
+            <legend className="label-text text-sm font-medium">Rooms</legend>
+            <p className="mb-2 text-xs text-base-content/60">
+              Choose a room type and how many rooms of that type. Add another room to mix types on
+              this stay.
+            </p>
+            <div className="flex flex-col gap-3">
+              {uniqueRoomTypes.length === 0 ? (
+                <p className="text-sm text-base-content/50">No active room types in the database.</p>
+              ) : (
+                form.roomLines.map((line, index) => {
+                  const selected = roomForTypeKey(line.typeKey);
+                  const rateHint = selected ? roomLineRateLabel(selected) : null;
+                  const label = selected
+                    ? `${selected.roomType?.name || selected.code}${rateHint ? ` · ${rateHint}` : ""}`
+                    : "Select room type";
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-col gap-2 rounded-lg border border-base-content/10 p-3"
+                    >
+                      <label className="form-control w-full">
+                        <span className="label-text text-sm">Room type</span>
+                        <details className="dropdown w-full">
+                          <summary className="btn btn-sm m-0 w-full justify-between font-normal">
+                            <span className="truncate">{label}</span>
+                            <ChevronDown className="h-4 w-4 shrink-0 opacity-70" />
+                          </summary>
+                          <ul className="menu dropdown-content z-20 mt-1 w-full rounded-box bg-base-100 p-2 shadow-sm">
+                            {uniqueRoomTypes.map((room) => {
+                              const hint = roomLineRateLabel(room);
+                              return (
+                                <li key={roomTypeKey(room)}>
+                                  <a
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      updateRoomLine(index, { typeKey: roomTypeKey(room) });
+                                      closeDropdown(e.currentTarget);
+                                    }}
+                                  >
+                                    {room.roomType?.name || room.code}
+                                    {hint ? (
+                                      <span className="text-base-content/50">· {hint}</span>
+                                    ) : null}
+                                  </a>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </details>
+                      </label>
+                      <label className="form-control w-full">
+                        <span className="label-text text-sm">Number of rooms</span>
+                        <details className="dropdown w-full">
+                          <summary className="btn btn-sm m-0 w-full justify-between font-normal">
+                            {line.quantity}
+                            <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                          </summary>
+                          <ul className="menu dropdown-content z-20 mt-1 w-full rounded-box bg-base-100 p-1 shadow-sm">
+                            {ROOM_QTY_OPTIONS.map((qty) => (
+                              <li key={qty}>
+                                <a
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    updateRoomLine(index, { quantity: qty });
+                                    closeDropdown(e.currentTarget);
+                                  }}
+                                >
+                                  {qty}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      </label>
+                      {form.roomLines.length > 1 ? (
+                        <button
+                          type="button"
+                          className="btn btn-ghost btn-sm w-full"
+                          onClick={() => removeRoomLine(index)}
+                        >
+                          Remove room
+                        </button>
+                      ) : null}
+                    </div>
+                  );
+                })
+              )}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm w-full"
+                disabled={uniqueRoomTypes.length === 0 || form.roomLines.length >= MAX_ROOM_LINES}
+                onClick={addRoomLine}
+              >
+                Add another room
+              </button>
+            </div>
+          </fieldset>
           <label className="form-control w-full">
-            <span className="label-text text-sm">Room</span>
-            <TypeaheadCreateSelect
-              value={form.roomId}
-              options={roomOptions.map((o) => ({
-                id: String(o.id),
-                label: o.label,
-              }))}
-              inputStyle={inputStyle}
-              placeholder="Search or create room..."
-              createLabel="Create room"
-              onCreate={createRoom}
-              onSelect={(roomId) => setForm((f) => ({ ...f, roomId }))}
+            <span className="label-text text-sm">Check in</span>
+            <input
+              type="date"
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.checkInDate}
+              onChange={(e) => setForm((f) => ({ ...f, checkInDate: e.target.value }))}
+              required
             />
           </label>
-          <div className="grid grid-cols-2 gap-2">
-            <label className="form-control w-full col-span-1">
-              <span className="label-text text-sm">Check in</span>
-              <input
-                type="date"
-                className="input input-bordered input-sm w-full"
-                style={inputStyle}
-                value={form.checkInDate}
-                onChange={(e) => setForm((f) => ({ ...f, checkInDate: e.target.value }))}
-                required
-              />
-            </label>
-            <label className="form-control w-full col-span-1">
-              <span className="label-text text-sm">Check out</span>
-              <input
-                type="date"
-                className="input input-bordered input-sm w-full"
-                style={inputStyle}
-                value={form.checkOutDate}
-                onChange={(e) => setForm((f) => ({ ...f, checkOutDate: e.target.value }))}
-                required
-              />
-            </label>
-          </div>
-          <div className="grid grid-cols-2 gap-2 sm:col-span-2">
-            <label className="form-control w-full col-span-2 sm:col-span-1">
-              <span className="label-text text-sm">Currency for amounts</span>
-              <input
-                className="input input-bordered input-sm w-full"
-                style={inputStyle}
-                value="KES"
-                readOnly
-              />
-            </label>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Check out</span>
+            <input
+              type="date"
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.checkOutDate}
+              onChange={(e) => setForm((f) => ({ ...f, checkOutDate: e.target.value }))}
+              required
+            />
+          </label>
+          {isEwc ? (
             <label className="form-control w-full">
-              <span className="label-text text-sm">Total</span>
-              <input
-                className="input input-bordered input-sm w-full"
-                style={inputStyle}
-                value={form.totalAmount}
-                onChange={(e) => setForm((f) => ({ ...f, totalAmount: e.target.value }))}
-                required
-              />
-            </label>
-            <label className="form-control w-full">
-              <span className="label-text text-sm">Paid</span>
-              <input
-                className="input input-bordered input-sm w-full"
-                style={inputStyle}
-                value={form.amountPaid}
-                onChange={(e) => setForm((f) => ({ ...f, amountPaid: e.target.value }))}
-              />
-            </label>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <label className="form-control w-full">
-              <span className="label-text text-sm">Pay status</span>
+              <span className="label-text text-sm">Guest category</span>
               <select
-                className={cn(
-                  "select select-bordered select-sm w-full",
-                  paymentStatusSelectAccentClass(form.paymentStatus)
-                )}
+                className="select select-bordered select-sm w-full"
                 style={inputStyle}
-                value={form.paymentStatus}
+                value={form.guestCategory}
                 onChange={(e) =>
-                  setForm((f) => ({ ...f, paymentStatus: e.target.value as (typeof PAY_STATUS)[number] }))
+                  setForm((f) => ({
+                    ...f,
+                    guestCategory: e.target.value as GuestCategory,
+                    pricingSource: "rate",
+                  }))
                 }
               >
-                {PAY_STATUS.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
+                {GUEST_CATEGORIES.map((row) => (
+                  <option key={row.id} value={row.id}>
+                    {row.label}
                   </option>
                 ))}
               </select>
             </label>
-            <label className="form-control w-full">
-              <span className="label-text text-sm">Reservation</span>
-              <select
-                className={cn(
-                  "select select-bordered select-sm w-full",
-                  hotelReservationSelectAccentClass(form.status)
-                )}
-                style={inputStyle}
-                value={form.status}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, status: e.target.value as (typeof RES_STATUS)[number] }))
-                }
-              >
-                {RES_STATUS.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
+          ) : null}
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Currency for amounts</span>
+            <input
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={stayCurrency}
+              readOnly
+            />
+          </label>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Total</span>
+            <input
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.totalAmount}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  totalAmount: e.target.value,
+                  pricingSource: "manual",
+                }))
+              }
+              required
+            />
+          </label>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Paid</span>
+            <input
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.amountPaid}
+              onChange={(e) => setForm((f) => ({ ...f, amountPaid: e.target.value }))}
+            />
+          </label>
+          {rateQuote ? (
+            <div className="rounded-lg border border-base-content/10 bg-base-200/40 p-3 text-sm">
+              <div className="flex flex-col gap-2">
+                <p className="font-medium">
+                  Room rate quote{" "}
+                  <span className="text-base-content/60">
+                    ({form.pricingSource === "rate" ? "applied" : "available"})
+                  </span>
+                </p>
+                {form.pricingSource !== "rate" ? (
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm w-full"
+                    onClick={() =>
+                      setForm((f) => ({
+                        ...f,
+                        totalAmount: String(rateQuote.sellingPrice),
+                        pricingSource: "rate",
+                      }))
+                    }
+                  >
+                    Apply room rate
+                  </button>
+                ) : null}
+              </div>
+              <p className="mt-1 text-base-content/70">
+                {rateQuote.nights} night{rateQuote.nights === 1 ? "" : "s"} ×{" "}
+                {formatAmountForDisplay(rateQuote.nightlyRate, stayCurrency)}
+                {rateQuote.roundedUpBy > 0
+                  ? ` → rounded to ${formatAmountForDisplay(rateQuote.sellingPrice, stayCurrency)}`
+                  : ` = ${formatAmountForDisplay(rateQuote.sellingPrice, stayCurrency)}`}
+              </p>
+              {isEwc ? (
+                <p className="mt-2 text-xs text-base-content/60">
+                  Full board STO 2026. Low season Mar–Jun and Oct–Nov. High season Jan–Feb,
+                  Jul–Sep and Dec. Child 2–12 years: 75% of extra adult bed. Infant to 2 years: free.
+                </p>
+              ) : null}
+            </div>
+          ) : selectedAllocations.length > 0 && stayNights >= 1 ? (
+            <p className="text-xs text-base-content/60">
+              No rate for this room type — enter total manually.
+            </p>
+          ) : null}
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Pay status</span>
+            <select
+              className={cn(
+                "select select-bordered select-sm w-full",
+                paymentStatusSelectAccentClass(form.paymentStatus)
+              )}
+              style={inputStyle}
+              value={form.paymentStatus}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, paymentStatus: e.target.value as (typeof PAY_STATUS)[number] }))
+              }
+            >
+              {PAY_STATUS.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Reservation</span>
+            <select
+              className={cn(
+                "select select-bordered select-sm w-full",
+                hotelReservationSelectAccentClass(form.status)
+              )}
+              style={inputStyle}
+              value={form.status}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, status: e.target.value as (typeof RES_STATUS)[number] }))
+              }
+            >
+              {RES_STATUS.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </label>
           {showMealType && (
             <>
               <label className="form-control w-full">
@@ -904,41 +1266,129 @@ export function HotelStaysPanel() {
               onChange={(e) => setForm((f) => ({ ...f, guestName: e.target.value }))}
             />
           </label>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <label className="form-control w-full">
-              <span className="label-text text-sm">Guest email</span>
-              <input
-                type="email"
-                className="input input-bordered input-sm w-full"
-                style={inputStyle}
-                value={form.guestEmail}
-                onChange={(e) => setForm((f) => ({ ...f, guestEmail: e.target.value }))}
-              />
-            </label>
-            <label className="form-control w-full">
-              <span className="label-text text-sm">Guest phone</span>
-              <input
-                className="input input-bordered input-sm w-full"
-                style={inputStyle}
-                value={form.guestPhone}
-                onChange={(e) => setForm((f) => ({ ...f, guestPhone: e.target.value }))}
-              />
-            </label>
-          </div>
           <label className="form-control w-full">
-            <span className="label-text text-sm">Guest country</span>
+            <span className="label-text text-sm">Guest email</span>
+            <input
+              type="email"
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.guestEmail}
+              onChange={(e) => setForm((f) => ({ ...f, guestEmail: e.target.value }))}
+            />
+          </label>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Guest phone</span>
             <input
               className="input input-bordered input-sm w-full"
               style={inputStyle}
-              value={form.guestCountry}
-              onChange={(e) => setForm((f) => ({ ...f, guestCountry: e.target.value }))}
+              value={form.guestPhone}
+              onChange={(e) => setForm((f) => ({ ...f, guestPhone: e.target.value }))}
             />
           </label>
-          <div className="flex justify-end gap-2 pt-2">
-            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setModal(null)}>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Adults</span>
+            <input
+              type="number"
+              min={0}
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.adults}
+              onChange={(e) => setForm((f) => ({ ...f, adults: e.target.value }))}
+            />
+          </label>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Children (2–12 years)</span>
+            <input
+              type="number"
+              min={0}
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.children}
+              onChange={(e) => setForm((f) => ({ ...f, children: e.target.value }))}
+            />
+          </label>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Infants (until 2 years)</span>
+            <input
+              type="number"
+              min={0}
+              className="input input-bordered input-sm w-full"
+              style={inputStyle}
+              value={form.infants}
+              onChange={(e) => setForm((f) => ({ ...f, infants: e.target.value }))}
+            />
+          </label>
+          <p className="text-xs text-base-content/50">
+            Primary guest email is optional for walk-ins. Each additional guest needs a name and email
+            and is not turned into a customer.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="label-text text-sm">Additional guests</span>
+              <button
+                type="button"
+                className="btn btn-ghost btn-xs"
+                onClick={() =>
+                  setForm((f) => ({
+                    ...f,
+                    occupants: [...f.occupants, { name: "", email: "" }],
+                  }))
+                }
+              >
+                Add guest
+              </button>
+            </div>
+            {form.occupants.map((occupant, index) => (
+              <div key={index} className="flex flex-col gap-1">
+                <input
+                  className="input input-bordered input-sm w-full"
+                  style={inputStyle}
+                  placeholder="Name"
+                  value={occupant.name}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      occupants: f.occupants.map((row, i) =>
+                        i === index ? { ...row, name: e.target.value } : row
+                      ),
+                    }))
+                  }
+                />
+                <input
+                  type="email"
+                  className="input input-bordered input-sm w-full"
+                  style={inputStyle}
+                  placeholder="Email"
+                  value={occupant.email}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      occupants: f.occupants.map((row, i) =>
+                        i === index ? { ...row, email: e.target.value } : row
+                      ),
+                    }))
+                  }
+                />
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm w-full"
+                  onClick={() =>
+                    setForm((f) => ({
+                      ...f,
+                      occupants: f.occupants.filter((_, i) => i !== index),
+                    }))
+                  }
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
+            <button type="button" className="btn btn-ghost btn-sm w-full sm:w-auto" onClick={() => setModal(null)}>
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary btn-sm" disabled={saving}>
+            <button type="submit" className="btn btn-primary btn-sm w-full sm:w-auto" disabled={saving}>
               {saving ? <span className="loading loading-spinner loading-xs" /> : "Save"}
             </button>
           </div>

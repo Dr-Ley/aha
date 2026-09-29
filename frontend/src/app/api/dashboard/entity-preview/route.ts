@@ -2,23 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
+  barItems,
   barOrderItems,
   barOrders,
   bookings,
   contactSubmissions,
   expenses,
-  hotelBookingGuests,
+  hotelBookingRooms,
   hotelBookings,
   payments,
+  restaurantItems,
   restaurantOrderItems,
   restaurantOrders,
   roomTypes,
   rooms,
   tours,
 } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkApiPermission, canAccessDashboardFromSession, getUserIdFromSession } from "@/lib/permissions-server";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
+import { requireTenantContext } from "@/server/tenancy";
 import type { DashboardModuleId } from "@/lib/dashboard-modules";
 
 const PREVIEW_TYPES = ["booking", "hotel", "payment", "expense", "restaurant", "bar", "enquiry"] as const;
@@ -45,24 +45,14 @@ function moduleForPreview(t: PreviewType): DashboardModuleId {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = getUserIdFromSession(session);
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
     const sp = new URL(request.url).searchParams;
     const type = sp.get("type") as PreviewType | null;
     const id = sp.get("id");
-    const companyId = resolveCompanyId(sp.get("companyId"));
 
     if (!type || !PREVIEW_TYPES.includes(type)) {
       return NextResponse.json({ error: "Invalid type" }, { status: 400 });
     }
-    if (!id || !isValidCompanyId(companyId)) {
+    if (!id) {
       return NextResponse.json({ error: "id and companyId required" }, { status: 400 });
     }
     const nid = parseInt(id, 10);
@@ -70,17 +60,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
-    const mod = moduleForPreview(type);
-    if (type === "enquiry") {
-      const denied = await checkApiPermission(session, "aha", "enquiries", false);
-      if (denied) return denied;
-    } else {
-      const denied = await checkApiPermission(session, companyId, mod, false);
-      if (denied) return denied;
-    }
+    const tenant = await requireTenantContext(sp.get("companyId"), {
+      module: moduleForPreview(type),
+      requireEdit: false,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
     switch (type) {
       case "booking": {
+        const { ensureBookingCustomerColumn, ensureBookingTravellerColumns } = await import("@/lib/customers");
+        await ensureBookingCustomerColumn();
+        await ensureBookingTravellerColumns();
+        const { ensureBookingComponentTables } = await import("@/lib/booking-components");
+        await ensureBookingComponentTables();
         const [row] = await db
           .select({ booking: bookings, tour: tours })
           .from(bookings)
@@ -88,13 +81,19 @@ export async function GET(request: NextRequest) {
           .where(and(eq(bookings.id, nid), eq(bookings.companyId, companyId)))
           .limit(1);
         if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
+        const { listComponentsForBooking } = await import("@/lib/booking-components");
+        const components = await listComponentsForBooking(row.booking.id);
         return NextResponse.json({
           success: true,
           kind: type,
-          data: { ...row.booking, tour: row.tour },
+          data: { ...row.booking, tour: row.tour, components },
         });
       }
       case "hotel": {
+        const { ensureHotelStayPartyColumns } = await import("@/lib/customers");
+        await ensureHotelStayPartyColumns();
+        const { ensureHotelBookingRoomsTable } = await import("@/server/database/ensure-hotel-booking-rooms");
+        await ensureHotelBookingRoomsTable();
         const [row] = await db
           .select({
             booking: hotelBookings,
@@ -111,14 +110,27 @@ export async function GET(request: NextRequest) {
           .where(and(eq(hotelBookings.id, nid), eq(hotelBookings.companyId, companyId)))
           .limit(1);
         if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
-        const guests = await db
-          .select()
-          .from(hotelBookingGuests)
-          .where(eq(hotelBookingGuests.hotelBookingId, nid));
+        const allocated = await db
+          .select({
+            id: rooms.id,
+            code: rooms.code,
+            name: rooms.name,
+            roomTypeName: roomTypes.name,
+            quantity: hotelBookingRooms.quantity,
+          })
+          .from(hotelBookingRooms)
+          .innerJoin(rooms, eq(hotelBookingRooms.roomId, rooms.id))
+          .leftJoin(roomTypes, eq(rooms.roomTypeId, roomTypes.id))
+          .where(eq(hotelBookingRooms.hotelBookingId, nid));
         return NextResponse.json({
           success: true,
           kind: type,
-          data: { ...row.booking, room: row.room, guests },
+          data: {
+            ...row.booking,
+            room: row.room,
+            rooms: allocated,
+            additionalOccupants: row.booking.additionalOccupants ?? [],
+          },
         });
       }
       case "payment": {
@@ -147,8 +159,14 @@ export async function GET(request: NextRequest) {
           .limit(1);
         if (!order) return NextResponse.json({ error: "Not found" }, { status: 404 });
         const lines = await db
-          .select()
+          .select({
+            itemName: restaurantItems.name,
+            quantity: restaurantOrderItems.quantity,
+            unitPrice: restaurantOrderItems.unitPrice,
+            lineTotal: restaurantOrderItems.lineTotal,
+          })
           .from(restaurantOrderItems)
+          .leftJoin(restaurantItems, eq(restaurantOrderItems.itemId, restaurantItems.id))
           .where(eq(restaurantOrderItems.orderId, nid));
         return NextResponse.json({
           success: true,
@@ -164,8 +182,14 @@ export async function GET(request: NextRequest) {
           .limit(1);
         if (!order) return NextResponse.json({ error: "Not found" }, { status: 404 });
         const lines = await db
-          .select()
+          .select({
+            itemName: barItems.name,
+            quantity: barOrderItems.quantity,
+            unitPrice: barOrderItems.unitPrice,
+            lineTotal: barOrderItems.lineTotal,
+          })
           .from(barOrderItems)
+          .leftJoin(barItems, eq(barOrderItems.itemId, barItems.id))
           .where(eq(barOrderItems.orderId, nid));
         return NextResponse.json({
           success: true,
@@ -177,7 +201,7 @@ export async function GET(request: NextRequest) {
         const [row] = await db
           .select()
           .from(contactSubmissions)
-          .where(eq(contactSubmissions.id, nid))
+          .where(and(eq(contactSubmissions.id, nid), eq(contactSubmissions.companyId, companyId)))
           .limit(1);
         if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
         return NextResponse.json({ success: true, kind: type, data: row });

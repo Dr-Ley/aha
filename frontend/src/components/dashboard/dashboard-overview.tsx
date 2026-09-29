@@ -7,25 +7,31 @@ import {
   CircleDollarSign,
   ClipboardList,
   FileWarning,
+  Wine,
+  UtensilsCrossed,
 } from "lucide-react";
 import { useCompany } from "@/store/company-context";
-import type { TrendPoint, CountryAmount, SafariSlice } from "@/components/dashboard/dashboard-charts";
+import type { TrendPoint, CountryAmount, SafariSlice, ProductSale } from "@/components/dashboard/dashboard-charts";
 import { useCurrency } from "@/lib/currency-context";
 import { formatKesForDisplay } from "@/lib/data";
+import { companyUsesHotelStays, companyUsesRestaurant, companyUsesSafariTours } from "@/types/company";
+
+const chartLoading = (
+  <div className="grid gap-6 lg:grid-cols-2">
+    <div className="skeleton h-72 rounded-2xl lg:col-span-2" />
+    <div className="skeleton h-72 rounded-2xl" />
+    <div className="skeleton h-72 rounded-2xl" />
+  </div>
+);
 
 const DashboardCharts = dynamic(
-  () =>
-    import("@/components/dashboard/dashboard-charts").then((m) => m.DashboardCharts),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="skeleton h-72 rounded-2xl lg:col-span-2" />
-        <div className="skeleton h-72 rounded-2xl" />
-        <div className="skeleton h-72 rounded-2xl" />
-      </div>
-    ),
-  }
+  () => import("@/components/dashboard/dashboard-charts").then((m) => m.DashboardCharts),
+  { ssr: false, loading: () => chartLoading }
+);
+
+const HospitalityCharts = dynamic(
+  () => import("@/components/dashboard/dashboard-charts").then((m) => m.HospitalityCharts),
+  { ssr: false, loading: () => chartLoading }
 );
 
 type OverviewPayload = {
@@ -38,6 +44,27 @@ type OverviewPayload = {
   revenueTrend: TrendPoint[];
   revenueByCountry: CountryAmount[];
   safariDistribution: SafariSlice[];
+  hospitalityKpis: {
+    hotelStays: number;
+    hotelRevenueMonth: number;
+    upcomingArrivals: number;
+    barSales: number;
+    weeklyBarRecords: number;
+    restaurantSales: number;
+  };
+  hotelStayTrend: TrendPoint[];
+  barWeeklySales: { label: string; amount: number }[];
+  barProductSales: ProductSale[];
+  restaurantSalesTrend: TrendPoint[];
+  restaurantProductSales: ProductSale[];
+  recentStays: Array<{
+    id: number;
+    guest: string;
+    checkInDate: string;
+    status: string;
+    paymentStatus: string;
+    totalAmount: number;
+  }>;
   recentBookings: Array<{
     id: number;
     customerName: string;
@@ -84,10 +111,24 @@ export function DashboardOverview() {
         if (cancelled) return;
         setData({
           kpis: json.kpis,
+          hospitalityKpis: json.hospitalityKpis ?? {
+            hotelStays: 0,
+            hotelRevenueMonth: 0,
+            upcomingArrivals: 0,
+            barSales: 0,
+            weeklyBarRecords: 0,
+            restaurantSales: 0,
+          },
           revenueTrend: json.revenueTrend ?? [],
           revenueByCountry: json.revenueByCountry ?? [],
           safariDistribution: json.safariDistribution ?? [],
+          hotelStayTrend: json.hotelStayTrend ?? [],
+          barWeeklySales: json.barWeeklySales ?? [],
+          barProductSales: json.barProductSales ?? [],
+          restaurantSalesTrend: json.restaurantSalesTrend ?? [],
+          restaurantProductSales: json.restaurantProductSales ?? [],
           recentBookings: json.recentBookings ?? [],
+          recentStays: json.recentStays ?? [],
           recentPayments: json.recentPayments ?? [],
         });
       } catch (e) {
@@ -160,59 +201,159 @@ export function DashboardOverview() {
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-xs font-medium text-base-content/60">Total bookings</p>
-            <ClipboardList className="h-4 w-4 text-primary opacity-80" aria-hidden />
+      {companyUsesHotelStays(selectedCompanyId) ? (
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-medium text-base-content/60">Hotel stays</p>
+              <ClipboardList className="h-4 w-4 text-primary opacity-80" aria-hidden />
+            </div>
+            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+              {data.hospitalityKpis.hotelStays}
+            </p>
           </div>
-          <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-            {data.kpis.totalBookings}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-xs font-medium text-base-content/60">Monthly revenue</p>
-            <CircleDollarSign className="h-4 w-4 text-primary opacity-80" aria-hidden />
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-medium text-base-content/60">Hotel revenue this month</p>
+              <CircleDollarSign className="h-4 w-4 text-primary opacity-80" aria-hidden />
+            </div>
+            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+              {formatKesForDisplay(data.hospitalityKpis.hotelRevenueMonth)}
+            </p>
           </div>
-          <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-            {formatKesForDisplay(data.kpis.monthlyRevenue)}
-          </p>
-          <p className="mt-1 text-xs text-base-content/50">From revenue entries this month</p>
-        </div>
-        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-xs font-medium text-base-content/60">Upcoming trips</p>
-            <CalendarRange className="h-4 w-4 text-primary opacity-80" aria-hidden />
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-medium text-base-content/60">Bar sales</p>
+              <Wine className="h-4 w-4 text-primary opacity-80" aria-hidden />
+            </div>
+            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+              {formatKesForDisplay(data.hospitalityKpis.barSales)}
+            </p>
+            <p className="mt-1 text-xs text-base-content/50">
+              {selectedCompanyId === "ewc"
+                ? `${data.hospitalityKpis.weeklyBarRecords} weekly records`
+                : `${data.hospitalityKpis.weeklyBarRecords} bar orders`}
+            </p>
           </div>
-          <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-            {data.kpis.upcomingTrips}
-          </p>
-          <p className="mt-1 text-xs text-base-content/50">Non-cancelled, start on or after today</p>
+          {companyUsesRestaurant(selectedCompanyId) ? (
+            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-xs font-medium text-base-content/60">Restaurant sales</p>
+                <UtensilsCrossed className="h-4 w-4 text-primary opacity-80" aria-hidden />
+              </div>
+              <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+                {formatKesForDisplay(data.hospitalityKpis.restaurantSales)}
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-xs font-medium text-base-content/60">Upcoming arrivals</p>
+                <CalendarRange className="h-4 w-4 text-primary opacity-80" aria-hidden />
+              </div>
+              <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+                {data.hospitalityKpis.upcomingArrivals}
+              </p>
+              <p className="mt-1 text-xs text-base-content/50">Check-in on or after today</p>
+            </div>
+          )}
         </div>
-        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-xs font-medium text-base-content/60">Unpaid invoices</p>
-            <FileWarning className="h-4 w-4 text-accent opacity-90" aria-hidden />
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-medium text-base-content/60">Total bookings</p>
+              <ClipboardList className="h-4 w-4 text-primary opacity-80" aria-hidden />
+            </div>
+            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+              {data.kpis.totalBookings}
+            </p>
           </div>
-          <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-            {data.kpis.unpaidInvoices}
-          </p>
-          <p className="mt-1 text-xs text-base-content/50">Bookings unpaid or partially paid</p>
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-medium text-base-content/60">Monthly revenue</p>
+              <CircleDollarSign className="h-4 w-4 text-primary opacity-80" aria-hidden />
+            </div>
+            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+              {formatKesForDisplay(data.kpis.monthlyRevenue)}
+            </p>
+            <p className="mt-1 text-xs text-base-content/50">From revenue entries this month</p>
+          </div>
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-medium text-base-content/60">Upcoming trips</p>
+              <CalendarRange className="h-4 w-4 text-primary opacity-80" aria-hidden />
+            </div>
+            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+              {data.kpis.upcomingTrips}
+            </p>
+            <p className="mt-1 text-xs text-base-content/50">Non-cancelled, start on or after today</p>
+          </div>
+          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-medium text-base-content/60">Unpaid invoices</p>
+              <FileWarning className="h-4 w-4 text-accent opacity-90" aria-hidden />
+            </div>
+            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
+              {data.kpis.unpaidInvoices}
+            </p>
+            <p className="mt-1 text-xs text-base-content/50">Bookings unpaid or partially paid</p>
+          </div>
         </div>
-      </div>
+      )}
 
-      <DashboardCharts
-        revenueTrend={data.revenueTrend}
-        revenueByCountry={data.revenueByCountry}
-        safariDistribution={data.safariDistribution}
-      />
+      {companyUsesHotelStays(selectedCompanyId) ? (
+        <HospitalityCharts
+          hotelStayTrend={data.hotelStayTrend}
+          barWeeklySales={data.barWeeklySales}
+          barProductSales={data.barProductSales}
+          restaurantSalesTrend={data.restaurantSalesTrend}
+          restaurantProductSales={data.restaurantProductSales}
+          showRestaurant={companyUsesRestaurant(selectedCompanyId)}
+          barTrendTitle={selectedCompanyId === "ewc" ? "Weekly bar sales" : "Bar sales"}
+        />
+      ) : (
+        <DashboardCharts
+          revenueTrend={data.revenueTrend}
+          revenueByCountry={data.revenueByCountry}
+          safariDistribution={data.safariDistribution}
+        />
+      )}
+
+      {companyUsesSafariTours(selectedCompanyId) && companyUsesHotelStays(selectedCompanyId) ? (
+        <DashboardCharts
+          revenueTrend={data.revenueTrend}
+          revenueByCountry={data.revenueByCountry}
+          safariDistribution={data.safariDistribution}
+        />
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-base-content">Recent bookings</h2>
+          <h2 className="text-sm font-semibold text-base-content">
+            {companyUsesHotelStays(selectedCompanyId) ? "Recent stays" : "Recent bookings"}
+          </h2>
           <ul className="mt-4 divide-y divide-base-content/10">
-            {data.recentBookings.length === 0 ? (
+            {companyUsesHotelStays(selectedCompanyId) ? (
+              data.recentStays.length === 0 ? (
+                <li className="py-6 text-center text-sm text-base-content/50">No hotel stays yet.</li>
+              ) : (
+                data.recentStays.map((s) => (
+                  <li key={s.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
+                    <div>
+                      <p className="font-medium text-base-content">{s.guest}</p>
+                      <p className="text-xs text-base-content/60">{formatKesForDisplay(s.totalAmount)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-base-content/50">{s.checkInDate}</p>
+                      <p className="text-xs capitalize text-base-content/70">
+                        {s.status} · {s.paymentStatus}
+                      </p>
+                    </div>
+                  </li>
+                ))
+              )
+            ) : data.recentBookings.length === 0 ? (
               <li className="py-6 text-center text-sm text-base-content/50">No bookings yet.</li>
             ) : (
               data.recentBookings.map((b) => (

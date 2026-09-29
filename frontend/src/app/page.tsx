@@ -18,8 +18,7 @@ import {
 } from "lucide-react";
 import { Container, Section } from "@/components/layout";
 import { TourCard } from "@/components/tour-card";
-import { testimonials } from "@/lib/data";
-import type { Tour } from "@/lib/data";
+import type { Tour, Testimonial } from "@/lib/data";
 
 const testimonialSources = [
   { name: "Tripadvisor", logo: "/tripadvisorpartner.png" },
@@ -233,7 +232,7 @@ function FeaturedToursSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("/api/tours")
+    fetch("/api/tours?companyId=aha")
       .then((res) => res.json())
       .then((data: Tour[]) => {
         if (Array.isArray(data)) {
@@ -595,6 +594,26 @@ const testimonialTourCite: Record<string, string> = {
 };
 
 function TestimonialsSection() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchTestimonials() {
+      try {
+        const response = await fetch("/api/testimonials?companyId=aha");
+        const data = await response.json();
+        if (data.success && Array.isArray(data.testimonials)) {
+          setTestimonials(data.testimonials.slice(0, 6));
+        }
+      } catch {
+        /* section stays empty on failure */
+      } finally {
+        setLoading(false);
+      }
+    }
+    void fetchTestimonials();
+  }, []);
+
   return (
     <Section variant="secondary">
       <Container>
@@ -609,13 +628,18 @@ function TestimonialsSection() {
 
         {/* Horizontal scrollable testimonials */}
         <div className="mt-12 relative">
+          {loading ? (
+            <p className="text-center text-base-content/60">Loading testimonials...</p>
+          ) : testimonials.length === 0 ? (
+            <p className="text-center text-base-content/60">No testimonials yet.</p>
+          ) : (
           <div
             className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-1"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {testimonials.slice(0, 6).map((t, index) => {
+            {testimonials.map((t, index) => {
               const source = testimonialSources[index % testimonialSources.length];
-              const tourSlug = testimonialTourCite[t.tour];
+              const tourSlug = t.tourSlug ?? testimonialTourCite[t.tour];
               const cite = tourSlug
                 ? `https://africanhomeadventure.com/tours/${tourSlug}`
                 : "https://africanhomeadventure.com/tours";
@@ -673,6 +697,7 @@ function TestimonialsSection() {
               );
             })}
           </div>
+          )}
 
           {/* Scroll hint for mobile */}
           <div className="mt-2 text-center text-sm text-base-content/50 lg:hidden">

@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Plus, Pencil, Trash2, Search, CheckCircle, Calendar, AlertTriangle } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, CheckCircle, Calendar, AlertTriangle, Printer } from "lucide-react";
+import { InvoicePrintButton } from "@/components/documents/invoice-print-button";
 import { useCompany } from "@/store/company-context";
 import { companyUsesSafariTours } from "@/types/company";
 import { DashboardModal } from "@/components/dashboard/dashboard-modal";
@@ -21,21 +22,37 @@ import {
   paymentStatusSelectAccentClass,
 } from "@/lib/dashboard-status-badges";
 import { cn } from "@/lib/utils";
+import { normalizeTravellerCounts, travellerCountsLabel, travellerHeadcount } from "@/lib/travellers";
+import { costStackKindLabel, priceLineLabel, quoteCostStack, quoteTourSafariPackage, BOOKING_KINDS, bookingKindLabel, type BookingKind, resolveBookingKind } from "@/lib/pricing";
 
-type TourRow = { id: number; title: string; slug: string };
+type TourRow = {
+  id: number;
+  title: string;
+  slug: string;
+  price: number;
+  childPrice?: number;
+  infantPrice?: number;
+  days: number;
+  countries: string[];
+};
 type BookingRow = {
   id: number;
   firstName: string;
   lastName: string | null;
   email: string;
   phone: string | null;
+  /** Guest nationality (bookings.country). */
   country: string | null;
   safariPackage: string | null;
+  /** Destination country (bookings.trip_country). */
   tripCountry: "Kenya" | "Tanzania" | null;
   startDate: string | null;
   endDate: string | null;
   travelDate: string;
   guests: number;
+  adults?: number;
+  children?: number;
+  infants?: number;
   status: string;
   paymentStatus: string;
   totalPrice: number | null;
@@ -48,14 +65,38 @@ type BookingRow = {
   accommodation: string;
   transport: string;
   specialRequests: string | null;
+  voucherToCompany?: string | null;
   pricePerPerson: number | null;
+  pricingSource?: string | null;
+  bookingKind?: string | null;
+  costStack?: {
+    markupPercent?: number;
+    accommodation?: number | null;
+    transport?: number | null;
+    parkFees?: number | null;
+    transfers?: number | null;
+    activities?: number | null;
+    other?: number | null;
+    quote?: {
+      costTotal?: number;
+      markupAmount?: number;
+      sellingPrice?: number;
+      lines?: { kind: string; amount: number; label?: string }[];
+    };
+  } | null;
+  components?: Array<{
+    type: string;
+    cost: number;
+    sequence?: number;
+    config?: { label?: string } | null;
+  }> | null;
+  currentVersion?: number | null;
 };
 
 const STATUS_OPTS = ["pending", "confirmed", "cancelled", "completed", "refunded"] as const;
 const PAY_OPTS = ["unpaid", "partial", "paid"] as const;
 
 const exportColumns: ExportColumn<BookingRow>[] = [
-  { key: "id", header: "ID", value: (b) => b.id },
   { key: "guest", header: "Guest", value: customerName },
   { key: "email", header: "Email", value: (b) => b.email },
   { key: "phone", header: "Phone", value: (b) => b.phone },
@@ -69,6 +110,15 @@ const exportColumns: ExportColumn<BookingRow>[] = [
   { key: "rate", header: "Rate to KES", value: (b) => b.exchangeRateToKes },
 ];
 
+function bookingTravellers(b: BookingRow) {
+  return normalizeTravellerCounts({
+    adults: b.adults,
+    children: b.children,
+    infants: b.infants,
+    guests: b.guests,
+  });
+}
+
 function customerName(b: BookingRow) {
   return [b.firstName, b.lastName].filter(Boolean).join(" ").trim() || b.email;
 }
@@ -77,10 +127,52 @@ function bookingStartYmd(b: BookingRow): string {
   return (b.startDate || b.travelDate || "").slice(0, 10);
 }
 
+function costFieldsFromBooking(b: BookingRow) {
+  const sums: Record<string, number> = {
+    accommodation: 0,
+    transport: 0,
+    park_fee: 0,
+    activity: 0,
+    transfer: 0,
+    other: 0,
+  };
+  for (const row of b.components ?? []) {
+    if (row.type in sums) sums[row.type] += Math.round(Number(row.cost) || 0);
+  }
+  const stack = b.costStack;
+  return {
+    costAccommodation:
+      sums.accommodation || stack?.accommodation != null ? String(sums.accommodation || stack?.accommodation) : "",
+    costTransport:
+      sums.transport || stack?.transport != null ? String(sums.transport || stack?.transport) : "",
+    costParkFees: sums.park_fee || stack?.parkFees != null ? String(sums.park_fee || stack?.parkFees) : "",
+    costTransfers: sums.transfer || stack?.transfers != null ? String(sums.transfer || stack?.transfers) : "",
+    costActivities: sums.activity || stack?.activities != null ? String(sums.activity || stack?.activities) : "",
+    costOther: sums.other || stack?.other != null ? String(sums.other || stack?.other) : "",
+    markupPercent: stack?.markupPercent != null ? String(stack.markupPercent) : "20",
+  };
+}
+
 function formatOriginalBookingAmount(b: BookingRow): string | null {
   if (b.originalAmount == null) return null;
   const currency = getCurrencyByCode(b.originalCurrency ?? "KES");
   return `${currency.symbol}${Math.round(b.originalAmount).toLocaleString()} ${currency.code}`;
+}
+
+function inferTripCountryFromTour(countries: string[]): "Kenya" | "Tanzania" {
+  for (let i = countries.length - 1; i >= 0; i--) {
+    const n = countries[i].toLowerCase();
+    if (n.includes("tanzania")) return "Tanzania";
+    if (n.includes("kenya")) return "Kenya";
+  }
+  return "Kenya";
+}
+
+function addDaysIsoClient(start: string, daysToAdd: number): string {
+  const d = new Date(`${start}T12:00:00.000Z`);
+  if (Number.isNaN(d.getTime())) return start;
+  d.setUTCDate(d.getUTCDate() + daysToAdd);
+  return d.toISOString().slice(0, 10);
 }
 
 export function BookingsPanel() {
@@ -119,7 +211,9 @@ export function BookingsPanel() {
     travelDate: "",
     startDate: "",
     endDate: "",
-    guests: "2",
+    adults: "2",
+    children: "0",
+    infants: "0",
     safariPackage: "",
     tripCountry: "Kenya" as "Kenya" | "Tanzania",
     totalPrice: "",
@@ -130,7 +224,17 @@ export function BookingsPanel() {
     accommodation: "mid-range" as "budget" | "mid-range" | "semi-luxury" | "luxury",
     transport: "4x4-landcruiser" as "4x4-landcruiser" | "safari-van",
     specialRequests: "",
+    voucherToCompany: "",
     pricePerPerson: "",
+    pricingSource: "manual" as "package" | "manual" | "cost_stack",
+    bookingKind: "predefined_safari" as BookingKind,
+    costAccommodation: "",
+    costTransport: "",
+    costParkFees: "",
+    costTransfers: "",
+    costActivities: "",
+    costOther: "",
+    markupPercent: "20",
   };
   const [form, setForm] = useState(emptyForm);
 
@@ -169,15 +273,193 @@ export function BookingsPanel() {
   }, [load]);
 
   const loadTours = useCallback(async () => {
-    if (tours.length) return;
     try {
-      const res = await fetch("/api/tours");
+      const res = await fetch(`/api/tours?companyId=${encodeURIComponent(selectedCompanyId)}`);
       const data = await res.json();
-      if (Array.isArray(data)) setTours(data.map((t: TourRow) => ({ id: t.id, title: t.title, slug: t.slug })));
+      if (Array.isArray(data)) {
+        setTours(
+          data.map(
+            (t: {
+              id: string | number;
+              title: string;
+              slug: string;
+              price: number;
+              childPrice?: number;
+              infantPrice?: number;
+              days?: number;
+              countries?: string[];
+            }) => ({
+              id: typeof t.id === "number" ? t.id : parseInt(String(t.id), 10),
+              title: t.title,
+              slug: t.slug,
+              price: Number(t.price) || 0,
+              childPrice: t.childPrice,
+              infantPrice: t.infantPrice,
+              days: Number(t.days) || 1,
+              countries: Array.isArray(t.countries) ? t.countries : [],
+            })
+          )
+        );
+      }
     } catch {
-      /* ignore */
+      setTours([]);
     }
-  }, [tours.length]);
+  }, [selectedCompanyId]);
+
+  const selectedTour = useMemo(
+    () => tours.find((t) => String(t.id) === form.tourId) ?? null,
+    [tours, form.tourId]
+  );
+
+  const packageQuote = useMemo(() => {
+    if (!selectedTour) return null;
+    return quoteTourSafariPackage(
+      {
+        price: selectedTour.price,
+        childPrice: selectedTour.childPrice,
+        infantPrice: selectedTour.infantPrice,
+      },
+      normalizeTravellerCounts({
+        adults: parseInt(form.adults, 10) || 0,
+        children: parseInt(form.children, 10) || 0,
+        infants: parseInt(form.infants, 10) || 0,
+      }),
+      "KES"
+    );
+  }, [selectedTour, form.adults, form.children, form.infants]);
+
+  const costStackQuote = useMemo(
+    () =>
+      quoteCostStack({
+        currency: "KES",
+        markupPercent: parseInt(form.markupPercent, 10) || 0,
+        lines: [
+          { kind: "accommodation", amount: parseInt(form.costAccommodation, 10) || 0 },
+          { kind: "transport", amount: parseInt(form.costTransport, 10) || 0 },
+          { kind: "park_fees", amount: parseInt(form.costParkFees, 10) || 0 },
+          { kind: "transfers", amount: parseInt(form.costTransfers, 10) || 0 },
+          { kind: "activities", amount: parseInt(form.costActivities, 10) || 0 },
+          { kind: "other", amount: parseInt(form.costOther, 10) || 0 },
+        ],
+      }),
+    [
+      form.markupPercent,
+      form.costAccommodation,
+      form.costTransport,
+      form.costParkFees,
+      form.costTransfers,
+      form.costActivities,
+      form.costOther,
+    ]
+  );
+
+  function costStackPayload() {
+    return {
+      markupPercent: parseInt(form.markupPercent, 10) || 0,
+      accommodation: form.costAccommodation.trim() ? parseInt(form.costAccommodation, 10) : null,
+      transport: form.costTransport.trim() ? parseInt(form.costTransport, 10) : null,
+      parkFees: form.costParkFees.trim() ? parseInt(form.costParkFees, 10) : null,
+      transfers: form.costTransfers.trim() ? parseInt(form.costTransfers, 10) : null,
+      activities: form.costActivities.trim() ? parseInt(form.costActivities, 10) : null,
+      other: form.costOther.trim() ? parseInt(form.costOther, 10) : null,
+    };
+  }
+
+  function componentsPayload() {
+    return [
+      { type: "accommodation" as const, cost: parseInt(form.costAccommodation, 10) || 0, sequence: 0 },
+      { type: "transport" as const, cost: parseInt(form.costTransport, 10) || 0, sequence: 1 },
+      { type: "park_fee" as const, cost: parseInt(form.costParkFees, 10) || 0, sequence: 2 },
+      { type: "transfer" as const, cost: parseInt(form.costTransfers, 10) || 0, sequence: 3 },
+      { type: "activity" as const, cost: parseInt(form.costActivities, 10) || 0, sequence: 4 },
+      { type: "other" as const, cost: parseInt(form.costOther, 10) || 0, sequence: 5 },
+    ].filter((row) => row.cost > 0);
+  }
+
+  function applyCostStackToForm() {
+    if (costStackQuote.costTotal <= 0) return;
+    setForm((prev) => ({
+      ...prev,
+      totalPrice: String(costStackQuote.sellingPrice),
+      pricePerPerson: "",
+      pricingSource: "cost_stack",
+      bookingKind: "customized_safari",
+      tourId: "",
+    }));
+  }
+
+  function applyPackageQuoteToForm(tour: TourRow, adults: string, children: string, infants: string) {
+    const quote = quoteTourSafariPackage(
+      {
+        price: tour.price,
+        childPrice: tour.childPrice,
+        infantPrice: tour.infantPrice,
+      },
+      normalizeTravellerCounts({
+        adults: parseInt(adults, 10) || 0,
+        children: parseInt(children, 10) || 0,
+        infants: parseInt(infants, 10) || 0,
+      }),
+      "KES"
+    );
+    const adultUnit = quote.lines.find((line) => line.kind === "adult")?.unitAmount;
+    return {
+      totalPrice: String(quote.sellingPrice),
+      pricePerPerson: adultUnit != null ? String(adultUnit) : "",
+      pricingSource: "package" as const,
+    };
+  }
+
+  function selectTour(tourIdValue: string) {
+    if (!tourIdValue) {
+      setForm((prev) => ({ ...prev, tourId: "", pricingSource: "manual" }));
+      return;
+    }
+    const tour = tours.find((t) => String(t.id) === tourIdValue);
+    if (!tour) {
+      setForm((prev) => ({ ...prev, tourId: tourIdValue }));
+      return;
+    }
+    setForm((prev) => {
+      const priced = applyPackageQuoteToForm(tour, prev.adults, prev.children, prev.infants);
+      const start = prev.startDate || prev.travelDate;
+      return {
+        ...prev,
+        tourId: tourIdValue,
+        safariPackage: tour.title,
+        tripCountry: inferTripCountryFromTour(tour.countries),
+        endDate: start ? addDaysIsoClient(start, Math.max(0, tour.days - 1)) : prev.endDate,
+        bookingKind: "predefined_safari",
+        ...priced,
+      };
+    });
+  }
+
+  useEffect(() => {
+    if (form.pricingSource !== "package" || !selectedTour) return;
+    const priced = applyPackageQuoteToForm(selectedTour, form.adults, form.children, form.infants);
+    setForm((prev) => {
+      if (
+        prev.totalPrice === priced.totalPrice &&
+        prev.pricePerPerson === priced.pricePerPerson &&
+        prev.pricingSource === "package"
+      ) {
+        return prev;
+      }
+      return { ...prev, ...priced };
+    });
+    // Only re-quote when travellers change while package pricing is active.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- selectedTour/tour changes handled by selectTour
+  }, [form.adults, form.children, form.infants, form.pricingSource, selectedTour]);
+
+  useEffect(() => {
+    if (form.pricingSource !== "cost_stack" || costStackQuote.costTotal <= 0) return;
+    const nextTotal = String(costStackQuote.sellingPrice);
+    setForm((prev) => {
+      if (prev.totalPrice === nextTotal && prev.pricingSource === "cost_stack") return prev;
+      return { ...prev, totalPrice: nextTotal, pricePerPerson: "", pricingSource: "cost_stack" };
+    });
+  }, [form.pricingSource, costStackQuote.costTotal, costStackQuote.sellingPrice]);
 
   const filtered = useMemo(() => {
     return rows.filter((b) => {
@@ -261,7 +543,9 @@ export function BookingsPanel() {
       travelDate: b.travelDate,
       startDate: b.startDate ?? b.travelDate,
       endDate: b.endDate ?? "",
-      guests: String(b.guests),
+      adults: String(b.adults ?? b.guests ?? 1),
+      children: String(b.children ?? 0),
+      infants: String(b.infants ?? 0),
       safariPackage: b.safariPackage ?? "",
       tripCountry: (b.tripCountry as "Kenya" | "Tanzania") ?? "Kenya",
       totalPrice: b.totalPrice != null ? String(b.totalPrice) : "",
@@ -272,7 +556,18 @@ export function BookingsPanel() {
       accommodation: (b.accommodation as "budget" | "mid-range" | "luxury") ?? "mid-range",
       transport: (b.transport as "4x4-landcruiser" | "safari-van") ?? "4x4-landcruiser",
       specialRequests: b.specialRequests ?? "",
+      voucherToCompany: b.voucherToCompany ?? "",
       pricePerPerson: b.pricePerPerson != null ? String(b.pricePerPerson) : "",
+      pricingSource:
+        b.pricingSource === "package" || b.pricingSource === "cost_stack" || b.pricingSource === "manual"
+          ? b.pricingSource
+          : "manual",
+      bookingKind: resolveBookingKind({
+        bookingKind: b.bookingKind,
+        pricingSource: b.pricingSource,
+        tourId: b.tourId,
+      }),
+      ...costFieldsFromBooking(b),
     });
     setModal("edit");
     void loadTours();
@@ -296,17 +591,33 @@ export function BookingsPanel() {
           travelDate: form.travelDate,
           startDate: form.startDate || form.travelDate,
           endDate: form.endDate || null,
-          guests: parseInt(form.guests, 10),
+          adults: parseInt(form.adults, 10) || 0,
+          children: parseInt(form.children, 10) || 0,
+          infants: parseInt(form.infants, 10) || 0,
+          guests: travellerHeadcount(
+            normalizeTravellerCounts({
+              adults: parseInt(form.adults, 10) || 0,
+              children: parseInt(form.children, 10) || 0,
+              infants: parseInt(form.infants, 10) || 0,
+            })
+          ),
           safariPackage: form.safariPackage,
           tripCountry: form.tripCountry,
           totalPrice: form.totalPrice ? parseInt(form.totalPrice, 10) : null,
+          originalCurrency: "KES",
+          pricingSource: form.pricingSource,
+          bookingKind: form.bookingKind,
           tourId: form.tourId ? parseInt(form.tourId, 10) : null,
           status: form.status,
           paymentStatus: form.paymentStatus,
           accommodation: form.accommodation,
           transport: form.transport,
           specialRequests: form.specialRequests.trim() || null,
+          voucherToCompany: form.voucherToCompany.trim() || null,
           pricePerPerson: form.pricePerPerson.trim() ? parseInt(form.pricePerPerson, 10) : null,
+          ...(form.pricingSource === "cost_stack"
+            ? { costStack: costStackPayload(), components: componentsPayload() }
+            : {}),
         }),
       });
       const data = await res.json();
@@ -340,17 +651,33 @@ export function BookingsPanel() {
           travelDate: form.travelDate,
           startDate: form.startDate || form.travelDate,
           endDate: form.endDate || null,
-          guests: parseInt(form.guests, 10),
+          adults: parseInt(form.adults, 10) || 0,
+          children: parseInt(form.children, 10) || 0,
+          infants: parseInt(form.infants, 10) || 0,
+          guests: travellerHeadcount(
+            normalizeTravellerCounts({
+              adults: parseInt(form.adults, 10) || 0,
+              children: parseInt(form.children, 10) || 0,
+              infants: parseInt(form.infants, 10) || 0,
+            })
+          ),
           safariPackage: form.safariPackage,
           tripCountry: form.tripCountry,
           totalPrice: form.totalPrice ? parseInt(form.totalPrice, 10) : null,
+          originalCurrency: "KES",
+          pricingSource: form.pricingSource,
+          bookingKind: form.bookingKind,
           tourId: form.tourId ? parseInt(form.tourId, 10) : null,
           status: form.status,
           paymentStatus: form.paymentStatus,
           accommodation: form.accommodation,
           transport: form.transport,
           specialRequests: form.specialRequests.trim() || null,
+          voucherToCompany: form.voucherToCompany.trim() || null,
           pricePerPerson: form.pricePerPerson.trim() ? parseInt(form.pricePerPerson, 10) : null,
+          ...(form.pricingSource === "cost_stack"
+            ? { costStack: costStackPayload(), components: componentsPayload() }
+            : {}),
         }),
       });
       const data = await res.json();
@@ -394,6 +721,83 @@ export function BookingsPanel() {
     await load();
     showToast("Booking deleted successfully", "success");
   }
+
+  const costField = (
+    key:
+      | "costAccommodation"
+      | "costTransport"
+      | "costParkFees"
+      | "costTransfers"
+      | "costActivities"
+      | "costOther"
+      | "markupPercent",
+    label: string
+  ) => (
+    <label key={key} className="form-control gap-1">
+      <span className="label-text text-xs font-medium">{label}</span>
+      <input
+        type="number"
+        min={0}
+        className="input input-bordered input-sm rounded-md"
+        style={inputStyle}
+        value={form[key]}
+        onChange={(e) =>
+          setForm({
+            ...form,
+            [key]: e.target.value,
+            pricingSource: form.pricingSource === "package" ? "manual" : form.pricingSource === "cost_stack" ? "cost_stack" : form.pricingSource,
+          })
+        }
+      />
+    </label>
+  );
+
+  const costStackEditor = (
+    <div className="sm:col-span-2 rounded-lg border border-dashed border-base-content/20 p-3 text-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <p className="font-medium">Booking components (custom safari)</p>
+          <p className="text-xs text-base-content/60">
+            Each line is stored as its own component. Markup is applied, then the selling price rounds up to the nearest 10.
+            {form.pricingSource === "cost_stack" ? " Applied." : ""}
+          </p>
+        </div>
+        <button
+          type="button"
+          className="btn btn-outline btn-xs"
+          disabled={costStackQuote.costTotal <= 0}
+          onClick={applyCostStackToForm}
+        >
+          Apply cost stack
+        </button>
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {costField("costAccommodation", costStackKindLabel("accommodation"))}
+        {costField("costTransport", costStackKindLabel("transport"))}
+        {costField("costParkFees", costStackKindLabel("park_fees"))}
+        {costField("costTransfers", costStackKindLabel("transfers"))}
+        {costField("costActivities", costStackKindLabel("activities"))}
+        {costField("costOther", costStackKindLabel("other"))}
+        {costField("markupPercent", "Markup %")}
+      </div>
+      {costStackQuote.costTotal > 0 ? (
+        <ul className="mt-3 space-y-1 text-base-content/70">
+          <li className="flex justify-between gap-4">
+            <span>Cost total</span>
+            <span>{formatKesForDisplay(costStackQuote.costTotal)}</span>
+          </li>
+          <li className="flex justify-between gap-4">
+            <span>Markup ({costStackQuote.markupPercent}%)</span>
+            <span>{formatKesForDisplay(costStackQuote.markupAmount)}</span>
+          </li>
+          <li className="flex justify-between gap-4 border-t border-base-content/10 pt-1 font-medium text-base-content">
+            <span>Selling price</span>
+            <span>{formatKesForDisplay(costStackQuote.sellingPrice)}</span>
+          </li>
+        </ul>
+      ) : null}
+    </div>
+  );
 
   if (!companyUsesSafariTours(selectedCompanyId)) {
     return (
@@ -464,10 +868,9 @@ export function BookingsPanel() {
                       <a href={`#booking-${b.id}`} className="font-medium text-primary hover:underline">
                         {customerName(b)}
                       </a>
-                      <span className="text-base-content/50"> · #{b.id}</span>
                       <div className="text-xs text-base-content/60">
-                        {bookingStartYmd(b)} · {b.safariPackage ?? b.tour?.title ?? "—"} · {b.guests} guests ·{" "}
-                        {b.paymentStatus}
+                        {bookingStartYmd(b)} · {b.safariPackage ?? b.tour?.title ?? "—"} ·{" "}
+                        {travellerCountsLabel(bookingTravellers(b))} · {b.paymentStatus}
                       </div>
                     </li>
                   ))}
@@ -485,9 +888,9 @@ export function BookingsPanel() {
                       <a href={`#booking-${b.id}`} className="font-medium text-primary hover:underline">
                         {customerName(b)}
                       </a>
-                      <span className="text-base-content/50"> · #{b.id}</span>
                       <div className="text-xs text-base-content/60">
-                        Start {bookingStartYmd(b)} · {b.safariPackage ?? b.tour?.title ?? "—"} · {b.guests} guests
+                        Start {bookingStartYmd(b)} · {b.safariPackage ?? b.tour?.title ?? "—"} ·{" "}
+                        {travellerCountsLabel(bookingTravellers(b))}
                       </div>
                     </li>
                   ))}
@@ -542,7 +945,6 @@ export function BookingsPanel() {
         <table className="table table-sm">
           <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
             <tr>
-              <th className="align-top">ID</th>
               <th className="align-top">Guest</th>
               <th className="align-top">Package</th>
               <th className="align-top normal-case font-normal">
@@ -626,13 +1028,13 @@ export function BookingsPanel() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={9} className="py-12 text-center text-base-content/50">
+                <td colSpan={8} className="py-12 text-center text-base-content/50">
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
             ) : sortedFiltered.length === 0 ? (
               <tr>
-                <td colSpan={9} className="py-10 text-center text-sm text-base-content/50">
+                <td colSpan={8} className="py-10 text-center text-sm text-base-content/50">
                   {rows.length === 0 ? "No bookings yet." : "No bookings match filters."}
                 </td>
               </tr>
@@ -644,7 +1046,6 @@ export function BookingsPanel() {
                   className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
                   onClick={() => setViewId(b.id)}
                 >
-                  <td className="font-mono text-xs">{b.id}</td>
                   <td>
                     <div className="font-medium">{customerName(b)}</div>
                     <div className="text-xs text-base-content/50">{b.email}</div>
@@ -695,6 +1096,22 @@ export function BookingsPanel() {
                     ) : null}
                   </td>
                   <td className=" gap-1">
+                    <a
+                      className="btn btn-ghost btn-xs btn-square"
+                      href={`/print/booking-voucher/${b.id}?companyId=${encodeURIComponent(selectedCompanyId)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="Print booking voucher"
+                      title="Print booking voucher"
+                    >
+                      <Printer className="h-3.5 w-3.5" />
+                    </a>
+                    <InvoicePrintButton
+                      companyId={selectedCompanyId}
+                      referenceType="tour"
+                      referenceId={b.id}
+                    />
                     <button
                       type="button"
                       className="btn btn-ghost btn-xs btn-square"
@@ -813,18 +1230,44 @@ export function BookingsPanel() {
               onChange={(e) => setForm({ ...form, endDate: e.target.value })}
             />
           </label>
-          <label className="form-control gap-2">
-            <span className="label-text text-sm font-medium">Guests</span>
-            <input
-              type="number"
-              min={1}
-              className="input input-bordered input-sm rounded-md"
-              style={inputStyle}
-              required
-              value={form.guests}
-              onChange={(e) => setForm({ ...form, guests: e.target.value })}
-            />
-          </label>
+          <div className="grid grid-cols-3 gap-2">
+            <label className="form-control gap-2">
+              <span className="label-text text-sm font-medium">Adults</span>
+              <input
+                type="number"
+                min={0}
+                className="input input-bordered input-sm rounded-md"
+                style={inputStyle}
+                required
+                value={form.adults}
+                onChange={(e) => setForm({ ...form, adults: e.target.value })}
+              />
+            </label>
+            <label className="form-control gap-2">
+              <span className="label-text text-sm font-medium">Children</span>
+              <input
+                type="number"
+                min={0}
+                className="input input-bordered input-sm rounded-md"
+                style={inputStyle}
+                required
+                value={form.children}
+                onChange={(e) => setForm({ ...form, children: e.target.value })}
+              />
+            </label>
+            <label className="form-control gap-2">
+              <span className="label-text text-sm font-medium">Infants</span>
+              <input
+                type="number"
+                min={0}
+                className="input input-bordered input-sm rounded-md"
+                style={inputStyle}
+                required
+                value={form.infants}
+                onChange={(e) => setForm({ ...form, infants: e.target.value })}
+              />
+            </label>
+          </div>
           <label className="form-control gap-2">
             <span className="label-text text-sm font-medium">Accommodation</span>
             <select
@@ -865,6 +1308,16 @@ export function BookingsPanel() {
             />
           </label>
           <label className="form-control gap-2 sm:col-span-2">
+            <span className="label-text text-sm font-medium">Voucher to (company / supplier)</span>
+            <input
+              className="input input-bordered input-sm rounded-md w-full"
+              style={inputStyle}
+              placeholder="Lodge, camp, or supplier on the booking voucher"
+              value={form.voucherToCompany}
+              onChange={(e) => setForm({ ...form, voucherToCompany: e.target.value })}
+            />
+          </label>
+          <label className="form-control gap-2 sm:col-span-2">
             <span className="label-text text-sm font-medium">Safari package</span>
             <input
               className="input input-bordered input-sm rounded-md w-full"
@@ -886,48 +1339,15 @@ export function BookingsPanel() {
               <option value="Tanzania">Tanzania</option>
             </select>
           </label>
-          <label className="form-control gap-2">
-            <span className="label-text text-sm font-medium">Price per person (optional)</span>
-            <input
-              type="number"
-              min={0}
-              className="input input-bordered input-sm rounded-md"
-              style={inputStyle}
-              value={form.pricePerPerson}
-              onChange={(e) => setForm({ ...form, pricePerPerson: e.target.value })}
-            />
-          </label>
-          <div className="form-control sm:col-span-2 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-end">
-            <label className="form-control gap-2">
-              <span className="label-text text-sm font-medium">Total price</span>
-              <input
-                type="number"
-                min={0}
-                className="input input-bordered input-sm rounded-md"
-                style={inputStyle}
-                value={form.totalPrice}
-                onChange={(e) => setForm({ ...form, totalPrice: e.target.value })}
-              />
-            </label>
-            <label className="form-control gap-2 w-full sm:w-[110px]">
-              <span className="label-text text-sm font-medium">Currency</span>
-              <input
-                className="input input-bordered input-sm rounded-md w-full"
-                style={inputStyle}
-                value="KES"
-                readOnly
-              />
-            </label>
-          </div>
           <label className="form-control gap-2 sm:col-span-2">
             <span className="label-text text-sm font-medium">Link tour (optional)</span>
             <select
               className="select select-bordered select-sm rounded-md w-full"
               style={inputStyle}
               value={form.tourId}
-              onChange={(e) => setForm({ ...form, tourId: e.target.value })}
+              onChange={(e) => selectTour(e.target.value)}
             >
-              <option value="">None</option>
+              <option value="">None — enter a package name above</option>
               {tours.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.title}
@@ -935,6 +1355,105 @@ export function BookingsPanel() {
               ))}
             </select>
           </label>
+          {selectedTour && packageQuote ? (
+            <div className="sm:col-span-2 rounded-lg border border-base-content/10 bg-base-200/40 p-3 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="font-medium">
+                  Package quote{" "}
+                  <span className="text-base-content/60">
+                    ({form.pricingSource === "package" ? "applied" : "available"})
+                  </span>
+                </p>
+                {form.pricingSource !== "package" ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-xs"
+                    onClick={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        ...applyPackageQuoteToForm(selectedTour, prev.adults, prev.children, prev.infants),
+                      }))
+                    }
+                  >
+                    Apply package quote
+                  </button>
+                ) : null}
+              </div>
+              <ul className="mt-2 space-y-1 text-base-content/70">
+                {packageQuote.lines.map((line) => (
+                  <li key={line.kind} className="flex justify-between gap-4">
+                    <span>{priceLineLabel(line)}</span>
+                    <span>{formatKesForDisplay(line.amount)}</span>
+                  </li>
+                ))}
+                <li className="flex justify-between gap-4 border-t border-base-content/10 pt-1 font-medium text-base-content">
+                  <span>Estimated total (round up to 10)</span>
+                  <span>{formatKesForDisplay(packageQuote.sellingPrice)}</span>
+                </li>
+              </ul>
+            </div>
+          ) : null}
+          <details className="sm:col-span-2 rounded-lg border border-base-content/15 bg-base-200/30 p-3">
+            <summary className="cursor-pointer text-sm font-medium">
+              Custom safari — cost breakdown
+            </summary>
+            <p className="mt-2 text-xs text-base-content/60">
+              Open only for a tailor-made safari. This is separate from a packaged tour quote.
+            </p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <label className="form-control gap-2">
+                <span className="label-text text-sm font-medium">Booking kind</span>
+                <select
+                  className="select select-bordered select-sm rounded-md"
+                  style={inputStyle}
+                  value={form.bookingKind}
+                  onChange={(e) =>
+                    setForm({ ...form, bookingKind: e.target.value as BookingKind })
+                  }
+                >
+                  {BOOKING_KINDS.map((kind) => (
+                    <option key={kind} value={kind}>
+                      {bookingKindLabel(kind)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="form-control gap-2">
+                <span className="label-text text-sm font-medium">Price per person (optional)</span>
+                <input
+                  type="number"
+                  min={0}
+                  className="input input-bordered input-sm rounded-md"
+                  style={inputStyle}
+                  value={form.pricePerPerson}
+                  onChange={(e) => setForm({ ...form, pricePerPerson: e.target.value, pricingSource: "manual" })}
+                />
+              </label>
+              <div className="form-control sm:col-span-2 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-end">
+                <label className="form-control gap-2">
+                  <span className="label-text text-sm font-medium">Custom total</span>
+                  <input
+                    type="number"
+                    min={0}
+                    className="input input-bordered input-sm rounded-md"
+                    style={inputStyle}
+                    value={form.totalPrice}
+                    onChange={(e) => setForm({ ...form, totalPrice: e.target.value, pricingSource: "manual" })}
+                  />
+                </label>
+                <label className="form-control gap-2 w-full sm:w-[110px]">
+                  <span className="label-text text-sm font-medium">Currency</span>
+                  <input
+                    className="input input-bordered input-sm rounded-md w-full"
+                    style={inputStyle}
+                    value="KES"
+                    readOnly
+                  />
+                </label>
+              </div>
+              <div className="sm:col-span-2">{costStackEditor}</div>
+            </div>
+          </details>
           <label className="form-control gap-2">
             <span className="label-text text-sm font-medium">Status</span>
             <select
@@ -1064,18 +1583,44 @@ export function BookingsPanel() {
               onChange={(e) => setForm({ ...form, endDate: e.target.value })}
             />
           </label>
-          <label className="form-control gap-2 px-2">
-            <span className="label-text text-sm font-medium px-2">Guests</span>
-            <input
-              type="number"
-              min={1}
-              className="input input-bordered input-sm rounded-md w-full"
-              style={inputStyle}
-              required
-              value={form.guests}
-              onChange={(e) => setForm({ ...form, guests: e.target.value })}
-            />
-          </label>
+          <div className="grid grid-cols-3 gap-2 px-2">
+            <label className="form-control gap-2">
+              <span className="label-text text-sm font-medium">Adults</span>
+              <input
+                type="number"
+                min={0}
+                className="input input-bordered input-sm rounded-md w-full"
+                style={inputStyle}
+                required
+                value={form.adults}
+                onChange={(e) => setForm({ ...form, adults: e.target.value })}
+              />
+            </label>
+            <label className="form-control gap-2">
+              <span className="label-text text-sm font-medium">Children</span>
+              <input
+                type="number"
+                min={0}
+                className="input input-bordered input-sm rounded-md w-full"
+                style={inputStyle}
+                required
+                value={form.children}
+                onChange={(e) => setForm({ ...form, children: e.target.value })}
+              />
+            </label>
+            <label className="form-control gap-2">
+              <span className="label-text text-sm font-medium">Infants</span>
+              <input
+                type="number"
+                min={0}
+                className="input input-bordered input-sm rounded-md w-full"
+                style={inputStyle}
+                required
+                value={form.infants}
+                onChange={(e) => setForm({ ...form, infants: e.target.value })}
+              />
+            </label>
+          </div>
           <label className="form-control gap-2 px-2">
             <span className="label-text text-sm font-medium px-2">Accommodation</span>
             <select
@@ -1115,6 +1660,16 @@ export function BookingsPanel() {
               onChange={(e) => setForm({ ...form, specialRequests: e.target.value })}
             />
           </label>
+          <label className="form-control gap-2 sm:col-span-2 px-2">
+            <span className="label-text text-sm font-medium px-2">Voucher to (company / supplier)</span>
+            <input
+              className="input input-bordered input-sm rounded-md w-full"
+              style={inputStyle}
+              placeholder="Lodge, camp, or supplier on the booking voucher"
+              value={form.voucherToCompany}
+              onChange={(e) => setForm({ ...form, voucherToCompany: e.target.value })}
+            />
+          </label>
           <label className="form-control gap-2 sm:col-span-2">
             <span className="label-text text-sm font-medium px-2">Safari package</span>
             <input
@@ -1137,48 +1692,15 @@ export function BookingsPanel() {
               <option value="Tanzania">Tanzania</option>
             </select>
           </label>
-          <label className="form-control gap-2 px-2">
-            <span className="label-text text-sm font-medium px-2">Price per person (optional)</span>
-            <input
-              type="number"
-              min={0}
-              className="input input-bordered input-sm rounded-md w-full"
-              style={inputStyle}
-              value={form.pricePerPerson}
-              onChange={(e) => setForm({ ...form, pricePerPerson: e.target.value })}
-            />
-          </label>
-          <div className="form-control px-2 sm:col-span-2 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-end">
-            <label className="form-control gap-2 px-2">
-              <span className="label-text text-sm font-medium px-2">Total price</span>
-              <input
-                type="number"
-                min={0}
-                className="input input-bordered input-sm rounded-md w-full"
-                style={inputStyle}
-                value={form.totalPrice}
-                onChange={(e) => setForm({ ...form, totalPrice: e.target.value })}
-              />
-            </label>
-            <label className="form-control gap-2 px-2 w-full sm:w-[110px]">
-              <span className="label-text text-sm font-medium px-2">Currency</span>
-              <input
-                className="input input-bordered input-sm rounded-md w-full"
-                style={inputStyle}
-                value="KES"
-                readOnly
-              />
-            </label>
-          </div>
           <label className="form-control gap-2 sm:col-span-2 px-2">
             <span className="label-text text-sm font-medium px-2">Link tour (optional)</span>
             <select
               className="select select-bordered select-sm rounded-md w-full"
               style={inputStyle}
               value={form.tourId}
-              onChange={(e) => setForm({ ...form, tourId: e.target.value })}
+              onChange={(e) => selectTour(e.target.value)}
             >
-              <option value="">None</option>
+              <option value="">None — enter totals manually</option>
               {tours.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.title}
@@ -1186,6 +1708,105 @@ export function BookingsPanel() {
               ))}
             </select>
           </label>
+          {selectedTour && packageQuote ? (
+            <div className="sm:col-span-2 mx-2 rounded-lg border border-base-content/10 bg-base-200/40 p-3 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="font-medium">
+                  Package quote{" "}
+                  <span className="text-base-content/60">
+                    ({form.pricingSource === "package" ? "applied" : "available"})
+                  </span>
+                </p>
+                {form.pricingSource !== "package" ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-xs"
+                    onClick={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        ...applyPackageQuoteToForm(selectedTour, prev.adults, prev.children, prev.infants),
+                      }))
+                    }
+                  >
+                    Apply package quote
+                  </button>
+                ) : null}
+              </div>
+              <ul className="mt-2 space-y-1 text-base-content/70">
+                {packageQuote.lines.map((line) => (
+                  <li key={line.kind} className="flex justify-between gap-4">
+                    <span>{priceLineLabel(line)}</span>
+                    <span>{formatKesForDisplay(line.amount)}</span>
+                  </li>
+                ))}
+                <li className="flex justify-between gap-4 border-t border-base-content/10 pt-1 font-medium text-base-content">
+                  <span>Estimated total (round up to 10)</span>
+                  <span>{formatKesForDisplay(packageQuote.sellingPrice)}</span>
+                </li>
+              </ul>
+            </div>
+          ) : null}
+          <details className="sm:col-span-2 mx-2 rounded-lg border border-base-content/15 bg-base-200/30 p-3">
+            <summary className="cursor-pointer text-sm font-medium">
+              Custom safari — cost breakdown
+            </summary>
+            <p className="mt-2 text-xs text-base-content/60">
+              Open only for a tailor-made safari. This is separate from a packaged tour quote.
+            </p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <label className="form-control gap-2">
+                <span className="label-text text-sm font-medium">Booking kind</span>
+                <select
+                  className="select select-bordered select-sm rounded-md w-full"
+                  style={inputStyle}
+                  value={form.bookingKind}
+                  onChange={(e) =>
+                    setForm({ ...form, bookingKind: e.target.value as BookingKind })
+                  }
+                >
+                  {BOOKING_KINDS.map((kind) => (
+                    <option key={kind} value={kind}>
+                      {bookingKindLabel(kind)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="form-control gap-2">
+                <span className="label-text text-sm font-medium">Price per person (optional)</span>
+                <input
+                  type="number"
+                  min={0}
+                  className="input input-bordered input-sm rounded-md w-full"
+                  style={inputStyle}
+                  value={form.pricePerPerson}
+                  onChange={(e) => setForm({ ...form, pricePerPerson: e.target.value, pricingSource: "manual" })}
+                />
+              </label>
+              <div className="form-control sm:col-span-2 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-end">
+                <label className="form-control gap-2">
+                  <span className="label-text text-sm font-medium">Custom total</span>
+                  <input
+                    type="number"
+                    min={0}
+                    className="input input-bordered input-sm rounded-md w-full"
+                    style={inputStyle}
+                    value={form.totalPrice}
+                    onChange={(e) => setForm({ ...form, totalPrice: e.target.value, pricingSource: "manual" })}
+                  />
+                </label>
+                <label className="form-control gap-2 w-full sm:w-[110px]">
+                  <span className="label-text text-sm font-medium">Currency</span>
+                  <input
+                    className="input input-bordered input-sm rounded-md w-full"
+                    style={inputStyle}
+                    value="KES"
+                    readOnly
+                  />
+                </label>
+              </div>
+              <div className="sm:col-span-2">{costStackEditor}</div>
+            </div>
+          </details>
           <label className="form-control gap-2 px-2">
             <span className="label-text text-sm font-medium px-2">Status</span>
             <select

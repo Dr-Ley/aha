@@ -29,7 +29,6 @@ function fullName(row: EnquiryRow): string {
 }
 
 const exportColumns: ExportColumn<EnquiryRow>[] = [
-  { key: "id", header: "ID", value: (row) => row.id },
   { key: "name", header: "Name", value: fullName },
   { key: "email", header: "Email", value: (row) => row.email },
   { key: "phone", header: "Phone", value: (row) => row.phone },
@@ -58,7 +57,8 @@ export function EnquiriesPanel() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/contact");
+      const qs = new URLSearchParams({ companyId: selectedCompanyId });
+      const res = await fetch(`/api/contact?${qs}`);
       const data = await res.json();
       if (!res.ok) throw new Error(typeof data.error === "string" ? data.error : "Failed to load enquiries");
       setRows(data.enquiries ?? []);
@@ -68,7 +68,7 @@ export function EnquiriesPanel() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [selectedCompanyId]);
 
   useEffect(() => {
     void load();
@@ -91,7 +91,7 @@ export function EnquiriesPanel() {
     const res = await fetch("/api/contact", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: "replied" }),
+      body: JSON.stringify({ id, status: "replied", companyId: selectedCompanyId }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -160,7 +160,6 @@ export function EnquiriesPanel() {
         <table className="table table-sm">
           <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
             <tr>
-              <th>ID</th>
               <th>Name</th>
               <th>Contact</th>
               <th>Subject</th>
@@ -172,13 +171,13 @@ export function EnquiriesPanel() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={7} className="py-12 text-center">
+                <td colSpan={6} className="py-12 text-center">
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
             ) : pagedRows.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-10 text-center text-sm text-base-content/50">
+                <td colSpan={6} className="py-10 text-center text-sm text-base-content/50">
                   No enquiries found.
                 </td>
               </tr>
@@ -189,7 +188,6 @@ export function EnquiriesPanel() {
                   className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
                   onClick={() => setModalId(row.id)}
                 >
-                  <td className="font-mono text-xs">#{row.id}</td>
                   <td>
                     <div className="font-medium">{fullName(row)}</div>
                     <div className="text-xs text-base-content/50">{row.email}</div>

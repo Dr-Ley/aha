@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { expenses } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkApiPermission, canAccessDashboardFromSession } from "@/lib/permissions-server";
 import { createNotification } from "@/lib/notify";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
+import { requireTenantContext } from "@/server/tenancy";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { companyIdZod, financialReferenceTypeZod } from "@/lib/schemas/company-id";
-
-function getUserId(session: { user?: { id?: string | null } } | null): number | null {
-  if (!session?.user?.id) return null;
-  return typeof session.user.id === "string" ? parseInt(session.user.id, 10) : session.user.id;
-}
 
 const createSchema = z.object({
   companyId: companyIdZod,
@@ -38,19 +31,13 @@ const patchSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
     const { searchParams } = new URL(request.url);
-    const companyId = resolveCompanyId(searchParams.get("companyId"));
-
-    const viewDenied = await checkApiPermission(session, companyId, "expenses", false);
-    if (viewDenied) return viewDenied;
+    const tenant = await requireTenantContext(searchParams.get("companyId"), {
+      module: "expenses",
+      requireEdit: false,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
     const rows = await db
       .select()
@@ -67,20 +54,18 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const json = await request.json();
     const parsed = createSchema.safeParse(json);
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
     const d = parsed.data;
-    const companyId = resolveCompanyId(d.companyId);
-
-    const postDenied = await checkApiPermission(session, companyId, "expenses", true);
-    if (postDenied) return postDenied;
+    const tenant = await requireTenantContext(d.companyId, {
+      module: "expenses",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
     const [row] = await db
       .insert(expenses)
@@ -114,19 +99,19 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const json = await request.json();
     const parsed = patchSchema.safeParse(json);
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
     const d = parsed.data;
-    const { id, companyId, ...rest } = d;
-    const patchDenied = await checkApiPermission(session, companyId, "expenses", true);
-    if (patchDenied) return patchDenied;
+    const tenant = await requireTenantContext(d.companyId, {
+      module: "expenses",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
+    const { id, ...rest } = d;
     const updates: Record<string, unknown> = {};
     if (rest.category !== undefined) updates.category = rest.category;
     if (rest.amount !== undefined) updates.amount = rest.amount;
@@ -157,19 +142,17 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const companyId = searchParams.get("companyId");
-    if (!id || !companyId || !isValidCompanyId(companyId)) {
+    if (!id) {
       return NextResponse.json({ error: "id and valid companyId required" }, { status: 400 });
     }
-
-    const delDenied = await checkApiPermission(session, companyId, "expenses", true);
-    if (delDenied) return delDenied;
+    const tenant = await requireTenantContext(searchParams.get("companyId"), {
+      module: "expenses",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
     const deleted = await db
       .delete(expenses)

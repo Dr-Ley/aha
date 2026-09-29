@@ -34,7 +34,6 @@ type OrderRow = {
 type LineForm = { itemId: string; quantity: string };
 
 const exportColumns: ExportColumn<OrderRow>[] = [
-  { key: "id", header: "ID", value: (o) => o.id },
   { key: "status", header: "Payment status", value: (o) => o.status },
   { key: "table", header: "Table", value: (o) => o.tableLabel },
   { key: "customer", header: "Customer", value: (o) => o.customerName },
@@ -338,7 +337,6 @@ export function RestaurantPanel() {
         <table className="table table-sm">
           <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
             <tr>
-              <th className="align-top">ID</th>
               <th className="align-top normal-case font-normal">
                 <label className="flex min-w-32 flex-col gap-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
                   <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
@@ -368,13 +366,13 @@ export function RestaurantPanel() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={6} className="py-12 text-center">
+                <td colSpan={5} className="py-12 text-center">
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
             ) : displayedOrders.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-10 text-center text-sm text-base-content/50">
+                <td colSpan={5} className="py-10 text-center text-sm text-base-content/50">
                   {orders.length === 0 ? "No restaurant orders." : "No orders match status filter."}
                 </td>
               </tr>
@@ -385,7 +383,6 @@ export function RestaurantPanel() {
                   className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
                   onClick={() => setViewId(o.id)}
                 >
-                  <td className="font-mono text-xs">#{o.id}</td>
                   <td>
                     <select
                       className={cn(

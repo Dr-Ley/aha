@@ -14,6 +14,7 @@ import { canAccessDashboard } from "@/lib/roles";
 
 const navLinks = [
   { label: "Home", href: "/" },
+  { label: "Plan safari", href: "/plan-safari" },
   { label: "Contact", href: "/contact" },
 ];
 

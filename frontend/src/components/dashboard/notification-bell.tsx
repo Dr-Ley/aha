@@ -3,6 +3,7 @@
 import { Bell } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCompany } from "@/store/company-context";
+import { COMPANIES } from "@/types/company";
 import type { NotificationEntity } from "@/lib/notify";
 import { EntityViewModal } from "@/components/dashboard/entity-view-modal";
 
@@ -44,22 +45,36 @@ export function NotificationBell({ buttonClassName }: NotificationBellProps) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async () => {
-    const r = await fetch(`/api/notifications?companyId=${encodeURIComponent(selectedCompanyId)}`);
-    const j = await r.json();
-    if (j.notificationsDisabled) {
-      setDisabled(true);
+    const companyId = selectedCompanyId;
+    try {
+      const r = await fetch(`/api/notifications?companyId=${encodeURIComponent(companyId)}`);
+      const j = await r.json();
+      if (j.notificationsDisabled) {
+        setDisabled(true);
+        setItems([]);
+        setUnreadCount(0);
+        return;
+      }
+      setDisabled(false);
+      if (!r.ok || !j.success) {
+        setItems([]);
+        setUnreadCount(0);
+        return;
+      }
+      const scoped = ((j.notifications ?? []) as NotificationRow[]).filter(
+        (n) => n.companyId === companyId
+      );
+      setItems(scoped);
+      setUnreadCount(scoped.filter((n) => !n.isRead).length);
+    } catch {
       setItems([]);
       setUnreadCount(0);
-      return;
-    }
-    setDisabled(false);
-    if (j.success) {
-      setItems(j.notifications ?? []);
-      setUnreadCount(Number(j.unreadCount ?? 0));
     }
   }, [selectedCompanyId]);
 
   useEffect(() => {
+    setItems([]);
+    setUnreadCount(0);
     const id = window.setTimeout(() => void load(), 0);
     return () => window.clearTimeout(id);
   }, [load]);
@@ -134,7 +149,9 @@ export function NotificationBell({ buttonClassName }: NotificationBellProps) {
             onMouseDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-base-content/10 px-3 py-2">
-              <span className="text-sm font-semibold">Notifications</span>
+              <span className="text-sm font-semibold">
+                {COMPANIES.find((c) => c.id === selectedCompanyId)?.name ?? "Notifications"}
+              </span>
               {unreadCount > 0 ? (
                 <button type="button" className="btn btn-ghost btn-xs" onClick={() => void markAllRead()}>
                   Mark all read

@@ -11,6 +11,8 @@ import {
   type ExportColumn,
   useDashboardPagination,
 } from "@/components/dashboard/dashboard-table-tools";
+import { safariSourceLabel, staySourceLabel } from "@/lib/stay-labels";
+import { companyUsesHotelStays, companyUsesSafariTours } from "@/types/company";
 
 type RevenueRow = {
   id: number;
@@ -27,20 +29,25 @@ function revenueRowLinked(r: RevenueRow): boolean {
   return r.bookingId != null || (r.referenceType != null && r.referenceId != null);
 }
 
-function formatRevenueLinkCell(r: RevenueRow): string {
-  if (r.referenceType === "payment" && r.referenceId != null) return `Payment #${r.referenceId}`;
-  if (r.referenceType === "hotel" && r.referenceId != null) return `Hotel stay #${r.referenceId}`;
-  if (r.referenceType === "bar" && r.referenceId != null) return `Bar order #${r.referenceId}`;
-  if (r.referenceType === "restaurant" && r.referenceId != null) return `Restaurant order #${r.referenceId}`;
-  if (r.bookingId != null) return `Safari booking #${r.bookingId}`;
+function formatRevenueLinkCell(r: RevenueRow, labels: Record<string, string>): string {
+  if (r.referenceType === "hotel" && r.referenceId != null) {
+    return labels[`hotel:${r.referenceId}`] ?? "Hotel stay";
+  }
+  if (r.bookingId != null || (r.referenceType === "tour" && r.referenceId != null)) {
+    const bid = r.bookingId ?? r.referenceId;
+    return (bid != null && labels[`tour:${bid}`]) || "Safari booking";
+  }
+  if (r.referenceType === "bar" && r.referenceId != null) return labels[`bar:${r.referenceId}`] ?? "Bar order";
+  if (r.referenceType === "restaurant" && r.referenceId != null) {
+    return labels[`restaurant:${r.referenceId}`] ?? "Restaurant order";
+  }
+  if (r.referenceType === "payment" && r.referenceId != null) return "Payment";
   return "—";
 }
 
 const exportColumns: ExportColumn<RevenueRow>[] = [
-  { key: "id", header: "ID", value: (r) => r.id },
   { key: "periodMonth", header: "Month", value: (r) => r.periodMonth },
   { key: "packageLabel", header: "Package", value: (r) => r.packageLabel },
-  { key: "link", header: "Linked source", value: formatRevenueLinkCell },
   { key: "amount", header: "Amount", value: (r) => r.amount },
   { key: "recognizedAt", header: "Recognized", value: (r) => r.recognizedAt },
 ];
@@ -57,6 +64,7 @@ function previewForRevenue(r: RevenueRow): { kind: EntityPreviewKind; id: number
 export function RevenuePanel() {
   const { selectedCompanyId } = useCompany();
   const [rows, setRows] = useState<RevenueRow[]>([]);
+  const [sourceLabels, setSourceLabels] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [monthF, setMonthF] = useState("");
@@ -70,10 +78,32 @@ export function RevenuePanel() {
     setError(null);
     try {
       const qs = new URLSearchParams({ companyId: selectedCompanyId });
-      const rRes = await fetch(`/api/revenue?${qs}`);
+      const parts: Promise<Response>[] = [fetch(`/api/revenue?${qs}`)];
+      if (companyUsesSafariTours(selectedCompanyId)) parts.push(fetch(`/api/bookings?${qs}`));
+      if (companyUsesHotelStays(selectedCompanyId)) parts.push(fetch(`/api/hotel-bookings?${qs}`));
+      const results = await Promise.all(parts);
+      const rRes = results[0];
       const rJson = await rRes.json();
       if (!rRes.ok) throw new Error(typeof rJson.error === "string" ? rJson.error : "Failed to load revenue");
       setRows(rJson.revenue ?? []);
+
+      const labels: Record<string, string> = {};
+      let idx = 1;
+      if (companyUsesSafariTours(selectedCompanyId)) {
+        const res = results[idx++];
+        if (res?.ok) {
+          const j = await res.json();
+          for (const b of j.bookings ?? []) labels[`tour:${b.id}`] = safariSourceLabel(b);
+        }
+      }
+      if (companyUsesHotelStays(selectedCompanyId)) {
+        const res = results[idx++];
+        if (res?.ok) {
+          const j = await res.json();
+          for (const h of j.hotelBookings ?? []) labels[`hotel:${h.id}`] = staySourceLabel(h);
+        }
+      }
+      setSourceLabels(labels);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error");
     } finally {
@@ -225,7 +255,6 @@ export function RevenuePanel() {
         <table className="table table-sm">
           <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
             <tr>
-              <th className="align-top">ID</th>
               <th className="align-top normal-case font-normal">
                 <label className="flex min-w-32 flex-col gap-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
                   <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
@@ -270,13 +299,13 @@ export function RevenuePanel() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="py-12 text-center">
+                <td colSpan={4} className="py-12 text-center">
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
             ) : revenueTableRows.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-10 text-center text-sm text-base-content/50">
+                <td colSpan={4} className="py-10 text-center text-sm text-base-content/50">
                   {rows.length === 0 ? "No revenue entries." : "No rows match filters."}
                 </td>
               </tr>
@@ -289,10 +318,9 @@ export function RevenuePanel() {
                       if (target) setView(target);
                     }}
                   >
-                    <td className="font-mono text-xs">{r.id}</td>
                     <td>{r.periodMonth ?? "—"}</td>
                     <td className="max-w-[200px] truncate">{r.packageLabel ?? "—"}</td>
-                    <td>{formatRevenueLinkCell(r)}</td>
+                    <td>{formatRevenueLinkCell(r, sourceLabels)}</td>
                     <td className="text-right tabular-nums font-medium">{formatKesForDisplay(r.amount)}</td>
                   </tr>
                 ))}

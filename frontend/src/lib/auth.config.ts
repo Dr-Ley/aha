@@ -1,13 +1,12 @@
 import type { NextAuthConfig } from "next-auth";
+import { getAuthSecret } from "@/lib/env";
 
 /**
  * Edge-safe NextAuth options (no DB / bcrypt). Used by middleware JWT checks.
  * Full providers + adapter live in `auth.ts`.
  */
 export const authConfig = {
-  secret:
-    process.env.AUTH_SECRET ||
-    (process.env.NODE_ENV === "development" ? "dev-secret-replace-in-production" : undefined),
+  secret: getAuthSecret(),
   pages: {
     signIn: "/login",
   },

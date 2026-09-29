@@ -141,7 +141,7 @@ export function TourFilters() {
   useEffect(() => {
     async function fetchTours() {
       try {
-        const res = await fetch("/api/tours");
+        const res = await fetch("/api/tours?companyId=aha");
         const data = (await res.json()) as Tour[];
         setTours(data);
       } finally {

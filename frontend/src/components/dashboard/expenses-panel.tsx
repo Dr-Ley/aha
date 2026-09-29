@@ -13,6 +13,7 @@ import {
 } from "@/components/dashboard/dashboard-table-tools";
 import type { CurrencyCode } from "@/lib/data";
 import { formatKesForDisplay } from "@/lib/data";
+import { safariSourceLabel } from "@/lib/stay-labels";
 
 type ExpenseRow = {
   id: number;
@@ -26,9 +27,8 @@ type ExpenseRow = {
 type BookingOpt = { id: number; label: string };
 
 const exportColumns: ExportColumn<ExpenseRow>[] = [
-  { key: "id", header: "ID", value: (x) => x.id },
   { key: "category", header: "Category", value: (x) => x.category },
-  { key: "bookingId", header: "Booking ID", value: (x) => x.bookingId },
+  { key: "booking", header: "Linked booking", value: (x) => x.bookingId },
   { key: "amount", header: "Amount", value: (x) => x.amount },
   { key: "description", header: "Description", value: (x) => x.description },
   { key: "incurredAt", header: "Date", value: (x) => x.incurredAt },
@@ -74,10 +74,19 @@ export function ExpensesPanel() {
       if (!eRes.ok) throw new Error(eJson.error ?? "Failed");
       setRows(eJson.expenses ?? []);
       setBookings(
-        (bJson.bookings ?? []).map((b: { id: number; firstName: string; lastName: string | null; email: string }) => ({
-          id: b.id,
-          label: `#${b.id} — ${[b.firstName, b.lastName].filter(Boolean).join(" ") || b.email}`,
-        }))
+        (bJson.bookings ?? []).map(
+          (b: {
+            id: number;
+            firstName: string;
+            lastName: string | null;
+            email: string;
+            safariPackage?: string | null;
+            tour?: { title?: string | null };
+          }) => ({
+            id: b.id,
+            label: safariSourceLabel(b),
+          })
+        )
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error");
@@ -230,7 +239,6 @@ export function ExpensesPanel() {
         <table className="table table-sm">
           <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
             <tr>
-              <th className="align-top">ID</th>
               <th className="align-top normal-case font-normal">
                 <label className="flex min-w-[9rem] flex-col gap-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
                   <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
@@ -276,13 +284,13 @@ export function ExpensesPanel() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={6} className="py-12 text-center">
+                <td colSpan={5} className="py-12 text-center">
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-10 text-center text-sm text-base-content/50">
+                <td colSpan={5} className="py-10 text-center text-sm text-base-content/50">
                   {rows.length === 0 ? "No expenses." : "No expenses match filters."}
                 </td>
               </tr>
@@ -293,7 +301,6 @@ export function ExpensesPanel() {
                   className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
                   onClick={() => setViewId(x.id)}
                 >
-                  <td className="font-mono text-xs">{x.id}</td>
                   <td>
                     <span className="badge badge-outline badge-sm">{x.category}</span>
                   </td>
@@ -304,7 +311,8 @@ export function ExpensesPanel() {
                         className="link link-primary inline-flex items-center gap-1 text-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Link2 className="h-3 w-3" />#{x.bookingId}
+                        <Link2 className="h-3 w-3" />
+                        {bookings.find((b) => b.id === x.bookingId)?.label ?? "Safari booking"}
                       </a>
                     ) : (
                       "—"

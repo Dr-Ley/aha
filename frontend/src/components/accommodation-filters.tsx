@@ -78,7 +78,7 @@ export function AccommodationFilters() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/accommodations");
+        const response = await fetch("/api/accommodations?companyId=aha");
         const data = await response.json();
 
         if (!response.ok) {

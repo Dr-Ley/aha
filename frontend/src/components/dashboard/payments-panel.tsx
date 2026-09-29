@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Link2, CheckCircle } from "lucide-react";
+import { Plus, Pencil, Trash2, Link2, CheckCircle, Printer } from "lucide-react";
 import { useCompany } from "@/store/company-context";
 import { useCurrency } from "@/lib/currency-context";
 import type { CurrencyCode } from "@/lib/data";
@@ -21,6 +21,8 @@ import {
   companyUsesRestaurant,
   companyUsesSafariTours,
 } from "@/types/company";
+import { safariSourceLabel, staySourceLabel } from "@/lib/stay-labels";
+import { nairobiYmd } from "@/lib/nairobi-date";
 
 type PaymentRow = {
   id: number;
@@ -46,16 +48,28 @@ const STATUSES = ["pending", "completed", "cancelled"] as const;
 const BASE_PAYMENT_CURRENCY = "KES" satisfies CurrencyCode;
 
 const exportColumns: ExportColumn<PaymentRow>[] = [
-  { key: "id", header: "ID", value: (p) => p.id },
   { key: "referenceType", header: "Reference type", value: (p) => p.referenceType },
-  { key: "referenceId", header: "Reference ID", value: (p) => p.referenceId ?? p.bookingId },
   { key: "amount", header: "Amount", value: (p) => p.amount },
   { key: "currency", header: "Currency", value: (p) => p.currency },
   { key: "method", header: "Method", value: (p) => p.method },
   { key: "status", header: "Status", value: (p) => normalizePaymentRecordStatus(p.status) },
   { key: "notes", header: "Notes", value: (p) => p.notes },
-  { key: "recordedAt", header: "Recorded", value: (p) => p.recordedAt },
+  { key: "recordedAt", header: "Date", value: (p) => formatPaymentDate(p.recordedAt) },
 ];
+
+function paymentYmd(value: string | null | undefined): string {
+  return String(value ?? "").slice(0, 10);
+}
+
+function formatPaymentDate(value: string | null | undefined): string {
+  const ymd = paymentYmd(value);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return "—";
+  return new Date(`${ymd}T12:00:00+03:00`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 /** Map legacy payment row statuses into the canonical dashboard set. */
 function normalizePaymentRecordStatus(raw: string): (typeof STATUSES)[number] {
@@ -68,7 +82,9 @@ function normalizePaymentRecordStatus(raw: string): (typeof STATUSES)[number] {
   return "pending";
 }
 
-function primaryGuestName(guests: { fullName: string; isPrimary?: boolean | null }[]): string {
+function primaryGuestName(stay: { primaryGuestName?: string | null; guests?: { fullName: string; isPrimary?: boolean | null }[] }): string {
+  if (stay.primaryGuestName?.trim()) return stay.primaryGuestName.trim();
+  const guests = stay.guests ?? [];
   const primary = guests.find((g) => g.isPrimary);
   const g = primary ?? guests[0];
   return g?.fullName?.trim() ?? "";
@@ -101,12 +117,14 @@ function linkPayloadFromPaymentKey(key: string): {
   return { bookingId: null, referenceType: null, referenceId: null };
 }
 
-function PaymentLinkedCell({ p }: { p: PaymentRow }) {
+function PaymentLinkedCell({ p, labels }: { p: PaymentRow; labels: Record<string, string> }) {
+  const key = linkKeyFromPaymentRow(p);
+  const label = (key && labels[key]) || "";
   if (p.referenceType === "hotel" && p.referenceId != null) {
     return (
       <a href="/dashboard/hotel-stays" className="link link-primary inline-flex items-center gap-1 text-sm">
         <Link2 className="h-3 w-3" />
-        Hotel #{p.referenceId}
+        {label || "Hotel stay"}
       </a>
     );
   }
@@ -114,7 +132,7 @@ function PaymentLinkedCell({ p }: { p: PaymentRow }) {
     return (
       <a href="/dashboard/bar" className="link link-primary inline-flex items-center gap-1 text-sm">
         <Link2 className="h-3 w-3" />
-        Bar #{p.referenceId}
+        {label || "Bar order"}
       </a>
     );
   }
@@ -122,7 +140,7 @@ function PaymentLinkedCell({ p }: { p: PaymentRow }) {
     return (
       <a href="/dashboard/restaurant" className="link link-primary inline-flex items-center gap-1 text-sm">
         <Link2 className="h-3 w-3" />
-        Restaurant #{p.referenceId}
+        {label || "Restaurant order"}
       </a>
     );
   }
@@ -134,7 +152,7 @@ function PaymentLinkedCell({ p }: { p: PaymentRow }) {
         className="link link-primary inline-flex items-center gap-1 text-sm"
       >
         <Link2 className="h-3 w-3" />
-        Safari #{bid}
+        {label || "Safari booking"}
       </a>
     );
   }
@@ -146,6 +164,7 @@ export function PaymentsPanel() {
   const { formatMoney } = useCurrency();
   const [rows, setRows] = useState<PaymentRow[]>([]);
   const [linkOptions, setLinkOptions] = useState<LinkOption[]>([]);
+  const [sourceLabels, setSourceLabels] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modal, setModal] = useState<"create" | "edit" | null>(null);
@@ -155,6 +174,8 @@ export function PaymentsPanel() {
   const [statusPF, setStatusPF] = useState("");
   const [methodPF, setMethodPF] = useState("");
   const [currencyPF, setCurrencyPF] = useState("");
+  const [dateFromF, setDateFromF] = useState("");
+  const [dateToF, setDateToF] = useState("");
   const [linkAmountHintsKes, setLinkAmountHintsKes] = useState<Record<string, number>>({});
   const [viewId, setViewId] = useState<number | null>(null);
   const [form, setForm] = useState({
@@ -164,6 +185,7 @@ export function PaymentsPanel() {
     status: "pending",
     notes: "",
     currency: "KES" as CurrencyCode,
+    recordedAt: nairobiYmd(),
   });
 
   const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
@@ -190,6 +212,7 @@ export function PaymentsPanel() {
 
       const opts: LinkOption[] = [];
       const hints: Record<string, number> = {};
+      const labels: Record<string, string> = {};
       let idx = 1;
 
       if (companyUsesSafariTours(selectedCompanyId)) {
@@ -197,12 +220,12 @@ export function PaymentsPanel() {
         if (res?.ok) {
           const j = await res.json();
           for (const b of j.bookings ?? []) {
-            const tourTitle = b.tour?.shortTitle ?? b.tour?.title ?? "Safari";
-            const who = [b.firstName, b.lastName].filter(Boolean).join(" ") || b.email;
+            const label = safariSourceLabel(b);
+            labels[`tour:${b.id}`] = label;
             hints[`tour:${b.id}`] = Math.max(0, Number(b.totalPrice ?? 0));
             opts.push({
               value: `tour:${b.id}`,
-              label: `Safari #${b.id} — ${tourTitle} — ${who}`,
+              label,
               group: "Safari tour bookings",
             });
           }
@@ -214,9 +237,11 @@ export function PaymentsPanel() {
         if (res?.ok) {
           const j = await res.json();
           for (const h of j.hotelBookings ?? []) {
-            const room = h.room?.code || h.room?.name || h.room?.roomTypeName || "Room";
-            const guest = primaryGuestName(h.guests ?? []);
-            const who = guest || "Guest";
+            const label = staySourceLabel({
+              ...h,
+              primaryGuestName: primaryGuestName(h) || h.primaryGuestName,
+            });
+            labels[`hotel:${h.id}`] = label;
             const ps = String(h.paymentStatus ?? "").toLowerCase();
             if (ps === "paid") {
               hints[`hotel:${h.id}`] = Math.max(1, Number(h.totalAmount ?? 0));
@@ -225,7 +250,7 @@ export function PaymentsPanel() {
             }
             opts.push({
               value: `hotel:${h.id}`,
-              label: `Hotel #${h.id} — ${room} — ${h.checkInDate} → ${h.checkOutDate} — ${who}`,
+              label,
               group: "Hotel stays",
             });
           }
@@ -240,9 +265,10 @@ export function PaymentsPanel() {
             const tag = o.tableLabel || o.customerName || "Walk-in";
             const total = typeof o.total === "number" ? o.total : 0;
             hints[`bar:${o.id}`] = Math.max(1, total);
+            labels[`bar:${o.id}`] = tag;
             opts.push({
               value: `bar:${o.id}`,
-              label: `Bar #${o.id} — ${tag} (${o.status})`,
+              label: `${tag} (${o.status})`,
               group: "Bar orders",
             });
           }
@@ -257,9 +283,10 @@ export function PaymentsPanel() {
             const tag = o.tableLabel || o.customerName || "Walk-in";
             const total = typeof o.total === "number" ? o.total : 0;
             hints[`restaurant:${o.id}`] = Math.max(1, total);
+            labels[`restaurant:${o.id}`] = tag;
             opts.push({
               value: `restaurant:${o.id}`,
-              label: `Restaurant #${o.id} — ${tag} (${o.status})`,
+              label: `${tag} (${o.status})`,
               group: "Restaurant orders",
             });
           }
@@ -268,6 +295,7 @@ export function PaymentsPanel() {
 
       setLinkAmountHintsKes(hints);
       setLinkOptions(opts);
+      setSourceLabels(labels);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error");
     } finally {
@@ -289,9 +317,12 @@ export function PaymentsPanel() {
       if (statusPF && normalizePaymentRecordStatus(p.status) !== statusPF) return false;
       if (methodPF && (p.method ?? "") !== methodPF) return false;
       if (currencyPF && p.currency !== currencyPF) return false;
+      const ymd = paymentYmd(p.recordedAt);
+      if (dateFromF && ymd && ymd < dateFromF) return false;
+      if (dateToF && ymd && ymd > dateToF) return false;
       return true;
     });
-  }, [sorted, statusPF, methodPF, currencyPF]);
+  }, [sorted, statusPF, methodPF, currencyPF, dateFromF, dateToF]);
   const { page, pageCount, setPage, pagedRows } = useDashboardPagination(filteredPayments, 10);
 
   const linkGroups = useMemo(() => {
@@ -323,6 +354,7 @@ export function PaymentsPanel() {
       status: "pending",
       notes: "",
       currency: BASE_PAYMENT_CURRENCY,
+      recordedAt: nairobiYmd(),
     });
     setModal("create");
   }
@@ -340,6 +372,7 @@ export function PaymentsPanel() {
       status: normalizePaymentRecordStatus(p.status),
       notes: p.notes ?? "",
       currency: BASE_PAYMENT_CURRENCY,
+      recordedAt: paymentYmd(p.recordedAt) || nairobiYmd(),
     });
     setModal("edit");
   }
@@ -358,7 +391,9 @@ export function PaymentsPanel() {
           method: form.method || null,
           status: form.status,
           notes: form.notes || null,
+          recordedAt: form.recordedAt || nairobiYmd(),
           currency: form.currency,
+          idempotencyKey: crypto.randomUUID(),
         }),
       });
       const data = await res.json();
@@ -389,6 +424,7 @@ export function PaymentsPanel() {
           method: form.method || null,
           status: form.status,
           notes: form.notes || null,
+          recordedAt: form.recordedAt || nairobiYmd(),
           currency: form.currency,
         }),
       });
@@ -513,13 +549,41 @@ export function PaymentsPanel() {
             ))}
           </select>
         </label>
+        <label className="form-control gap-1">
+          <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">
+            From
+          </span>
+          <input
+            type="date"
+            className="input input-bordered input-sm rounded-md"
+            style={inputStyle}
+            value={dateFromF}
+            onChange={(e) => setDateFromF(e.target.value)}
+          />
+        </label>
+        <label className="form-control gap-1">
+          <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">
+            To
+          </span>
+          <input
+            type="date"
+            className="input input-bordered input-sm rounded-md"
+            style={inputStyle}
+            value={dateToF}
+            onChange={(e) => setDateToF(e.target.value)}
+          />
+        </label>
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-base-content/10 bg-base-100 shadow-sm">
         <table className="table table-sm">
           <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
             <tr>
-              <th className="align-top">ID</th>
+              <th className="align-top normal-case font-normal">
+                <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
+                  Date
+                </span>
+              </th>
               <th className="align-top normal-case font-normal">
                 <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
                   Linked source
@@ -593,9 +657,9 @@ export function PaymentsPanel() {
                   className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
                   onClick={() => setViewId(p.id)}
                 >
-                  <td className="font-mono text-xs">{p.id}</td>
+                  <td className="whitespace-nowrap text-sm">{formatPaymentDate(p.recordedAt)}</td>
                   <td className="max-w-56">
-                    <PaymentLinkedCell p={p} />
+                    <PaymentLinkedCell p={p} labels={sourceLabels} />
                   </td>
                   <td className="tabular-nums font-medium">{formatMoney(p.amount, p.currency)}</td>
                   <td className="text-sm">{p.method ?? "—"}</td>
@@ -605,6 +669,17 @@ export function PaymentsPanel() {
                     </span>
                   </td>
                   <td className="flex gap-1">
+                    <a
+                      className="btn btn-ghost btn-xs btn-square"
+                      href={`/print/payment-receipt/${p.id}?companyId=${encodeURIComponent(selectedCompanyId)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="Print payment receipt"
+                      title="Print payment receipt"
+                    >
+                      <Printer className="h-3.5 w-3.5" />
+                    </a>
                     <button
                       type="button"
                       className="btn btn-ghost btn-xs btn-square"
@@ -642,6 +717,18 @@ export function PaymentsPanel() {
 
       <DashboardModal open={modal === "create"} title="Log payment" onClose={() => setModal(null)}>
         <form className="space-y-5" onSubmit={submitCreate}>
+          <label className="form-control gap-2">
+            <span className="label-text text-sm font-medium">Date</span>
+            <input
+              type="date"
+              className="input input-bordered input-sm w-full rounded-md"
+              style={inputStyle}
+              required
+              value={form.recordedAt}
+              onChange={(e) => setForm({ ...form, recordedAt: e.target.value })}
+            />
+          </label>
+
           <label className="form-control gap-2">
             <span className="label-text text-sm font-medium">Amount (integer)</span>
             <input
@@ -724,6 +811,18 @@ export function PaymentsPanel() {
 
       <DashboardModal open={modal === "edit"} title="Edit payment" onClose={() => setModal(null)}>
         <form className="space-y-5" onSubmit={submitEdit}>
+          <label className="form-control gap-2">
+            <span className="label-text text-sm font-medium">Date</span>
+            <input
+              type="date"
+              className="input input-bordered input-sm w-full rounded-md"
+              style={inputStyle}
+              required
+              value={form.recordedAt}
+              onChange={(e) => setForm({ ...form, recordedAt: e.target.value })}
+            />
+          </label>
+
           <label className="form-control gap-2">
             <span className="label-text text-sm font-medium">Amount</span>
             <input

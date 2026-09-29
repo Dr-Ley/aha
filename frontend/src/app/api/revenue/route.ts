@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { revenueEntries } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { canAccessDashboardFromSession } from "@/lib/permissions-server";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
+import { moduleForRevenue } from "@/lib/dashboard-modules";
+import { requireTenantContext } from "@/server/tenancy";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { companyIdZod, financialReferenceTypeZod } from "@/lib/schemas/company-id";
-
-function getUserId(session: { user?: { id?: string | null } } | null): number | null {
-  if (!session?.user?.id) return null;
-  return typeof session.user.id === "string" ? parseInt(session.user.id, 10) : session.user.id;
-}
 
 const createSchema = z.object({
   companyId: companyIdZod,
@@ -37,16 +31,13 @@ const patchSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
     const { searchParams } = new URL(request.url);
-    const companyId = resolveCompanyId(searchParams.get("companyId"));
+    const tenant = await requireTenantContext(searchParams.get("companyId"), {
+      module: moduleForRevenue(),
+      requireEdit: false,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
     const rows = await db
       .select()
@@ -63,15 +54,16 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const json = await request.json();
     const parsed = createSchema.safeParse(json);
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const tenant = await requireTenantContext(parsed.data.companyId, {
+      module: moduleForRevenue(),
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
     return NextResponse.json(
       { error: "Revenue entries are created automatically when a payment is marked completed." },
       { status: 400 }
@@ -84,15 +76,16 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const json = await request.json();
     const parsed = patchSchema.safeParse(json);
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
+    const tenant = await requireTenantContext(parsed.data.companyId, {
+      module: moduleForRevenue(),
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
     return NextResponse.json(
       { error: "Revenue entries are updated automatically from completed payment entries." },
       { status: 400 }
@@ -105,16 +98,17 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const companyId = searchParams.get("companyId");
-    if (!id || !companyId || !isValidCompanyId(companyId)) {
+    if (!id) {
       return NextResponse.json({ error: "id and valid companyId required" }, { status: 400 });
     }
+    const tenant = await requireTenantContext(searchParams.get("companyId"), {
+      module: moduleForRevenue(),
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
 
     const deleted = await db
       .delete(revenueEntries)

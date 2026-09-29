@@ -2,14 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { notifications, users } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { canAccessDashboard, isAdminRole } from "@/lib/roles";
-import {
-  getEffectiveUserRole,
-  getUserIdFromSession,
-  userHasAnyModuleAccess,
-} from "@/lib/permissions-server";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
+import { isAdminRole } from "@/lib/roles";
+import { getEffectiveUserRole } from "@/lib/permissions-server";
+import { requireStaffUser, requireTenantContext } from "@/server/tenancy";
+import { ensureEnquiryNotificationEnum } from "@/lib/ensure-notification-entity-enum";
 import { z } from "zod";
 
 const patchSchema = z.object({
@@ -31,27 +27,16 @@ async function ensureDashboardNotificationsColumn(): Promise<void> {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = getUserIdFromSession(session);
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const role = await getEffectiveUserRole(userId, session?.user?.role);
-    if (!canAccessDashboard(role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const companyId = resolveCompanyId(new URL(request.url).searchParams.get("companyId"));
-    if (!isValidCompanyId(companyId)) {
-      return NextResponse.json({ error: "Invalid company" }, { status: 400 });
-    }
-    if (!isAdminRole(role)) {
-      const ok = await userHasAnyModuleAccess(userId, companyId);
-      if (!ok) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
-    }
+    const tenant = await requireTenantContext(new URL(request.url).searchParams.get("companyId"), {
+      overview: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
+    const userId = tenant.ctx.userId;
+    const role = await getEffectiveUserRole(userId, tenant.ctx.session.user?.role);
 
     await ensureDashboardNotificationsColumn();
+    await ensureEnquiryNotificationEnum();
 
     const [pref] = await db
       .select({ dashboardNotificationsEnabled: users.dashboardNotificationsEnabled })
@@ -73,11 +58,8 @@ export async function GET(request: NextRequest) {
 
     const whereParts = [eq(notifications.companyId, companyId)];
     if (!isAdminRole(role)) {
-      whereParts.push(sql`${notifications.type} <> 'payment'`);
-      whereParts.push(sql`${notifications.type} <> 'enquiry'`);
-    }
-    if (companyId !== "aha") {
-      whereParts.push(sql`${notifications.type} <> 'enquiry'`);
+      whereParts.push(sql`${notifications.type}::text <> 'payment'`);
+      whereParts.push(sql`${notifications.type}::text <> 'enquiry'`);
     }
 
     const whereClause = and(...whereParts);
@@ -107,38 +89,25 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = getUserIdFromSession(session);
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const role = await getEffectiveUserRole(userId, session?.user?.role);
-    if (!canAccessDashboard(role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const body = patchSchema.safeParse(await request.json());
     if (!body.success) {
       return NextResponse.json({ error: body.error.flatten().fieldErrors }, { status: 400 });
     }
     const d = body.data;
-    const companyId = d.companyId ? resolveCompanyId(d.companyId) : null;
     if (d.markAllRead) {
-      if (!companyId || !isValidCompanyId(companyId)) {
-        return NextResponse.json({ error: "companyId required" }, { status: 400 });
-      }
-      if (!isAdminRole(role)) {
-        const ok = await userHasAnyModuleAccess(userId, companyId);
-        if (!ok) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
+      const tenant = await requireTenantContext(d.companyId, { overview: true });
+      if (!tenant.ok) return tenant.response;
       await db
         .update(notifications)
         .set({ isRead: true })
-        .where(eq(notifications.companyId, companyId));
+        .where(eq(notifications.companyId, tenant.ctx.companyId));
       return NextResponse.json({ success: true });
     }
     if (!d.id) {
       return NextResponse.json({ error: "id or markAllRead required" }, { status: 400 });
     }
+    const staff = await requireStaffUser();
+    if (!staff.ok) return staff.response;
     const [row] = await db
       .select()
       .from(notifications)
@@ -147,10 +116,8 @@ export async function PATCH(request: NextRequest) {
     if (!row) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-    if (!isAdminRole(role)) {
-      const ok = await userHasAnyModuleAccess(userId, row.companyId);
-      if (!ok) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    const tenant = await requireTenantContext(row.companyId, { overview: true });
+    if (!tenant.ok) return tenant.response;
     await db
       .update(notifications)
       .set({ isRead: true })

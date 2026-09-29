@@ -6,6 +6,16 @@ import { canAccessDashboard, isAdminRole } from "@/lib/roles";
 import type { DashboardModuleId } from "@/lib/dashboard-modules";
 import { isDashboardModuleId } from "@/lib/dashboard-modules";
 import { COMPANY_IDS, type CompanyId } from "@/types/company";
+import {
+  companyAdminIdsFromMemberships,
+  ensureMembershipsReady,
+  getActiveMembership,
+  listActiveMemberships,
+} from "@/lib/membership";
+import {
+  canProceedTenantAccess,
+  membershipGrantsFullCompanyAccess,
+} from "@/lib/membership-role";
 
 export type PermissionMatrix = Record<
   string,
@@ -90,28 +100,35 @@ export async function loadUserPermissionPayload(
 ): Promise<{
   isAdmin: boolean;
   companyIds: CompanyId[];
+  companyAdminIds: CompanyId[];
   matrix: PermissionMatrix;
 }> {
-  const role =
-    resolvedRole ?? (await getEffectiveUserRole(userId, sessionRole));
+  const role = resolvedRole ?? (await getEffectiveUserRole(userId, sessionRole));
+  await ensureMembershipsReady();
   if (isAdminRole(role)) {
     return {
       isAdmin: true,
       companyIds: [...COMPANY_IDS],
+      companyAdminIds: [...COMPANY_IDS],
       matrix: {},
     };
   }
+
+  const memberships = await listActiveMemberships(userId);
+  const memberSet = new Set(memberships.map((m) => m.companyId));
+  const companyAdminIds = companyAdminIdsFromMemberships(memberships);
 
   const rows = await db
     .select()
     .from(userPermissions)
     .where(eq(userPermissions.userId, userId));
 
-  const companySet = new Set<CompanyId>();
+  const companySet = new Set<CompanyId>(companyAdminIds);
   const matrix: PermissionMatrix = {};
 
   for (const r of rows) {
     if (!isDashboardModuleId(r.module)) continue;
+    if (!memberSet.has(r.companyId as CompanyId)) continue;
     if (r.canView || r.canEdit) {
       companySet.add(r.companyId as CompanyId);
     }
@@ -125,13 +142,41 @@ export async function loadUserPermissionPayload(
   return {
     isAdmin: false,
     companyIds: [...companySet],
+    companyAdminIds,
     matrix,
   };
 }
 
-/**
- * Returns `NextResponse` on failure, or `null` when the caller may proceed.
- */
+async function tenantAccessGate(
+  session: { user?: { id?: string | null; role?: string | null } } | null,
+  companyId: string,
+  hasModuleAccess: () => Promise<boolean>
+): Promise<NextResponse | null> {
+  const userId = getUserIdFromSession(session);
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const role = await getEffectiveUserRole(userId, session?.user?.role);
+  if (!canAccessDashboard(role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  await ensureMembershipsReady();
+  const membership = await getActiveMembership(userId, companyId);
+  const fullCompanyAccess =
+    isAdminRole(role) ||
+    membershipGrantsFullCompanyAccess(membership?.role, membership?.status);
+  const allowed = canProceedTenantAccess({
+    isPlatformAdmin: isAdminRole(role),
+    membership,
+    hasModuleAccess: fullCompanyAccess ? true : await hasModuleAccess(),
+  });
+  if (!allowed) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  return null;
+}
+
+/** Returns `NextResponse` on failure, or `null` when the caller may proceed. */
 export async function checkApiPermission(
   session: { user?: { id?: string | null; role?: string | null } } | null,
   companyId: string,
@@ -142,18 +187,9 @@ export async function checkApiPermission(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const role = await getEffectiveUserRole(userId, session?.user?.role);
-  if (!canAccessDashboard(role)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-  if (isAdminRole(role)) {
-    return null;
-  }
-  const ok = await userHasModuleAccess(userId, companyId, module, requireEdit);
-  if (!ok) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-  return null;
+  return tenantAccessGate(session, companyId, () =>
+    userHasModuleAccess(userId, companyId, module, requireEdit)
+  );
 }
 
 export async function checkAdminApi(
@@ -179,18 +215,7 @@ export async function checkOverviewApi(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const role = await getEffectiveUserRole(userId, session?.user?.role);
-  if (!canAccessDashboard(role)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-  if (isAdminRole(role)) {
-    return null;
-  }
-  const ok = await userHasAnyModuleAccess(userId, companyId);
-  if (!ok) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-  return null;
+  return tenantAccessGate(session, companyId, () => userHasAnyModuleAccess(userId, companyId));
 }
 
 /** First matching module grants access (OR). */
@@ -204,17 +229,12 @@ export async function checkAnyApiPermission(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const role = await getEffectiveUserRole(userId, session?.user?.role);
-  if (!canAccessDashboard(role)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-  if (isAdminRole(role)) {
-    return null;
-  }
-  for (const m of modules) {
-    if (await userHasModuleAccess(userId, companyId, m, requireEdit)) {
-      return null;
+  return tenantAccessGate(session, companyId, async () => {
+    for (const m of modules) {
+      if (await userHasModuleAccess(userId, companyId, m, requireEdit)) {
+        return true;
+      }
     }
-  }
-  return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return false;
+  });
 }

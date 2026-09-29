@@ -65,8 +65,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
       return;
     }
 
-    if (signupPassword.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (signupPassword.length < 8) {
+      setError("Password must be at least 8 characters");
       return;
     }
 
@@ -300,7 +300,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
                 className="input input-bordered w-full pl-10 pr-10"
                 style={{ outline: "1px solid gray" }}
                 required
-                minLength={6}
+                minLength={8}
               />
               <button
                 type="button"
@@ -311,7 +311,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "login" }: AuthModalPr
               </button>
             </div>
             <label className="label">
-              <span className="label-text-alt text-base-content/50">Min 6 characters</span>
+              <span className="label-text-alt text-base-content/50">Min 8 characters</span>
             </label>
           </div>
 

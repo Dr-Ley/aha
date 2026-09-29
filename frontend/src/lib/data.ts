@@ -74,7 +74,12 @@ export interface Tour {
   countries: ("Kenya" | "Tanzania")[]
   duration: string;
   days: number;
+  /** Adult USD rate (canonical). */
   price: number;
+  /** Child USD rate; omit to use the adult rate. */
+  childPrice?: number;
+  /** Infant USD rate; omit to treat infants as complimentary. */
+  infantPrice?: number;
   originalPrice?: number;
   /** Multiple images for tour card (hover on desktop, slideshow on mobile). First image is primary. */
   image: string[];
@@ -106,7 +111,10 @@ export interface Testimonial {
   avatar: string;
   rating: number;
   text: string;
+  /** Tour title for display (from joined tours.title). */
   tour: string;
+  /** Tour slug for links (from joined tours.slug). */
+  tourSlug?: string;
 }
 
 export interface Accomodations {
@@ -182,11 +190,16 @@ export function formatUsdForDisplay(usdAmount: number, target: CurrencyCode): st
   return `${c.symbol}${n.toLocaleString()}`;
 }
 
-/** Format a dashboard amount already stored in Kenyan shillings without converting it. */
-export function formatKesForDisplay(amount: number): string {
-  const c = getCurrencyByCode("KES");
+/** Format a stored amount in its own currency without converting. */
+export function formatAmountForDisplay(amount: number, currency: CurrencyCode = "KES"): string {
+  const c = getCurrencyByCode(currency);
   const n = Number.isFinite(amount) ? Math.round(amount) : 0;
   return `${c.symbol}${n.toLocaleString()}`;
+}
+
+/** Format a dashboard amount already stored in Kenyan shillings without converting it. */
+export function formatKesForDisplay(amount: number): string {
+  return formatAmountForDisplay(amount, "KES");
 }
 
 /** Convert any stored amount + its ISO code to USD (floating, for display math). */
@@ -703,7 +716,7 @@ export const accommodations: Accomodations[] = [
       "WiFi",
       "Parking"
     ],
-    priceFrom: 60,
+      priceFrom: 100,
     badges: ["Budget", "Near Gate", "Eco-Friendly"],
     recommended: true,
     type: "tented-camp"

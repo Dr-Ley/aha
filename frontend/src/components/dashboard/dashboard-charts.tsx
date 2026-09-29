@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -23,10 +24,22 @@ export type TrendPoint = { month: string; label: string; amount: number };
 export type CountryAmount = { country: string; amount: number };
 export type SafariSlice = { name: string; value: number };
 
+export type ProductSale = { name: string; quantity: number; amount: number };
+
 type DashboardChartsProps = {
   revenueTrend: TrendPoint[];
   revenueByCountry: CountryAmount[];
   safariDistribution: SafariSlice[];
+};
+
+type HospitalityChartsProps = {
+  hotelStayTrend: TrendPoint[];
+  barWeeklySales: TrendPoint[] | { label: string; amount: number }[];
+  barProductSales: ProductSale[];
+  restaurantSalesTrend?: TrendPoint[];
+  restaurantProductSales?: ProductSale[];
+  showRestaurant?: boolean;
+  barTrendTitle?: string;
 };
 
 function SafariLegend({ payload }: { payload?: { value?: unknown; color?: string }[] }) {
@@ -157,6 +170,167 @@ export function DashboardCharts({
           </ResponsiveContainer>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ChartCard({
+  title,
+  children,
+  wide,
+}: {
+  title: string;
+  children: ReactNode;
+  wide?: boolean;
+}) {
+  return (
+    <div className={`rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm ${wide ? "lg:col-span-2" : ""}`}>
+      <h3 className="mb-4 text-sm font-semibold text-base-content">{title}</h3>
+      <div className={wide ? "h-80 w-full min-w-0 overflow-hidden" : "h-72 w-full min-w-0"}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export function HospitalityCharts({
+  hotelStayTrend,
+  barWeeklySales,
+  barProductSales,
+  restaurantSalesTrend = [],
+  restaurantProductSales = [],
+  showRestaurant = false,
+  barTrendTitle = "Weekly bar sales",
+}: HospitalityChartsProps) {
+  const barTrend = barWeeklySales.map((row) => ({
+    label: row.label,
+    amount: row.amount,
+  }));
+  const productRows =
+    barProductSales.length > 0 ? barProductSales : [{ name: "No products sold", quantity: 0, amount: 0 }];
+  const restaurantProducts =
+    restaurantProductSales.length > 0
+      ? restaurantProductSales
+      : [{ name: "No products sold", quantity: 0, amount: 0 }];
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <ChartCard title="Hotel stay revenue" wide>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={hotelStayTrend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
+            <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+            <YAxis
+              tick={{ fontSize: 11 }}
+              tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
+            />
+            <Tooltip
+              formatter={(value) => [
+                formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
+                "Stay revenue",
+              ]}
+            />
+            <Line
+              type="monotone"
+              dataKey="amount"
+              stroke="#2d5a3d"
+              strokeWidth={2}
+              dot={{ fill: "#d4a84b", strokeWidth: 0, r: 3 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartCard>
+
+      <ChartCard title={barTrendTitle} wide>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={barTrend} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
+            <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" height={48} />
+            <YAxis
+              tick={{ fontSize: 11 }}
+              tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
+            />
+            <Tooltip
+              formatter={(value) => [
+                formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
+                "Sales",
+              ]}
+            />
+            <Bar dataKey="amount" fill="#2d5a3d" radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
+
+      <ChartCard title="Bar products" wide={!showRestaurant}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={productRows} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
+            <XAxis
+              type="number"
+              tick={{ fontSize: 11 }}
+              tickFormatter={(v) => String(Math.round(typeof v === "number" ? v : Number(v) || 0))}
+            />
+            <YAxis type="category" dataKey="name" width={72} tick={{ fontSize: 11 }} />
+            <Tooltip
+              formatter={(value, _name, item) => {
+                const row = item?.payload as ProductSale | undefined;
+                return [
+                  `${row?.quantity ?? value} sold · ${formatKesForDisplay(row?.amount ?? 0)}`,
+                  "Product",
+                ];
+              }}
+            />
+            <Bar dataKey="quantity" fill="#d4a84b" radius={[0, 6, 6, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
+
+      {showRestaurant ? (
+        <>
+          <ChartCard title="Restaurant sales">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={restaurantSalesTrend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
+                <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
+                />
+                <Tooltip
+                  formatter={(value) => [
+                    formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
+                    "Sales",
+                  ]}
+                />
+                <Line type="monotone" dataKey="amount" stroke="#5a7d6a" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </ChartCard>
+          <ChartCard title="Restaurant products">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={restaurantProducts} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={(v) => String(Math.round(typeof v === "number" ? v : Number(v) || 0))}
+                />
+                <YAxis type="category" dataKey="name" width={88} tick={{ fontSize: 11 }} />
+                <Tooltip
+                  formatter={(value, _name, item) => {
+                    const row = item?.payload as ProductSale | undefined;
+                    return [
+                      `${row?.quantity ?? value} sold · ${formatKesForDisplay(row?.amount ?? 0)}`,
+                      "Product",
+                    ];
+                  }}
+                />
+                <Bar dataKey="quantity" fill="#8b6914" radius={[0, 6, 6, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </>
+      ) : null}
     </div>
   );
 }

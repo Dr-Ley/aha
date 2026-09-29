@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import {
   LayoutDashboard,
   BookOpenCheck,
+  Compass,
   CreditCard,
   Landmark,
   ReceiptText,
@@ -17,7 +18,9 @@ import {
   Bed,
   UtensilsCrossed,
   Wine,
+  Users,
   LogOut,
+  Map,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCompany } from "@/store/company-context";
@@ -37,6 +40,7 @@ type NavKey =
   | "settings"
   | "enquiries"
   | "revenue"
+  | "customers"
   | DashboardModuleId;
 
 const navItems: {
@@ -55,6 +59,27 @@ const navItems: {
     icon: BookOpenCheck,
     companyOk: companyUsesSafariTours,
     moduleKey: "bookings",
+  },
+  {
+    href: "/dashboard/itineraries",
+    label: "Itineraries",
+    icon: Map,
+    companyOk: companyUsesSafariTours,
+    moduleKey: "bookings",
+  },
+  {
+    href: "/dashboard/tours",
+    label: "Safari tours",
+    icon: Compass,
+    companyOk: companyUsesSafariTours,
+    moduleKey: "tours",
+  },
+  {
+    href: "/dashboard/customers",
+    label: "Customers",
+    icon: Users,
+    companyOk: () => true,
+    moduleKey: "customers",
   },
   {
     href: "/dashboard/hotel-stays",
@@ -148,8 +173,15 @@ export function DashboardSidebar({ collapsed, isMobile, onToggle, onNavigate }: 
       if (item.moduleKey === "overview")
         return canViewModule("overview") || hasOverviewAccess;
       if (item.moduleKey === "revenue") return canViewRevenue();
-      if (item.moduleKey === "bookings") {
+      if (item.moduleKey === "bookings" || item.moduleKey === "tours") {
         return canViewModule("bookings") || canViewModule("tours");
+      }
+      if (item.moduleKey === "customers") {
+        return (
+          canViewModule("bookings") ||
+          canViewModule("tours") ||
+          canViewModule("accommodation")
+        );
       }
       return canViewModule(item.moduleKey);
     });

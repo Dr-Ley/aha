@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { barCategories } from "@/lib/schema";
-import { auth } from "@/lib/auth";
-import { checkApiPermission, canAccessDashboardFromSession } from "@/lib/permissions-server";
-import { isValidCompanyId, resolveCompanyId } from "@/lib/tenant";
+import { requireTenantContext } from "@/server/tenancy";
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { companyIdZod } from "@/lib/schemas/company-id";
-
-function getUserId(session: { user?: { id?: string | null } } | null): number | null {
-  if (!session?.user?.id) return null;
-  return typeof session.user.id === "string" ? parseInt(session.user.id, 10) : session.user.id;
-}
 
 const postSchema = z.object({
   companyId: companyIdZod,
@@ -22,14 +15,12 @@ const postSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    const companyId = resolveCompanyId(new URL(request.url).searchParams.get("companyId"));
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), {
+      module: "bar",
+      requireEdit: false,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const rows = await db
       .select()
       .from(barCategories)
@@ -44,22 +35,21 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!getUserId(session) || !await canAccessDashboardFromSession(session)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     const body = postSchema.safeParse(await request.json());
     if (!body.success) {
       return NextResponse.json({ error: body.error.flatten().fieldErrors }, { status: 400 });
     }
+    const tenant = await requireTenantContext(body.data.companyId, {
+      module: "bar",
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+    const companyId = tenant.ctx.companyId;
     const d = body.data;
-    if (!isValidCompanyId(d.companyId)) {
-      return NextResponse.json({ error: "Invalid company" }, { status: 400 });
-    }
     const [row] = await db
       .insert(barCategories)
       .values({
-        companyId: d.companyId,
+        companyId,
         name: d.name,
         description: d.description ?? null,
         sortOrder: d.sortOrder ?? 0,
