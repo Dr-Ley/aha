@@ -6,7 +6,6 @@ import { useCompany } from "@/store/company-context";
 import { companyUsesBar } from "@/types/company";
 import { DashboardModal } from "@/components/dashboard/dashboard-modal";
 import { TypeaheadCreateSelect } from "@/components/dashboard/typeahead-create-select";
-import { EntityViewModal } from "@/components/dashboard/entity-view-modal";
 import {
   DashboardPagination,
   DashboardTableExport,
@@ -15,16 +14,22 @@ import {
 } from "@/components/dashboard/dashboard-table-tools";
 import { formatKesForDisplay } from "@/lib/data";
 import { orderPayLabel, orderPaySelectAccentClass } from "@/lib/dashboard-status-badges";
+import { nairobiYmd } from "@/lib/nairobi-date";
 import { cn } from "@/lib/utils";
 import {
   breakdownSummary,
   dateRangeForPreset,
+  dayInRange,
+  dayPeriodLabel,
   defaultSaturdayFridayWeek,
+  formatDayFromLabel,
   formatWeekFromLabel,
   itemsSoldTotal,
+  parseDayLabel,
   parseWeekPeriod,
   salesTotal,
   soldLines,
+  weekOverlapsRange,
   weekPeriodLabel,
   type WeeklyDatePreset,
 } from "@/lib/weekly-bar";
@@ -60,23 +65,20 @@ type OrderRow = {
 
 type LineForm = { itemId: string; quantity: string };
 
-const posExportColumns: ExportColumn<OrderRow>[] = [
-  { key: "status", header: "Payment status", value: (o) => o.status },
-  { key: "table", header: "Table / ref", value: (o) => o.tableLabel ?? o.customerName },
-  { key: "customer", header: "Customer", value: (o) => o.customerName },
-  { key: "total", header: "Total", value: (o) => o.total },
-  { key: "notes", header: "Notes", value: (o) => o.notes },
-  { key: "createdAt", header: "Created", value: (o) => o.createdAt },
-];
+function periodText(o: OrderRow, isWeekly: boolean) {
+  return isWeekly ? formatWeekFromLabel(o.tableLabel) : formatDayFromLabel(o.tableLabel);
+}
 
-const weeklyExportColumns: ExportColumn<OrderRow>[] = [
-  { key: "week", header: "Week", value: (o) => formatWeekFromLabel(o.tableLabel) },
-  { key: "sales", header: "Sales", value: (o) => recordSales(o) },
-  { key: "itemsSold", header: "Items sold", value: (o) => recordItemsSold(o) },
-  { key: "breakdown", header: "Breakdown", value: (o) => recordBreakdown(o) },
-  { key: "status", header: "Status", value: (o) => orderPayLabel(o.status) },
-  { key: "notes", header: "Notes", value: (o) => o.notes },
-];
+function salesExportColumns(isWeekly: boolean): ExportColumn<OrderRow>[] {
+  return [
+    { key: "period", header: isWeekly ? "Week" : "Day", value: (o) => periodText(o, isWeekly) },
+    { key: "sales", header: "Sales", value: (o) => recordSales(o) },
+    { key: "itemsSold", header: "Items sold", value: (o) => recordItemsSold(o) },
+    { key: "breakdown", header: "Breakdown", value: (o) => recordBreakdown(o) },
+    { key: "status", header: "Status", value: (o) => orderPayLabel(o.status) },
+    { key: "notes", header: "Notes", value: (o) => o.notes },
+  ];
+}
 
 function recordLines(o: OrderRow) {
   return soldLines(o.lineItems ?? []);
@@ -114,10 +116,9 @@ export function BarPanel() {
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
   const [form, setForm] = useState({
-    tableLabel: "",
-    customerName: "",
     weekStart: "",
     weekEnd: "",
+    saleDate: "",
     notes: "",
     status: "unpaid",
     lines: [{ itemId: "", quantity: "1" }] as LineForm[],
@@ -125,14 +126,12 @@ export function BarPanel() {
   const [editing, setEditing] = useState<OrderRow | null>(null);
   const [editSaving, setEditSaving] = useState(false);
   const [editForm, setEditForm] = useState({
-    tableLabel: "",
-    customerName: "",
     weekStart: "",
     weekEnd: "",
+    saleDate: "",
     notes: "",
     status: "unpaid",
   });
-  const [viewId, setViewId] = useState<number | null>(null);
   const [detail, setDetail] = useState<OrderRow | null>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
@@ -171,19 +170,23 @@ export function BarPanel() {
   }, [load]);
 
   const filteredRecords = useMemo(() => {
-    const range = isWeekly ? dateRangeForPreset(preset, new Date(), { from: customFrom, to: customTo }) : null;
+    const range = dateRangeForPreset(preset, new Date(), { from: customFrom, to: customTo });
     const q = search.trim().toLowerCase();
     return orders
       .filter((o) => {
         if (statusF && o.status !== statusF) return false;
-        if (isWeekly && range) {
-          const period = parseWeekPeriod(o.tableLabel);
-          if (period && !((period.start <= range.to && period.end >= range.from))) return false;
-          if (!period) return false;
+        if (range) {
+          if (isWeekly) {
+            const period = parseWeekPeriod(o.tableLabel);
+            if (!period || !weekOverlapsRange(period, range.from, range.to)) return false;
+          } else {
+            const day = parseDayLabel(o.tableLabel);
+            if (!dayInRange(day, range.from, range.to)) return false;
+          }
         }
         if (!q) return true;
         const hay = [
-          formatWeekFromLabel(o.tableLabel),
+          periodText(o, isWeekly),
           o.tableLabel,
           o.notes,
           o.customerName,
@@ -196,14 +199,14 @@ export function BarPanel() {
         return hay.includes(q);
       })
       .sort((a, b) => {
-        const pa = parseWeekPeriod(a.tableLabel)?.start ?? "";
-        const pb = parseWeekPeriod(b.tableLabel)?.start ?? "";
+        const pa = isWeekly ? parseWeekPeriod(a.tableLabel)?.start ?? "" : parseDayLabel(a.tableLabel) ?? "";
+        const pb = isWeekly ? parseWeekPeriod(b.tableLabel)?.start ?? "" : parseDayLabel(b.tableLabel) ?? "";
         if (pa && pb && pa !== pb) return pb.localeCompare(pa);
         return String(b.createdAt ?? "").localeCompare(String(a.createdAt ?? ""));
       });
   }, [orders, statusF, isWeekly, preset, customFrom, customTo, search]);
 
-  const displayedOrders = isWeekly ? filteredRecords : statusF ? orders.filter((o) => o.status === statusF) : orders;
+  const displayedOrders = filteredRecords;
   const { page, pageCount, setPage, pagedRows } = useDashboardPagination(displayedOrders, 10);
 
   const weeklyKpis = useMemo(() => {
@@ -246,10 +249,9 @@ export function BarPanel() {
   function openNew() {
     const week = defaultSaturdayFridayWeek();
     setForm({
-      tableLabel: "",
-      customerName: "",
       weekStart: isWeekly ? week.start : "",
       weekEnd: isWeekly ? week.end : "",
+      saleDate: isWeekly ? "" : nairobiYmd(),
       notes: "",
       status: "unpaid",
       lines: [{ itemId: "", quantity: "1" }],
@@ -322,9 +324,13 @@ export function BarPanel() {
       showToast("Add at least one product", "error");
       return;
     }
-    const tableLabel = isWeekly ? weekLabelFromForm(form.weekStart, form.weekEnd) : form.tableLabel || null;
-    if (isWeekly && !tableLabel) {
-      showToast("Enter the week start and end dates", "error");
+    const tableLabel = isWeekly
+      ? weekLabelFromForm(form.weekStart, form.weekEnd)
+      : form.saleDate
+        ? dayPeriodLabel(form.saleDate)
+        : null;
+    if (!tableLabel) {
+      showToast(isWeekly ? "Enter the week start and end dates" : "Enter the sales date", "error");
       return;
     }
     setSaving(true);
@@ -335,7 +341,7 @@ export function BarPanel() {
         body: JSON.stringify({
           companyId: selectedCompanyId,
           tableLabel,
-          customerName: isWeekly ? null : form.customerName || null,
+          customerName: null,
           notes: form.notes || null,
           status: form.status || "unpaid",
           items: linePayload,
@@ -345,7 +351,7 @@ export function BarPanel() {
       if (!res.ok) throw new Error(typeof data.error === "string" ? data.error : "Failed");
       setModal(false);
       await load();
-      showToast(isWeekly ? "Weekly record saved" : "Order created", "success");
+      showToast(isWeekly ? "Weekly record saved" : "Daily record saved", "success");
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error", "error");
     } finally {
@@ -358,9 +364,11 @@ export function BarPanel() {
     if (!editing) return;
     const tableLabel = isWeekly
       ? weekLabelFromForm(editForm.weekStart, editForm.weekEnd)
-      : editForm.tableLabel.trim() || null;
-    if (isWeekly && !tableLabel) {
-      showToast("Enter the week start and end dates", "error");
+      : editForm.saleDate
+        ? dayPeriodLabel(editForm.saleDate)
+        : null;
+    if (!tableLabel) {
+      showToast(isWeekly ? "Enter the week start and end dates" : "Enter the sales date", "error");
       return;
     }
     setEditSaving(true);
@@ -372,7 +380,7 @@ export function BarPanel() {
           id: editing.id,
           companyId: selectedCompanyId,
           tableLabel,
-          customerName: isWeekly ? null : editForm.customerName.trim() || null,
+          customerName: null,
           notes: editForm.notes.trim() || null,
           status: editForm.status,
         }),
@@ -381,7 +389,7 @@ export function BarPanel() {
       if (!res.ok) throw new Error(typeof d.error === "string" ? d.error : "Update failed");
       setEditing(null);
       await load();
-      showToast(isWeekly ? "Weekly record updated" : "Order updated", "success");
+      showToast(isWeekly ? "Weekly record updated" : "Daily record updated", "success");
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error", "error");
     } finally {
@@ -392,10 +400,9 @@ export function BarPanel() {
   function openEdit(o: OrderRow) {
     const period = parseWeekPeriod(o.tableLabel);
     setEditForm({
-      tableLabel: o.tableLabel ?? "",
-      customerName: o.customerName ?? "",
       weekStart: period?.start ?? "",
       weekEnd: period?.end ?? "",
+      saleDate: parseDayLabel(o.tableLabel) ?? "",
       notes: o.notes ?? "",
       status: ORDER_PAY_STATUS.includes(o.status as (typeof ORDER_PAY_STATUS)[number])
         ? o.status
@@ -407,7 +414,9 @@ export function BarPanel() {
   async function removeOrder(id: number) {
     if (
       !window.confirm(
-        isWeekly ? "Delete this weekly bar record? This cannot be undone." : "Delete this bar order? This cannot be undone."
+        isWeekly
+          ? "Delete this weekly bar record? This cannot be undone."
+          : "Delete this daily bar record? This cannot be undone."
       )
     ) {
       return;
@@ -420,7 +429,7 @@ export function BarPanel() {
       return;
     }
     await load();
-    showToast(isWeekly ? "Weekly record deleted" : "Order deleted", "success");
+    showToast(isWeekly ? "Weekly record deleted" : "Daily record deleted", "success");
   }
 
   if (!ok) {
@@ -460,108 +469,53 @@ export function BarPanel() {
           <p className="text-sm text-base-content/60">
             {isWeekly
               ? "Weekly bar sales records for management. Each row is one week, not a single drink order."
-              : "Drink orders and payment status."}
+              : "Daily bar sales records for management. Each row is one day, not a single drink order."}
           </p>
         </div>
         <button type="button" className="btn btn-primary btn-sm gap-2" onClick={openNew}>
           <Plus className="h-4 w-4" />
-          {isWeekly ? "New weekly record" : "New order"}
+          {isWeekly ? "New weekly record" : "New daily record"}
         </button>
       </div>
 
-      {isWeekly && (
-        <>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-              <p className="text-xs font-medium text-base-content/60">Total sales</p>
-              <p className="mt-3 text-2xl font-semibold tabular-nums">{formatKesForDisplay(weeklyKpis.sales)}</p>
-            </div>
-            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-              <p className="text-xs font-medium text-base-content/60">Weekly records</p>
-              <p className="mt-3 text-2xl font-semibold tabular-nums">{weeklyKpis.records}</p>
-            </div>
-            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-              <p className="text-xs font-medium text-base-content/60">Items sold</p>
-              <p className="mt-3 text-2xl font-semibold tabular-nums">{weeklyKpis.itemsSold}</p>
-            </div>
-            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-              <p className="text-xs font-medium text-base-content/60">Average weekly sales</p>
-              <p className="mt-3 text-2xl font-semibold tabular-nums">{formatKesForDisplay(weeklyKpis.average)}</p>
-            </div>
-          </div>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+          <p className="text-xs font-medium text-base-content/60">Total sales</p>
+          <p className="mt-3 text-2xl font-semibold tabular-nums">{formatKesForDisplay(weeklyKpis.sales)}</p>
+        </div>
+        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+          <p className="text-xs font-medium text-base-content/60">
+            {isWeekly ? "Weekly records" : "Daily records"}
+          </p>
+          <p className="mt-3 text-2xl font-semibold tabular-nums">{weeklyKpis.records}</p>
+        </div>
+        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+          <p className="text-xs font-medium text-base-content/60">Items sold</p>
+          <p className="mt-3 text-2xl font-semibold tabular-nums">{weeklyKpis.itemsSold}</p>
+        </div>
+        <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+          <p className="text-xs font-medium text-base-content/60">
+            {isWeekly ? "Average weekly sales" : "Average daily sales"}
+          </p>
+          <p className="mt-3 text-2xl font-semibold tabular-nums">{formatKesForDisplay(weeklyKpis.average)}</p>
+        </div>
+      </div>
 
-          <div className="flex flex-col gap-3 rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm lg:flex-row lg:flex-wrap lg:items-end">
-            <label className="form-control min-w-44">
-              <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">Period</span>
-              <select
-                className="select select-bordered select-sm rounded-md"
-                style={inputStyle}
-                value={preset}
-                onChange={(e) => setPreset(e.target.value as WeeklyDatePreset)}
-              >
-                {DATE_PRESETS.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {preset === "custom" && (
-              <>
-                <label className="form-control">
-                  <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">From</span>
-                  <input
-                    type="date"
-                    className="input input-bordered input-sm rounded-md"
-                    style={inputStyle}
-                    value={customFrom}
-                    onChange={(e) => setCustomFrom(e.target.value)}
-                  />
-                </label>
-                <label className="form-control">
-                  <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">To</span>
-                  <input
-                    type="date"
-                    className="input input-bordered input-sm rounded-md"
-                    style={inputStyle}
-                    value={customTo}
-                    onChange={(e) => setCustomTo(e.target.value)}
-                  />
-                </label>
-              </>
-            )}
-            <label className="form-control min-w-44">
-              <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">Status</span>
-              <select
-                className="select select-bordered select-sm rounded-md"
-                style={inputStyle}
-                value={statusF}
-                onChange={(e) => setStatusF(e.target.value)}
-              >
-                <option value="">All</option>
-                {ORDER_PAY_STATUS.map((s) => (
-                  <option key={s} value={s}>
-                    {orderPayLabel(s)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="form-control min-w-56 flex-1">
-              <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">Search</span>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/40" />
-                <input
-                  className="input input-bordered input-sm w-full rounded-md pl-9"
-                  style={inputStyle}
-                  placeholder="Week, product, or notes"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </label>
+      <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
+        <label className="form-control w-full max-w-md">
+          <span className="label-text text-xs font-medium uppercase tracking-wide text-base-content/60">Search</span>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/40" />
+            <input
+              className="input input-bordered input-sm w-full rounded-md pl-9"
+              style={inputStyle}
+              placeholder={isWeekly ? "Week, product, or notes" : "Day, product, or notes"}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-        </>
-      )}
+        </label>
+      </div>
 
       {items.length === 0 && !loading && (
         <p className="text-sm text-warning">No bar items yet. Search in a line item to create the first one.</p>
@@ -569,17 +523,75 @@ export function BarPanel() {
 
       {error && <p className="text-sm text-error">{error}</p>}
 
-      {isWeekly ? (
-        <div className="overflow-x-auto rounded-2xl border border-base-content/10 bg-base-100 shadow-sm">
+      <div className="overflow-x-auto rounded-2xl border border-base-content/10 bg-base-100 shadow-sm">
           <table className="table table-sm">
             <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
               <tr>
-                <th>Week</th>
-                <th className="text-right">Sales</th>
-                <th className="text-right">Items sold</th>
-                <th>Breakdown</th>
-                <th>Status</th>
-                <th className="w-[1%]">Actions</th>
+                <th className="align-top normal-case font-normal">
+                  <label className="flex min-w-44 flex-col gap-1 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
+                    <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
+                      {isWeekly ? "Week" : "Day"}
+                      <select
+                        className="select select-bordered select-xs max-w-40 rounded-md font-normal normal-case"
+                        style={inputStyle}
+                        value={preset}
+                        onChange={(e) => setPreset(e.target.value as WeeklyDatePreset)}
+                        title={isWeekly ? "Filter by week" : "Filter by day"}
+                      >
+                        {DATE_PRESETS.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </span>
+                    {preset === "custom" && (
+                      <span className="inline-flex flex-wrap items-center gap-1 font-normal normal-case">
+                        <input
+                          type="date"
+                          className="input input-bordered input-xs rounded-md"
+                          style={inputStyle}
+                          value={customFrom}
+                          onChange={(e) => setCustomFrom(e.target.value)}
+                          aria-label="From"
+                        />
+                        <input
+                          type="date"
+                          className="input input-bordered input-xs rounded-md"
+                          style={inputStyle}
+                          value={customTo}
+                          onChange={(e) => setCustomTo(e.target.value)}
+                          aria-label="To"
+                        />
+                      </span>
+                    )}
+                  </label>
+                </th>
+                <th className="text-right align-top">Sales</th>
+                <th className="text-right align-top">Items sold</th>
+                <th className="align-top">Breakdown</th>
+                <th className="align-top normal-case font-normal">
+                  <label className="flex min-w-36 flex-col gap-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
+                    <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
+                      Status
+                      <select
+                        className="select select-bordered select-xs max-w-36 rounded-md font-normal normal-case"
+                        style={inputStyle}
+                        value={statusF}
+                        onChange={(e) => setStatusF(e.target.value)}
+                        title="Filter by status"
+                      >
+                        <option value="">All</option>
+                        {ORDER_PAY_STATUS.map((s) => (
+                          <option key={s} value={s}>
+                            {orderPayLabel(s)}
+                          </option>
+                        ))}
+                      </select>
+                    </span>
+                  </label>
+                </th>
+                <th className="w-[1%] align-top">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -592,7 +604,11 @@ export function BarPanel() {
               ) : displayedOrders.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-10 text-center text-sm text-base-content/50">
-                    {orders.length === 0 ? "No weekly bar records." : "No records match the selected period."}
+                    {orders.length === 0
+                      ? isWeekly
+                        ? "No weekly bar records."
+                        : "No daily bar records."
+                      : "No records match the selected filters."}
                   </td>
                 </tr>
               ) : (
@@ -602,7 +618,7 @@ export function BarPanel() {
                     className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
                     onClick={() => setDetail(o)}
                   >
-                    <td className="font-medium">{formatWeekFromLabel(o.tableLabel)}</td>
+                    <td className="font-medium">{periodText(o, isWeekly)}</td>
                     <td className="text-right tabular-nums font-medium">{formatKesForDisplay(recordSales(o))}</td>
                     <td className="text-right tabular-nums">{recordItemsSold(o)}</td>
                     <td className="max-w-64 text-sm text-base-content/80">{recordBreakdown(o) || "—"}</td>
@@ -668,129 +684,20 @@ export function BarPanel() {
             </tbody>
           </table>
         </div>
-      ) : (
-        <div className="overflow-x-auto rounded-2xl border border-base-content/10 bg-base-100 shadow-sm">
-          <table className="table table-sm">
-            <thead className="sticky top-0 z-10 bg-base-200/95 text-xs uppercase text-base-content/70 backdrop-blur">
-              <tr>
-                <th className="align-top normal-case font-normal">
-                  <label className="flex min-w-32 flex-col gap-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-base-content/70">
-                    <span className="inline-flex flex-wrap items-center gap-1 leading-tight">
-                      Payment
-                      <select
-                        className="select select-bordered select-xs max-w-36 rounded-md font-normal normal-case"
-                        style={inputStyle}
-                        value={statusF}
-                        onChange={(e) => setStatusF(e.target.value)}
-                      >
-                        <option value="">All</option>
-                        {ORDER_PAY_STATUS.map((s) => (
-                          <option key={s} value={s}>
-                            {orderPayLabel(s)}
-                          </option>
-                        ))}
-                      </select>
-                    </span>
-                  </label>
-                </th>
-                <th className="align-top">Table / ref</th>
-                <th className="align-top">Total</th>
-                <th className="align-top">Time</th>
-                <th className="align-top w-[1%]">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="py-12 text-center">
-                    <span className="loading loading-spinner loading-md" />
-                  </td>
-                </tr>
-              ) : displayedOrders.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="py-10 text-center text-sm text-base-content/50">
-                    {orders.length === 0 ? "No bar orders." : "No orders match status filter."}
-                  </td>
-                </tr>
-              ) : (
-                pagedRows.map((o) => (
-                  <tr
-                    key={o.id}
-                    className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
-                    onClick={() => setViewId(o.id)}
-                  >
-                    <td>
-                      <select
-                        className={cn(
-                          "select select-bordered select-xs rounded-md",
-                          orderPaySelectAccentClass(o.status)
-                        )}
-                        style={inputStyle}
-                        value={
-                          ORDER_PAY_STATUS.includes(o.status as (typeof ORDER_PAY_STATUS)[number])
-                            ? o.status
-                            : "unpaid"
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={(e) => void patchStatus(o.id, e.target.value)}
-                      >
-                        {ORDER_PAY_STATUS.map((s) => (
-                          <option key={s} value={s}>
-                            {orderPayLabel(s)}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="text-sm">{o.tableLabel || o.customerName || "—"}</td>
-                    <td className="tabular-nums font-medium">{formatKesForDisplay(Number(o.total) || 0)}</td>
-                    <td className="text-xs text-base-content/60">
-                      {o.createdAt ? new Date(o.createdAt).toLocaleString() : "—"}
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-xs gap-1"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openEdit(o);
-                        }}
-                        title="Edit order"
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-xs text-error gap-1"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          void removeOrder(o.id);
-                        }}
-                        title="Delete order"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
 
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <DashboardPagination page={page} pageCount={pageCount} setPage={setPage} />
         <DashboardTableExport
-          title={isWeekly ? "Weekly bar records" : "Bar orders"}
+          title={isWeekly ? "Weekly bar records" : "Daily bar records"}
           rows={displayedOrders}
-          columns={isWeekly ? weeklyExportColumns : posExportColumns}
+          columns={salesExportColumns(isWeekly)}
         />
       </div>
 
       <DashboardModal
         open={modal}
         onClose={() => setModal(false)}
-        title={isWeekly ? "New weekly bar record" : "New bar order"}
+        title={isWeekly ? "New weekly bar record" : "New daily bar record"}
         wide
       >
         <form onSubmit={submit} className="space-y-3 max-w-2xl">
@@ -820,26 +727,17 @@ export function BarPanel() {
               </label>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-2">
-              <label className="form-control w-full">
-                <span className="label-text text-sm">Table / tab</span>
-                <input
-                  className="input input-bordered input-sm w-full"
-                  style={inputStyle}
-                  value={form.tableLabel}
-                  onChange={(e) => setForm((f) => ({ ...f, tableLabel: e.target.value }))}
-                />
-              </label>
-              <label className="form-control w-full">
-                <span className="label-text text-sm">Guest / ref</span>
-                <input
-                  className="input input-bordered input-sm w-full"
-                  style={inputStyle}
-                  value={form.customerName}
-                  onChange={(e) => setForm((f) => ({ ...f, customerName: e.target.value }))}
-                />
-              </label>
-            </div>
+            <label className="form-control w-full">
+              <span className="label-text text-sm">Sales date</span>
+              <input
+                type="date"
+                className="input input-bordered input-sm w-full"
+                style={inputStyle}
+                required
+                value={form.saleDate}
+                onChange={(e) => setForm((f) => ({ ...f, saleDate: e.target.value }))}
+              />
+            </label>
           )}
           {form.lines.map((line, idx) => (
             <div key={idx} className="grid grid-cols-12 gap-2 items-end">
@@ -894,37 +792,33 @@ export function BarPanel() {
           >
             + Product
           </button>
-          {isWeekly && (
-            <>
-              <label className="form-control w-full">
-                <span className="label-text text-sm">Record status</span>
-                <select
-                  className={cn(
-                    "select select-bordered select-sm w-full rounded-md",
-                    orderPaySelectAccentClass(form.status)
-                  )}
-                  style={inputStyle}
-                  value={form.status}
-                  onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
-                >
-                  {ORDER_PAY_STATUS.map((s) => (
-                    <option key={s} value={s}>
-                      {orderPayLabel(s)}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="form-control w-full">
-                <span className="label-text text-sm">Notes</span>
-                <textarea
-                  className="textarea textarea-bordered textarea-sm w-full min-h-16"
-                  style={inputStyle}
-                  value={form.notes}
-                  onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-                />
-              </label>
-            </>
-          )}
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Record status</span>
+            <select
+              className={cn(
+                "select select-bordered select-sm w-full rounded-md",
+                orderPaySelectAccentClass(form.status)
+              )}
+              style={inputStyle}
+              value={form.status}
+              onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+            >
+              {ORDER_PAY_STATUS.map((s) => (
+                <option key={s} value={s}>
+                  {orderPayLabel(s)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="form-control w-full">
+            <span className="label-text text-sm">Notes</span>
+            <textarea
+              className="textarea textarea-bordered textarea-sm w-full min-h-16"
+              style={inputStyle}
+              value={form.notes}
+              onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
+            />
+          </label>
           <div className="flex justify-end gap-2">
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => setModal(false)}>
               Cancel
@@ -935,7 +829,7 @@ export function BarPanel() {
               ) : isWeekly ? (
                 "Save weekly record"
               ) : (
-                "Create order"
+                "Save daily record"
               )}
             </button>
           </div>
@@ -945,11 +839,11 @@ export function BarPanel() {
       <DashboardModal
         open={editing != null}
         onClose={() => setEditing(null)}
-        title={isWeekly ? "Edit weekly bar record" : editing ? `Edit bar order #${editing.id}` : "Edit order"}
+        title={isWeekly ? "Edit weekly bar record" : "Edit daily bar record"}
       >
         <form onSubmit={saveEdit} className="space-y-3 max-w-lg">
           <label className="form-control w-full">
-            <span className="label-text text-sm">{isWeekly ? "Record status" : "Payment status"}</span>
+            <span className="label-text text-sm">Record status</span>
             <select
               className={cn(
                 "select select-bordered select-sm w-full rounded-md",
@@ -996,26 +890,17 @@ export function BarPanel() {
               </label>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-2">
-              <label className="form-control w-full">
-                <span className="label-text text-sm">Table / tab</span>
-                <input
-                  className="input input-bordered input-sm w-full"
-                  style={inputStyle}
-                  value={editForm.tableLabel}
-                  onChange={(e) => setEditForm((f) => ({ ...f, tableLabel: e.target.value }))}
-                />
-              </label>
-              <label className="form-control w-full">
-                <span className="label-text text-sm">Guest / ref</span>
-                <input
-                  className="input input-bordered input-sm w-full"
-                  style={inputStyle}
-                  value={editForm.customerName}
-                  onChange={(e) => setEditForm((f) => ({ ...f, customerName: e.target.value }))}
-                />
-              </label>
-            </div>
+            <label className="form-control w-full">
+              <span className="label-text text-sm">Sales date</span>
+              <input
+                type="date"
+                className="input input-bordered input-sm w-full"
+                style={inputStyle}
+                required
+                value={editForm.saleDate}
+                onChange={(e) => setEditForm((f) => ({ ...f, saleDate: e.target.value }))}
+              />
+            </label>
           )}
           <label className="form-control w-full">
             <span className="label-text text-sm">Notes</span>
@@ -1040,13 +925,17 @@ export function BarPanel() {
       <DashboardModal
         open={detail != null}
         onClose={() => setDetail(null)}
-        title="Weekly bar record"
+        title={isWeekly ? "Weekly bar record" : "Daily bar record"}
       >
         {detail && (
           <div className="space-y-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-base-content/50">Week</p>
-              <p className="mt-1 text-lg font-semibold">{formatWeekFromLabel(detail.tableLabel, "long")}</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-base-content/50">
+                {isWeekly ? "Week" : "Day"}
+              </p>
+              <p className="mt-1 text-lg font-semibold">
+                {isWeekly ? formatWeekFromLabel(detail.tableLabel, "long") : formatDayFromLabel(detail.tableLabel, "long")}
+              </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl bg-base-200/60 p-3">
@@ -1073,7 +962,7 @@ export function BarPanel() {
                     {detailLines.length === 0 ? (
                       <tr>
                         <td colSpan={3} className="text-sm text-base-content/50">
-                          No products recorded for this week.
+                          {isWeekly ? "No products recorded for this week." : "No products recorded for this day."}
                         </td>
                       </tr>
                     ) : (
@@ -1109,14 +998,6 @@ export function BarPanel() {
           </div>
         )}
       </DashboardModal>
-
-      <EntityViewModal
-        open={viewId !== null}
-        onClose={() => setViewId(null)}
-        companyId={selectedCompanyId}
-        kind="bar"
-        entityId={viewId}
-      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { tours } from "@/lib/schema";
+import { bookings, likes, testimonials, tours } from "@/lib/schema";
 import type { Tour } from "@/lib/data";
 import { ensureCatalogCompanyColumns } from "@/lib/catalog-company";
 import type { CompanyId } from "@/types/company";
@@ -105,4 +105,21 @@ export async function updateTourPackageRates(
     .where(and(eq(tours.id, id), eq(tours.companyId, companyId)))
     .returning();
   return row ? mapDbTourToTour(row) : null;
+}
+
+/** Unlink related records, then delete a tenant safari tour. */
+export async function deleteTourFromDb(companyId: CompanyId, id: number): Promise<boolean> {
+  await ensureCatalogCompanyColumns();
+  const [existing] = await db
+    .select({ id: tours.id })
+    .from(tours)
+    .where(and(eq(tours.id, id), eq(tours.companyId, companyId)))
+    .limit(1);
+  if (!existing) return false;
+
+  await db.delete(likes).where(eq(likes.tourId, id));
+  await db.update(testimonials).set({ tourId: null }).where(eq(testimonials.tourId, id));
+  await db.update(bookings).set({ tourId: null }).where(eq(bookings.tourId, id));
+  await db.delete(tours).where(and(eq(tours.id, id), eq(tours.companyId, companyId)));
+  return true;
 }

@@ -232,7 +232,7 @@ export function DashboardOverview() {
             <p className="mt-1 text-xs text-base-content/50">
               {selectedCompanyId === "ewc"
                 ? `${data.hospitalityKpis.weeklyBarRecords} weekly records`
-                : `${data.hospitalityKpis.weeklyBarRecords} bar orders`}
+                : `${data.hospitalityKpis.weeklyBarRecords} daily records`}
             </p>
           </div>
           {companyUsesRestaurant(selectedCompanyId) ? (
@@ -310,7 +310,7 @@ export function DashboardOverview() {
           restaurantSalesTrend={data.restaurantSalesTrend}
           restaurantProductSales={data.restaurantProductSales}
           showRestaurant={companyUsesRestaurant(selectedCompanyId)}
-          barTrendTitle={selectedCompanyId === "ewc" ? "Weekly bar sales" : "Bar sales"}
+          barTrendTitle={selectedCompanyId === "ewc" ? "Weekly bar sales" : "Daily bar sales"}
         />
       ) : (
         <DashboardCharts

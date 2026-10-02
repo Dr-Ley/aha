@@ -641,8 +641,8 @@ function TestimonialsSection() {
               const source = testimonialSources[index % testimonialSources.length];
               const tourSlug = t.tourSlug ?? testimonialTourCite[t.tour];
               const cite = tourSlug
-                ? `https://africanhomeadventure.com/tours/${tourSlug}`
-                : "https://africanhomeadventure.com/tours";
+                ? `https://www.africanhomeadventure.com/tours/${tourSlug}`
+                : "https://www.africanhomeadventure.com/tours";
               return (
                 <blockquote
                   key={t.id}

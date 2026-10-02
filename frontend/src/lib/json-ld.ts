@@ -1,6 +1,7 @@
 import type { Tour } from "@/lib/data";
+import { SITE_URL } from "@/lib/site-url";
 
-export const SITE_URL = "https://africanhomeadventure.com";
+export { SITE_URL };
 export const LOGO_URL = `${SITE_URL}/AHA_logo.png`;
 
 /** Primary park/area coordinates for tour destination matching. */

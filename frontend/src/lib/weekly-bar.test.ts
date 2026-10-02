@@ -3,7 +3,10 @@ import { describe, it } from "node:test";
 import {
   breakdownSummary,
   dateRangeForPreset,
+  dayInRange,
+  formatDayFromLabel,
   formatWeekFromLabel,
+  parseDayLabel,
   parseWeekPeriod,
   salesTotal,
   soldLines,
@@ -44,6 +47,24 @@ describe("week helpers", () => {
   it("computes this-year bounds in Nairobi", () => {
     const range = dateRangeForPreset("this_year", new Date("2026-09-29T10:00:00+03:00"));
     assert.deepEqual(range, { from: "2026-01-01", to: "2026-12-31" });
+  });
+});
+
+describe("parseDayLabel", () => {
+  it("reads a stored daily sales date and ignores week ranges", () => {
+    assert.equal(parseDayLabel("01/10/2026"), "2026-10-01");
+    assert.equal(parseDayLabel("2026-10-01"), "2026-10-01");
+    assert.equal(parseDayLabel("27/06/2026 - 03/07/2026"), null);
+  });
+
+  it("formats a management label", () => {
+    assert.equal(formatDayFromLabel("01/10/2026"), "01 Oct 2026");
+    assert.equal(formatDayFromLabel("01/10/2026", "long"), "1 October 2026");
+  });
+
+  it("filters a day inside the selected period", () => {
+    assert.equal(dayInRange(parseDayLabel("15/03/2026"), "2026-03-01", "2026-03-31"), true);
+    assert.equal(dayInRange(parseDayLabel("15/04/2026"), "2026-03-01", "2026-03-31"), false);
   });
 });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Trash2 } from "lucide-react";
 import { useCompany } from "@/store/company-context";
 import { formatUsdForDisplay } from "@/lib/data";
 import { quoteTourSafariPackage, resolvePackageRatesUsd } from "@/lib/pricing";
@@ -114,6 +115,7 @@ export function ToursPanel() {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -212,6 +214,34 @@ export function ToursPanel() {
       setError(e instanceof Error ? e.message : "Save failed");
     } finally {
       setSavingId(null);
+    }
+  }
+
+  async function deleteRow(row: TourRateRow) {
+    if (
+      !confirm(
+        `Delete “${row.title}”? Bookings that used this tour will keep their package details but will no longer be linked to it.`
+      )
+    ) {
+      return;
+    }
+    setDeletingId(row.id);
+    setError(null);
+    try {
+      const qs = new URLSearchParams({ id: row.id, companyId: selectedCompanyId });
+      const res = await fetch(`/api/tours?${qs}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(typeof data.error === "string" ? data.error : "Delete failed");
+      setRows((prev) => prev.filter((item) => item.id !== row.id));
+      setDrafts((prev) => {
+        const next = { ...prev };
+        delete next[row.id];
+        return next;
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Delete failed");
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -314,18 +344,35 @@ export function ToursPanel() {
                       </td>
                       <td className="whitespace-nowrap font-medium">{sampleQuoteLabel(draft)}</td>
                       <td>
-                        {canEdit ? (
-                          <button
-                            type="button"
-                            className="btn btn-primary btn-xs"
-                            disabled={!dirty || savingId === row.id}
-                            onClick={() => void saveRow(row)}
-                          >
-                            {savingId === row.id ? "Saving…" : "Save"}
-                          </button>
-                        ) : (
-                          <span className="text-xs text-base-content/50">View only</span>
-                        )}
+                        <div className="flex items-center gap-1">
+                          {canEdit ? (
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-xs"
+                              disabled={!dirty || savingId === row.id || deletingId === row.id}
+                              onClick={() => void saveRow(row)}
+                            >
+                              {savingId === row.id ? "Saving…" : "Save"}
+                            </button>
+                          ) : (
+                            <span className="text-xs text-base-content/50">View only</span>
+                          )}
+                          {canEdit ? (
+                            <button
+                              type="button"
+                              className="btn btn-ghost btn-xs btn-square text-error"
+                              disabled={savingId === row.id || deletingId === row.id}
+                              aria-label={`Delete ${row.title}`}
+                              onClick={() => void deleteRow(row)}
+                            >
+                              {deletingId === row.id ? (
+                                <span className="loading loading-spinner loading-xs" />
+                              ) : (
+                                <Trash2 className="h-3.5 w-3.5" />
+                              )}
+                            </button>
+                          ) : null}
+                        </div>
                       </td>
                     </tr>
                   );

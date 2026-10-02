@@ -22,7 +22,7 @@ import {
   companyUsesSafariTours,
   type CompanyId,
 } from "@/types/company";
-import { formatWeekPeriod, parseWeekPeriod } from "@/lib/weekly-bar";
+import { formatDayFromLabel, formatWeekPeriod, parseDayLabel, parseWeekPeriod } from "@/lib/weekly-bar";
 import { nairobiYmd } from "@/lib/nairobi-date";
 
 function monthKey(d: Date): string {
@@ -252,11 +252,13 @@ export async function GET(request: NextRequest) {
       .map((order) => {
         const lines = barByOrder.get(order.id) ?? [];
         const period = parseWeekPeriod(order.tableLabel);
+        const day = parseDayLabel(order.tableLabel);
         const sales = lines.reduce((sum, line) => sum + line.sales, 0);
-        return { period, sales, createdAt: order.createdAt };
+        return { period, day, sales, createdAt: order.createdAt };
       })
       .filter((row) => row.sales > 0);
     const useWeeklyBarPoints = weeklyPoints.some((row) => row.period);
+    const useDailyBarPoints = !useWeeklyBarPoints && weeklyPoints.some((row) => row.day);
     const barWeekly = useWeeklyBarPoints
       ? weeklyPoints
           .filter((row) => row.period)
@@ -266,13 +268,22 @@ export async function GET(request: NextRequest) {
             amount: row.sales,
           }))
           .sort((a, b) => a.start.localeCompare(b.start))
-      : lastSixMonthKeys().map((month) => ({
-          start: month,
-          label: monthLabel(month),
-          amount: weeklyPoints
-            .filter((row) => monthKeyFromYmd(row.createdAt?.toISOString()) === month)
-            .reduce((sum, row) => sum + row.sales, 0),
-        }));
+      : useDailyBarPoints
+        ? weeklyPoints
+            .filter((row) => row.day)
+            .map((row) => ({
+              start: row.day!,
+              label: formatDayFromLabel(row.day),
+              amount: row.sales,
+            }))
+            .sort((a, b) => a.start.localeCompare(b.start))
+        : lastSixMonthKeys().map((month) => ({
+            start: month,
+            label: monthLabel(month),
+            amount: weeklyPoints
+              .filter((row) => monthKeyFromYmd(row.createdAt?.toISOString()) === month)
+              .reduce((sum, row) => sum + row.sales, 0),
+          }));
 
     const barProductMap = new Map<string, { name: string; quantity: number; amount: number }>();
     for (const line of barLines) {

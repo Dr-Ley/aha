@@ -20,8 +20,10 @@ import {
 import { formatKesForDisplay } from "@/lib/data";
 import {
   breakdownSummary,
+  formatDayFromLabel,
   formatWeekFromLabel,
   itemsSoldTotal,
+  parseDayLabel,
   parseWeekPeriod,
   salesTotal,
   soldLines,
@@ -78,8 +80,10 @@ function titleFromPayload(kind: EntityPreviewKind, payload: unknown): string {
   const base = Object.keys(order).length ? order : row;
   if (kind === "hotel") return staySourceLabel(base);
   if (kind === "booking") return safariSourceLabel(base);
-  if (kind === "bar" && parseWeekPeriod(typeof base.tableLabel === "string" ? base.tableLabel : null)) {
-    return formatWeekFromLabel(String(base.tableLabel), "long");
+  if (kind === "bar") {
+    const label = typeof base.tableLabel === "string" ? base.tableLabel : null;
+    if (parseWeekPeriod(label)) return formatWeekFromLabel(label, "long");
+    if (parseDayLabel(label)) return formatDayFromLabel(label, "long");
   }
   return titleForKind(kind);
 }
@@ -239,10 +243,27 @@ function summaryFields(kind: EntityPreviewKind, payload: unknown, companyId?: st
       ];
     case "expense":
       return [
+        { label: "Date", value: base.incurredAt },
         { label: "Category", value: base.category },
-        { label: "Amount", value: `${base.currency ?? ""} ${base.amount ?? ""}`.trim() },
-        { label: "Date", value: base.expenseDate ?? base.createdAt },
-        { label: "Notes", value: base.notes },
+        { label: "Amount", value: formatKesForDisplay(Number(base.amount ?? 0)) },
+        { label: "Description", value: base.description || "No description" },
+        {
+          label: "Reference",
+          value:
+            base.referenceType === "bar"
+              ? "Bar"
+              : base.referenceType === "hotel"
+                ? "Accommodation"
+                : base.referenceType === "restaurant"
+                  ? "Restaurant"
+                  : base.referenceType === "tour"
+                    ? "Tour"
+                    : base.referenceType === "payment"
+                      ? "Payment"
+                      : base.bookingId != null
+                        ? "Tour"
+                        : "—",
+        },
       ];
     case "restaurant":
       return [
@@ -264,9 +285,14 @@ function summaryFields(kind: EntityPreviewKind, payload: unknown, companyId?: st
         })
       );
       const notes = typeof base.notes === "string" ? base.notes.trim() : "";
-      if (companyId === "ewc") {
+      if (companyId === "ewc" || companyId === "bth") {
+        const daily = companyId === "bth";
+        const label = typeof base.tableLabel === "string" ? base.tableLabel : null;
         return [
-          { label: "Week", value: formatWeekFromLabel(typeof base.tableLabel === "string" ? base.tableLabel : null, "long") },
+          {
+            label: daily ? "Day" : "Week",
+            value: daily ? formatDayFromLabel(label, "long") : formatWeekFromLabel(label, "long"),
+          },
           { label: "Total sales", value: formatKesForDisplay(salesTotal(lines)) },
           { label: "Items sold", value: itemsSoldTotal(lines) },
           { label: "Sales breakdown", value: breakdownSummary(lines) || "—" },

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getToursFromDb, updateTourPackageRates } from "@/lib/tours-db";
+import { deleteTourFromDb, getToursFromDb, updateTourPackageRates } from "@/lib/tours-db";
 import { requireCompanyId } from "@/lib/tenant";
 import { companyIdZod } from "@/lib/schemas/company-id";
 import { requireTenantContext } from "@/server/tenancy";
@@ -82,5 +82,28 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error("Error updating tour rates:", error);
     return NextResponse.json({ error: "Failed to update tour rates" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const idRaw = searchParams.get("id");
+    const id = idRaw ? Number(idRaw) : NaN;
+    if (!Number.isInteger(id) || id <= 0) {
+      return NextResponse.json({ error: "id and valid companyId required" }, { status: 400 });
+    }
+    const tenant = await requireTenantContext(searchParams.get("companyId"), {
+      module: ["tours", "bookings"],
+      requireEdit: true,
+    });
+    if (!tenant.ok) return tenant.response;
+
+    const deleted = await deleteTourFromDb(tenant.ctx.companyId, id);
+    if (!deleted) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting tour:", error);
+    return NextResponse.json({ error: "Failed to delete tour" }, { status: 500 });
   }
 }

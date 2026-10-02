@@ -22,6 +22,7 @@ import {
   companyUsesSafariTours,
 } from "@/types/company";
 import { safariSourceLabel, staySourceLabel } from "@/lib/stay-labels";
+import { formatDayFromLabel, formatWeekFromLabel } from "@/lib/weekly-bar";
 import { nairobiYmd } from "@/lib/nairobi-date";
 
 type PaymentRow = {
@@ -262,14 +263,19 @@ export function PaymentsPanel() {
         if (res?.ok) {
           const j = await res.json();
           for (const o of j.orders ?? []) {
-            const tag = o.tableLabel || o.customerName || "Walk-in";
+            const tag =
+              selectedCompanyId === "ewc"
+                ? formatWeekFromLabel(o.tableLabel)
+                : selectedCompanyId === "bth"
+                  ? formatDayFromLabel(o.tableLabel)
+                  : o.tableLabel || o.customerName || "Walk-in";
             const total = typeof o.total === "number" ? o.total : 0;
             hints[`bar:${o.id}`] = Math.max(1, total);
             labels[`bar:${o.id}`] = tag;
             opts.push({
               value: `bar:${o.id}`,
               label: `${tag} (${o.status})`,
-              group: "Bar orders",
+              group: "Bar records",
             });
           }
         }

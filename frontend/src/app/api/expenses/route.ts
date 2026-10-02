@@ -27,6 +27,7 @@ const patchSchema = z.object({
   bookingId: z.coerce.number().int().optional().nullable(),
   referenceType: financialReferenceTypeZod.optional().nullable(),
   referenceId: z.coerce.number().int().optional().nullable(),
+  incurredAt: z.string().optional().nullable(),
 });
 
 export async function GET(request: NextRequest) {
@@ -119,6 +120,9 @@ export async function PATCH(request: NextRequest) {
     if (rest.bookingId !== undefined) updates.bookingId = rest.bookingId;
     if (rest.referenceType !== undefined) updates.referenceType = rest.referenceType;
     if (rest.referenceId !== undefined) updates.referenceId = rest.referenceId;
+    if (rest.incurredAt !== undefined) {
+      updates.incurredAt = rest.incurredAt ? new Date(rest.incurredAt) : null;
+    }
 
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: "No fields to update" }, { status: 400 });

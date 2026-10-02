@@ -22,8 +22,11 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://africanhomeadventure.com"),
-  title: "African Home Adventure | Kenya & Tanzania Safari Tours",
+  metadataBase: new URL("https://www.africanhomeadventure.com"),
+  alternates: {
+    canonical: "https://www.africanhomeadventure.com",
+  },
+  title: "African Home Adventure Safaris| Kenya & Tanzania Safari Tours",
   description:
     "Premium safari tours in Kenya and Tanzania. Over 25 years of experience creating unforgettable African wildlife adventures. KATO certified tour operator.",
   keywords:

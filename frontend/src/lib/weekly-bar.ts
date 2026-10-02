@@ -138,6 +138,36 @@ export function formatWeekFromLabel(
   return formatWeekPeriod(period, style);
 }
 
+/** A single calendar day stored as `01/10/2026` or `2026-10-01`. Week ranges are not days. */
+export function parseDayLabel(label: string | null | undefined): string | null {
+  if (!label) return null;
+  const text = String(label).trim();
+  if (!text || parseWeekPeriod(text)) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  return parseDmyPart(text);
+}
+
+export function dayPeriodLabel(day: string): string {
+  return formatDmy(day);
+}
+
+export function formatDayFromLabel(
+  label: string | null | undefined,
+  style: "short" | "long" = "short"
+): string {
+  const day = parseDayLabel(label);
+  const parts = day ? parseYmd(day) : null;
+  if (!parts) return label?.trim() || "Day not specified";
+  const month = (style === "long" ? MONTHS_LONG : MONTHS_SHORT)[parts.m - 1];
+  const d = style === "long" ? String(parts.d) : pad2(parts.d);
+  return `${d} ${month} ${parts.y}`;
+}
+
+export function dayInRange(day: string | null, from: string, to: string): boolean {
+  if (!day) return false;
+  return day >= from && day <= to;
+}
+
 export function weekOverlapsRange(
   period: WeekPeriod | null,
   from: string,

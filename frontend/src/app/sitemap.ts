@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getTourSitemapEntries } from "@/lib/tours-db";
 import { DEFAULT_COMPANY_ID } from "@/types/company";
-
-const SITE_URL = "https://africanhomeadventure.com";
+import { SITE_URL } from "@/lib/site-url";
 
 const staticPaths: {
   path: string;

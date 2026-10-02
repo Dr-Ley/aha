@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/dashboard/", "/login/"],
     },
-    sitemap: "https://africanhomeadventure.com/sitemap.xml",
+    sitemap: "https://www.africanhomeadventure.com/sitemap.xml",
   };
 }
