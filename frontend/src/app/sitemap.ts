@@ -29,6 +29,29 @@ const staticPaths: {
   { path: "/visa", changeFrequency: "monthly", priority: 0.5 },
 ];
 
+/** Public AHA itineraries that should stay in the sitemap even if the catalog query fails. */
+const CATALOG_TOUR_SLUGS = [
+  "3-day-masai-mara-safari",
+  "5-day-nakuru-naivasha-masai-mara",
+  "3-day-amboseli-safari",
+  "6-day-serengeti-ngorongoro-masai-mara",
+  "5-day-amboseli-tsavo-west-tsavo-east",
+  "8-day-kenya-tanzania-combined",
+  "4-day-masai-mara-group-safari",
+  "7-day-luxury-masai-mara-amboseli",
+  "3-day-masai-mara-national-reserve-safari",
+  "6-day-masai-mara-lake-nakuru-lake-naivasha-road-safari",
+  "4-days-masai-mara-safari-enchoro-wildlife-camp",
+  "3-day-amboseli-safari-drop-off-diani",
+  "3-day-masai-mara-group-joining-safari",
+  "4-day-masai-mara-group-joining-safari",
+  "5-day-lake-nakuru-lake-naivasha-masai-mara-mid-comfort-safari",
+  "6-day-masai-mara-lake-nakuru-lake-naivasha-migration-safari",
+  "6-day-ngorongoro-serengeti-masai-mara-mid-range-safari",
+  "8-day-lake-nakuru-masai-mara-diani-beach-safari",
+  "9-day-ol-pejeta-nakuru-masai-mara-naivasha-amboseli-safari",
+] as const;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
@@ -41,13 +64,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  const tourEntries = await getTourSitemapEntries(DEFAULT_COMPANY_ID);
-  const tourPages: MetadataRoute.Sitemap = tourEntries.map((tour) => ({
-    url: `${SITE_URL}/tours/${tour.slug}`,
-    lastModified: tour.lastModified,
-    changeFrequency: "weekly",
-    priority: 0.9,
-  }));
+  const tourLastModified = new Map<string, Date>();
+  for (const slug of CATALOG_TOUR_SLUGS) {
+    tourLastModified.set(slug, now);
+  }
+  try {
+    const tourEntries = await getTourSitemapEntries(DEFAULT_COMPANY_ID);
+    for (const tour of tourEntries) {
+      if (!tour.slug) continue;
+      tourLastModified.set(tour.slug, tour.lastModified);
+    }
+  } catch {
+    // Keep the catalog slugs so itinerary pages remain indexable.
+  }
+
+  const tourPages: MetadataRoute.Sitemap = [...tourLastModified.entries()].map(
+    ([slug, lastModified]) => ({
+      url: `${SITE_URL}/tours/${slug}`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    })
+  );
 
   let destinationPages: MetadataRoute.Sitemap = [];
   try {
