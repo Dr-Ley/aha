@@ -10,12 +10,13 @@ import {
   MessageCircle,
 } from "lucide-react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/contact", {
   title: "Contact Us | African Home Adventure",
   description:
     "Get in touch with African Home Adventure. Request a custom safari quote, ask questions, or plan your perfect Kenya & Tanzania adventure.",
-};
+});
 
 const contactMethods = [
   {

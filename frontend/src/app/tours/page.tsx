@@ -2,12 +2,13 @@ import { Suspense } from "react";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/tours", {
   title: "Safari Tours | African Home Adventure",
   description:
     "Browse our collection of Kenya and Tanzania safari tours. From 3-day getaways to 12-day expeditions, find your perfect African adventure.",
-};
+});
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 

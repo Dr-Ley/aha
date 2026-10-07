@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/day-trips", {
   title: "Day Trips | African Home Adventure",
   description:
     "Short safari and city excursions perfect for travelers with limited time, departing from Nairobi and Arusha.",
-};
+});
 
 export default function DayTripsPage() {
   return (

@@ -132,7 +132,7 @@ describe("buildItineraryGeneratedEmail", () => {
       destination: "Serengeti",
       travelDate: "2026-10-01",
       amountLabel: "KSh 120,000",
-      viewUrl: "https://africanhomeadventure.com/itineraries/tok",
+      viewUrl: "https://www.africanhomeadventure.com/itineraries/tok",
     });
     assert.match(mail.subject, /Serengeti/);
     assert.match(mail.text, /Itinerary #9/);

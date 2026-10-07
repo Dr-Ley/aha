@@ -6,6 +6,7 @@ import { destinations } from "@/lib/schema";
 import { ensureSprint7Schema } from "@/server/database/ensure-sprint7";
 import { Container, Section } from "@/components/layout";
 import { listAttractionsForDestination } from "@/server/services/tourism/tourism-service";
+import { withCanonical } from "@/lib/site-url";
 
 async function getPublishedDestination(slug: string) {
   await ensureSprint7Schema();
@@ -24,12 +25,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const dest = await getPublishedDestination(slug);
-  if (!dest) return { title: "Destination" };
-  return {
+  if (!dest) return { title: "Destination", robots: { index: false, follow: false } };
+  const path = dest.canonicalPath?.startsWith("/")
+    ? dest.canonicalPath
+    : `/destinations/${slug}`;
+  return withCanonical(path, {
     title: dest.seoTitle || `${dest.name} | African Home Adventure`,
     description: dest.metaDescription || dest.description || undefined,
-    alternates: dest.canonicalPath ? { canonical: dest.canonicalPath } : undefined,
-  };
+  });
 }
 
 export default async function DestinationPage({

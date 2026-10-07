@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { AccommodationFilters } from "@/components/accommodation-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/luxury-lodges", {
   title: "Luxury Safari Lodges | African Home Adventure",
   description:
     "Premium safari lodges in Kenya and Tanzania. Experience world-class luxury accommodations with stunning views, gourmet dining, and exceptional service.",
-};
+});
 
 export default function LuxuryLodgesPage() {
   return (

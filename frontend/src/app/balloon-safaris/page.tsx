@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/balloon-safaris", {
   title: "Balloon Safaris | African Home Adventure",
   description:
     "Hot air balloon safaris over Masai Mara and Serengeti, including sunrise flights and champagne breakfasts.",
-};
+});
 
 export default function BalloonSafarisPage() {
   return (

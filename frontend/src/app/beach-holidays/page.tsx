@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/beach-holidays", {
   title: "Beach Holidays | African Home Adventure",
   description:
     "Safari and beach holiday packages combining wildlife with the white-sand beaches of Diani, Zanzibar, and the Swahili Coast.",
-};
+});
 
 export default function BeachHolidaysPage() {
   return (

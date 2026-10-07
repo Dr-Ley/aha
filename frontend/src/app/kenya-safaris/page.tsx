@@ -2,12 +2,13 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
+import { withCanonical } from "@/lib/site-url";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/kenya-safaris", {
   title: "Kenya Safaris | African Home Adventure",
   description:
     "Kenya safari tours to Masai Mara, Amboseli, Tsavo and more, with customizable itineraries for all budgets.",
-};
+});
 
 export default function KenyaSafarisPage() {
   return (

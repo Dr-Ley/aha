@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@react-pdf/renderer"],
+  outputFileTracingIncludes: {
+    "/sitemap.xml": ["./src/app/**/page.tsx", "./src/app/**/layout.tsx", "./src/app/home-page.tsx"],
+  },
   images: {
     remotePatterns: [
       {

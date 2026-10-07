@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/kilimanjaro-climbing", {
   title: "Kilimanjaro Climbing | African Home Adventure",
   description:
     "Guided Mt. Kilimanjaro trekking packages with experienced guides, support teams, and carefully planned routes.",
-};
+});
 
 export default function KilimanjaroClimbingPage() {
   return (

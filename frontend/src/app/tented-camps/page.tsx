@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { AccommodationFilters } from "@/components/accommodation-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/tented-camps", {
   title: "Tented Camps | African Home Adventure",
   description:
     "Authentic safari tented camps in Kenya and Tanzania. Experience the wild with comfortable canvas accommodations and immersive nature experiences.",
-};
+});
 
 export default function TentedCampsPage() {
   return (

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -17,12 +18,12 @@ import { Container, Section } from "@/components/layout";
 import { FlightsMonthSection } from "./FlightsMonthSection";
 import { FlightCostsTable, type FlightCostRow } from "./FlightCostsTable";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/flights", {
   title:
     "Booking Flights for Kenya & Tanzania Safari | African Home Adventure",
   description:
     "Everything you need to know about booking flights for your Kenya and Tanzania safari. Best airports, airlines, flight costs, and expert tips from African Home Adventure.",
-};
+});
 
 const airports = {
   kenya: [

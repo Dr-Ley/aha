@@ -1,4 +1,5 @@
 import { randomBytes, randomUUID } from "node:crypto";
+import { SITE_URL } from "@/lib/site-url";
 import { and, desc, eq } from "drizzle-orm";
 import type { CurrencyCode } from "@/lib/data";
 import { exchangeRateToKes, wholeInCurrencyToKes } from "@/lib/data";
@@ -522,7 +523,7 @@ export function itineraryViewUrl(publicToken: string): string {
   const origin = (
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.AUTH_URL ||
-    "https://www.africanhomeadventure.com"
+    SITE_URL
   ).replace(/\/$/, "");
   return `${origin}/itineraries/${publicToken}`;
 }

@@ -69,7 +69,7 @@ export async function getTourSlugs(companyId: CompanyId): Promise<string[]> {
 
 /** Slug + lastModified for sitemap (uses createdAt; tours table has no updatedAt). */
 export async function getTourSitemapEntries(companyId: CompanyId): Promise<
-  { slug: string; lastModified: Date }[]
+  { slug: string; lastModified: Date | null }[]
 > {
   await ensureCatalogCompanyColumns();
   const rows = await db
@@ -78,7 +78,7 @@ export async function getTourSitemapEntries(companyId: CompanyId): Promise<
     .where(eq(tours.companyId, companyId));
   return rows.map((r) => ({
     slug: r.slug,
-    lastModified: r.createdAt ?? new Date(),
+    lastModified: r.createdAt ?? null,
   }));
 }
 

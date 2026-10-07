@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/tanzania-safaris", {
   title: "Tanzania Safaris | African Home Adventure",
   description:
     "Tanzania safari tours to Serengeti, Ngorongoro Crater, Tarangire and more, including Great Migration itineraries.",
-};
+});
 
 export default function TanzaniaSafarisPage() {
   return (

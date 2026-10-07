@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 import { Container, Section } from "@/components/layout";
 import { TourFilters } from "@/components/tour-filters";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/budget-safaris", {
   title: "Budget Safaris | African Home Adventure",
   description:
     "Affordable Kenya and Tanzania safari tours with quality accommodations and expert guides. Explore East Africa on a budget.",
-};
+});
 
 export default function BudgetSafarisPage() {
   return (

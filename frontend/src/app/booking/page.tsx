@@ -2,12 +2,14 @@ import { Suspense } from "react";
 import { BookingForm } from "@/components/booking-form";
 import { Container, Section } from "@/components/layout";
 import type { Metadata } from "next";
+import { withCanonical } from "@/lib/site-url";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonical("/booking", {
   title: "Book Your Safari | African Home Adventure",
   description:
     "Complete your safari booking with African Home Adventure. Secure your East African wildlife adventure today.",
-};
+  robots: { index: false, follow: true },
+});
 
 function BookingFormFallback() {
   return (

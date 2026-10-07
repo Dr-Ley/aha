@@ -5,6 +5,7 @@ import { getTourBySlug, getTourSlugs } from "@/lib/tours-db";
 import { tourJsonLd } from "@/lib/json-ld";
 import type { Metadata } from "next";
 import { DEFAULT_COMPANY_ID } from "@/types/company";
+import { withCanonical } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 
@@ -20,11 +21,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const tour = await getTourBySlug(slug, DEFAULT_COMPANY_ID);
-  if (!tour) return { title: "Tour Not Found" };
-  return {
+  if (!tour) return { title: "Tour Not Found", robots: { index: false, follow: false } };
+  return withCanonical(`/tours/${slug}`, {
     title: `${tour.title} | African Home Adventure`,
     description: tour.description,
-  };
+  });
 }
 
 export default async function TourDetailPage({

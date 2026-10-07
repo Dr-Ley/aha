@@ -3,12 +3,13 @@
   import { Container, Section } from "@/components/layout";
   import { AccommodationList } from "@/components/accommodation-list";
   import type { Metadata } from "next";
+  import { withCanonical } from "@/lib/site-url";
 
-  export const metadata: Metadata = {
+  export const metadata: Metadata = withCanonical("/camps", {
     title: "Safari Accommodations | African Home Adventure",
     description:
       "Browse our curated selection of safari lodges, tented camps, and luxury cottages across Kenya and Tanzania.",
-  };
+  });
 
   export default function AccommodationsPage() {
     return (
