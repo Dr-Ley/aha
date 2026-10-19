@@ -157,6 +157,23 @@ function costStackPreviewFields(raw: unknown): Field[] {
   return fields;
 }
 
+function linkedPackageFromPayload(
+  payload: unknown
+): { kind: EntityPreviewKind; record: unknown } | null {
+  const linked = asRecord(asRecord(payload).linkedPackage);
+  const kind = linked.kind;
+  if (kind !== "booking" && kind !== "hotel" && kind !== "bar" && kind !== "restaurant") return null;
+  if (linked.record == null || typeof linked.record !== "object") return null;
+  return { kind, record: linked.record };
+}
+
+function payloadWithoutLinkedPackage(payload: unknown): unknown {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return payload;
+  const copy = { ...(payload as Record<string, unknown>) };
+  delete copy.linkedPackage;
+  return copy;
+}
+
 function summaryFields(kind: EntityPreviewKind, payload: unknown, companyId?: string): Field[] {
   const row = asRecord(payload);
   const order = asRecord(row.order);
@@ -375,7 +392,9 @@ export function EntityViewModal({ open, onClose, companyId, kind, entityId }: En
 
   const title = titleFromPayload(kind, payload);
   const summaries = summaryFields(kind, payload, companyId);
-  const fullFields = flattenFields(payload);
+  const linkedPackage = kind === "payment" ? linkedPackageFromPayload(payload) : null;
+  const linkedFields = linkedPackage ? summaryFields(linkedPackage.kind, linkedPackage.record, companyId) : [];
+  const fullFields = flattenFields(kind === "payment" ? payloadWithoutLinkedPackage(payload) : payload);
 
   return (
     <dialog className="modal modal-open">
@@ -412,15 +431,36 @@ export function EntityViewModal({ open, onClose, companyId, kind, entityId }: En
               {expanded ? "hide full details" : fullLinkText(kind)}
             </button>
             {expanded ? (
-              <div className="max-h-[50vh] overflow-y-auto rounded-lg border border-base-content/10">
-                <dl className="divide-y divide-base-content/10">
-                  {fullFields.map((field, index) => (
-                    <div key={`${field.label}-${index}`} className="grid gap-1 px-3 py-2 sm:grid-cols-3">
-                      <dt className="text-xs font-medium text-base-content/50">{field.label}</dt>
-                      <dd className="break-words text-sm text-base-content sm:col-span-2">{displayValue(field.value)}</dd>
-                    </div>
-                  ))}
-                </dl>
+              <div className="max-h-[50vh] space-y-3 overflow-y-auto">
+                {linkedFields.length > 0 ? (
+                  <div className="rounded-lg border border-base-content/10">
+                    <h4 className="border-b border-base-content/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-base-content/50">
+                      Linked package
+                    </h4>
+                    <dl className="grid gap-3 p-3 sm:grid-cols-2">
+                      {linkedFields.map((field) => (
+                        <div key={field.label}>
+                          <dt className="text-xs font-medium uppercase tracking-wide text-base-content/50">
+                            {field.label}
+                          </dt>
+                          <dd className="mt-1 break-words text-sm text-base-content">{displayValue(field.value)}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                ) : null}
+                <div className="rounded-lg border border-base-content/10">
+                  <dl className="divide-y divide-base-content/10">
+                    {fullFields.map((field, index) => (
+                      <div key={`${field.label}-${index}`} className="grid gap-1 px-3 py-2 sm:grid-cols-3">
+                        <dt className="text-xs font-medium text-base-content/50">{field.label}</dt>
+                        <dd className="break-words text-sm text-base-content sm:col-span-2">
+                          {displayValue(field.value)}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
               </div>
             ) : null}
           </div>

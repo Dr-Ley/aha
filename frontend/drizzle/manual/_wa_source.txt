@@ -1,0 +1,440 @@
+<timestamp>Sunday, Oct 18, 2026, 4:20 PM (UTC+1)</timestamp>
+<user_query>
+frontend/src/lib/schema.ts [11:01 am, 23/03/2026] Dad👑: Today - 23/March
+
+4pax 2nights arriving late lunch.
+
+Total - 16k
+
+Karibu safaris
+[4:45 pm, 27/03/2026] Stella: Today 27/march 
+2 pax for 2 nights 
+Ksh.8,000
+Ochieng
+[4:46 pm, 27/03/2026] Stella: You have successfully transferred KES 8,000.00 from your MPESA to account: 0100002141258. refID: 117869708.
+[7:01 pm, 27/03/2026] +254 745 825005: WEEKLY BAR RECORDS / SALES ( Enchoro Wildlife Camp)
+
+ From 21/03/2026 to 27/03/2026
+   
+ Sales. 
+Soda, 31 bottles  @100= 3100
+Water, 15 bottles × 200 =   3000
+Tusker,4 bottles @400=1600
+
+Total Sales   Ksh.7,700
+       Stock as at 27th/03/2026
+Tusker, 14 bottles
+Soda,  66 bottles 
+Water, 24 bottles.
+Amount available for deposit.
+7,700
+[7:03 pm, 27/03/2026] +254 745 825005: You have successfully transferred KES 7,700.00 from your MPESA to account: 0100002141258. refID: 117872420.
+[12:33 pm, 01/04/2026] Dad👑: Today - 1/April
+
+4pax 2nights arriving late lunch.
+
+Total - 16k
+[11:02 am, 03/04/2026] Dad👑: Today - 3/April
+
+2pax 2nights arriving evening.
+
+Total - 8k
+
+Karibu safaris
+[3:55 pm, 06/04/2026] Stella: Hello everyone 
+2 pax checked in today overnight (Ochieng)
+Ksh. 4,000
+Purchased 
+Diesel 5ltrs 1000
+Petrol 2 LTRs 400
+Transport 100
+Cash deposited Ksh. 2,500
+[2:06 am, 07/04/2026] Stella: You have successfully transferred KES 2,500.00 from your MPESA to account: 0100002141258. refID: 118056150.
+[4:57 pm, 09/04/2026] Stella: Good evening, 
+4 pax checked in today overnight (Ochieng)
+Ksh. 8,000
+Paid electricity repair at the main transformer 500 
+2ltrs of petrol for water pump 500
+Deposited Ksh.7000
+[4:58 pm, 09/04/2026] Stella: You have successfully transferred KES 7,000.00 from your MPESA to account: 0100002141258. refID: 118122807.
+[6:27 pm, 10/04/2026] +254 745 825005: WEEKLY BAR RECORDS / SALES ( Enchoro Wildlife Camp)
+ 10/04/2026
+Stock at 10/04/26
+Tusker, 29 bottles
+Soda,  50bottles 
+Water, 48 bottles.
+Sales made ,None .
+[12:28 pm, 13/04/2026] Dad👑: Today - 13/April
+
+3pax 2nights arriving late lunch.
+
+Total - 12k.
+
+Karibu safaris
+[12:27 pm, 15/04/2026] Dad👑: Today - 15/April
+
+9pax - 8pax 2nights and 1pax 1night arriving late lunch.
+
+Total - 34k.
+
+Karibu safaris
+[6:26 pm, 17/04/2026] +254 745 825005: WEEKLY BAR RECORDS / SALES ( Enchoro Wildlife Camp)
+
+ From 11/04/026 to 17/04/026
+   
+ Sales. 
+Soda, 6 bottles  @100= 600
+Water, 3 bottles × 200 =   600
+Tusker,5 bottles @400=2000
+Wine,2 glasses @400=800
+
+Total Sales   Ksh.4000/-
+       Stock as at 17/04/026
+Tusker, 24 bottles
+Soda,  44 bottles 
+Water, 45 bottles.
+Amount available for deposit.
+4000/-
+[10:36 am, 18/04/2026] Dad👑: Today - 18/April
+
+3pax 2nights arriving late lunch.
+
+Total - 12k.
+[11:10 am, 18/04/2026] Dad👑: Karibu safaris
+[12:57 pm, 18/04/2026] +254 745 825005: UDHCA17T09 Confirmed. Ksh4,000.00 sent to Stanbic Bank for account 0100002141258 on 17/4/26 at 8:35 PM New M-PESA balance is Ksh. Transaction cost, Ksh34.00.Amount you can transact within the day is 495,850.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk
+[1:12 pm, 20/04/2026] Dad👑: Today - 20/April
+
+3pax 2nights arriving late lunch.
+
+Total - 8k.
+
+Karibu safaris
+[6:50 pm, 24/04/2026] +254 745 825005: WEEKLY BAR RECORDS / SALES ( Enchoro Wildlife Camp)
+
+ From 18/04/026 to 24/04/026
+   
+ Sales. 
+Water, 3 bottles × 200 =   600
+Tusker,10 bottles @400=4000
+Wine,5 glasses @400=2000
+
+Total Sales   Ksh.6,600/-
+       Stock as at 24/04/026
+Tusker, 14 bottles
+Soda,  44 bottles 
+Water, 42 bottles.
+1 crate of beer to be purchased,@4600
+Amount available for deposit.
+2000/-
+
+[12:25 pm, 01/03/2026] Dad👑: Today - 1/March
+
+1pax 2nights arriving late lunch.
+
+Total - 4k.
+
+Karibu safaris
+[9:12 am, 02/03/2026] Dad👑: Today - 2/March
+
+4pax 2nights arriving evening.
+
+Total - 16k.
+
+Karibu Safaris
+[5:03 pm, 02/03/2026] Stella: 2pax checked in for 3 nights (Ochieng)
+ksh. 12,000
+[5:04 pm, 02/03/2026] Dad👑: Good evening Stellah 
+I sent over 5 Ltrs of cellar cast red sweet wine, kindly acknowledge receipt 
+Good evening
+[5:05 pm, 02/03/2026] Stella: You have successfully transferred KES 12,000.00 from your MPESA to account: 0100002141258. refID: 117419071.
+[5:06 pm, 02/03/2026] Stella: Good evening Stellah 
+I sent over 5 Ltrs of cellar cast red sweet wine, kindly acknowledge receipt 
+Good evening
+Well received thanks
+[10:26 am, 04/03/2026] Dad👑: Today - 4/March
+
+2pax 3nights arriving late lunch.
+
+Total - 12k
+
+Karibu safaris
+[5:15 am, 05/03/2026] Dad👑: New KTB video. Share wide.
+[12:55 pm, 05/03/2026] Dad👑: Today - 5/March
+
+1pax 3nights arriving late lunch.
+
+Total - 6k.
+
+Karibu safaris
+[11:30 am, 06/03/2026] Dad👑: Today - 6/March
+
+1pax 2nights arriving late lunch.
+
+Total - 4k.
+
+Karibu safaris
+[11:31 am, 06/03/2026] Stella: 1pax to check in overnight (Ochieng)
+Ksh 2,000
+[12:11 pm, 06/03/2026] Stella: You have successfully transferred KES 2,000.00 from your MPESA to account: 0100002141258. refID: 117493868.
+[6:37 pm, 06/03/2026] +254 745 825005: You have successfully transferred KES 5,200.00 from your MPESA to account: 0100002141258. refID: 117502834.
+[10:00 am, 09/03/2026] Dad👑: Today - 9/March
+
+4pax 2nights arriving evening.
+
+Total - 16k.
+
+Karibu safaris
+[10:29 am, 09/03/2026] Stella: You have successfully transferred KES 8,000.00 from your MPESA to account: 0100002141258. refID: 117544171.
+[10:30 am, 09/03/2026] Stella: 2pax for 2 nights Ksh. 8000(Ochieng)
+[10:55 am, 12/03/2026] Dad👑: Today - 12/March
+
+2pax 2nights arriving late lunch.
+
+Total - 8k
+
+Karibu safaris
+[4:17 pm, 12/03/2026] Stella: 6pax checked in one night (booking.com ? 
+Paid 139 Usd bed and breakfast
+[4:19 pm, 12/03/2026] Dad👑: Hi @Stella How is that price adding up with 6 people?
+Can you please take an image of that slip and send to me?
+Thank you.
+[4:24 pm, 12/03/2026] Dad👑: Is there somewhere written Enchoro wildlife camp or it’s a booking for another camp
+[9:01 am, 13/03/2026] Stella: 6pax checked in one night (booking.com ? 
+Paid 139 Usd bed and breakfast
+6 pax extended another night 
+Total 278 @ 128 = 35,584
+Purchased diesel 20ltrs 3600
+                   3ltrs petrol 700
+                  2ltrs oil 1200
+Tota deposited 30,000
+[9:01 am, 13/03/2026] Stella: You have successfully transferred KES 30,000.00 from your MPESA to account: 0100002141258. refID: 117620190.
+[12:56 pm, 13/03/2026] Dad👑: Today - 13/March
+
+4pax 2nights arriving late lunch.
+
+Total - 16k
+
+Karibu safaris
+[6:54 pm, 13/03/2026] +254 745 825005: You have successfully transferred KES 5,300.00 from your MPESA to account: 0100002141258. refID: 117631965.
+
+[12:44 pm, 01/02/2026] Stella: Today 1/Feb 
+2pax for 3 nights (Ochieng)
+Ksh. 12,000
+[12:45 pm, 01/02/2026] Stella: You have successfully transferred KES 11,950.00 from your MPESA to account: 0100002141258. refID: 116883148.
+[9:49 am, 03/02/2026] Dad👑: Today
+
+6pax 2nights arriving late lunch.
+
+24k
+
+Karibu safaris
+[6:44 pm, 03/02/2026] Stella: 5pax (Ochieng) for 2 nights Ksh. 20,000
+[7:22 pm, 03/02/2026] Stella: You have successfully transferred KES 19,900.00 from your MPESA to account: 0100002141258. refID: 116929241.
+[3:37 pm, 05/02/2026] Dad👑: Corrected - Today
+
+3pax - 3pax 2nights arriving late lunch.
+
+12k
+
+Karibu Safaris
+[7:48 am, 06/02/2026] Dad👑: Today - 6/Feb.
+
+7pax 2nights arriving late lunch.
+
+Total - 28k
+
+Karibu safaris
+[7:12 pm, 06/02/2026] +254 745 825005: WEEKLY BAR RECORDS / SALES ( Enchoro Wildlife Camp)
+ 
+ From 31/01/2026 to 06/02/2026
+   
+ Sales. 
+Soda 9 bottles  @100= 900
+Water 3 bottles × 200 =   600
+Tusker,6 bottles @400=2400
+ 
+Total Sales   Ksh.3,900
+ 
+ 
+   Stock as at 06/02/2026
+Tusker, 25 bottles
+Soda,  65 bottles
+Water, 57 bottles.
+[7:12 pm, 06/02/2026] +254 745 825005: You have successfully transferred KES 3,900.00 from your MPESA to account: 0100002141258. refID: 116990662.
+[6:54 am, 09/02/2026] Dad👑: Today - 9/Feb.
+
+2pax 2nights arriving late lunch.
+
+Total - 8k
+
+Karibu Safaris
+[6:47 am, 10/02/2026] Dad👑: Today - 10/Feb.
+
+2pax 2nights arriving late lunch.
+
+Total - 8k
+
+Karibu safaris
+[6:12 am, 11/02/2026] Dad👑: Today - 11/Feb.
+
+8pax 2nights arriving late lunch.
+
+Total - 32k
+
+Karibu safaris
+[8:00 am, 12/02/2026] Dad👑: Today - 12/Feb.
+
+3pax 2nights arriving late lunch.
+
+Total - 12k
+
+Karibu safaris
+[11:58 am, 12/02/2026] Stella: 5 pax for 2nights (Ochieng)
+Ksh. 20,000
+Used  Ksh.4,000 for the 4 beds net frame  Kimanjaro and Mingati
+Ksh.16,000 deposited
+[12:00 pm, 12/02/2026] Stella: You have successfully transferred KES 16,000.00 from your MPESA to account: 0100002141258. refID: 117095046.
+[10:41 am, 13/02/2026] Dad👑: Today - 13/Feb.
+
+3pax 2nights arriving late lunch.
+
+Total - 12k
+
+Karibu safaris
+[5:39 pm, 13/02/2026] Stella: Today 13/Feb
+1 pax for 2 nights (Ochieng)
+Ksh. 4,000
+[5:39 pm, 13/02/2026] Stella: You have successfully transferred KES 4,000.00 from your MPESA to account: 0100002141258. refID: 117121633.
+[6:42 pm, 13/02/2026] +254 745 825005: WEEKLY BAR RECORDS / SALES ( Enchoro Wildlife Camp)
+ 
+ From 7/02/2026 to 13/02/2026
+   
+ Sales. 
+Soda 19 bottles  @100= 1900
+Water 12 bottles × 200 =   2400
+Tusker,22 bottles @400=8800
+Wine ,10 glasses @400 =4000
+ 
+Total Sales   Ksh.17,300.
+Purchased.
+5 litres of diesel purchased,980
+2 crates of tusker ,9600
+ 
+ 
+   Stock as at 13/02/2026
+Tusker, 53 bottles
+Soda,  46 bottles
+Water, 45 bottles.
+ Amount for deposit,6780/-
+[7:09 pm, 13/02/2026] +254 745 825005: You have successfully transferred KES 6,780.00 from your MPESA to account: 0100002141258. refID: 117123507.
+[10:55 am, 14/02/2026] Dad👑: Today - 14/Feb.
+
+1pax 2nights arriving late lunch.
+
+Total - 4k
+
+Karibu safaris
+[8:58 am, 17/02/2026] Dad👑: Today - 17/Feb.
+
+5pax 2nights arriving late lunch.
+
+Total - 20k
+
+Karibu safaris
+[10:11 am, 20/02/2026] Dad👑: Today - 20/Feb.
+
+4pax 2nights arriving late lunch.
+
+Total - 16k
+
+Karibu safaris
+[6:43 pm, 20/02/2026] +254 745 825005: WEEKLY BAR RECORDS / SALES ( Enchoro Wildlife Camp)
+ 
+ From 14/02/2026 to 20/02/2026
+   
+ Sales. 
+Soda 13 bottles  @100= 1300
+Water 3 bottles × 200 =   600
+Tusker,10 bottles @400=4000
+Wine 3  glasses @400 =1200
+ 
+Total Sales   Ksh.7,100
+   Stock as at 20th/02/2026
+Tusker, 43 bottles
+Soda,  33 bottles
+Water, 42 bottles.
+
+fill in the stays, expenses and check for duplicates. add every row which is not in the database. return sql file insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (1, 'ewc', 37, '2026-01-01', '2026-01-03', 2, 26000, 26000, null, 'paid', 'Kairi Tours', 'full_board', 'checked_out', null, '2026-06-16 13:00:06.451025', '2026-06-18 13:29:50.204', null, 'Zia Ul Haq Abbasi X2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (2, 'ewc', 37, '2026-01-01', '2026-01-03', 2, 12000, 12000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-16 13:15:27.220948', '2026-06-17 16:13:55.986', 39, 'Holly Dunford', null, 'Dunfordh14@gmail.com', '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (3, 'ewc', 37, '2026-01-02', '2026-01-04', 2, 36000, 36000, null, 'paid', 'Karibu Safaris', 'full_board', 'checked_out', null, '2026-06-16 13:19:39.813965', '2026-06-18 13:29:24.563', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (4, 'ewc', 37, '2026-01-03', '2026-01-05', 2, 8000, 8000, null, 'paid', 'Savannah Spirits', 'full_board', 'checked_out', null, '2026-06-16 13:28:36.403949', '2026-06-17 16:13:15.004', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (5, 'ewc', 37, '2026-01-03', '2026-01-05', 2, 32000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-18 13:15:26.909063', '2026-06-18 13:15:26.909063', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (6, 'ewc', 37, '2026-01-04', '2026-01-06', 2, 78000, 0, null, 'paid', 'Baboon Budget Safaris', 'full_board', 'checked_out', null, '2026-06-18 13:17:28.653695', '2026-06-18 13:18:59.844', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (7, 'ewc', 37, '2026-01-05', '2026-01-07', 2, 10000, 0, null, 'paid', 'Karibu Safaris', 'bed_only', 'checked_out', null, '2026-06-18 13:18:49.967895', '2026-06-18 13:18:49.967895', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (8, 'ewc', 3, '2026-01-06', '2026-01-08', 2, 26000, 0, null, 'paid', 'Africa Outdoor Tours', 'full_board', 'checked_out', null, '2026-06-18 13:20:57.305522', '2026-06-18 13:20:57.305522', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (9, 'ewc', 37, '2026-01-06', '2026-01-07', 1, 12000, 0, null, 'paid', 'Ochieng', 'bed_only', 'checked_out', null, '2026-06-18 13:22:59.211383', '2026-06-18 13:22:59.211383', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (10, 'ewc', 37, '2026-01-07', '2026-06-09', 153, 16000, 0, null, 'paid', 'Ochieng', 'full_board', 'checked_out', null, '2026-06-18 13:24:16.851555', '2026-06-18 13:24:16.851555', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (11, 'ewc', 3, '2026-01-08', '2026-01-10', 2, 16000, 0, null, 'paid', 'Karibu Safaris', 'full_board', 'checked_out', null, '2026-06-18 13:26:08.205658', '2026-06-18 13:26:08.205658', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (12, 'ewc', 3, '2026-01-09', '2026-01-11', 2, 56000, 0, null, 'paid', 'Glory Safaris', 'full_board', 'checked_out', null, '2026-06-18 13:28:58.035236', '2026-06-18 13:28:58.035236', null, 'Majidax X4 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (13, 'ewc', 37, '2026-01-12', '2026-01-16', 4, 77712, 0, null, 'paid', 'Sirua Expeditions', 'full_board', 'checked_out', null, '2026-06-18 13:36:01.544875', '2026-06-18 13:36:01.544875', null, '2Pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (14, 'ewc', 4, '2026-01-12', '2026-01-14', 2, 46627, 0, null, 'paid', 'Blends Of Africa', 'full_board', 'checked_out', null, '2026-06-18 13:38:04.869378', '2026-06-18 13:38:48.917', null, 'Alison Baker X3 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (15, 'ewc', 37, '2026-01-12', '2026-01-14', 2, 165000, 0, null, 'paid', 'Lilian Savuka', 'full_board', 'checked_out', null, '2026-06-18 13:40:17.446059', '2026-06-18 13:40:17.446059', null, '56 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (16, 'ewc', 37, '2026-01-13', '2026-01-15', 2, 12000, 0, null, 'paid', 'Karibu Safaris', 'full_board', 'checked_out', null, '2026-06-18 13:42:40.267643', '2026-06-18 13:42:40.267643', null, '3pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (17, 'ewc', 3, '2026-01-14', '2026-01-17', 3, 24000, 0, null, 'paid', 'Kenya Magic', 'full_board', 'checked_out', null, '2026-06-18 13:44:07.801366', '2026-06-18 13:45:58.077', null, 'David X2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (18, 'ewc', 3, '2026-01-14', '2026-01-16', 2, 15000, 0, null, 'paid', 'Leobeast Safaris', 'full_board', 'checked_out', null, '2026-06-18 13:45:24.153816', '2026-06-18 13:45:24.153816', null, '2pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (19, 'ewc', 4, '2026-01-14', '2026-01-16', 2, 8000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-18 13:47:24.352019', '2026-06-18 13:47:24.352019', null, '3pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (20, 'ewc', 4, '2026-01-15', '2026-01-17', 2, 12000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-18 13:48:24.273737', '2026-06-18 13:48:24.273737', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (21, 'ewc', 37, '2026-01-16', '2026-01-18', 2, 20000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-18 13:53:19.878815', '2026-06-18 13:53:19.878815', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (22, 'ewc', 5, '2026-06-15', '2026-06-17', 2, 33000, 0, null, 'paid', 'Mohrale Tours', 'full_board', 'checked_out', null, '2026-06-22 10:44:09.996673', '2026-06-22 10:44:09.996673', null, 'Emmanuel X2 adults/2 kids', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (23, 'ewc', 6, '2026-06-15', '2026-06-17', 2, 4000, 4000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', '[EWC26-WA JUN-K-0615] marked fully paid', '2026-06-22 10:45:21.796338', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (24, 'ewc', 3, '2026-06-17', '2026-06-19', 2, 16000, 0, null, 'paid', 'Kenya Magic', 'full_board', 'checked_out', null, '2026-06-22 10:46:35.879921', '2026-06-22 10:46:35.879921', null, 'Clair X2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (25, 'ewc', 6, '2026-06-18', '2026-06-19', 1, 2000, 2000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', '[EWC26-WA JUN-K-0618] marked fully paid (corrected to 1 night, KES 2000 per the corrected message)', '2026-06-22 10:51:01.180641', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (26, 'ewc', 7, '2026-06-19', '2026-06-21', 2, 456000, 0, null, 'paid', 'The Stepping Stone Schools', 'full_board', 'checked_out', null, '2026-06-22 10:53:50.879427', '2026-06-22 10:53:50.879427', null, '144 kids, 9 teachers', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (27, 'ewc', 3, '2026-06-20', '2026-06-23', 3, 12000, 0, null, 'paid', 'Ochieng', 'half_board', 'checked_out', null, '2026-06-22 10:55:07.233426', '2026-06-23 03:23:38.248', null, '2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (28, 'ewc', 6, '2026-06-20', '2026-06-21', 1, 2000, 0, null, 'paid', 'Ochieng', 'bed_only', 'checked_out', null, '2026-06-22 10:55:47.746495', '2026-06-22 10:55:47.746495', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (29, 'ewc', 3, '2026-06-22', '2026-06-23', 1, 10000, 0, null, 'paid', 'Tai Adventures', 'half_board', 'checked_out', null, '2026-06-22 10:56:48.09268', '2026-06-23 03:23:28.117', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (30, 'ewc', 4, '2026-06-14', '2026-06-17', 3, 12000, 0, null, 'paid', 'Karibu Safaris', 'full_board', 'checked_out', null, '2026-06-22 10:59:58.152986', '2026-06-22 10:59:58.152986', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (31, 'ewc', 4, '2026-06-13', '2026-06-15', 2, 12000, 12000, null, 'paid', 'Karibu Safaris', 'full_board', 'checked_out', '[EWC26-WA JUN-K-0613] marked fully paid', '2026-06-22 11:01:03.055409', '2026-10-18 12:55:43.958234', null, '3 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (32, 'ewc', 37, '2026-06-13', '2026-06-15', 2, 48000, 0, null, 'paid', 'Kelly Tours', 'full_board', 'checked_out', null, '2026-06-22 11:02:50.575353', '2026-06-22 11:02:50.575353', null, '6  pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (33, 'ewc', 4, '2026-06-12', '2026-06-14', 2, 60500, 0, null, 'paid', 'Calvin Tours and Safaris', 'full_board', 'checked_out', null, '2026-06-22 11:38:34.315806', '2026-06-22 11:38:34.315806', null, 'Lorine Opondo X6 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (34, 'ewc', 4, '2026-06-11', '2026-06-13', 2, 24000, 24000, null, 'paid', 'Karibu Safaris', 'full_board', 'checked_out', '[EWC26-WA JUN-K-0611] marked fully paid', '2026-06-22 11:40:01.181548', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (35, 'ewc', 3, '2026-06-08', '2026-06-11', 3, 24000, 0, null, 'paid', 'Kenya Magic', 'full_board', 'checked_out', null, '2026-06-22 11:41:26.221946', '2026-06-22 11:41:45.565', null, 'Elias X2pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (36, 'ewc', 3, '2026-06-08', '2026-06-11', 3, 30000, 0, null, 'paid', 'Nanyak Safaris', 'full_board', 'checked_out', null, '2026-06-22 11:42:40.065057', '2026-06-22 11:42:40.065057', null, '2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (37, 'ewc', 3, '2026-06-07', '2026-06-09', 2, 8000, 8000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', '[EWC26-WA JUN-K-0607] marked fully paid', '2026-06-22 11:43:51.918978', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (38, 'ewc', 3, '2026-06-06', '2026-06-08', 2, 8000, 8000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', '[EWC26-WA JUN-K-0606] marked fully paid', '2026-06-22 11:44:53.692359', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (39, 'ewc', 3, '2026-06-06', '2026-06-08', 2, 18420, 0, null, 'paid', 'Tedio Safaris', 'full_board', 'checked_out', null, '2026-06-22 11:46:06.946145', '2026-06-22 12:00:45.273', null, 'Rudi 2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (40, 'ewc', 6, '2026-06-05', '2026-06-07', 2, 18117, 0, null, 'paid', 'Costsaver Adventures', 'full_board', 'checked_out', null, '2026-06-22 11:56:13.684687', '2026-06-22 11:56:13.684687', null, 'Shin', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (41, 'ewc', 4, '2026-06-05', '2026-06-07', 2, 24000, 24000, null, 'paid', 'Ochieng', 'half_board', 'checked_out', '[EWC26-WA JUN-O-0605] marked fully paid', '2026-06-22 11:57:17.731585', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (42, 'ewc', 4, '2026-06-05', '2026-06-07', 2, 20000, 20000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', '[EWC26-WA JUN-K-0605] marked fully paid', '2026-06-22 11:58:28.500429', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (43, 'ewc', 3, '2026-06-04', '2026-06-06', 2, 8000, 8000, null, 'paid', 'Ochieng', 'half_board', 'checked_out', '[EWC26-WA JUN-O-0604] marked fully paid', '2026-06-22 12:00:13.57935', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (44, 'ewc', 3, '2026-06-03', '2026-06-05', 2, 22000, 0, null, 'paid', 'Azari Afrika', 'full_board', 'checked_out', null, '2026-06-22 12:02:25.548705', '2026-06-22 12:02:25.548705', null, 'Blanche X2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (45, 'ewc', 6, '2026-06-03', '2026-06-05', 2, 4000, 4000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', '[EWC26-WA JUN-K-0603] marked fully paid', '2026-06-22 12:03:15.598099', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (46, 'ewc', 37, '2026-06-02', '2026-06-04', 2, 20000, 20000, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', '[EWC26-WA JUN-K-0602] marked fully paid', '2026-06-22 12:04:21.51452', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (47, 'ewc', 3, '2026-06-02', '2026-06-04', 2, 16000, 16000, null, 'paid', 'Ochieng', 'half_board', 'checked_out', '[EWC26-WA JUN-O-0602] marked fully paid', '2026-06-22 12:05:11.620438', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (48, 'ewc', 6, '2026-05-31', '2026-06-02', 2, 12941, 0, null, 'paid', 'Leopard Orchid', 'full_board', 'checked_out', null, '2026-06-22 12:08:08.891799', '2026-06-22 12:09:54.651', null, 'Martin', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (49, 'ewc', 3, '2026-06-01', '2026-06-03', 2, 16000, 16000, null, 'paid', 'Ochieng', 'half_board', 'checked_out', '[EWC26-WA JUN-O-0601] marked fully paid', '2026-06-22 12:08:42.662404', '2026-10-18 12:55:43.958234', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (50, 'ewc', 4, '2026-05-30', '2026-05-31', 1, 6000, 0, null, 'paid', 'Karibu Safaris', 'bed_only', 'checked_out', null, '2026-06-22 12:11:16.027553', '2026-06-22 12:11:16.027553', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (51, 'ewc', 3, '2026-05-30', '2026-06-01', 2, 8000, 0, null, 'paid', 'Ochieng', 'half_board', 'checked_out', null, '2026-06-22 12:11:50.186871', '2026-06-22 12:11:50.186871', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (52, 'ewc', 6, '2026-05-27', '2026-05-29', 2, 4000, 0, null, 'paid', 'Karibu Safaris', 'bed_only', 'checked_out', null, '2026-06-22 12:13:23.269148', '2026-06-22 12:13:23.269148', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (53, 'ewc', 3, '2026-05-27', '2026-05-30', 3, 24000, 0, null, 'paid', 'Perfect Everworld', 'half_board', 'checked_out', null, '2026-06-22 12:14:35.193416', '2026-06-22 12:14:35.193416', null, '2 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (54, 'ewc', 3, '2026-05-26', '2026-05-27', 1, 9000, 0, null, 'paid', 'Safari Updates', 'bed_only', 'checked_out', null, '2026-06-22 12:15:51.310257', '2026-06-22 12:15:51.310257', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (55, 'ewc', 6, '2026-05-26', '2026-05-28', 2, 4000, 0, null, 'paid', 'Ochieng', 'bed_only', 'checked_out', null, '2026-06-22 12:16:54.550136', '2026-06-22 12:16:54.550136', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (56, 'ewc', 3, '2026-05-26', '2026-05-28', 2, 16000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-22 12:17:51.032285', '2026-06-22 12:17:51.032285', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (57, 'ewc', 6, '2026-05-25', '2026-05-27', 2, 4000, 0, null, 'paid', 'Ochieng', 'bed_only', 'checked_out', null, '2026-06-22 12:18:38.876997', '2026-06-22 12:18:38.876997', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (58, 'ewc', 3, '2026-05-25', '2026-05-27', 2, 32000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-22 12:20:16.981023', '2026-06-22 12:20:16.981023', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (59, 'ewc', 5, '2026-05-25', '2026-05-27', 2, 38823, 0, null, 'paid', 'Waheguru Travels', 'full_board', 'checked_out', null, '2026-06-22 12:22:36.751133', '2026-06-22 12:22:36.751133', null, 'Lacadem Mangay X5 pax', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (60, 'ewc', 6, '2026-05-24', '2026-05-26', 2, 4000, 0, null, 'paid', 'Karibu Safaris', 'bed_only', 'checked_out', null, '2026-06-22 12:24:20.542217', '2026-06-22 12:24:36.842', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (61, 'ewc', 4, '2026-05-24', '2026-05-26', 2, 24000, 0, null, 'paid', 'Ochieng', 'half_board', 'checked_out', null, '2026-06-22 12:26:20.903268', '2026-06-22 12:26:20.903268', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (62, 'ewc', 3, '2026-05-23', '2026-05-24', 1, 18060, 0, null, 'paid', 'Tedio Safaris', 'bed_only', 'checked_out', null, '2026-06-22 12:27:56.332087', '2026-06-22 12:27:56.332087', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (63, 'ewc', 4, '2026-05-22', '2026-05-24', 2, 12000, 0, null, 'paid', 'Ochieng', 'half_board', 'checked_out', null, '2026-06-22 12:28:53.424452', '2026-06-22 12:28:53.424452', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (64, 'ewc', 37, '2026-05-22', '2026-05-24', 2, 20000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-22 12:29:43.55722', '2026-06-22 12:29:43.55722', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (65, 'ewc', 6, '2026-05-21', '2026-05-23', 2, 4000, 0, null, 'paid', 'Karibu Safaris', 'bed_only', 'checked_out', null, '2026-06-22 12:30:25.598289', '2026-06-22 12:30:25.598289', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (66, 'ewc', 3, '2026-05-19', '2026-05-21', 2, 16000, 0, null, 'paid', 'Walk-In', 'half_board', 'checked_out', null, '2026-06-22 12:31:51.071711', '2026-06-22 12:31:51.071711', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (67, 'ewc', 3, '2026-05-16', '2026-05-18', 2, 8000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-22 12:33:07.20174', '2026-06-22 12:33:07.20174', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (68, 'ewc', 37, '2026-05-16', '2026-05-18', 2, 28000, 0, null, 'paid', 'Ochieng', 'half_board', 'checked_out', null, '2026-06-22 12:34:26.397569', '2026-06-22 12:34:26.397569', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (69, 'ewc', 4, '2026-05-15', '2026-05-17', 2, 12000, 0, null, 'paid', 'Karibu Safaris', 'half_board', 'checked_out', null, '2026-06-22 12:37:01.814612', '2026-06-22 12:37:01.814612', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (70, 'ewc', 6, '2026-05-15', '2026-05-17', 2, 18117, 0, null, 'paid', 'Skylax Safaris', 'full_board', 'checked_out', null, '2026-06-22 12:41:31.267692', '2026-06-22 12:41:31.267692', null, 'Dr Prerak Shah', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (71, 'ewc', 4, '2026-05-11', '2026-05-13', 2, 30960, 0, null, 'paid', 'Scenic Expeditions', 'full_board', 'checked_out', null, '2026-06-22 12:43:57.231177', '2026-06-22 12:43:57.231177', null, '3 PAX', null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+insert into "hotel_bookings" ("id", "company_id", "room_id", "check_in_date", "check_out_date", "nights", "total_amount", "amount_paid", "payment_method", "payment_status", "external_company", "meal_type", "reservation_status", "notes", "created_at", "updated_at", "customer_id", "primary_guest_name", "primary_guest_phone", "primary_guest_email", "additional_occupants", "adults", "children", "infants", "pricing_source", "guest_category", "currency") overriding system value values (72, 'ewc', 5, '2026-05-09', '2026-05-11', 2, 20000, 0, null, 'paid', 'Ochieng', 'full_board', 'checked_out', null, '2026-06-22 12:58:47.482408', '2026-06-22 12:58:47.482408', null, null, null, null, '[]', 1, 0, 0, 'manual', 'resident', 'KES');
+create sql file that feeds the rows not in the database. these include expenses, hotel stays and mark all of the rows as paid
+</user_query>

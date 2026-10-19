@@ -41,7 +41,7 @@ function quoteStaySellingPrice(input: {
     roomTypeName: string | null;
     maxOccupancy: number | null;
   }>;
-  allocations: Array<{ roomId: number; quantity: number }>;
+  allocations: Array<{ roomId: number; quantity: number; nightlyRate?: number }>;
 }): number | null {
   const byId = new Map(input.allocated.map((room) => [room.id, room]));
   const quote = quoteAllocatedStay({
@@ -53,8 +53,14 @@ function quoteStaySellingPrice(input: {
     children: input.children,
     rooms: input.allocations.map((row) => {
       const room = byId.get(row.roomId);
+      const nightlyRate =
+        row.nightlyRate != null
+          ? row.nightlyRate
+          : input.companyId === "ewc"
+            ? undefined
+            : room?.baseRate;
       return {
-        nightlyRate: room?.baseRate,
+        nightlyRate,
         roomTypeName: room?.roomTypeName,
         maxOccupancy: room?.maxOccupancy,
         quantity: row.quantity,
@@ -88,6 +94,7 @@ const MAX_ROOM_QUANTITY = 20;
 const roomAllocSchema = z.object({
   roomId: z.coerce.number().int().positive(),
   quantity: z.coerce.number().int().min(1).max(MAX_ROOM_QUANTITY).default(1),
+  nightlyRate: z.coerce.number().int().min(0).optional(),
 });
 
 function uniqueRoomIds(ids: number[]): number[] {
@@ -96,25 +103,34 @@ function uniqueRoomIds(ids: number[]): number[] {
 
 /** Merge duplicate room rows so (stay, room_id) unique index is never violated. */
 function mergeRoomAllocations(
-  rows: Array<{ roomId: number; quantity?: number | null }>
-): Array<{ roomId: number; quantity: number }> {
-  const byRoom = new Map<number, number>();
+  rows: Array<{ roomId: number; quantity?: number | null; nightlyRate?: number | null }>
+): Array<{ roomId: number; quantity: number; nightlyRate?: number }> {
+  const byRoom = new Map<number, { quantity: number; nightlyRate?: number }>();
   for (const row of rows) {
     if (!Number.isInteger(row.roomId) || row.roomId <= 0) continue;
     const qty = Math.min(
       MAX_ROOM_QUANTITY,
       Math.max(1, Math.round(Number(row.quantity) || 1))
     );
-    byRoom.set(row.roomId, Math.min(MAX_ROOM_QUANTITY, (byRoom.get(row.roomId) ?? 0) + qty));
+    const current = byRoom.get(row.roomId) ?? { quantity: 0 };
+    current.quantity = Math.min(MAX_ROOM_QUANTITY, current.quantity + qty);
+    if (row.nightlyRate != null && Number.isFinite(Number(row.nightlyRate))) {
+      current.nightlyRate = Math.max(0, Math.round(Number(row.nightlyRate)));
+    }
+    byRoom.set(row.roomId, current);
   }
-  return [...byRoom.entries()].map(([roomId, quantity]) => ({ roomId, quantity }));
+  return [...byRoom.entries()].map(([roomId, value]) => ({
+    roomId,
+    quantity: value.quantity,
+    ...(value.nightlyRate != null ? { nightlyRate: value.nightlyRate } : {}),
+  }));
 }
 
 function allocationsFromInput(d: {
   roomId?: number;
   roomIds?: number[];
-  rooms?: Array<{ roomId: number; quantity: number }>;
-}): Array<{ roomId: number; quantity: number }> {
+  rooms?: Array<{ roomId: number; quantity: number; nightlyRate?: number | null }>;
+}): Array<{ roomId: number; quantity: number; nightlyRate?: number }> {
   if (d.rooms && d.rooms.length > 0) return mergeRoomAllocations(d.rooms);
   const ids = uniqueRoomIds(d.roomIds ?? (d.roomId ? [d.roomId] : []));
   return ids.map((roomId) => ({ roomId, quantity: 1 }));
@@ -139,7 +155,7 @@ async function loadCompanyRooms(companyId: string, roomIds: number[]) {
 
 async function replaceStayRooms(input: {
   stayId: number;
-  allocations: Array<{ roomId: number; quantity: number }>;
+  allocations: Array<{ roomId: number; quantity: number; nightlyRate?: number }>;
   companyId: string;
 }): Promise<void> {
   const { ensureHotelBookingRoomsTable } = await import("@/server/database/ensure-hotel-booking-rooms");
@@ -160,7 +176,7 @@ async function replaceStayRooms(input: {
       hotelBookingId: input.stayId,
       roomId: row.roomId,
       quantity: row.quantity,
-      nightlyRate: byId.get(row.roomId)?.baseRate ?? null,
+      nightlyRate: row.nightlyRate ?? byId.get(row.roomId)?.baseRate ?? null,
     }))
   );
 }
@@ -428,6 +444,7 @@ export async function GET(request: NextRequest) {
               code: rooms.code,
               name: rooms.name,
               quantity: hotelBookingRooms.quantity,
+              nightlyRate: hotelBookingRooms.nightlyRate,
               roomTypeName: roomTypes.name,
             })
             .from(hotelBookingRooms)
@@ -481,6 +498,7 @@ export async function GET(request: NextRequest) {
           code: item.code,
           name: item.name,
           quantity: item.quantity,
+          nightlyRate: item.nightlyRate,
           roomTypeName: item.roomTypeName,
         })),
         guests,
@@ -741,6 +759,9 @@ export async function PATCH(request: NextRequest) {
           ? allocations.map((row) => ({
               roomId: row.roomId,
               quantity: "quantity" in row ? Number(row.quantity) || 1 : 1,
+              ...("nightlyRate" in row && row.nightlyRate != null
+                ? { nightlyRate: Number(row.nightlyRate) }
+                : {}),
             }))
           : [{ roomId: existing.roomId, quantity: 1 }];
       return quoteStaySellingPrice({

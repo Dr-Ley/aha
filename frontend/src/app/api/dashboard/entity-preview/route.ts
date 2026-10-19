@@ -20,6 +20,111 @@ import {
 } from "@/lib/schema";
 import { requireTenantContext } from "@/server/tenancy";
 import type { DashboardModuleId } from "@/lib/dashboard-modules";
+import { normalizePaymentLink } from "@/lib/payment-link";
+
+async function linkedPackageForPayment(
+  companyId: string,
+  row: { bookingId: number | null; referenceType: string | null; referenceId: number | null }
+) {
+  const link = normalizePaymentLink(row);
+  if (link.referenceType === "tour" && link.referenceId != null) {
+    const { ensureBookingCustomerColumn, ensureBookingTravellerColumns } = await import("@/lib/customers");
+    await ensureBookingCustomerColumn();
+    await ensureBookingTravellerColumns();
+    const { listComponentsForBooking } = await import("@/lib/booking-components");
+    const [found] = await db
+      .select({ booking: bookings, tour: tours })
+      .from(bookings)
+      .leftJoin(tours, eq(bookings.tourId, tours.id))
+      .where(and(eq(bookings.id, link.referenceId), eq(bookings.companyId, companyId)))
+      .limit(1);
+    if (!found) return null;
+    const components = await listComponentsForBooking(found.booking.id);
+    return { kind: "booking" as const, record: { ...found.booking, tour: found.tour, components } };
+  }
+  if (link.referenceType === "hotel" && link.referenceId != null) {
+    const { ensureHotelStayPartyColumns } = await import("@/lib/customers");
+    await ensureHotelStayPartyColumns();
+    const { ensureHotelBookingRoomsTable } = await import("@/server/database/ensure-hotel-booking-rooms");
+    await ensureHotelBookingRoomsTable();
+    const [found] = await db
+      .select({
+        booking: hotelBookings,
+        room: {
+          id: rooms.id,
+          code: rooms.code,
+          name: rooms.name,
+          roomTypeName: roomTypes.name,
+        },
+      })
+      .from(hotelBookings)
+      .leftJoin(rooms, eq(hotelBookings.roomId, rooms.id))
+      .leftJoin(roomTypes, eq(rooms.roomTypeId, roomTypes.id))
+      .where(and(eq(hotelBookings.id, link.referenceId), eq(hotelBookings.companyId, companyId)))
+      .limit(1);
+    if (!found) return null;
+    const allocated = await db
+      .select({
+        id: rooms.id,
+        code: rooms.code,
+        name: rooms.name,
+        roomTypeName: roomTypes.name,
+        quantity: hotelBookingRooms.quantity,
+      })
+      .from(hotelBookingRooms)
+      .innerJoin(rooms, eq(hotelBookingRooms.roomId, rooms.id))
+      .leftJoin(roomTypes, eq(rooms.roomTypeId, roomTypes.id))
+      .where(eq(hotelBookingRooms.hotelBookingId, link.referenceId));
+    return {
+      kind: "hotel" as const,
+      record: {
+        ...found.booking,
+        room: found.room,
+        rooms: allocated,
+        additionalOccupants: found.booking.additionalOccupants ?? [],
+      },
+    };
+  }
+  if (link.referenceType === "bar" && link.referenceId != null) {
+    const [order] = await db
+      .select()
+      .from(barOrders)
+      .where(and(eq(barOrders.id, link.referenceId), eq(barOrders.companyId, companyId)))
+      .limit(1);
+    if (!order) return null;
+    const lines = await db
+      .select({
+        itemName: barItems.name,
+        quantity: barOrderItems.quantity,
+        unitPrice: barOrderItems.unitPrice,
+        lineTotal: barOrderItems.lineTotal,
+      })
+      .from(barOrderItems)
+      .leftJoin(barItems, eq(barOrderItems.itemId, barItems.id))
+      .where(eq(barOrderItems.orderId, link.referenceId));
+    return { kind: "bar" as const, record: { order, lineItems: lines } };
+  }
+  if (link.referenceType === "restaurant" && link.referenceId != null) {
+    const [order] = await db
+      .select()
+      .from(restaurantOrders)
+      .where(and(eq(restaurantOrders.id, link.referenceId), eq(restaurantOrders.companyId, companyId)))
+      .limit(1);
+    if (!order) return null;
+    const lines = await db
+      .select({
+        itemName: restaurantItems.name,
+        quantity: restaurantOrderItems.quantity,
+        unitPrice: restaurantOrderItems.unitPrice,
+        lineTotal: restaurantOrderItems.lineTotal,
+      })
+      .from(restaurantOrderItems)
+      .leftJoin(restaurantItems, eq(restaurantOrderItems.itemId, restaurantItems.id))
+      .where(eq(restaurantOrderItems.orderId, link.referenceId));
+    return { kind: "restaurant" as const, record: { order, lineItems: lines } };
+  }
+  return null;
+}
 
 const PREVIEW_TYPES = ["booking", "hotel", "payment", "expense", "restaurant", "bar", "enquiry"] as const;
 type PreviewType = (typeof PREVIEW_TYPES)[number];
@@ -140,7 +245,8 @@ export async function GET(request: NextRequest) {
           .where(and(eq(payments.id, nid), eq(payments.companyId, companyId)))
           .limit(1);
         if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
-        return NextResponse.json({ success: true, kind: type, data: row });
+        const linkedPackage = await linkedPackageForPayment(companyId, row);
+        return NextResponse.json({ success: true, kind: type, data: { ...row, linkedPackage } });
       }
       case "expense": {
         const [row] = await db

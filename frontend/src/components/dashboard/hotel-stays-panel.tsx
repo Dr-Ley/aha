@@ -48,6 +48,7 @@ type AllocatedRoom = {
   code: string;
   name: string | null;
   quantity?: number;
+  nightlyRate?: number | null;
   roomTypeName: string | null;
 };
 
@@ -82,6 +83,7 @@ type HotelBookingRow = {
 type RoomLine = {
   typeKey: string;
   quantity: number;
+  price: string;
 };
 
 const RES_STATUS = ["pending", "confirmed", "cancelled", "checked_out"] as const;
@@ -89,7 +91,7 @@ const PAY_STATUS = ["unpaid", "partial", "paid"] as const;
 const MEAL_TYPES = ["full_board", "half_board", "bed_only"] as const;
 const ROOM_QTY_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 const MAX_ROOM_LINES = 12;
-const emptyRoomLine = (): RoomLine => ({ typeKey: "", quantity: 1 });
+const emptyRoomLine = (): RoomLine => ({ typeKey: "", quantity: 1, price: "" });
 
 const exportColumns: ExportColumn<HotelBookingRow>[] = [
   { key: "room", header: "Room", value: (b) => stayRoomsLabel(b) },
@@ -243,17 +245,40 @@ export function HotelStaysPanel() {
     return uniqueRoomTypes.find((room) => roomTypeKey(room) === typeKey);
   }
 
+  function catalogNightly(room: RoomRow, checkIn = form.checkInDate, category = form.guestCategory): number | null {
+    if (isEwc) {
+      const season = checkIn ? accommodationSeasonForDate(checkIn) : "low";
+      return enchoroTentNightlyRate({
+        guestCategory: category,
+        season,
+        roomTypeName: room.roomType?.name || room.code,
+        maxOccupancy: room.roomType?.maxOccupancy,
+      });
+    }
+    return room.roomType?.baseRate ?? null;
+  }
+
   const selectedAllocations = useMemo(() => {
-    const merged = new Map<number, { room: RoomRow; quantity: number }>();
+    const merged = new Map<number, { room: RoomRow; quantity: number; nightlyRate?: number }>();
     for (const line of form.roomLines) {
       const room = roomForTypeKey(line.typeKey);
       if (!room) continue;
       const qty = Math.max(1, Math.min(ROOM_QTY_OPTIONS[ROOM_QTY_OPTIONS.length - 1], line.quantity || 1));
+      const entered = Math.round(Number(line.price));
+      const catalog = catalogNightly(room);
+      const nightlyRate =
+        line.price.trim() !== "" && Number.isFinite(entered) && entered >= 0 && entered !== catalog
+          ? entered
+          : undefined;
       const existing = merged.get(room.id);
-      merged.set(room.id, { room, quantity: (existing?.quantity ?? 0) + qty });
+      merged.set(room.id, {
+        room,
+        quantity: (existing?.quantity ?? 0) + qty,
+        nightlyRate: nightlyRate ?? existing?.nightlyRate,
+      });
     }
     return [...merged.values()];
-  }, [form.roomLines, uniqueRoomTypes]);
+  }, [form.roomLines, uniqueRoomTypes, form.checkInDate, form.guestCategory, isEwc]);
 
   const stayNights = useMemo(
     () =>
@@ -272,8 +297,8 @@ export function HotelStaysPanel() {
       guestCategory: form.guestCategory,
       adults: parseInt(form.adults, 10) || 0,
       children: parseInt(form.children, 10) || 0,
-      rooms: selectedAllocations.map(({ room, quantity }) => ({
-        nightlyRate: room.roomType?.baseRate,
+      rooms: selectedAllocations.map(({ room, quantity, nightlyRate }) => ({
+        nightlyRate: nightlyRate ?? (isEwc ? undefined : room.roomType?.baseRate),
         roomTypeName: room.roomType?.name || room.code,
         maxOccupancy: room.roomType?.maxOccupancy,
         quantity,
@@ -431,9 +456,10 @@ export function HotelStaysPanel() {
   }
 
   function allocationsPayload() {
-    return selectedAllocations.map(({ room, quantity }) => ({
+    return selectedAllocations.map(({ room, quantity, nightlyRate }) => ({
       roomId: room.id,
       quantity: Math.max(1, Math.min(20, quantity)),
+      ...(nightlyRate != null ? { nightlyRate } : {}),
     }));
   }
 
@@ -452,10 +478,21 @@ export function HotelStaysPanel() {
             },
           ];
     setForm({
-      roomLines: source.map((room) => ({
-        typeKey: typeKeyFromAllocated(room),
-        quantity: Math.max(1, room.quantity ?? 1),
-      })),
+      roomLines: source.map((room) => {
+        const full = rooms.find((row) => row.id === room.id);
+        const catalog = full
+          ? catalogNightly(
+              full,
+              String(b.checkInDate).slice(0, 10),
+              b.guestCategory === "non_resident" ? "non_resident" : "resident"
+            )
+          : null;
+        return {
+          typeKey: typeKeyFromAllocated(room),
+          quantity: Math.max(1, room.quantity ?? 1),
+          price: String(room.nightlyRate ?? catalog ?? ""),
+        };
+      }),
       checkInDate: String(b.checkInDate).slice(0, 10),
       checkOutDate: String(b.checkOutDate).slice(0, 10),
       totalAmount: String(b.totalAmount),
@@ -963,7 +1000,7 @@ export function HotelStaysPanel() {
           <fieldset className="form-control w-full">
             <legend className="label-text text-sm font-medium">Rooms</legend>
             <p className="mb-2 text-xs text-base-content/60">
-              Choose a room type and how many rooms of that type. Add another room to mix types on
+              Choose a room type, how many rooms, and the nightly price. Add another room to mix types on
               this stay.
             </p>
             <div className="flex flex-col gap-3">
@@ -996,7 +1033,11 @@ export function HotelStaysPanel() {
                                   <a
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      updateRoomLine(index, { typeKey: roomTypeKey(room) });
+                                      const amount = catalogNightly(room);
+                                      updateRoomLine(index, {
+                                        typeKey: roomTypeKey(room),
+                                        price: amount != null ? String(amount) : "",
+                                      });
                                       closeDropdown(e.currentTarget);
                                     }}
                                   >
@@ -1011,6 +1052,27 @@ export function HotelStaysPanel() {
                           </ul>
                         </details>
                       </label>
+                      {line.typeKey ? (
+                        <label className="form-control w-full">
+                          <span className="label-text text-sm">Price / night ({stayCurrency})</span>
+                          <input
+                            type="number"
+                            min={0}
+                            step={1}
+                            className="input input-bordered input-sm w-full"
+                            style={inputStyle}
+                            value={line.price}
+                            onChange={(e) => {
+                              const price = e.target.value;
+                              setForm((f) => ({
+                                ...f,
+                                pricingSource: "rate",
+                                roomLines: f.roomLines.map((row, i) => (i === index ? { ...row, price } : row)),
+                              }));
+                            }}
+                          />
+                        </label>
+                      ) : null}
                       <label className="form-control w-full">
                         <span className="label-text text-sm">Number of rooms</span>
                         <details className="dropdown w-full">
@@ -1080,6 +1142,29 @@ export function HotelStaysPanel() {
               required
             />
           </label>
+          {showMealType ? (
+            <label className="form-control w-full">
+              <span className="label-text text-sm">Meal type</span>
+              <select
+                className="select select-bordered select-sm w-full"
+                style={inputStyle}
+                value={form.mealType}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    mealType: e.target.value as typeof f.mealType,
+                  }))
+                }
+              >
+                <option value="">—</option>
+                {MEAL_TYPES.map((m) => (
+                  <option key={m} value={m}>
+                    {m.replaceAll("_", " ")}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
           {isEwc ? (
             <label className="form-control w-full">
               <span className="label-text text-sm">Guest category</span>
@@ -1221,42 +1306,17 @@ export function HotelStaysPanel() {
               ))}
             </select>
           </label>
-          {showMealType && (
-            <>
-              <label className="form-control w-full">
-                <span className="label-text text-sm">Meal type</span>
-                <select
-                  className="select select-bordered select-sm w-full"
-                  style={inputStyle}
-                  value={form.mealType}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      mealType: e.target.value as typeof f.mealType,
-                    }))
-                  }
-                >
-                  <option value="">—</option>
-                  {MEAL_TYPES.map((m) => (
-                    <option key={m} value={m}>
-                      {m.replaceAll("_", " ")}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {isEwc && (
-                <label className="form-control w-full">
-                  <span className="label-text text-sm">External company (EWC)</span>
-                  <input
-                    className="input input-bordered input-sm w-full"
-                    style={inputStyle}
-                    value={form.externalCompany}
-                    onChange={(e) => setForm((f) => ({ ...f, externalCompany: e.target.value }))}
-                  />
-                </label>
-              )}
-            </>
-          )}
+          {showMealType && isEwc ? (
+            <label className="form-control w-full">
+              <span className="label-text text-sm">External company (EWC)</span>
+              <input
+                className="input input-bordered input-sm w-full"
+                style={inputStyle}
+                value={form.externalCompany}
+                onChange={(e) => setForm((f) => ({ ...f, externalCompany: e.target.value }))}
+              />
+            </label>
+          ) : null}
           <label className="form-control w-full">
             <span className="label-text text-sm">Primary guest name</span>
             <input

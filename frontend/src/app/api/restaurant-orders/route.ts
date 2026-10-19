@@ -11,6 +11,7 @@ import { ensureBarRestaurantOrderStatusVarchar } from "@/lib/ensure-bar-restaura
 const lineSchema = z.object({
   itemId: z.coerce.number().int().positive(),
   quantity: z.coerce.number().int().min(1),
+  unitPrice: z.coerce.number().int().min(0).optional(),
   notes: z.string().max(500).optional().nullable(),
 });
 
@@ -30,6 +31,7 @@ const patchSchema = z.object({
   tableLabel: z.string().max(80).optional().nullable(),
   customerName: z.string().max(255).optional().nullable(),
   notes: z.string().optional().nullable(),
+  items: z.array(lineSchema).min(1).optional(),
 });
 
 export async function GET(request: NextRequest) {
@@ -106,12 +108,13 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
-      const lineTotal = menu.price * line.quantity;
+      const unitPrice = line.unitPrice ?? menu.price;
+      const lineTotal = unitPrice * line.quantity;
       lineRows.push({
         companyId,
         itemId: menu.id,
         quantity: line.quantity,
-        unitPrice: menu.price,
+        unitPrice,
         lineTotal,
         notes: line.notes ?? null,
       });
@@ -178,7 +181,7 @@ export async function PATCH(request: NextRequest) {
     if (d.tableLabel !== undefined) updates.tableLabel = d.tableLabel;
     if (d.customerName !== undefined) updates.customerName = d.customerName;
     if (d.notes !== undefined) updates.notes = d.notes;
-    if (Object.keys(updates).length === 1) {
+    if (Object.keys(updates).length === 1 && d.items == null) {
       return NextResponse.json({ error: "No fields to update" }, { status: 400 });
     }
     const [row] = await db
@@ -188,6 +191,30 @@ export async function PATCH(request: NextRequest) {
       .returning();
     if (!row) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    if (d.items) {
+      const lineRows: (Omit<typeof restaurantOrderItems.$inferInsert, "orderId">)[] = [];
+      for (const line of d.items) {
+        const [menu] = await db
+          .select()
+          .from(restaurantItems)
+          .where(and(eq(restaurantItems.id, line.itemId), eq(restaurantItems.companyId, companyId)))
+          .limit(1);
+        if (!menu) {
+          return NextResponse.json({ error: `Menu item not found: ${line.itemId}` }, { status: 400 });
+        }
+        const unitPrice = line.unitPrice ?? menu.price;
+        lineRows.push({
+          companyId,
+          itemId: menu.id,
+          quantity: line.quantity,
+          unitPrice,
+          lineTotal: unitPrice * line.quantity,
+          notes: line.notes ?? null,
+        });
+      }
+      await db.delete(restaurantOrderItems).where(eq(restaurantOrderItems.orderId, row.id));
+      await db.insert(restaurantOrderItems).values(lineRows.map((line) => ({ ...line, orderId: row.id })));
     }
     const title =
       d.status !== undefined

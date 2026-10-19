@@ -63,7 +63,7 @@ type OrderRow = {
   createdAt: string | null;
 };
 
-type LineForm = { itemId: string; quantity: string };
+type LineForm = { itemId: string; quantity: string; price: string };
 
 function periodText(o: OrderRow, isWeekly: boolean) {
   return isWeekly ? formatWeekFromLabel(o.tableLabel) : formatDayFromLabel(o.tableLabel);
@@ -121,7 +121,7 @@ export function BarPanel() {
     saleDate: "",
     notes: "",
     status: "unpaid",
-    lines: [{ itemId: "", quantity: "1" }] as LineForm[],
+    lines: [{ itemId: "", quantity: "1", price: "" }] as LineForm[],
   });
   const [editing, setEditing] = useState<OrderRow | null>(null);
   const [editSaving, setEditSaving] = useState(false);
@@ -254,7 +254,7 @@ export function BarPanel() {
       saleDate: isWeekly ? "" : nairobiYmd(),
       notes: "",
       status: "unpaid",
-      lines: [{ itemId: "", quantity: "1" }],
+      lines: [{ itemId: "", quantity: "1", price: "" }],
     });
     setModal(true);
   }
@@ -315,10 +315,14 @@ export function BarPanel() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const linePayload = form.lines
-      .map((l) => ({
-        itemId: parseInt(l.itemId, 10),
-        quantity: parseInt(l.quantity, 10),
-      }))
+      .map((l) => {
+        const unitPrice = Math.round(Number(l.price));
+        return {
+          itemId: parseInt(l.itemId, 10),
+          quantity: parseInt(l.quantity, 10),
+          ...(l.price.trim() !== "" && Number.isFinite(unitPrice) && unitPrice >= 0 ? { unitPrice } : {}),
+        };
+      })
       .filter((l) => !Number.isNaN(l.itemId) && l.itemId > 0 && l.quantity > 0);
     if (linePayload.length === 0) {
       showToast("Add at least one product", "error");
@@ -700,9 +704,9 @@ export function BarPanel() {
         title={isWeekly ? "New weekly bar record" : "New daily bar record"}
         wide
       >
-        <form onSubmit={submit} className="space-y-3 max-w-2xl">
+        <form onSubmit={submit} className="flex flex-col gap-4">
           {isWeekly ? (
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <label className="form-control w-full">
                 <span className="label-text text-sm">Week start</span>
                 <input
@@ -727,7 +731,7 @@ export function BarPanel() {
               </label>
             </div>
           ) : (
-            <label className="form-control w-full">
+            <label className="form-control w-full sm:max-w-xs">
               <span className="label-text text-sm">Sales date</span>
               <input
                 type="date"
@@ -740,8 +744,11 @@ export function BarPanel() {
             </label>
           )}
           {form.lines.map((line, idx) => (
-            <div key={idx} className="grid grid-cols-12 gap-2 items-end">
-              <label className="form-control w-full col-span-8">
+            <div
+              key={idx}
+              className="grid grid-cols-1 gap-3 rounded-xl border border-base-content/10 p-3 sm:grid-cols-[minmax(0,1fr)_8.5rem_5.5rem_auto] sm:items-end"
+            >
+              <label className="form-control w-full min-w-0">
                 <span className="label-text text-sm">Product</span>
                 <TypeaheadCreateSelect
                   value={line.itemId}
@@ -751,48 +758,69 @@ export function BarPanel() {
                   createLabel="Create bar item"
                   onCreate={createBarItem}
                   onSelect={(itemId) => {
+                    const product = items.find((row) => String(row.id) === itemId);
                     const next = [...form.lines];
-                    next[idx] = { ...line, itemId };
+                    next[idx] = { ...line, itemId, price: product ? String(product.price) : "" };
                     setForm((f) => ({ ...f, lines: next }));
                   }}
                 />
               </label>
-              <label className="form-control w-full col-span-3">
-                <span className="label-text text-sm">Qty</span>
-                <input
-                  className="input input-bordered input-sm w-full"
-                  style={inputStyle}
-                  value={line.quantity}
-                  onChange={(e) => {
-                    const next = [...form.lines];
-                    next[idx] = { ...line, quantity: e.target.value };
-                    setForm((f) => ({ ...f, lines: next }));
-                  }}
-                />
-              </label>
-              <div className="col-span-1">
-                {form.lines.length > 1 && (
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-xs"
-                    onClick={() =>
-                      setForm((f) => ({ ...f, lines: f.lines.filter((_, j) => j !== idx) }))
-                    }
-                  >
-                    ×
-                  </button>
-                )}
+              <div className="grid grid-cols-2 gap-3 sm:contents">
+                <label className="form-control w-full min-w-0">
+                  <span className="label-text text-sm">Price</span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={1}
+                    className="input input-bordered input-sm w-full"
+                    style={inputStyle}
+                    value={line.price}
+                    onChange={(e) => {
+                      const next = [...form.lines];
+                      next[idx] = { ...line, price: e.target.value };
+                      setForm((f) => ({ ...f, lines: next }));
+                    }}
+                  />
+                </label>
+                <label className="form-control w-full min-w-0">
+                  <span className="label-text text-sm">Qty</span>
+                  <input
+                    className="input input-bordered input-sm w-full"
+                    style={inputStyle}
+                    value={line.quantity}
+                    onChange={(e) => {
+                      const next = [...form.lines];
+                      next[idx] = { ...line, quantity: e.target.value };
+                      setForm((f) => ({ ...f, lines: next }));
+                    }}
+                  />
+                </label>
               </div>
+              {form.lines.length > 1 ? (
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm w-full sm:btn-square sm:mb-0.5 sm:w-8"
+                  aria-label="Remove product"
+                  onClick={() =>
+                    setForm((f) => ({ ...f, lines: f.lines.filter((_, j) => j !== idx) }))
+                  }
+                >
+                  <span className="sm:hidden">Remove</span>
+                  <span className="hidden sm:inline" aria-hidden>
+                    ×
+                  </span>
+                </button>
+              ) : null}
             </div>
           ))}
           <button
             type="button"
             className="btn btn-ghost btn-sm"
-            onClick={() => setForm((f) => ({ ...f, lines: [...f.lines, { itemId: "", quantity: "1" }] }))}
+            onClick={() => setForm((f) => ({ ...f, lines: [...f.lines, { itemId: "", quantity: "1", price: "" }] }))}
           >
             + Product
           </button>
-          <label className="form-control w-full">
+          <label className="form-control w-full sm:max-w-xs">
             <span className="label-text text-sm">Record status</span>
             <select
               className={cn(

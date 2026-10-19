@@ -183,6 +183,8 @@ export type EnchoroStayRoomInput = {
   roomTypeName?: string | null;
   maxOccupancy?: number | null;
   quantity?: number;
+  /** Staff override. When set, this replaces the seasonal tent rate for every night. */
+  nightlyRate?: number | null;
 };
 
 export function quoteEnchoroStay(input: {
@@ -203,7 +205,14 @@ export function quoteEnchoroStay(input: {
   const roomRows = input.rooms.map((room) => {
     const quantity = Math.max(1, Math.round(Number(room.quantity) || 1));
     const tent = tentPricing(room.roomTypeName, room.maxOccupancy);
-    return { ...tent, quantity, roomTypeName: room.roomTypeName, maxOccupancy: room.maxOccupancy };
+    const override = room.nightlyRate == null ? null : Number(room.nightlyRate);
+    return {
+      ...tent,
+      quantity,
+      roomTypeName: room.roomTypeName,
+      maxOccupancy: room.maxOccupancy,
+      nightlyRate: override != null && Number.isFinite(override) && override >= 0 ? Math.round(override) : null,
+    };
   });
 
   const coveredBeds = roomRows.reduce((sum, row) => sum + row.beds * row.quantity, 0);
@@ -216,13 +225,16 @@ export function quoteEnchoroStay(input: {
   for (const ymd of nightsDates) {
     const season = accommodationSeasonForDate(ymd);
     for (const row of roomRows) {
-      subtotal +=
-        enchoroTentNightlyRate({
-          guestCategory: input.guestCategory,
-          season,
-          roomTypeName: row.roomTypeName,
-          maxOccupancy: row.maxOccupancy,
-        }) * row.quantity;
+      const nightly =
+        row.nightlyRate != null
+          ? row.nightlyRate
+          : enchoroTentNightlyRate({
+              guestCategory: input.guestCategory,
+              season,
+              roomTypeName: row.roomTypeName,
+              maxOccupancy: row.maxOccupancy,
+            });
+      subtotal += nightly * row.quantity;
     }
     const extraAdultRate = enchoroOccupancyAmount({
       guestCategory: input.guestCategory,

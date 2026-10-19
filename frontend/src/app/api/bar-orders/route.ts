@@ -11,6 +11,7 @@ import { ensureBarRestaurantOrderStatusVarchar } from "@/lib/ensure-bar-restaura
 const lineSchema = z.object({
   itemId: z.coerce.number().int().positive(),
   quantity: z.coerce.number().int().min(1),
+  unitPrice: z.coerce.number().int().min(0).optional(),
   notes: z.string().max(500).optional().nullable(),
 });
 
@@ -121,12 +122,13 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
-      const lineTotal = menu.price * line.quantity;
+      const unitPrice = line.unitPrice ?? menu.price;
+      const lineTotal = unitPrice * line.quantity;
       lineRows.push({
         companyId,
         itemId: menu.id,
         quantity: line.quantity,
-        unitPrice: menu.price,
+        unitPrice,
         lineTotal,
         notes: line.notes ?? null,
       });

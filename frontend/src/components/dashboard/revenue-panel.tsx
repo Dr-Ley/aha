@@ -1,7 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { TrendingUp } from "lucide-react";
+
+const MonthlyReportChart = dynamic(
+  () => import("@/components/dashboard/dashboard-charts").then((m) => m.MonthlyReportChart),
+  { ssr: false, loading: () => <div className="skeleton h-64 rounded-xl" /> }
+);
 import { useCompany } from "@/store/company-context";
 import { formatKesForDisplay } from "@/lib/data";
 import { EntityViewModal, type EntityPreviewKind } from "@/components/dashboard/entity-view-modal";
@@ -51,6 +57,21 @@ const exportColumns: ExportColumn<RevenueRow>[] = [
   { key: "amount", header: "Amount", value: (r) => r.amount },
   { key: "recognizedAt", header: "Recognized", value: (r) => r.recognizedAt },
 ];
+
+function shortMonthLabel(ym: string): string {
+  const match = /^(\d{4})-(\d{2})$/.exec(ym);
+  if (!match) return ym;
+  return new Date(Number(match[1]), Number(match[2]) - 1, 1).toLocaleString("en-US", { month: "short" });
+}
+
+function monthTrendLabel(ym: string): string {
+  const match = /^(\d{4})-(\d{2})$/.exec(ym);
+  if (!match) return ym;
+  return new Date(Number(match[1]), Number(match[2]) - 1, 1).toLocaleString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+}
 
 function previewForRevenue(r: RevenueRow): { kind: EntityPreviewKind; id: number } | null {
   if (r.referenceType === "payment" && r.referenceId != null) return { kind: "payment", id: r.referenceId };
@@ -141,8 +162,16 @@ export function RevenuePanel() {
   const trendSpark = useMemo(() => {
     const last = [...byMonth].slice(0, 6).reverse();
     const max = Math.max(1, ...last.map((x) => x.total));
-    return last.map((x) => ({ ...x, pct: Math.round((x.total / max) * 100) }));
+    return last.map((x) => ({ ...x, pct: Math.round((x.total / max) * 100), monthText: shortMonthLabel(x.month) }));
   }, [byMonth]);
+
+  const monthlyTrend = useMemo(
+    () =>
+      [...byMonth]
+        .sort((a, b) => a.month.localeCompare(b.month))
+        .map((row) => ({ label: monthTrendLabel(row.month), total: row.total })),
+    [byMonth]
+  );
 
   const monthChoices = useMemo(() => {
     const s = new Set<string>();
@@ -184,32 +213,11 @@ export function RevenuePanel() {
             <TrendingUp className="h-4 w-4 text-primary" />
             Monthly report
           </h2>
-          <div className="overflow-x-auto">
-            <table className="table table-sm">
-              <thead>
-                <tr className="text-xs uppercase text-base-content/60">
-                  <th>Month</th>
-                  <th className="text-right">Recognized</th>
-                </tr>
-              </thead>
-              <tbody>
-                {byMonth.length === 0 ? (
-                  <tr>
-                    <td colSpan={2} className="text-sm text-base-content/50">
-                      No revenue rows yet.
-                    </td>
-                  </tr>
-                ) : (
-                  byMonth.map((row) => (
-                    <tr key={row.month}>
-                      <td className="font-medium">{row.month}</td>
-                      <td className="text-right tabular-nums">{formatKesForDisplay(row.total)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          {monthlyTrend.length === 0 ? (
+            <p className="text-sm text-base-content/50">No revenue rows yet.</p>
+          ) : (
+            <MonthlyReportChart points={monthlyTrend} />
+          )}
         </div>
         <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
           <h2 className="mb-3 text-sm font-semibold text-base-content">6-month trend (relative)</h2>
@@ -224,7 +232,7 @@ export function RevenuePanel() {
                     style={{ height: `${Math.max(12, b.pct)}%` }}
                     title={`${b.month}: ${formatKesForDisplay(b.total)}`}
                   />
-                  <span className="max-w-12 truncate text-[0.65rem] text-base-content/50">{b.month.slice(5)}</span>
+                  <span className="max-w-12 truncate text-[0.65rem] text-base-content/50">{b.monthText}</span>
                 </div>
               ))
             )}

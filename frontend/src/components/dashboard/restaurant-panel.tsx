@@ -28,10 +28,10 @@ type OrderRow = {
   notes?: string | null;
   total: number;
   createdAt: string | null;
-  lineItems: { quantity: number; lineTotal: number; itemId: number }[];
+  lineItems: { quantity: number; lineTotal: number; unitPrice?: number; itemId: number }[];
 };
 
-type LineForm = { itemId: string; quantity: string };
+type LineForm = { itemId: string; quantity: string; price: string };
 
 const exportColumns: ExportColumn<OrderRow>[] = [
   { key: "status", header: "Payment status", value: (o) => o.status },
@@ -57,7 +57,7 @@ export function RestaurantPanel() {
   const [form, setForm] = useState({
     tableLabel: "",
     customerName: "",
-    lines: [{ itemId: "", quantity: "1" }] as LineForm[],
+    lines: [{ itemId: "", quantity: "1", price: "" }] as LineForm[],
   });
   const [editing, setEditing] = useState<OrderRow | null>(null);
   const [editSaving, setEditSaving] = useState(false);
@@ -66,6 +66,7 @@ export function RestaurantPanel() {
     customerName: "",
     notes: "",
     status: "unpaid",
+    lines: [{ itemId: "", quantity: "1", price: "" }] as LineForm[],
   });
   const [viewId, setViewId] = useState<number | null>(null);
 
@@ -139,9 +140,29 @@ export function RestaurantPanel() {
     setForm({
       tableLabel: "",
       customerName: "",
-      lines: [{ itemId: "", quantity: "1" }],
+      lines: [{ itemId: "", quantity: "1", price: "" }],
     });
     setModal(true);
+  }
+
+  function menuPrice(itemId: string): string {
+    const item = items.find((row) => String(row.id) === itemId);
+    return item ? String(item.price) : "";
+  }
+
+  function linePayload(lines: LineForm[]) {
+    return lines
+      .map((line) => {
+        const itemId = parseInt(line.itemId, 10);
+        const quantity = parseInt(line.quantity, 10);
+        const unitPrice = Math.round(Number(line.price));
+        return {
+          itemId,
+          quantity,
+          ...(line.price.trim() !== "" && Number.isFinite(unitPrice) && unitPrice >= 0 ? { unitPrice } : {}),
+        };
+      })
+      .filter((line) => !Number.isNaN(line.itemId) && line.itemId > 0 && line.quantity > 0);
   }
 
   async function createRestaurantItem(name: string) {
@@ -194,13 +215,8 @@ export function RestaurantPanel() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const linePayload = form.lines
-      .map((l) => ({
-        itemId: parseInt(l.itemId, 10),
-        quantity: parseInt(l.quantity, 10),
-      }))
-      .filter((l) => !Number.isNaN(l.itemId) && l.itemId > 0 && l.quantity > 0);
-    if (linePayload.length === 0) {
+    const lines = linePayload(form.lines);
+    if (lines.length === 0) {
       showToast("Add at least one line", "error");
       return;
     }
@@ -214,7 +230,7 @@ export function RestaurantPanel() {
           tableLabel: form.tableLabel || null,
           customerName: form.customerName || null,
           status: "unpaid",
-          items: linePayload,
+          items: lines,
         }),
       });
       const data = await res.json();
@@ -232,6 +248,10 @@ export function RestaurantPanel() {
   async function saveEdit(e: React.FormEvent) {
     e.preventDefault();
     if (!editing) return;
+    if (linePayload(editForm.lines).length === 0) {
+      showToast("Add at least one item", "error");
+      return;
+    }
     setEditSaving(true);
     try {
       const res = await fetch("/api/restaurant-orders", {
@@ -244,6 +264,7 @@ export function RestaurantPanel() {
           customerName: editForm.customerName.trim() || null,
           notes: editForm.notes.trim() || null,
           status: editForm.status,
+          items: linePayload(editForm.lines),
         }),
       });
       const d = await res.json();
@@ -259,6 +280,14 @@ export function RestaurantPanel() {
   }
 
   function openEdit(o: OrderRow) {
+    const lines =
+      o.lineItems.length > 0
+        ? o.lineItems.map((line) => ({
+            itemId: String(line.itemId),
+            quantity: String(line.quantity),
+            price: String(line.unitPrice ?? (line.quantity > 0 ? Math.round(line.lineTotal / line.quantity) : "")),
+          }))
+        : [{ itemId: "", quantity: "1", price: "" }];
     setEditForm({
       tableLabel: o.tableLabel ?? "",
       customerName: o.customerName ?? "",
@@ -266,6 +295,7 @@ export function RestaurantPanel() {
       status: ORDER_PAY_STATUS.includes(o.status as (typeof ORDER_PAY_STATUS)[number])
         ? o.status
         : "unpaid",
+      lines,
     });
     setEditing(o);
   }
@@ -466,7 +496,7 @@ export function RestaurantPanel() {
           </div>
           {form.lines.map((line, idx) => (
             <div key={idx} className="grid grid-cols-12 gap-2 items-end">
-              <label className="form-control w-full col-span-8">
+              <label className="form-control w-full col-span-6">
                 <span className="label-text text-sm">Item</span>
                 <TypeaheadCreateSelect
                   value={line.itemId}
@@ -477,12 +507,28 @@ export function RestaurantPanel() {
                   onCreate={createRestaurantItem}
                   onSelect={(itemId) => {
                     const next = [...form.lines];
-                    next[idx] = { ...line, itemId };
+                    next[idx] = { ...line, itemId, price: menuPrice(itemId) };
                     setForm((f) => ({ ...f, lines: next }));
                   }}
                 />
               </label>
               <label className="form-control w-full col-span-3">
+                <span className="label-text text-sm">Price</span>
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  className="input input-bordered input-sm w-full"
+                  style={inputStyle}
+                  value={line.price}
+                  onChange={(e) => {
+                    const next = [...form.lines];
+                    next[idx] = { ...line, price: e.target.value };
+                    setForm((f) => ({ ...f, lines: next }));
+                  }}
+                />
+              </label>
+              <label className="form-control w-full col-span-2">
                 <span className="label-text text-sm">Qty</span>
                 <input
                   className="input input-bordered input-sm w-full"
@@ -513,7 +559,7 @@ export function RestaurantPanel() {
           <button
             type="button"
             className="btn btn-ghost btn-sm"
-            onClick={() => setForm((f) => ({ ...f, lines: [...f.lines, { itemId: "", quantity: "1" }] }))}
+            onClick={() => setForm((f) => ({ ...f, lines: [...f.lines, { itemId: "", quantity: "1", price: "" }] }))}
           >
             + Line
           </button>
@@ -532,8 +578,9 @@ export function RestaurantPanel() {
         open={editing != null}
         onClose={() => setEditing(null)}
         title={editing ? `Edit restaurant order #${editing.id}` : "Edit order"}
+        wide
       >
-        <form onSubmit={saveEdit} className="space-y-3 max-w-lg">
+        <form onSubmit={saveEdit} className="space-y-3 max-w-2xl">
           <label className="form-control w-full">
             <span className="label-text text-sm">Payment status</span>
             <select
@@ -576,6 +623,77 @@ export function RestaurantPanel() {
               />
             </label>
           </div>
+          {editForm.lines.map((line, idx) => (
+            <div key={idx} className="grid grid-cols-12 gap-2 items-end">
+              <label className="form-control w-full col-span-6">
+                <span className="label-text text-sm">Item</span>
+                <TypeaheadCreateSelect
+                  value={line.itemId}
+                  options={itemOptions}
+                  inputStyle={inputStyle}
+                  placeholder="Search or create item..."
+                  createLabel="Create menu item"
+                  onCreate={createRestaurantItem}
+                  onSelect={(itemId) => {
+                    const next = [...editForm.lines];
+                    next[idx] = { ...line, itemId, price: menuPrice(itemId) };
+                    setEditForm((f) => ({ ...f, lines: next }));
+                  }}
+                />
+              </label>
+              <label className="form-control w-full col-span-3">
+                <span className="label-text text-sm">Price</span>
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  className="input input-bordered input-sm w-full"
+                  style={inputStyle}
+                  value={line.price}
+                  onChange={(e) => {
+                    const next = [...editForm.lines];
+                    next[idx] = { ...line, price: e.target.value };
+                    setEditForm((f) => ({ ...f, lines: next }));
+                  }}
+                />
+              </label>
+              <label className="form-control w-full col-span-2">
+                <span className="label-text text-sm">Qty</span>
+                <input
+                  className="input input-bordered input-sm w-full"
+                  style={inputStyle}
+                  value={line.quantity}
+                  onChange={(e) => {
+                    const next = [...editForm.lines];
+                    next[idx] = { ...line, quantity: e.target.value };
+                    setEditForm((f) => ({ ...f, lines: next }));
+                  }}
+                />
+              </label>
+              <div className="col-span-1">
+                {editForm.lines.length > 1 ? (
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-xs"
+                    onClick={() =>
+                      setEditForm((f) => ({ ...f, lines: f.lines.filter((_, j) => j !== idx) }))
+                    }
+                  >
+                    ×
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={() =>
+              setEditForm((f) => ({ ...f, lines: [...f.lines, { itemId: "", quantity: "1", price: "" }] }))
+            }
+          >
+            + Line
+          </button>
           <label className="form-control w-full">
             <span className="label-text text-sm">Notes</span>
             <textarea

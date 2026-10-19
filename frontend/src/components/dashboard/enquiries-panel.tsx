@@ -28,6 +28,20 @@ function fullName(row: EnquiryRow): string {
   return [row.firstName, row.lastName].filter(Boolean).join(" ").trim() || row.email;
 }
 
+function receivedAgo(value: string | null): string {
+  if (!value) return "—";
+  const then = new Date(value).getTime();
+  if (Number.isNaN(then)) return "—";
+  const minutes = Math.floor((Date.now() - then) / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 14) return `${days}d ago`;
+  return new Date(value).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+}
+
 const exportColumns: ExportColumn<EnquiryRow>[] = [
   { key: "name", header: "Name", value: fullName },
   { key: "email", header: "Email", value: (row) => row.email },
@@ -164,7 +178,7 @@ export function EnquiriesPanel() {
               <th>Contact</th>
               <th>Subject</th>
               <th>Status</th>
-              <th>Created</th>
+              <th>Received</th>
               <th className="text-right">Actions</th>
             </tr>
           </thead>
@@ -201,8 +215,8 @@ export function EnquiriesPanel() {
                       {row.status ?? "new"}
                     </span>
                   </td>
-                  <td className="text-xs text-base-content/60">
-                    {row.createdAt ? new Date(row.createdAt).toLocaleString() : "—"}
+                  <td className="text-xs text-base-content/60" title={row.createdAt ? new Date(row.createdAt).toLocaleString() : undefined}>
+                    {receivedAgo(row.createdAt)}
                   </td>
                   <td className="text-right">
                     {(row.status ?? "new") !== "replied" ? (
