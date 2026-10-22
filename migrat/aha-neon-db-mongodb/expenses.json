@@ -1,0 +1,5106 @@
+[
+ {
+  "_id": 2,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 11830,
+  "description": "[BTH26-BAR-XLSX MAR-2] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 3,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 780,
+  "description": "[BTH26-BAR-XLSX MAR-3] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 4,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2220,
+  "description": "[BTH26-BAR-XLSX MAR-19] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-21T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 5,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 7169,
+  "description": "[BTH26-BAR-XLSX APR-17] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 6,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1110,
+  "description": "[BTH26-BAR-XLSX APR-27] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 7,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2700,
+  "description": "[BTH26-BAR-XLSX MAY-7] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 8,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1960,
+  "description": "[BTH26-BAR-XLSX MAY-13] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 9,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 3070,
+  "description": "[BTH26-BAR-XLSX MAY-18] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 10,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 5000,
+  "description": "[BTH26-BAR-XLSX MAY-23] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 11,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1350,
+  "description": "[BTH26-BAR-XLSX MAY-24] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 12,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1350,
+  "description": "[BTH26-BAR-XLSX MAY-25] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 13,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1350,
+  "description": "[BTH26-BAR-XLSX MAY-30] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 14,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 3410,
+  "description": "[BTH26-BAR-XLSX JUN-5] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 15,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1420,
+  "description": "[BTH26-BAR-XLSX JUN-6] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 16,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1110,
+  "description": "[BTH26-BAR-XLSX JUN-7] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 17,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 6090,
+  "description": "[BTH26-BAR-XLSX JUN-9] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 18,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2220,
+  "description": "[BTH26-BAR-XLSX JUN-12] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 19,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1960,
+  "description": "[BTH26-BAR-XLSX JUN-13] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 20,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 3810,
+  "description": "[BTH26-BAR-XLSX JUN-18] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 21,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 3960,
+  "description": "[BTH26-BAR-XLSX JUN-28] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 22,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4020,
+  "description": "[BTH26-BAR-XLSX JUN-31] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 23,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2700,
+  "description": "[BTH26-BAR-XLSX JUL-5] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 24,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1350,
+  "description": "[BTH26-BAR-XLSX JUL-6] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 25,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 3930,
+  "description": "[BTH26-BAR-XLSX JUL-19] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 26,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2910,
+  "description": "[BTH26-BAR-XLSX JUL-23] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 27,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1350,
+  "description": "[BTH26-BAR-XLSX JUL-29] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 28,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2700,
+  "description": "[BTH26-BAR-XLSX AUG-2] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 29,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 6422,
+  "description": "[BTH26-BAR-XLSX AUG-7] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 30,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 3990,
+  "description": "[BTH26-BAR-XLSX AUG-14] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 31,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2220,
+  "description": "[BTH26-BAR-XLSX AUG-17] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 32,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2390,
+  "description": "[BTH26-BAR-XLSX AUG-19] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 33,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2700,
+  "description": "[BTH26-BAR-XLSX AUG-27] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 34,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4010,
+  "description": "[BTH26-BAR-XLSX AUG-30] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 35,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4280,
+  "description": "[BTH26-BAR-XLSX SEP-7] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 36,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1350,
+  "description": "[BTH26-BAR-XLSX SEP-11] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 37,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 15318,
+  "description": "[BTH26-BAR-XLSX SEP-14] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 38,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1110,
+  "description": "[BTH26-BAR-XLSX SEP-19] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 39,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2340,
+  "description": "[BTH26-BAR-XLSX SEP-20] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 40,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4600,
+  "description": "[BTH26-BAR-XLSX SEP-21] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 41,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4130,
+  "description": "[BTH26-BAR-XLSX SEP-25] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 42,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1070,
+  "description": "[BTH26-REST-XLSX JAN-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 43,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 570,
+  "description": "[BTH26-REST-XLSX JAN-3] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-02T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 44,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2860,
+  "description": "[BTH26-REST-XLSX JAN-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 45,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 155,
+  "description": "[BTH26-REST-XLSX JAN-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 46,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1620,
+  "description": "[BTH26-REST-XLSX JAN-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 47,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1520,
+  "description": "[BTH26-REST-XLSX JAN-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 48,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 215,
+  "description": "[BTH26-REST-XLSX JAN-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 49,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3342,
+  "description": "[BTH26-REST-XLSX JAN-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 50,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2450,
+  "description": "[BTH26-REST-XLSX JAN-10] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-09T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 51,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 985,
+  "description": "[BTH26-REST-XLSX JAN-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 52,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2430,
+  "description": "[BTH26-REST-XLSX JAN-12] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 53,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4600,
+  "description": "[BTH26-REST-XLSX JAN-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 54,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2233,
+  "description": "[BTH26-REST-XLSX JAN-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 55,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 300,
+  "description": "[BTH26-REST-XLSX JAN-16] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-15T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 56,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1400,
+  "description": "[BTH26-REST-XLSX JAN-17] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 57,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2857,
+  "description": "[BTH26-REST-XLSX JAN-18] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 58,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1770,
+  "description": "[BTH26-REST-XLSX JAN-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 59,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2670,
+  "description": "[BTH26-REST-XLSX JAN-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 60,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 700,
+  "description": "[BTH26-REST-XLSX JAN-22] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-21T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 61,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 570,
+  "description": "[BTH26-REST-XLSX JAN-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 62,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2509,
+  "description": "[BTH26-REST-XLSX JAN-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 63,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4235,
+  "description": "[BTH26-REST-XLSX JAN-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 64,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5710,
+  "description": "[BTH26-REST-XLSX JAN-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 65,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1700,
+  "description": "[BTH26-REST-XLSX JAN-28] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 66,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2715,
+  "description": "[BTH26-REST-XLSX JAN-29] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 67,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1863,
+  "description": "[BTH26-REST-XLSX JAN-31] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 68,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1690,
+  "description": "[BTH26-REST-XLSX JAN-32] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-01-31T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 69,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1480,
+  "description": "[BTH26-REST-XLSX FEB-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 70,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 910,
+  "description": "[BTH26-REST-XLSX FEB-3] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-02T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 71,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 7021,
+  "description": "[BTH26-REST-XLSX FEB-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 72,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4800,
+  "description": "[BTH26-REST-XLSX FEB-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 73,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2848,
+  "description": "[BTH26-REST-XLSX FEB-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 74,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 6805,
+  "description": "[BTH26-REST-XLSX FEB-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 75,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3303,
+  "description": "[BTH26-REST-XLSX FEB-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 76,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3180,
+  "description": "[BTH26-REST-XLSX FEB-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 77,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 265,
+  "description": "[BTH26-REST-XLSX FEB-10] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-09T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 78,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 7760,
+  "description": "[BTH26-REST-XLSX FEB-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 79,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 220,
+  "description": "[BTH26-REST-XLSX FEB-12] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 80,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1000,
+  "description": "[BTH26-REST-XLSX FEB-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 81,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5214,
+  "description": "[BTH26-REST-XLSX FEB-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 82,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3275,
+  "description": "[BTH26-REST-XLSX FEB-16] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-15T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 83,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2285,
+  "description": "[BTH26-REST-XLSX FEB-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 84,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1446,
+  "description": "[BTH26-REST-XLSX FEB-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 85,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 10675,
+  "description": "[BTH26-REST-XLSX FEB-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 86,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 6356,
+  "description": "[BTH26-REST-XLSX FEB-22] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-21T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 87,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1050,
+  "description": "[BTH26-REST-XLSX FEB-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 88,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2235,
+  "description": "[BTH26-REST-XLSX FEB-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 89,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3961,
+  "description": "[BTH26-REST-XLSX FEB-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 90,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1290,
+  "description": "[BTH26-REST-XLSX FEB-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 91,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 218,
+  "description": "[BTH26-REST-XLSX FEB-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 92,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4155,
+  "description": "[BTH26-REST-XLSX FEB-28] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 93,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 65,
+  "description": "[BTH26-REST-XLSX FEB-29] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-02-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 94,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1450,
+  "description": "[BTH26-REST-XLSX MAR-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 95,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1399,
+  "description": "[BTH26-REST-XLSX MAR-3] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-02T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 96,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4628,
+  "description": "[BTH26-REST-XLSX MAR-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 97,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4287,
+  "description": "[BTH26-REST-XLSX MAR-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 98,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1150,
+  "description": "[BTH26-REST-XLSX MAR-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 99,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 6160,
+  "description": "[BTH26-REST-XLSX MAR-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 100,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5310,
+  "description": "[BTH26-REST-XLSX MAR-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 101,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 6073,
+  "description": "[BTH26-REST-XLSX MAR-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 102,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4025,
+  "description": "[BTH26-REST-XLSX MAR-10] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-09T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 103,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 220,
+  "description": "[BTH26-REST-XLSX MAR-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 104,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1200,
+  "description": "[BTH26-REST-XLSX MAR-12] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 105,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3200,
+  "description": "[BTH26-REST-XLSX MAR-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 106,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3858,
+  "description": "[BTH26-REST-XLSX MAR-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 107,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 200,
+  "description": "[BTH26-REST-XLSX MAR-15] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-14T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 108,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4500,
+  "description": "[BTH26-REST-XLSX MAR-18] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 109,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 200,
+  "description": "[BTH26-REST-XLSX MAR-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 110,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 700,
+  "description": "[BTH26-REST-XLSX MAR-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 111,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5024,
+  "description": "[BTH26-REST-XLSX MAR-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 112,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3700,
+  "description": "[BTH26-REST-XLSX MAR-22] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-21T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 113,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3970,
+  "description": "[BTH26-REST-XLSX MAR-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 114,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 65,
+  "description": "[BTH26-REST-XLSX MAR-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 115,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1850,
+  "description": "[BTH26-REST-XLSX MAR-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 116,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1500,
+  "description": "[BTH26-REST-XLSX MAR-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 117,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1590,
+  "description": "[BTH26-REST-XLSX MAR-28] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 118,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4350,
+  "description": "[BTH26-REST-XLSX MAR-30] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 119,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 420,
+  "description": "[BTH26-REST-XLSX MAR-31] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 120,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 975,
+  "description": "[BTH26-REST-XLSX MAR-32] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-03-31T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 121,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3300,
+  "description": "[BTH26-REST-XLSX APR-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 122,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5320,
+  "description": "[BTH26-REST-XLSX APR-3] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-02T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 123,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 8492,
+  "description": "[BTH26-REST-XLSX APR-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 124,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1750,
+  "description": "[BTH26-REST-XLSX APR-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 125,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3740,
+  "description": "[BTH26-REST-XLSX APR-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 126,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2460,
+  "description": "[BTH26-REST-XLSX APR-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 127,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 715,
+  "description": "[BTH26-REST-XLSX APR-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 128,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1135,
+  "description": "[BTH26-REST-XLSX APR-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 129,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1200,
+  "description": "[BTH26-REST-XLSX APR-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 130,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 220,
+  "description": "[BTH26-REST-XLSX APR-12] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 131,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1110,
+  "description": "[BTH26-REST-XLSX APR-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 132,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1900,
+  "description": "[BTH26-REST-XLSX APR-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 133,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4350,
+  "description": "[BTH26-REST-XLSX APR-15] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-14T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 134,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1205,
+  "description": "[BTH26-REST-XLSX APR-16] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-15T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 135,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2795,
+  "description": "[BTH26-REST-XLSX APR-17] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 136,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4453,
+  "description": "[BTH26-REST-XLSX APR-18] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 137,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2955,
+  "description": "[BTH26-REST-XLSX APR-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 138,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 964,
+  "description": "[BTH26-REST-XLSX APR-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 139,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 635,
+  "description": "[BTH26-REST-XLSX APR-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 140,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2809,
+  "description": "[BTH26-REST-XLSX APR-22] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-21T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 141,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1065,
+  "description": "[BTH26-REST-XLSX APR-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 142,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 50,
+  "description": "[BTH26-REST-XLSX APR-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 143,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4573,
+  "description": "[BTH26-REST-XLSX APR-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 144,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 215,
+  "description": "[BTH26-REST-XLSX APR-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 145,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5250,
+  "description": "[BTH26-REST-XLSX APR-29] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 146,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2800,
+  "description": "[BTH26-REST-XLSX APR-30] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 147,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2160,
+  "description": "[BTH26-REST-XLSX APR-31] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-04-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 148,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5155,
+  "description": "[BTH26-REST-XLSX MAY-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 149,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1800,
+  "description": "[BTH26-REST-XLSX MAY-3] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-02T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 150,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1765,
+  "description": "[BTH26-REST-XLSX MAY-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 151,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 100,
+  "description": "[BTH26-REST-XLSX MAY-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 152,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2733,
+  "description": "[BTH26-REST-XLSX MAY-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 153,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2710,
+  "description": "[BTH26-REST-XLSX MAY-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 154,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 60,
+  "description": "[BTH26-REST-XLSX MAY-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 155,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1810,
+  "description": "[BTH26-REST-XLSX MAY-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 156,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3401,
+  "description": "[BTH26-REST-XLSX MAY-10] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-09T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 157,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2179,
+  "description": "[BTH26-REST-XLSX MAY-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 158,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1300,
+  "description": "[BTH26-REST-XLSX MAY-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 159,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1140,
+  "description": "[BTH26-REST-XLSX MAY-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 160,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 7584,
+  "description": "[BTH26-REST-XLSX MAY-16] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-15T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 161,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2420,
+  "description": "[BTH26-REST-XLSX MAY-17] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 162,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2340,
+  "description": "[BTH26-REST-XLSX MAY-18] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 163,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2000,
+  "description": "[BTH26-REST-XLSX MAY-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 164,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1580,
+  "description": "[BTH26-REST-XLSX MAY-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 165,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4125,
+  "description": "[BTH26-REST-XLSX MAY-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 166,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2480,
+  "description": "[BTH26-REST-XLSX MAY-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 167,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2605,
+  "description": "[BTH26-REST-XLSX MAY-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 168,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 555,
+  "description": "[BTH26-REST-XLSX MAY-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 169,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 960,
+  "description": "[BTH26-REST-XLSX MAY-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 170,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1380,
+  "description": "[BTH26-REST-XLSX MAY-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 171,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 6285,
+  "description": "[BTH26-REST-XLSX MAY-28] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 172,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2700,
+  "description": "[BTH26-REST-XLSX MAY-29] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 173,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3910,
+  "description": "[BTH26-REST-XLSX MAY-30] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 174,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 7152,
+  "description": "[BTH26-REST-XLSX MAY-31] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 175,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 65,
+  "description": "[BTH26-REST-XLSX MAY-32] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-05-31T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 176,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 100,
+  "description": "[BTH26-REST-XLSX JUN-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 177,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4378,
+  "description": "[BTH26-REST-XLSX JUN-3] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-02T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 178,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4560,
+  "description": "[BTH26-REST-XLSX JUN-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 179,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1000,
+  "description": "[BTH26-REST-XLSX JUN-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 180,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 12369,
+  "description": "[BTH26-REST-XLSX JUN-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 181,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 12526,
+  "description": "[BTH26-REST-XLSX JUN-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 182,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2770,
+  "description": "[BTH26-REST-XLSX JUN-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 183,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5015,
+  "description": "[BTH26-REST-XLSX JUN-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 184,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2210,
+  "description": "[BTH26-REST-XLSX JUN-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 185,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 700,
+  "description": "[BTH26-REST-XLSX JUN-12] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 186,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3110,
+  "description": "[BTH26-REST-XLSX JUN-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 187,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 765,
+  "description": "[BTH26-REST-XLSX JUN-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 188,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1540,
+  "description": "[BTH26-REST-XLSX JUN-15] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-14T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 189,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2129,
+  "description": "[BTH26-REST-XLSX JUN-17] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 190,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3880,
+  "description": "[BTH26-REST-XLSX JUN-18] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 191,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2500,
+  "description": "[BTH26-REST-XLSX JUN-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 192,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3451,
+  "description": "[BTH26-REST-XLSX JUN-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 193,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 240,
+  "description": "[BTH26-REST-XLSX JUN-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 194,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1120,
+  "description": "[BTH26-REST-XLSX JUN-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 195,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3900,
+  "description": "[BTH26-REST-XLSX JUN-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 196,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 50,
+  "description": "[BTH26-REST-XLSX JUN-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 197,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1590,
+  "description": "[BTH26-REST-XLSX JUN-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 198,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 440,
+  "description": "[BTH26-REST-XLSX JUN-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 199,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 550,
+  "description": "[BTH26-REST-XLSX JUN-28] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 200,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 800,
+  "description": "[BTH26-REST-XLSX JUN-29] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 201,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1740,
+  "description": "[BTH26-REST-XLSX JUN-30] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 202,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1019,
+  "description": "[BTH26-REST-XLSX JUN-31] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-06-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 203,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2420,
+  "description": "[BTH26-REST-XLSX JUL-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 204,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 440,
+  "description": "[BTH26-REST-XLSX JUL-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 205,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3005,
+  "description": "[BTH26-REST-XLSX JUL-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 206,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5930,
+  "description": "[BTH26-REST-XLSX JUL-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 207,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2290,
+  "description": "[BTH26-REST-XLSX JUL-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 208,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2390,
+  "description": "[BTH26-REST-XLSX JUL-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 209,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4131,
+  "description": "[BTH26-REST-XLSX JUL-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 210,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1010,
+  "description": "[BTH26-REST-XLSX JUL-10] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-09T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 211,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2100,
+  "description": "[BTH26-REST-XLSX JUL-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 212,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 9438,
+  "description": "[BTH26-REST-XLSX JUL-12] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 213,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3351,
+  "description": "[BTH26-REST-XLSX JUL-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 214,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1050,
+  "description": "[BTH26-REST-XLSX JUL-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 215,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 265,
+  "description": "[BTH26-REST-XLSX JUL-15] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-14T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 216,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 890,
+  "description": "[BTH26-REST-XLSX JUL-16] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-15T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 217,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1700,
+  "description": "[BTH26-REST-XLSX JUL-17] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 218,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3240,
+  "description": "[BTH26-REST-XLSX JUL-18] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 219,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 6140,
+  "description": "[BTH26-REST-XLSX JUL-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 220,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4340,
+  "description": "[BTH26-REST-XLSX JUL-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 221,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1200,
+  "description": "[BTH26-REST-XLSX JUL-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 222,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2900,
+  "description": "[BTH26-REST-XLSX JUL-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 223,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 440,
+  "description": "[BTH26-REST-XLSX JUL-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 224,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 665,
+  "description": "[BTH26-REST-XLSX JUL-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 225,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 10911,
+  "description": "[BTH26-REST-XLSX JUL-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 226,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2650,
+  "description": "[BTH26-REST-XLSX JUL-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 227,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2375,
+  "description": "[BTH26-REST-XLSX JUL-28] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 228,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3375,
+  "description": "[BTH26-REST-XLSX JUL-29] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 229,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 460,
+  "description": "[BTH26-REST-XLSX JUL-30] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 230,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 580,
+  "description": "[BTH26-REST-XLSX JUL-32] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-07-31T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 231,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1350,
+  "description": "[BTH26-REST-XLSX AUG-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 232,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3604,
+  "description": "[BTH26-REST-XLSX AUG-3] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-02T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 233,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 865,
+  "description": "[BTH26-REST-XLSX AUG-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 234,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2575,
+  "description": "[BTH26-REST-XLSX AUG-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 235,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 700,
+  "description": "[BTH26-REST-XLSX AUG-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 236,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2880,
+  "description": "[BTH26-REST-XLSX AUG-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 237,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2510,
+  "description": "[BTH26-REST-XLSX AUG-10] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-09T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 238,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 590,
+  "description": "[BTH26-REST-XLSX AUG-11] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 239,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1085,
+  "description": "[BTH26-REST-XLSX AUG-12] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-11T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 240,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1160,
+  "description": "[BTH26-REST-XLSX AUG-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 241,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2875,
+  "description": "[BTH26-REST-XLSX AUG-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 242,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2500,
+  "description": "[BTH26-REST-XLSX AUG-15] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-14T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 243,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2420,
+  "description": "[BTH26-REST-XLSX AUG-16] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-15T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 244,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3820,
+  "description": "[BTH26-REST-XLSX AUG-17] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 245,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1000,
+  "description": "[BTH26-REST-XLSX AUG-18] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-17T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 246,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2750,
+  "description": "[BTH26-REST-XLSX AUG-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 247,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4295,
+  "description": "[BTH26-REST-XLSX AUG-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 248,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2665,
+  "description": "[BTH26-REST-XLSX AUG-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 249,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2720,
+  "description": "[BTH26-REST-XLSX AUG-22] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-21T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 250,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2935,
+  "description": "[BTH26-REST-XLSX AUG-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 251,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2221,
+  "description": "[BTH26-REST-XLSX AUG-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 252,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1260,
+  "description": "[BTH26-REST-XLSX AUG-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 253,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1095,
+  "description": "[BTH26-REST-XLSX AUG-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 254,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5573,
+  "description": "[BTH26-REST-XLSX AUG-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 255,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1540,
+  "description": "[BTH26-REST-XLSX AUG-29] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-28T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 256,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 7540,
+  "description": "[BTH26-REST-XLSX AUG-30] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 257,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 220,
+  "description": "[BTH26-REST-XLSX AUG-31] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 258,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2485,
+  "description": "[BTH26-REST-XLSX AUG-32] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-08-31T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 259,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 8338,
+  "description": "[BTH26-REST-XLSX SEP-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 260,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 746,
+  "description": "[BTH26-REST-XLSX SEP-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 261,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1340,
+  "description": "[BTH26-REST-XLSX SEP-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 262,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 505,
+  "description": "[BTH26-REST-XLSX SEP-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 263,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2830,
+  "description": "[BTH26-REST-XLSX SEP-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 264,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1660,
+  "description": "[BTH26-REST-XLSX SEP-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 265,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2190,
+  "description": "[BTH26-REST-XLSX SEP-9] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-08T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 266,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3260,
+  "description": "[BTH26-REST-XLSX SEP-10] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-09T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 267,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5920,
+  "description": "[BTH26-REST-XLSX SEP-13] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-12T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 268,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 8568,
+  "description": "[BTH26-REST-XLSX SEP-14] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-13T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 269,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 490,
+  "description": "[BTH26-REST-XLSX SEP-15] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-14T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 270,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4200,
+  "description": "[BTH26-REST-XLSX SEP-16] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-15T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 271,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1000,
+  "description": "[BTH26-REST-XLSX SEP-17] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-16T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 272,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3580,
+  "description": "[BTH26-REST-XLSX SEP-19] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-18T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 273,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1485,
+  "description": "[BTH26-REST-XLSX SEP-20] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-19T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 274,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2789,
+  "description": "[BTH26-REST-XLSX SEP-21] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 275,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1725,
+  "description": "[BTH26-REST-XLSX SEP-22] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-21T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 276,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4050,
+  "description": "[BTH26-REST-XLSX SEP-23] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-22T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 277,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1300,
+  "description": "[BTH26-REST-XLSX SEP-24] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-23T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 278,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1200,
+  "description": "[BTH26-REST-XLSX SEP-25] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-24T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 279,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 828,
+  "description": "[BTH26-REST-XLSX SEP-26] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-25T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 280,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5105,
+  "description": "[BTH26-REST-XLSX SEP-27] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-26T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 281,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 5120,
+  "description": "[BTH26-REST-XLSX SEP-28] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 282,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2715,
+  "description": "[BTH26-REST-XLSX SEP-30] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-29T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 283,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 450,
+  "description": "[BTH26-REST-XLSX SEP-31] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-09-30T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 284,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 5312,
+  "description": "[BTH26-BAR-XLSX OCT-4] Bar expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-10-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T19:43:47.963Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 285,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 4860,
+  "description": "[BTH26-REST-XLSX OCT-2] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-10-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T19:44:35.278Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 286,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 3840,
+  "description": "[BTH26-REST-XLSX OCT-4] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-10-03T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T19:44:35.278Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 287,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 65,
+  "description": "[BTH26-REST-XLSX OCT-5] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T19:44:35.278Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 288,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1800,
+  "description": "[BTH26-REST-XLSX OCT-6] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-10-05T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T19:44:35.278Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 289,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 2680,
+  "description": "[BTH26-REST-XLSX OCT-7] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-10-06T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T19:44:35.278Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 290,
+  "company_id": "bth",
+  "booking_id": null,
+  "category": "Restaurant",
+  "amount": 1250,
+  "description": "[BTH26-REST-XLSX OCT-8] Restaurant expenses (daily sheet)",
+  "incurred_at": {
+   "$date": "2026-10-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T19:44:35.278Z"
+  },
+  "reference_type": "restaurant",
+  "reference_id": null
+ },
+ {
+  "_id": 291,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4600,
+  "description": "[EWC26-WA BAREXP-0410-1] 1 crate Tusker (week 27/09-04/10; message says \"to be purchased\")",
+  "incurred_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 292,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2000,
+  "description": "[EWC26-WA BAREXP-0410-2] 1 dozen water (week 27/09-04/10)",
+  "incurred_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 293,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1000,
+  "description": "[EWC26-WA BAREXP-0410-3] 1 crate soda (week 27/09-04/10)",
+  "incurred_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 294,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4600,
+  "description": "[EWC26-WA BAREXP-1010-1] 1 crate Tusker (week 04/10-10/10)",
+  "incurred_at": {
+   "$date": "2026-10-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 295,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 500,
+  "description": "[EWC26-WA BAREXP-1010-2] 1 dozen water (week 04/10-10/10)",
+  "incurred_at": {
+   "$date": "2026-10-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 296,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1000,
+  "description": "[EWC26-WA BAREXP-1010-3] 1 crate soda (week 04/10-10/10)",
+  "incurred_at": {
+   "$date": "2026-10-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 297,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4600,
+  "description": "[EWC26-WA SEP-BAREXP-0920-1] 1 crate Tusker (week 13/09-20/09)",
+  "incurred_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:17:41.159Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 298,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 500,
+  "description": "[EWC26-WA SEP-BAREXP-0920-2] 1 dozen water (week 13/09-20/09)",
+  "incurred_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:17:41.159Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 299,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4600,
+  "description": "[EWC26-WA SEP-BAREXP-0927-1] 1 crate Tusker (week 20/09-27/09)",
+  "incurred_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:17:41.159Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 300,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1000,
+  "description": "[EWC26-WA SEP-BAREXP-0927-2] 1 dozen water (week 20/09-27/09)",
+  "incurred_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:17:41.159Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 301,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1000,
+  "description": "[EWC26-WA SEP-BAREXP-0927-3] 1 crate soda (week 20/09-27/09)",
+  "incurred_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:17:41.159Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 302,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 9200,
+  "description": "[EWC26-WA AUG-BAREXP-0801-1] 2 crates Tusker (week 25/07-01/08)",
+  "incurred_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:35:12.447Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 303,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4000,
+  "description": "[EWC26-WA AUG-BAREXP-0801-2] 4 dozen soda (week 25/07-01/08)",
+  "incurred_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:35:12.447Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 304,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 2000,
+  "description": "[EWC26-WA AUG-BAREXP-0801-3] 4 dozen water (week 25/07-01/08)",
+  "incurred_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:35:12.447Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 305,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 9200,
+  "description": "[EWC26-WA AUG-BAREXP-0807-1] 2 crates Tusker (week 01/08-07/08)",
+  "incurred_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:35:12.447Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 306,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 4000,
+  "description": "[EWC26-WA AUG-BAREXP-0807-2] 4 dozen soda (week 01/08-07/08)",
+  "incurred_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:35:12.447Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 307,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar",
+  "amount": 1500,
+  "description": "[EWC26-WA AUG-BAREXP-0807-3] 3 dozen water (week 01/08-07/08)",
+  "incurred_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-17T23:35:12.447Z"
+  },
+  "reference_type": "bar",
+  "reference_id": null
+ },
+ {
+  "_id": 308,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Diesel",
+  "amount": 2550,
+  "description": "[EWC26-WA JUL-EXP-0710] 10 litres diesel (36,000 collected less 2,550 = 33,450 deposited 10/7)",
+  "incurred_at": {
+   "$date": "2026-07-10T12:00:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-10-18T12:55:43.958Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": null
+ },
+ {
+  "_id": 309,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Supplies",
+  "amount": 4000,
+  "description": "[EWC26-WA EXP-FEB-O-0212-NETS] 4 bed net frames for Kimanjaro and Mingati, paid from the Ochieng receipt.",
+  "incurred_at": {
+   "$date": "2026-02-12T11:58:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-02-12T11:58:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3303
+ },
+ {
+  "_id": 310,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Fuel",
+  "amount": 980,
+  "description": "[EWC26-WA EXP-FEB-BAR-0213-DIESEL] 5 litres of diesel, weekly bar record 07/02/2026 to 13/02/2026.",
+  "incurred_at": {
+   "$date": "2026-02-13T18:42:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-02-13T18:42:00.000Z"
+  },
+  "reference_type": null,
+  "reference_id": null
+ },
+ {
+  "_id": 311,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar stock",
+  "amount": 9600,
+  "description": "[EWC26-WA EXP-FEB-BAR-0213-TUSKER] 2 crates of Tusker, weekly bar record 07/02/2026 to 13/02/2026.",
+  "incurred_at": {
+   "$date": "2026-02-13T18:42:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-02-13T18:42:00.000Z"
+  },
+  "reference_type": null,
+  "reference_id": null
+ },
+ {
+  "_id": 312,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Fuel",
+  "amount": 3600,
+  "description": "[EWC26-WA EXP-MAR-B-0313-DIESEL] Diesel 20 litres, paid from the Booking.com receipt.",
+  "incurred_at": {
+   "$date": "2026-03-13T09:01:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-03-13T09:01:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3319
+ },
+ {
+  "_id": 313,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Fuel",
+  "amount": 700,
+  "description": "[EWC26-WA EXP-MAR-B-0313-PETROL] Petrol 3 litres, paid from the Booking.com receipt.",
+  "incurred_at": {
+   "$date": "2026-03-13T09:01:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-03-13T09:01:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3319
+ },
+ {
+  "_id": 314,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Fuel",
+  "amount": 1200,
+  "description": "[EWC26-WA EXP-MAR-B-0313-OIL] Oil 2 litres, paid from the Booking.com receipt.",
+  "incurred_at": {
+   "$date": "2026-03-13T09:01:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-03-13T09:01:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3319
+ },
+ {
+  "_id": 315,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Fuel",
+  "amount": 1000,
+  "description": "[EWC26-WA EXP-APR-O-0406-DIESEL] Diesel 5 litres, paid from the Ochieng overnight receipt.",
+  "incurred_at": {
+   "$date": "2026-04-06T15:55:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-04-06T15:55:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3325
+ },
+ {
+  "_id": 316,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Fuel",
+  "amount": 400,
+  "description": "[EWC26-WA EXP-APR-O-0406-PETROL] Petrol 2 litres, paid from the Ochieng overnight receipt.",
+  "incurred_at": {
+   "$date": "2026-04-06T15:55:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-04-06T15:55:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3325
+ },
+ {
+  "_id": 317,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Transport",
+  "amount": 100,
+  "description": "[EWC26-WA EXP-APR-O-0406-TRANSPORT] Transport, paid from the Ochieng overnight receipt.",
+  "incurred_at": {
+   "$date": "2026-04-06T15:55:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-04-06T15:55:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3325
+ },
+ {
+  "_id": 318,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Repairs",
+  "amount": 500,
+  "description": "[EWC26-WA EXP-APR-O-0409-POWER] Electricity repair at the main transformer, paid from the Ochieng overnight receipt.",
+  "incurred_at": {
+   "$date": "2026-04-09T16:57:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-04-09T16:57:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3326
+ },
+ {
+  "_id": 319,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Fuel",
+  "amount": 500,
+  "description": "[EWC26-WA EXP-APR-O-0409-PETROL] Petrol 2 litres for the water pump, paid from the Ochieng overnight receipt.",
+  "incurred_at": {
+   "$date": "2026-04-09T16:57:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-04-09T16:57:00.000Z"
+  },
+  "reference_type": "hotel",
+  "reference_id": 3326
+ },
+ {
+  "_id": 320,
+  "company_id": "ewc",
+  "booking_id": null,
+  "category": "Bar stock",
+  "amount": 4600,
+  "description": "[EWC26-WA EXP-APR-BAR-0424-BEER] 1 crate of beer. The 24/04/2026 bar note said it was to be purchased at 4,600; the deposit was KES 2,000 from KES 6,600 sales.",
+  "incurred_at": {
+   "$date": "2026-04-24T18:50:00.000Z"
+  },
+  "created_at": {
+   "$date": "2026-04-24T18:50:00.000Z"
+  },
+  "reference_type": null,
+  "reference_id": null
+ }
+]

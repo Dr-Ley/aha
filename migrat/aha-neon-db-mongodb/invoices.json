@@ -1,0 +1,347 @@
+[
+ {
+  "_id": 1,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 2,
+  "invoice_number": "INV-0001",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 1500,
+  "total": 1500,
+  "amount_paid": 1500,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-30T16:46:55.166Z"
+  },
+  "created_at": {
+   "$date": "2026-08-30T16:46:55.166Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-30T16:46:55.863Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 1,
+  "invoice_number": "INV-0002",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 3750,
+  "total": 3750,
+  "amount_paid": 3750,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-30T16:48:22.339Z"
+  },
+  "created_at": {
+   "$date": "2026-08-30T16:48:22.339Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-30T16:48:23.132Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 29,
+  "invoice_number": "INV-0003",
+  "status": "issued",
+  "currency": "KES",
+  "subtotal": 50000,
+  "total": 50000,
+  "amount_paid": 0,
+  "balance": 50000,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-31T07:38:29.367Z"
+  },
+  "created_at": {
+   "$date": "2026-08-31T07:38:29.367Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-31T09:12:59.883Z"
+  }
+ },
+ {
+  "_id": 4,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 30,
+  "invoice_number": "INV-0004",
+  "status": "issued",
+  "currency": "KES",
+  "subtotal": 49977,
+  "total": 49977,
+  "amount_paid": 0,
+  "balance": 49977,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-31T09:20:57.125Z"
+  },
+  "created_at": {
+   "$date": "2026-08-31T09:20:57.125Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-31T09:34:46.804Z"
+  }
+ },
+ {
+  "_id": 5,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 31,
+  "invoice_number": "INV-0005",
+  "status": "issued",
+  "currency": "KES",
+  "subtotal": 60000,
+  "total": 60000,
+  "amount_paid": 0,
+  "balance": 60000,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-31T09:41:54.777Z"
+  },
+  "created_at": {
+   "$date": "2026-08-31T09:41:54.777Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-31T10:11:36.294Z"
+  }
+ },
+ {
+  "_id": 6,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 32,
+  "invoice_number": "INV-0006",
+  "status": "issued",
+  "currency": "KES",
+  "subtotal": 50000,
+  "total": 50000,
+  "amount_paid": 0,
+  "balance": 50000,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-31T11:53:20.077Z"
+  },
+  "created_at": {
+   "$date": "2026-08-31T11:53:20.077Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-31T13:00:14.088Z"
+  }
+ },
+ {
+  "_id": 7,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 33,
+  "invoice_number": "INV-0007",
+  "status": "issued",
+  "currency": "KES",
+  "subtotal": 400000,
+  "total": 400000,
+  "amount_paid": 0,
+  "balance": 400000,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-31T13:03:32.692Z"
+  },
+  "created_at": {
+   "$date": "2026-08-31T13:03:32.692Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-31T13:03:32.659Z"
+  }
+ },
+ {
+  "_id": 8,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 34,
+  "invoice_number": "INV-0008",
+  "status": "issued",
+  "currency": "KES",
+  "subtotal": 100000001,
+  "total": 100000001,
+  "amount_paid": 0,
+  "balance": 100000001,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-08-31T15:51:33.524Z"
+  },
+  "created_at": {
+   "$date": "2026-08-31T15:51:33.524Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-31T15:51:33.094Z"
+  }
+ },
+ {
+  "_id": 9,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 21,
+  "invoice_number": "INV-0009",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 1360169,
+  "total": 1360169,
+  "amount_paid": 1360169,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-10-15T18:46:05.529Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:46:05.529Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-15T18:46:06.152Z"
+  }
+ },
+ {
+  "_id": 10,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 22,
+  "invoice_number": "INV-0010",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 245594,
+  "total": 245594,
+  "amount_paid": 245594,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-10-15T18:46:36.644Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:46:36.644Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-15T18:46:37.207Z"
+  }
+ },
+ {
+  "_id": 11,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 20,
+  "invoice_number": "INV-0011",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 433321,
+  "total": 433321,
+  "amount_paid": 433321,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-10-15T18:46:59.966Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:46:59.966Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-15T18:47:00.795Z"
+  }
+ },
+ {
+  "_id": 12,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 18,
+  "invoice_number": "INV-0012",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 595010,
+  "total": 595010,
+  "amount_paid": 595010,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-10-15T18:47:23.130Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:47:23.130Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-15T18:47:23.639Z"
+  }
+ },
+ {
+  "_id": 13,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 17,
+  "invoice_number": "INV-0013",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 1552201,
+  "total": 1552201,
+  "amount_paid": 1552201,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-10-15T18:48:11.102Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:48:11.102Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-15T18:48:11.634Z"
+  }
+ },
+ {
+  "_id": 14,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 16,
+  "invoice_number": "INV-0014",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 470834,
+  "total": 470834,
+  "amount_paid": 470834,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-10-15T18:48:25.610Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:48:25.610Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-15T18:48:26.130Z"
+  }
+ },
+ {
+  "_id": 15,
+  "company_id": "aha",
+  "reference_type": "tour",
+  "reference_id": 15,
+  "invoice_number": "INV-0015",
+  "status": "paid",
+  "currency": "KES",
+  "subtotal": 939081,
+  "total": 939081,
+  "amount_paid": 939081,
+  "balance": 0,
+  "notes": null,
+  "issued_at": {
+   "$date": "2026-10-15T18:48:37.808Z"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:48:37.808Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-15T18:48:38.445Z"
+  }
+ }
+]

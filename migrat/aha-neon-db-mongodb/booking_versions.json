@@ -1,0 +1,1022 @@
+[
+ {
+  "_id": 1,
+  "booking_id": 20,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 433321,
+   "pricingSource": "manual",
+   "originalAmount": 433321,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 433321,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 2,
+  "booking_id": 11,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 297504,
+   "pricingSource": "manual",
+   "originalAmount": 297504,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 297504,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 4,
+  "booking_id": 12,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 271635,
+   "pricingSource": "manual",
+   "originalAmount": 271635,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 271635,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 5,
+  "booking_id": 10,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 212024,
+   "pricingSource": "manual",
+   "originalAmount": 212024,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 212024,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 7,
+  "booking_id": 2,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 194024,
+   "pricingSource": "manual",
+   "originalAmount": 1500,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 1500,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 9,
+  "booking_id": 13,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 724360,
+   "pricingSource": "manual",
+   "originalAmount": 939081,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 939081,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 10,
+  "booking_id": 21,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 1360169,
+   "pricingSource": "manual",
+   "originalAmount": 1360169,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 1360169,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 11,
+  "booking_id": 5,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 577159,
+   "pricingSource": "manual",
+   "originalAmount": 577159,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 577159,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 12,
+  "booking_id": 19,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 329842,
+   "pricingSource": "manual",
+   "originalAmount": 329842,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 329842,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 14,
+  "booking_id": 6,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 860437,
+   "pricingSource": "manual",
+   "originalAmount": 860437,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 860437,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 16,
+  "booking_id": 4,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 38804,
+   "pricingSource": "manual",
+   "originalAmount": 38804,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 38804,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 17,
+  "booking_id": 1,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 485061,
+   "pricingSource": "manual",
+   "originalAmount": 3750,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 3750,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 19,
+  "booking_id": 3,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 155219,
+   "pricingSource": "manual",
+   "originalAmount": 1200,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 1200,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 20,
+  "booking_id": 14,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 271635,
+   "pricingSource": "manual",
+   "originalAmount": 271635,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 271635,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 21,
+  "booking_id": 9,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 155218,
+   "pricingSource": "manual",
+   "originalAmount": 155218,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 155218,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 22,
+  "booking_id": 7,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 689434,
+   "pricingSource": "manual",
+   "originalAmount": 689434,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 689434,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 6,
+  "booking_id": 18,
+  "version": 1,
+  "is_current": false,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 595010,
+   "pricingSource": "manual",
+   "originalAmount": 595010,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 595010,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 3,
+  "booking_id": 17,
+  "version": 1,
+  "is_current": false,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 1552201,
+   "pricingSource": "manual",
+   "originalAmount": 1552201,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 1552201,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 13,
+  "booking_id": 8,
+  "version": 1,
+  "is_current": false,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 952532,
+   "pricingSource": "manual",
+   "originalAmount": 952532,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 952532,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 15,
+  "booking_id": 16,
+  "version": 1,
+  "is_current": false,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 470834,
+   "pricingSource": "manual",
+   "originalAmount": 470834,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 470834,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 8,
+  "booking_id": 15,
+  "version": 1,
+  "is_current": false,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 939081,
+   "pricingSource": "manual",
+   "originalAmount": null,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 939081,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 18,
+  "booking_id": 22,
+  "version": 1,
+  "is_current": false,
+  "snapshot": {
+   "migrated": true,
+   "totalPrice": 245594,
+   "pricingSource": "manual",
+   "originalAmount": 245594,
+   "originalCurrency": "KES"
+  },
+  "selling_price": 245594,
+  "previous_selling_price": null,
+  "currency": "KES",
+  "changed_by_user_id": null,
+  "change_summary": "Initial snapshot (Sprint 4 migration)",
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.493Z"
+  }
+ },
+ {
+  "_id": 34,
+  "booking_id": 35,
+  "version": 1,
+  "is_current": true,
+  "snapshot": {
+   "booking": {
+    "adults": 2,
+    "guests": 2,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": {
+     "other": null,
+     "quote": {
+      "lines": [
+       {
+        "kind": "accommodation",
+        "label": "Amboseli Sopa Lodge × 3 nights",
+        "amount": 960
+       },
+       {
+        "kind": "park_fees",
+        "label": "Amboseli park fee × 5 days",
+        "amount": 600
+       },
+       {
+        "kind": "transport",
+        "label": "Safari Land Cruiser × 5 days",
+        "amount": 900
+       },
+       {
+        "kind": "transfers",
+        "label": "JKIA – Nairobi hotel transfer",
+        "amount": 50
+       }
+      ],
+      "currency": "USD",
+      "costTotal": 2510,
+      "roundedUpBy": 0,
+      "markupAmount": 0,
+      "sellingPrice": 3020,
+      "markupPercent": 20,
+      "baseSellingPrice": 2510
+     },
+     "parkFees": 600,
+     "transfers": 50,
+     "transport": 900,
+     "activities": null,
+     "accommodation": 960,
+     "markupPercent": 20
+    },
+    "transport": "4x4-landcruiser",
+    "totalPrice": 391090,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "cost_stack",
+    "safariPackage": "5-Day Amboseli Safari",
+    "originalAmount": 3020,
+    "pricePerPerson": 195545,
+    "originalCurrency": "USD"
+   },
+   "components": [
+    {
+     "cost": 960,
+     "type": "accommodation",
+     "config": {
+      "label": "Amboseli Sopa Lodge × 3 nights",
+      "nights": 3,
+      "source": "enzi_catalog",
+      "accommodation_id": 15
+     },
+     "sequence": 0
+    },
+    {
+     "cost": 600,
+     "type": "park_fee",
+     "config": {
+      "days": 5,
+      "label": "Amboseli park fee × 5 days",
+      "source": "enzi_catalog",
+      "park_fee_id": 3,
+      "destination_id": 2
+     },
+     "sequence": 1
+    },
+    {
+     "cost": 900,
+     "type": "transport",
+     "config": {
+      "days": 5,
+      "label": "Safari Land Cruiser × 5 days",
+      "source": "enzi_catalog",
+      "transport_id": 1
+     },
+     "sequence": 2
+    },
+    {
+     "cost": 50,
+     "type": "transfer",
+     "config": {
+      "label": "JKIA – Nairobi hotel transfer",
+      "source": "enzi_catalog",
+      "transfer_id": 1
+     },
+     "sequence": 3
+    }
+   ]
+  },
+  "selling_price": 3020,
+  "previous_selling_price": null,
+  "currency": "USD",
+  "changed_by_user_id": 4,
+  "change_summary": "Initial version",
+  "created_at": {
+   "$date": "2026-09-02T18:34:27.091Z"
+  }
+ },
+ {
+  "_id": 35,
+  "booking_id": 8,
+  "version": 2,
+  "is_current": false,
+  "snapshot": {
+   "booking": {
+    "adults": 2,
+    "guests": 2,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 952532,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "manual",
+    "safariPackage": "6 DAYS NAIROBI-NAMANGA-NGORONGORO CRATER-SERENGETI-MASAI MARA",
+    "originalAmount": 952532,
+    "pricePerPerson": 476266,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 952532,
+     "type": "other",
+     "config": {
+      "label": "6 DAYS NAIROBI-NAMANGA-NGORONGORO CRATER-SERENGETI-MASAI MARA",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 952532,
+  "previous_selling_price": 952532,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 952532)",
+  "created_at": {
+   "$date": "2026-10-15T18:40:10.910Z"
+  }
+ },
+ {
+  "_id": 36,
+  "booking_id": 8,
+  "version": 3,
+  "is_current": true,
+  "snapshot": {
+   "booking": {
+    "adults": 2,
+    "guests": 2,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 952532,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "manual",
+    "safariPackage": "6 DAYS NAIROBI-NAMANGA-NGORONGORO CRATER-SERENGETI-MASAI MARA",
+    "originalAmount": 952532,
+    "pricePerPerson": 476266,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 952532,
+     "type": "other",
+     "config": {
+      "label": "6 DAYS NAIROBI-NAMANGA-NGORONGORO CRATER-SERENGETI-MASAI MARA",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 952532,
+  "previous_selling_price": 952532,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 952532)",
+  "created_at": {
+   "$date": "2026-10-15T18:40:18.654Z"
+  }
+ },
+ {
+  "_id": 37,
+  "booking_id": 16,
+  "version": 2,
+  "is_current": false,
+  "snapshot": {
+   "booking": {
+    "adults": 2,
+    "guests": 2,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 470834,
+    "bookingKind": "customized_safari",
+    "accommodation": "budget",
+    "pricingSource": "manual",
+    "safariPackage": "6 DAYS MASAI MARA NAKURU NAIVASHA",
+    "originalAmount": 470834,
+    "pricePerPerson": 235417,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 470834,
+     "type": "other",
+     "config": {
+      "label": "6 DAYS MASAI MARA NAKURU NAIVASHA",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 470834,
+  "previous_selling_price": 470834,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 470834)",
+  "created_at": {
+   "$date": "2026-10-15T18:40:24.052Z"
+  }
+ },
+ {
+  "_id": 39,
+  "booking_id": 16,
+  "version": 3,
+  "is_current": true,
+  "snapshot": {
+   "booking": {
+    "adults": 2,
+    "guests": 2,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 470834,
+    "bookingKind": "customized_safari",
+    "accommodation": "budget",
+    "pricingSource": "manual",
+    "safariPackage": "6 DAYS MASAI MARA NAKURU NAIVASHA",
+    "originalAmount": 470834,
+    "pricePerPerson": 235417,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 470834,
+     "type": "other",
+     "config": {
+      "label": "6 DAYS MASAI MARA NAKURU NAIVASHA",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 470834,
+  "previous_selling_price": 470834,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 470834)",
+  "created_at": {
+   "$date": "2026-10-15T18:40:36.037Z"
+  }
+ },
+ {
+  "_id": 38,
+  "booking_id": 18,
+  "version": 2,
+  "is_current": false,
+  "snapshot": {
+   "booking": {
+    "adults": 3,
+    "guests": 3,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 595010,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "manual",
+    "safariPackage": "4 DAYS LAKE NAKURU & MASAI MARA",
+    "originalAmount": 595010,
+    "pricePerPerson": null,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 595010,
+     "type": "other",
+     "config": {
+      "label": "4 DAYS LAKE NAKURU & MASAI MARA",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 595010,
+  "previous_selling_price": 595010,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 595010)",
+  "created_at": {
+   "$date": "2026-10-15T18:40:29.806Z"
+  }
+ },
+ {
+  "_id": 40,
+  "booking_id": 18,
+  "version": 3,
+  "is_current": true,
+  "snapshot": {
+   "booking": {
+    "adults": 3,
+    "guests": 3,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 595010,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "manual",
+    "safariPackage": "4 DAYS LAKE NAKURU & MASAI MARA",
+    "originalAmount": 595010,
+    "pricePerPerson": null,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 595010,
+     "type": "other",
+     "config": {
+      "label": "4 DAYS LAKE NAKURU & MASAI MARA",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 595010,
+  "previous_selling_price": 595010,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 595010)",
+  "created_at": {
+   "$date": "2026-10-15T18:40:41.095Z"
+  }
+ },
+ {
+  "_id": 41,
+  "booking_id": 17,
+  "version": 2,
+  "is_current": false,
+  "snapshot": {
+   "booking": {
+    "adults": 4,
+    "guests": 4,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 1552201,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "manual",
+    "safariPackage": "17 DAYS KENYA VOLUNTEER MISSION & SAFARI",
+    "originalAmount": 1552201,
+    "pricePerPerson": 388050,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 1552201,
+     "type": "other",
+     "config": {
+      "label": "17 DAYS KENYA VOLUNTEER MISSION & SAFARI",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 1552201,
+  "previous_selling_price": 1552201,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 1552201)",
+  "created_at": {
+   "$date": "2026-10-15T18:40:50.052Z"
+  }
+ },
+ {
+  "_id": 42,
+  "booking_id": 17,
+  "version": 3,
+  "is_current": true,
+  "snapshot": {
+   "booking": {
+    "adults": 4,
+    "guests": 4,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 1552201,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "manual",
+    "safariPackage": "17 DAYS KENYA VOLUNTEER MISSION & SAFARI",
+    "originalAmount": 1552201,
+    "pricePerPerson": 388050,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 1552201,
+     "type": "other",
+     "config": {
+      "label": "17 DAYS KENYA VOLUNTEER MISSION & SAFARI",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 1552201,
+  "previous_selling_price": 1552201,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 1552201)",
+  "created_at": {
+   "$date": "2026-10-15T18:41:04.358Z"
+  }
+ },
+ {
+  "_id": 43,
+  "booking_id": 15,
+  "version": 2,
+  "is_current": true,
+  "snapshot": {
+   "booking": {
+    "adults": 4,
+    "guests": 4,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 939081,
+    "bookingKind": "customized_safari",
+    "accommodation": "mid-range",
+    "pricingSource": "manual",
+    "safariPackage": "8 DAYS KENYA TANZANIA SAFARI",
+    "originalAmount": null,
+    "pricePerPerson": 234770,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 939081,
+     "type": "other",
+     "config": {
+      "label": "8 DAYS KENYA TANZANIA SAFARI",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 939081,
+  "previous_selling_price": 939081,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 939081)",
+  "created_at": {
+   "$date": "2026-10-15T18:41:13.265Z"
+  }
+ },
+ {
+  "_id": 44,
+  "booking_id": 22,
+  "version": 2,
+  "is_current": true,
+  "snapshot": {
+   "booking": {
+    "adults": 2,
+    "guests": 2,
+    "tourId": null,
+    "infants": 0,
+    "children": 0,
+    "costStack": null,
+    "transport": "4x4-landcruiser",
+    "totalPrice": 245594,
+    "bookingKind": "customized_safari",
+    "accommodation": "budget",
+    "pricingSource": "manual",
+    "safariPackage": "4 DAYS MAASAI MARA BIG 5 TOUR",
+    "originalAmount": 245594,
+    "pricePerPerson": 122797,
+    "originalCurrency": "KES"
+   },
+   "components": [
+    {
+     "cost": 245594,
+     "type": "other",
+     "config": {
+      "label": "4 DAYS MAASAI MARA BIG 5 TOUR",
+      "source": "manual"
+     },
+     "sequence": 0
+    }
+   ]
+  },
+  "selling_price": 245594,
+  "previous_selling_price": 245594,
+  "currency": "KES",
+  "changed_by_user_id": 4,
+  "change_summary": "Components updated (price 245594)",
+  "created_at": {
+   "$date": "2026-10-15T18:41:16.957Z"
+  }
+ }
+]

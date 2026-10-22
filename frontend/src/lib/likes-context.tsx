@@ -34,10 +34,10 @@ export function LikesProvider({ children }: { children: ReactNode }) {
     user ? '/api/likes' : null,
     fetcher,
     {
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 100, // 5 seconds
-      refreshInterval: 0, // 
+      dedupingInterval: 2000,
+      refreshInterval: 0,
       fallbackData: { likes: [] },
     }
   );

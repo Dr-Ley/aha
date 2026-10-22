@@ -1,37 +1,13 @@
-/**
- * WebSocket Drizzle client for multi-step financial writes.
- * Neon HTTP (`@/lib/db`) cannot wrap Payment + Invoice + Booking in one transaction.
- */
-import { neonConfig, Pool } from "@neondatabase/serverless";
-import type { ExtractTablesWithRelations } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/neon-serverless";
-import type { NeonTransaction } from "drizzle-orm/neon-serverless";
-import * as schema from "@/lib/schema";
+import { db } from "@/lib/db";
 
-if (typeof globalThis.WebSocket !== "undefined") {
-  neonConfig.webSocketConstructor = globalThis.WebSocket;
-}
-
-let pool: Pool | null = null;
-let financeDb: ReturnType<typeof createFinanceDb> | null = null;
-
-function createFinanceDb() {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
-    throw new Error("DATABASE_URL is not defined");
-  }
-  pool = new Pool({ connectionString: url });
-  return drizzle(pool, { schema });
-}
-
+/** Financial writes use the same MongoDB client as the rest of the app. */
 export function getFinanceDb() {
-  if (!financeDb) financeDb = createFinanceDb();
-  return financeDb;
+  return db;
 }
 
-export type FinanceDb = ReturnType<typeof getFinanceDb>;
-export type FinanceTx = NeonTransaction<typeof schema, ExtractTablesWithRelations<typeof schema>>;
+export type FinanceDb = typeof db;
+export type FinanceTx = typeof db;
 
 export async function withFinanceTransaction<T>(fn: (tx: FinanceTx) => Promise<T>): Promise<T> {
-  return getFinanceDb().transaction(fn);
+  return db.transaction(fn);
 }

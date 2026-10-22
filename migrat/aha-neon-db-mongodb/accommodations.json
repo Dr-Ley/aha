@@ -1,0 +1,80 @@
+[
+ {
+  "_id": 13,
+  "slug": "sarova-lion-hill-game-lodge",
+  "name": "Sarova Lion Hill Game Lodge",
+  "location": "Lake Nakuru, Lake Nakuru National Park",
+  "country": "Kenya",
+  "image": [
+   "/sarovalion.png",
+   "/sarovalion2.png",
+   "/sarovalion3.png",
+   "/sarovalion4.png",
+   "/sarovalion5.png"
+  ],
+  "description": "Popular lodge inside the park on Lion Hill. | Highlights: Inside the park, Great views, Full spa | Room types: Chalet, Suite | Total rooms: 67",
+  "amenities": [
+   "Swimming pool",
+   "Spa",
+   "Restaurant"
+  ],
+  "price_from": 320,
+  "badges": [
+   "Luxury",
+   "Lake Nakuru",
+   "Featured",
+   "Spa",
+   "Pool"
+  ],
+  "recommended": true,
+  "type": "lodge",
+  "likes": 24,
+  "created_at": {
+   "$date": "2026-05-17T12:20:09.385Z"
+  },
+  "company_id": "aha",
+  "provider_id": 3,
+  "property_id": 3,
+  "destination_id": 3
+ },
+ {
+  "_id": 11,
+  "slug": "enchoro-wildlife-camp",
+  "name": "Enchoro Wildlife Camp",
+  "location": "Masai Mara, Masai Mara National Reserve",
+  "country": "Kenya",
+  "image": [
+   "/destination_maasai_mara1.png",
+   "/outdoor_space.png",
+   "/EWC_superior_tent.png",
+   "/ewc-luxury-tent.png",
+   "/double_room.png",
+   "/superior2-tented-camp.png",
+   "/superior-double-tent.png",
+   "/masai-mara-tented-camp-superior.png",
+   "/king_bed.png"
+  ],
+  "description": "Popular midrange eco-camp located near Oloolaimutia Gate. | Highlights: Close to main gate, En-suite tents, Good value | Room types: Standard Tent, Superior Tent | Total rooms: 27",
+  "amenities": [
+   "Restaurant",
+   "Bar",
+   "Wi-Fi"
+  ],
+  "price_from": 100,
+  "badges": [
+   "Midrange",
+   "Masai Mara",
+   "Featured"
+  ],
+  "recommended": true,
+  "type": "tented-camp",
+  "likes": 36,
+  "created_at": {
+   "$date": "2026-05-17T12:16:47.747Z"
+  },
+  "company_id": "aha",
+  "provider_id": 1,
+  "property_id": 1,
+  "destination_id": 1
+ }
+]

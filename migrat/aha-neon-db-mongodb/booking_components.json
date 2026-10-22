@@ -1,0 +1,374 @@
+[
+ {
+  "_id": 1,
+  "booking_id": 7,
+  "type": "other",
+  "config": {
+   "label": "8 DAYS LAKE NAKURU- MASAI MARA-DIANI",
+   "source": "manual"
+  },
+  "cost": 689434,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 2,
+  "booking_id": 10,
+  "type": "other",
+  "config": {
+   "label": "3 DAYS MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 212024,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 3,
+  "booking_id": 9,
+  "type": "other",
+  "config": {
+   "label": "3 DAYS MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 155218,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 4,
+  "booking_id": 12,
+  "type": "other",
+  "config": {
+   "label": "4 DAYS MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 271635,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 5,
+  "booking_id": 11,
+  "type": "other",
+  "config": {
+   "label": "4 DAYS MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 297504,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 6,
+  "booking_id": 4,
+  "type": "other",
+  "config": {
+   "label": "Elephant Orphanage and Giraffe Center Nairobi Day Tour",
+   "source": "manual"
+  },
+  "cost": 38804,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 7,
+  "booking_id": 14,
+  "type": "other",
+  "config": {
+   "label": "4 DAYS MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 271635,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 8,
+  "booking_id": 3,
+  "type": "other",
+  "config": {
+   "label": "3 DAYS MASAI MARA SAFARI PACKAGE",
+   "source": "manual"
+  },
+  "cost": 1200,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 9,
+  "booking_id": 5,
+  "type": "other",
+  "config": {
+   "label": "5 DAYS LAKE NAKURU-LAKE NAIVASHA-MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 577159,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 10,
+  "booking_id": 8,
+  "type": "other",
+  "config": {
+   "label": "6 DAYS NAIROBI-NAMANGA-NGORONGORO CRATER-SERENGETI-MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 952532,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 11,
+  "booking_id": 15,
+  "type": "other",
+  "config": {
+   "label": "8 DAYS KENYA TANZANIA SAFARI",
+   "source": "manual"
+  },
+  "cost": 939081,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 12,
+  "booking_id": 19,
+  "type": "other",
+  "config": {
+   "label": "3 DAYS MASAI MARA FROM WAGUSU",
+   "source": "manual"
+  },
+  "cost": 329842,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 13,
+  "booking_id": 16,
+  "type": "other",
+  "config": {
+   "label": "6 DAYS MASAI MARA NAKURU NAIVASHA",
+   "source": "manual"
+  },
+  "cost": 470834,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 14,
+  "booking_id": 17,
+  "type": "other",
+  "config": {
+   "label": "17 DAYS KENYA VOLUNTEER MISSION & SAFARI",
+   "source": "manual"
+  },
+  "cost": 1552201,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 15,
+  "booking_id": 18,
+  "type": "other",
+  "config": {
+   "label": "4 DAYS LAKE NAKURU & MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 595010,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 16,
+  "booking_id": 13,
+  "type": "other",
+  "config": {
+   "label": "4 DAYS MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 939081,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 17,
+  "booking_id": 2,
+  "type": "other",
+  "config": {
+   "label": "3 DAYS MASAI MARA PACKAGE",
+   "source": "manual"
+  },
+  "cost": 1500,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 18,
+  "booking_id": 1,
+  "type": "other",
+  "config": {
+   "label": "4 DAYS MASAI MARA PACKAGE",
+   "source": "manual"
+  },
+  "cost": 3750,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 19,
+  "booking_id": 6,
+  "type": "other",
+  "config": {
+   "label": "9 DAYS OL PEJETA-LAKE NAKURU-MASAI MARA-LAKE NAIVASHA-AMBOSELI",
+   "source": "manual"
+  },
+  "cost": 860437,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 20,
+  "booking_id": 20,
+  "type": "other",
+  "config": {
+   "label": " 4 DAYS MASAI MARA",
+   "source": "manual"
+  },
+  "cost": 433321,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 21,
+  "booking_id": 22,
+  "type": "other",
+  "config": {
+   "label": "4 DAYS MAASAI MARA BIG 5 TOUR",
+   "source": "manual"
+  },
+  "cost": 245594,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 22,
+  "booking_id": 21,
+  "type": "other",
+  "config": {
+   "label": "6-DAY MAASAI MARA-L.NAKURU-L.NAIVASHA MIGRATION SAFARI",
+   "source": "manual"
+  },
+  "cost": 1360169,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-08-30T21:35:40.372Z"
+  }
+ },
+ {
+  "_id": 32,
+  "booking_id": 35,
+  "type": "accommodation",
+  "config": {
+   "label": "Amboseli Sopa Lodge × 3 nights",
+   "nights": 3,
+   "source": "enzi_catalog",
+   "accommodation_id": 15
+  },
+  "cost": 960,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:34:26.292Z"
+  }
+ },
+ {
+  "_id": 33,
+  "booking_id": 35,
+  "type": "park_fee",
+  "config": {
+   "days": 5,
+   "label": "Amboseli park fee × 5 days",
+   "source": "enzi_catalog",
+   "park_fee_id": 3,
+   "destination_id": 2
+  },
+  "cost": 600,
+  "sequence": 1,
+  "created_at": {
+   "$date": "2026-09-02T18:34:26.292Z"
+  }
+ },
+ {
+  "_id": 34,
+  "booking_id": 35,
+  "type": "transport",
+  "config": {
+   "days": 5,
+   "label": "Safari Land Cruiser × 5 days",
+   "source": "enzi_catalog",
+   "transport_id": 1
+  },
+  "cost": 900,
+  "sequence": 2,
+  "created_at": {
+   "$date": "2026-09-02T18:34:26.292Z"
+  }
+ },
+ {
+  "_id": 35,
+  "booking_id": 35,
+  "type": "transfer",
+  "config": {
+   "label": "JKIA – Nairobi hotel transfer",
+   "source": "enzi_catalog",
+   "transfer_id": 1
+  },
+  "cost": 50,
+  "sequence": 3,
+  "created_at": {
+   "$date": "2026-09-02T18:34:26.292Z"
+  }
+ }
+]

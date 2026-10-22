@@ -1,0 +1,121 @@
+[
+ {
+  "_id": 1,
+  "email": "traveller@example.com",
+  "password_hash": "$2b$10$PSSO1S8McqKBFosjKI8peOTdcE2ha4QBLusuY0/g83g7dyTfYQ8Wi",
+  "name": "John Traveller",
+  "role": "customer",
+  "avatar": "JT",
+  "phone": "+1234567890",
+  "country": "United States",
+  "created_at": {
+   "$date": "2026-02-26T23:04:51.652Z"
+  },
+  "updated_at": {
+   "$date": "2026-02-26T23:04:51.652Z"
+  },
+  "dashboard_notifications_enabled": true
+ },
+ {
+  "_id": 2,
+  "email": "sarah.safari@email.com",
+  "password_hash": "$2b$10$PSSO1S8McqKBFosjKI8peOTdcE2ha4QBLusuY0/g83g7dyTfYQ8Wi",
+  "name": "Sarah Safari",
+  "role": "customer",
+  "avatar": "SS",
+  "phone": "+44123456789",
+  "country": "United Kingdom",
+  "created_at": {
+   "$date": "2026-02-26T23:04:52.008Z"
+  },
+  "updated_at": {
+   "$date": "2026-02-26T23:04:52.008Z"
+  },
+  "dashboard_notifications_enabled": true
+ },
+ {
+  "_id": 6,
+  "email": "bjo@gmail.com",
+  "password_hash": "$2b$10$mNJ9gAHXf17GQvTw5c0k4.UldYxhmQOmZ7yqMpcCl48o.0kw2NENq",
+  "name": "Brad Lee",
+  "role": "customer",
+  "avatar": "BL",
+  "phone": null,
+  "country": null,
+  "created_at": {
+   "$date": "2026-06-05T04:26:49.603Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-05T04:26:49.603Z"
+  },
+  "dashboard_notifications_enabled": true
+ },
+ {
+  "_id": 4,
+  "email": "admin@africahomeadventure.com",
+  "password_hash": "$2b$10$RiEyNAee/bMleIpQtJNiKOrtli6vCHF0mr/Y/5Ag/v93vb15zqGDa",
+  "name": "Admin User",
+  "role": "admin",
+  "avatar": "AU",
+  "phone": "+254722760662",
+  "country": "Kenya",
+  "created_at": {
+   "$date": "2026-02-26T23:04:52.720Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-23T17:28:04.586Z"
+  },
+  "dashboard_notifications_enabled": true
+ },
+ {
+  "_id": 7,
+  "email": "jagdish.funn@gmail.com",
+  "password_hash": "$2b$10$0G2NmxMk4XYPcAN35aiXwekswfovpRJ5cw8FKjxRocfcI0/P5S9Cy",
+  "name": "Jagdish",
+  "role": "customer",
+  "avatar": "J",
+  "phone": null,
+  "country": null,
+  "created_at": {
+   "$date": "2026-08-08T17:25:11.356Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-08T17:25:11.356Z"
+  },
+  "dashboard_notifications_enabled": true
+ },
+ {
+  "_id": 5,
+  "email": "finance@africahomeadventure.com",
+  "password_hash": "$2b$10$YztvTLWxGcnI2r0VYGpUzeP9KR/mwjTfJBYuTDpDgmMaYgweiw02m",
+  "name": "Finance Desk",
+  "role": "finance",
+  "avatar": "FD",
+  "phone": "+254722760663",
+  "country": "Kenya",
+  "created_at": {
+   "$date": "2026-04-20T16:33:27.128Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.504Z"
+  },
+  "dashboard_notifications_enabled": true
+ },
+ {
+  "_id": 3,
+  "email": "guide@africahomeadventure.com",
+  "password_hash": "$2b$10$YpmLLnMJePped.koris0aO7GSGxTaGxpvNNO3yLQcZ2YM.yt//16C",
+  "name": "Peter Guide",
+  "role": "operations",
+  "avatar": "PG",
+  "phone": "+254722760661",
+  "country": "Kenya",
+  "created_at": {
+   "$date": "2026-02-26T23:04:52.342Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.505Z"
+  },
+  "dashboard_notifications_enabled": false
+ }
+]

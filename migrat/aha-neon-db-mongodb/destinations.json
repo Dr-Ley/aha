@@ -1,0 +1,210 @@
+[
+ {
+  "_id": 4,
+  "country": "Kenya",
+  "region": "Nakuru",
+  "name": "Lake Naivasha",
+  "slug": "lake-naivasha",
+  "created_at": {
+   "$date": "2026-08-31T16:19:25.342Z"
+  },
+  "description": null,
+  "image": null,
+  "seo_title": null,
+  "meta_description": null,
+  "canonical_path": null,
+  "published": false
+ },
+ {
+  "_id": 8,
+  "country": "Tanzania",
+  "region": "Mara",
+  "name": "Serengeti",
+  "slug": "serengeti",
+  "created_at": {
+   "$date": "2026-08-31T16:19:26.723Z"
+  },
+  "description": null,
+  "image": null,
+  "seo_title": null,
+  "meta_description": null,
+  "canonical_path": null,
+  "published": false
+ },
+ {
+  "_id": 9,
+  "country": "Tanzania",
+  "region": "Arusha",
+  "name": "Ngorongoro",
+  "slug": "ngorongoro",
+  "created_at": {
+   "$date": "2026-08-31T16:19:26.955Z"
+  },
+  "description": null,
+  "image": null,
+  "seo_title": null,
+  "meta_description": null,
+  "canonical_path": null,
+  "published": false
+ },
+ {
+  "_id": 10,
+  "country": "Tanzania",
+  "region": "Arusha",
+  "name": "Lake Manyara",
+  "slug": "lake-manyara",
+  "created_at": {
+   "$date": "2026-08-31T16:19:27.219Z"
+  },
+  "description": null,
+  "image": null,
+  "seo_title": null,
+  "meta_description": null,
+  "canonical_path": null,
+  "published": false
+ },
+ {
+  "_id": 11,
+  "country": "Tanzania",
+  "region": "Arusha",
+  "name": "Arusha",
+  "slug": "arusha",
+  "created_at": {
+   "$date": "2026-08-31T16:19:27.441Z"
+  },
+  "description": null,
+  "image": null,
+  "seo_title": null,
+  "meta_description": null,
+  "canonical_path": null,
+  "published": false
+ },
+ {
+  "_id": 7,
+  "country": "Kenya",
+  "region": "Nairobi",
+  "name": "Nairobi",
+  "slug": "nairobi",
+  "created_at": {
+   "$date": "2026-08-31T16:19:26.494Z"
+  },
+  "description": "Kenya's capital is the usual safari gateway: Wilson and Jomo Kenyatta airports, city lodges, and Nairobi National Park on the urban fringe.",
+  "image": "/destination_maasai_mara1.png",
+  "seo_title": "Nairobi Safari Gateway | Kenya Tours",
+  "meta_description": "Start a Kenya safari in Nairobi — city lodges, airport transfers, and Nairobi National Park game viewing before heading to the Mara or Amboseli.",
+  "canonical_path": "/destinations/nairobi",
+  "published": true
+ },
+ {
+  "_id": 2,
+  "country": "Kenya",
+  "region": "Kajiado",
+  "name": "Amboseli",
+  "slug": "amboseli",
+  "created_at": {
+   "$date": "2026-08-31T16:19:24.522Z"
+  },
+  "description": "Amboseli is known for large elephant herds on open swamps with Mount Kilimanjaro as the backdrop on clear mornings.",
+  "image": "/destination_maasai_mara1.png",
+  "seo_title": "Amboseli National Park Safari | Elephants & Kilimanjaro",
+  "meta_description": "Visit Amboseli for elephant viewing, Observation Hill, and Kilimanjaro views on a Kenya safari itinerary.",
+  "canonical_path": "/destinations/amboseli",
+  "published": true
+ },
+ {
+  "_id": 3,
+  "country": "Kenya",
+  "region": "Nakuru",
+  "name": "Lake Nakuru",
+  "slug": "lake-nakuru",
+  "created_at": {
+   "$date": "2026-08-31T16:19:24.940Z"
+  },
+  "description": "Lake Nakuru National Park combines a soda lake, rhino sanctuary woodland, and easy access from Nairobi on a compact Kenya circuit.",
+  "image": "/destination_maasai_mara1.png",
+  "seo_title": "Lake Nakuru National Park | Flamingos & Rhinos",
+  "meta_description": "Add Lake Nakuru to a Kenya safari for rhino tracking, flamingo shoreline, and Rothschild giraffe in a compact national park.",
+  "canonical_path": "/destinations/lake-nakuru",
+  "published": true
+ },
+ {
+  "_id": 6,
+  "country": "Kenya",
+  "region": "Taita-Taveta",
+  "name": "Tsavo East",
+  "slug": "tsavo-east",
+  "created_at": {
+   "$date": "2026-08-31T16:19:26.161Z"
+  },
+  "description": "Tsavo East is a vast dry park famous for red-dust elephants along the Galana River and open-country game drives.",
+  "image": "/destination_maasai_mara1.png",
+  "seo_title": "Tsavo East National Park Safari",
+  "meta_description": "Explore Tsavo East on a Kenya safari for red elephants, riverine game, and spacious landscapes between Nairobi and the coast.",
+  "canonical_path": "/destinations/tsavo-east",
+  "published": true
+ },
+ {
+  "_id": 5,
+  "country": "Kenya",
+  "region": "Taita-Taveta",
+  "name": "Tsavo West",
+  "slug": "tsavo-west",
+  "created_at": {
+   "$date": "2026-08-31T16:19:25.749Z"
+  },
+  "description": "Tsavo West offers volcanic hills, Mzima Springs, and diverse habitats on the western side of the greater Tsavo ecosystem.",
+  "image": "/destination_maasai_mara1.png",
+  "seo_title": "Tsavo West National Park | Mzima Springs",
+  "meta_description": "Discover Tsavo West — Mzima Springs, rhino country, and scenic hills on a southern Kenya safari circuit.",
+  "canonical_path": "/destinations/tsavo-west",
+  "published": true
+ },
+ {
+  "_id": 1,
+  "country": "Kenya",
+  "region": "Narok County / Rift Valley",
+  "name": "Maasai Mara",
+  "slug": "maasai-mara",
+  "created_at": {
+   "$date": "2026-08-31T16:19:24.112Z"
+  },
+  "description": "The Maasai Mara National Reserve is one of Kenya's most celebrated safari destinations, known for its exceptional wildlife and the Great Wildebeest Migration.",
+  "image": "/destination_maasai_mara1.png",
+  "seo_title": "Maasai Mara Safari Guide",
+  "meta_description": "Plan your Maasai Mara safari with information about wildlife, accommodation, park fees, and transport.",
+  "canonical_path": "/destinations/maasai-mara",
+  "published": true
+ },
+ {
+  "_id": 12,
+  "country": "Kenya",
+  "region": "Kwale County",
+  "name": "Diani Beach",
+  "slug": "diani",
+  "created_at": {
+   "$date": "2026-09-24T08:49:44.951Z"
+  },
+  "description": null,
+  "image": null,
+  "seo_title": null,
+  "meta_description": null,
+  "canonical_path": null,
+  "published": false
+ },
+ {
+  "_id": 13,
+  "country": "Kenya",
+  "region": "Laikipia County",
+  "name": "Ol Pejeta Conservancy",
+  "slug": "ol-pejeta",
+  "created_at": {
+   "$date": "2026-09-24T09:16:50.767Z"
+  },
+  "description": null,
+  "image": null,
+  "seo_title": null,
+  "meta_description": null,
+  "canonical_path": null,
+  "published": false
+ }
+]

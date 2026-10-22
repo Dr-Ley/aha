@@ -1,0 +1,436 @@
+[
+ {
+  "_id": 125,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "tours",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 126,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "accommodation",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 127,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "restaurant",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 128,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "bar",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 129,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "bookings",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 130,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "payments",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 131,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "expenses",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 132,
+  "user_id": 5,
+  "company_id": "aha",
+  "module": "enquiries",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 133,
+  "user_id": 5,
+  "company_id": "ewc",
+  "module": "tours",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 134,
+  "user_id": 5,
+  "company_id": "ewc",
+  "module": "accommodation",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 135,
+  "user_id": 5,
+  "company_id": "ewc",
+  "module": "restaurant",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 136,
+  "user_id": 5,
+  "company_id": "ewc",
+  "module": "bar",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 137,
+  "user_id": 5,
+  "company_id": "ewc",
+  "module": "bookings",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 138,
+  "user_id": 5,
+  "company_id": "ewc",
+  "module": "payments",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 139,
+  "user_id": 5,
+  "company_id": "ewc",
+  "module": "expenses",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 140,
+  "user_id": 5,
+  "company_id": "bth",
+  "module": "tours",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 141,
+  "user_id": 5,
+  "company_id": "bth",
+  "module": "accommodation",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 142,
+  "user_id": 5,
+  "company_id": "bth",
+  "module": "restaurant",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 143,
+  "user_id": 5,
+  "company_id": "bth",
+  "module": "bar",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 144,
+  "user_id": 5,
+  "company_id": "bth",
+  "module": "bookings",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 145,
+  "user_id": 5,
+  "company_id": "bth",
+  "module": "payments",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 146,
+  "user_id": 5,
+  "company_id": "bth",
+  "module": "expenses",
+  "can_view": true,
+  "can_edit": true,
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.177Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:31.836Z"
+  }
+ },
+ {
+  "_id": 147,
+  "user_id": 3,
+  "company_id": "aha",
+  "module": "tours",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.691Z"
+  }
+ },
+ {
+  "_id": 148,
+  "user_id": 3,
+  "company_id": "aha",
+  "module": "accommodation",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.691Z"
+  }
+ },
+ {
+  "_id": 149,
+  "user_id": 3,
+  "company_id": "aha",
+  "module": "bookings",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.691Z"
+  }
+ },
+ {
+  "_id": 150,
+  "user_id": 3,
+  "company_id": "ewc",
+  "module": "tours",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.692Z"
+  }
+ },
+ {
+  "_id": 151,
+  "user_id": 3,
+  "company_id": "ewc",
+  "module": "accommodation",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.692Z"
+  }
+ },
+ {
+  "_id": 152,
+  "user_id": 3,
+  "company_id": "ewc",
+  "module": "bookings",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.692Z"
+  }
+ },
+ {
+  "_id": 153,
+  "user_id": 3,
+  "company_id": "bth",
+  "module": "tours",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.692Z"
+  }
+ },
+ {
+  "_id": 154,
+  "user_id": 3,
+  "company_id": "bth",
+  "module": "accommodation",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.692Z"
+  }
+ },
+ {
+  "_id": 155,
+  "user_id": 3,
+  "company_id": "bth",
+  "module": "bookings",
+  "can_view": true,
+  "can_edit": false,
+  "created_at": {
+   "$date": "2026-09-28T11:29:53.885Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:54.692Z"
+  }
+ }
+]

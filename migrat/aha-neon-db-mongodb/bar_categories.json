@@ -1,0 +1,42 @@
+[
+ {
+  "_id": 1,
+  "company_id": "bth",
+  "name": "Drinks",
+  "description": null,
+  "sort_order": 0,
+  "created_at": {
+   "$date": "2026-04-28T00:47:00.809Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "ewc",
+  "name": "Drinks",
+  "description": null,
+  "sort_order": 0,
+  "created_at": {
+   "$date": "2026-04-28T00:47:01.297Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "ewc",
+  "name": "Uncategorized",
+  "description": null,
+  "sort_order": 999,
+  "created_at": {
+   "$date": "2026-05-11T18:52:29.204Z"
+  }
+ },
+ {
+  "_id": 4,
+  "company_id": "bth",
+  "name": "Historical import",
+  "description": "Holds imported daily totals from the 2026 bar sheet. Not for sale.",
+  "sort_order": 999,
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  }
+ }
+]

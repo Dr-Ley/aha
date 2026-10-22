@@ -1,0 +1,119 @@
+[
+ {
+  "_id": 7,
+  "user_id": 4,
+  "company_id": "aha",
+  "role": "owner",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-08-23T18:46:40.122Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-23T18:46:40.122Z"
+  }
+ },
+ {
+  "_id": 8,
+  "user_id": 4,
+  "company_id": "ewc",
+  "role": "owner",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-08-23T18:46:40.236Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-23T18:46:40.236Z"
+  }
+ },
+ {
+  "_id": 9,
+  "user_id": 4,
+  "company_id": "bth",
+  "role": "owner",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-08-23T18:46:40.345Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-23T18:46:40.345Z"
+  }
+ },
+ {
+  "_id": 793,
+  "user_id": 5,
+  "company_id": "aha",
+  "role": "finance",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.639Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:32.300Z"
+  }
+ },
+ {
+  "_id": 794,
+  "user_id": 5,
+  "company_id": "ewc",
+  "role": "finance",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.639Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:32.300Z"
+  }
+ },
+ {
+  "_id": 795,
+  "user_id": 5,
+  "company_id": "bth",
+  "role": "finance",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-08-27T04:05:32.639Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T04:05:32.300Z"
+  }
+ },
+ {
+  "_id": 5926,
+  "user_id": 3,
+  "company_id": "aha",
+  "role": "operations",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-09-28T11:29:54.261Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:55.070Z"
+  }
+ },
+ {
+  "_id": 5927,
+  "user_id": 3,
+  "company_id": "ewc",
+  "role": "operations",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-09-28T11:29:54.261Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:55.071Z"
+  }
+ },
+ {
+  "_id": 5928,
+  "user_id": 3,
+  "company_id": "bth",
+  "role": "operations",
+  "status": "active",
+  "created_at": {
+   "$date": "2026-09-28T11:29:54.261Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T11:29:55.071Z"
+  }
+ }
+]

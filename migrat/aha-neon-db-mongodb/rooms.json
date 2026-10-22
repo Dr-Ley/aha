@@ -1,0 +1,964 @@
+[
+ {
+  "_id": 1,
+  "company_id": "bth",
+  "room_type_id": 1,
+  "code": "BTH-201",
+  "name": "Room BTH-201",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-04-28T00:46:59.459Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 33,
+  "company_id": "ewc",
+  "room_type_id": 122,
+  "code": "EWC-STD-T",
+  "name": "Standard Tent - Triple",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 34,
+  "company_id": "ewc",
+  "room_type_id": 126,
+  "code": "EWC-SUP-T",
+  "name": "Superior Tent - Triple",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 35,
+  "company_id": "ewc",
+  "room_type_id": 121,
+  "code": "EWC-STD-S",
+  "name": "Standard Tent - Single",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 36,
+  "company_id": "ewc",
+  "room_type_id": 128,
+  "code": "EWC-SUP-F",
+  "name": "Superior Tent - Family",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 37,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "EWC-STD-D",
+  "name": "Standard Tent - Double",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 38,
+  "company_id": "ewc",
+  "room_type_id": 125,
+  "code": "EWC-SUP-S",
+  "name": "Superior Tent - Single",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 39,
+  "company_id": "ewc",
+  "room_type_id": 124,
+  "code": "EWC-SUP-D",
+  "name": "Superior Tent - Double",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 40,
+  "company_id": "ewc",
+  "room_type_id": 127,
+  "code": "EWC-STD-F",
+  "name": "Standard Tent - Family",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.447Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 2,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "EWC-7",
+  "name": "Room EWC-7",
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-04-28T00:47:00.073Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 25,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Twin rooms and 1 Triple room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-01T08:24:08.610Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 26,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "1 Double room and 1 Single room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-01T12:18:40.370Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 27,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "12 Doubles 1 Twin and 7 Singles",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-01T12:33:37.174Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 28,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "7 Double rooms",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-12T08:25:06.610Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 29,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 (Doubles, Single, Extra beds)",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-12T08:46:35.170Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 30,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Twin rooms",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-12T09:10:57.823Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 31,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "7 Singles 6 Twins",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-12T09:35:59.821Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 32,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "6 Doubles",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-09-12T09:44:08.580Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 3,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "Double room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-06-18T13:20:51.412Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 4,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "Triple room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-06-18T13:36:41.243Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 5,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "Family Tent",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-06-22T10:42:41.211Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 6,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "Single Room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-06-22T10:44:41.858Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 7,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "All Tents",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-06-22T10:52:03.242Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 8,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Double room (Standard)",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-06-22T13:27:50.018Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 9,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "3 Twin rooms and 2 singles",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-06-26T13:14:35.064Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 10,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "1 Double room and 1 Triple room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-07-14T04:48:57.804Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 11,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "1 Double room and 3 Twin room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-07-14T05:06:20.637Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 12,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Twin rooms and 1 Double room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-07-14T05:33:39.983Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 13,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "3 Double rooms",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-07-25T09:41:51.692Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 14,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "3 Single rooms",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-07-25T09:43:09.947Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 15,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Double rooms and 1 Single room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-07-25T09:46:01.755Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 16,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "3 Triple rooms",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-07-25T09:49:33.215Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 17,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Double rooms 1 Triple 1 Single",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-08T07:57:21.954Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 18,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Double rooms 1 Triple room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-08T08:02:22.987Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 19,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "7 Twin rooms",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-08T08:33:13.659Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 20,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Triple rooms",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-08T08:50:52.427Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 21,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "1 Family room 3 Doubles 1 Triple",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-08T10:28:56.492Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 22,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "1 Double room and 1 Twin room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-15T06:46:02.628Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 23,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "2 Family tents",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-15T06:47:25.955Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 24,
+  "company_id": "ewc",
+  "room_type_id": 123,
+  "code": "Twin room",
+  "name": null,
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-08-28T13:28:12.512Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 41,
+  "company_id": "ewc",
+  "room_type_id": 129,
+  "code": "Triple room (Standard Tent)",
+  "name": null,
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-28T09:59:47.124Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 42,
+  "company_id": "ewc",
+  "room_type_id": 129,
+  "code": "4 Double rooms",
+  "name": null,
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-09-28T10:17:56.924Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 74,
+  "company_id": "bth",
+  "room_type_id": 136,
+  "code": "3",
+  "name": "Room 3",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 75,
+  "company_id": "bth",
+  "room_type_id": 137,
+  "code": "4",
+  "name": "Room 4",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 76,
+  "company_id": "bth",
+  "room_type_id": 138,
+  "code": "5",
+  "name": "Room 5",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 77,
+  "company_id": "bth",
+  "room_type_id": 139,
+  "code": "6",
+  "name": "Room 6",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 78,
+  "company_id": "bth",
+  "room_type_id": 140,
+  "code": "7",
+  "name": "Room 7",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 79,
+  "company_id": "bth",
+  "room_type_id": 139,
+  "code": "9",
+  "name": "Room 9",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 80,
+  "company_id": "bth",
+  "room_type_id": 136,
+  "code": "10",
+  "name": "Room 10",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 81,
+  "company_id": "bth",
+  "room_type_id": 137,
+  "code": "11",
+  "name": "Room 11",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 82,
+  "company_id": "bth",
+  "room_type_id": 141,
+  "code": "12",
+  "name": "Room 12",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 83,
+  "company_id": "bth",
+  "room_type_id": 136,
+  "code": "14",
+  "name": "Room 14",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 84,
+  "company_id": "bth",
+  "room_type_id": 137,
+  "code": "15",
+  "name": "Room 15",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 85,
+  "company_id": "bth",
+  "room_type_id": 138,
+  "code": "16",
+  "name": "Room 16",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 86,
+  "company_id": "bth",
+  "room_type_id": 139,
+  "code": "17",
+  "name": "Room 17",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 87,
+  "company_id": "bth",
+  "room_type_id": 140,
+  "code": "18",
+  "name": "Room 18",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 88,
+  "company_id": "bth",
+  "room_type_id": 140,
+  "code": "19",
+  "name": "Room 19",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 89,
+  "company_id": "bth",
+  "room_type_id": 139,
+  "code": "20",
+  "name": "Room 20",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 90,
+  "company_id": "bth",
+  "room_type_id": 136,
+  "code": "21",
+  "name": "Room 21",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 91,
+  "company_id": "bth",
+  "room_type_id": 137,
+  "code": "22",
+  "name": "Room 22",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 92,
+  "company_id": "bth",
+  "room_type_id": 141,
+  "code": "23",
+  "name": "Room 23",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 93,
+  "company_id": "bth",
+  "room_type_id": 136,
+  "code": "25",
+  "name": "Room 25",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 94,
+  "company_id": "bth",
+  "room_type_id": 137,
+  "code": "26",
+  "name": "Room 26",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 95,
+  "company_id": "bth",
+  "room_type_id": 138,
+  "code": "27",
+  "name": "Room 27",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 96,
+  "company_id": "bth",
+  "room_type_id": 139,
+  "code": "28",
+  "name": "Room 28",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 97,
+  "company_id": "bth",
+  "room_type_id": 140,
+  "code": "29",
+  "name": "Room 29",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 98,
+  "company_id": "bth",
+  "room_type_id": 140,
+  "code": "30",
+  "name": "Room 30",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 99,
+  "company_id": "bth",
+  "room_type_id": 139,
+  "code": "31",
+  "name": "Room 31",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 100,
+  "company_id": "bth",
+  "room_type_id": 136,
+  "code": "32",
+  "name": "Room 32",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 101,
+  "company_id": "bth",
+  "room_type_id": 137,
+  "code": "33",
+  "name": "Room 33",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 102,
+  "company_id": "bth",
+  "room_type_id": 141,
+  "code": "34",
+  "name": "Room 34",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 103,
+  "company_id": "bth",
+  "room_type_id": 141,
+  "code": "35",
+  "name": "Room 35",
+  "floor": null,
+  "is_active": true,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 104,
+  "company_id": "bth",
+  "room_type_id": 136,
+  "code": "UNASSIGNED-SSC",
+  "name": "Unassigned room (SSC) - number missing in sheet",
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 105,
+  "company_id": "ewc",
+  "room_type_id": 142,
+  "code": "UNASSIGNED",
+  "name": "Unassigned (room not recorded)",
+  "floor": null,
+  "is_active": false,
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "property_id": 1
+ }
+]

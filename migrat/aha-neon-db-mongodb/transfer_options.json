@@ -1,0 +1,41 @@
+[
+ {
+  "_id": 1,
+  "company_id": "aha",
+  "name": "JKIA – Nairobi hotel transfer",
+  "from_label": "JKIA",
+  "to_label": "Nairobi hotel",
+  "destination_id": 7,
+  "amount_usd": 50,
+  "vehicle_type": "safari_van",
+  "created_at": {
+   "$date": "2026-09-02T18:22:54.107Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "aha",
+  "name": "Nairobi – Maasai Mara road transfer",
+  "from_label": "Nairobi",
+  "to_label": "Maasai Mara",
+  "destination_id": 1,
+  "amount_usd": 180,
+  "vehicle_type": "landcruiser",
+  "created_at": {
+   "$date": "2026-09-02T18:22:54.451Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "aha",
+  "name": "Nairobi/JKIA – Masai Mara Private Road Transfer",
+  "from_label": "Nairobi / JKIA Airport",
+  "to_label": "Enchoro Wildlife Camp, Masai Mara",
+  "destination_id": 1,
+  "amount_usd": 200,
+  "vehicle_type": "4x4 Land Cruiser",
+  "created_at": {
+   "$date": "2026-09-07T17:26:14.122Z"
+  }
+ }
+]

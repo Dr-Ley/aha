@@ -1,0 +1,686 @@
+[
+ {
+  "_id": 1,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Booking received — 2 days amboseli",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "bookingId": 28,
+   "guestName": "boobies Ouko",
+   "travelDate": "2026-09-01",
+   "amountLabel": null,
+   "companyName": "African Home Adventure",
+   "safariPackage": "2 days amboseli",
+   "travellersLabel": "1 adult"
+  },
+  "created_at": {
+   "$date": "2026-08-31T06:56:46.332Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 2,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Booking received — 2 days amboseli",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "bookingId": 29,
+   "guestName": "Bradley Ouko",
+   "travelDate": "2026-08-31",
+   "amountLabel": "KSh 50,000",
+   "companyName": "African Home Adventure",
+   "safariPackage": "2 days amboseli",
+   "travellersLabel": "1 adult"
+  },
+  "created_at": {
+   "$date": "2026-08-31T07:37:28.288Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 3,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "method": "Bank",
+   "guestName": "Bradley Ouko",
+   "paymentId": 307,
+   "amountLabel": "KSh 50,000",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-08-31T07:38:28.385Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 4,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Booking received — 2 days amboseli",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "bookingId": 30,
+   "guestName": "Bradley Ouko",
+   "travelDate": "2026-09-01",
+   "amountLabel": "KSh 49,977",
+   "companyName": "African Home Adventure",
+   "safariPackage": "2 days amboseli",
+   "travellersLabel": "1 adult"
+  },
+  "created_at": {
+   "$date": "2026-08-31T09:18:12.325Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 5,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "method": "Bank",
+   "guestName": "Bradley Ouko",
+   "paymentId": 308,
+   "amountLabel": "KSh 49,977",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-08-31T09:20:56.591Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 6,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Booking received — 2 days amboseli",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "bookingId": 31,
+   "guestName": "Bradley Ouko",
+   "travelDate": "2026-09-01",
+   "amountLabel": "KSh 60,000",
+   "companyName": "African Home Adventure",
+   "safariPackage": "2 days amboseli",
+   "travellersLabel": "1 adult"
+  },
+  "created_at": {
+   "$date": "2026-08-31T09:37:18.666Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 7,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The www.africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "method": "Bank",
+   "guestName": "Bradley Ouko",
+   "paymentId": 309,
+   "amountLabel": "KSh 60,000",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-08-31T09:41:54.354Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 8,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Booking received — 2 days mara",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "bookingId": 32,
+   "guestName": "Bradley Ouko",
+   "travelDate": "2026-09-02",
+   "amountLabel": "KSh 50,000",
+   "companyName": "African Home Adventure",
+   "safariPackage": "2 days mara",
+   "travellersLabel": "2 adults"
+  },
+  "created_at": {
+   "$date": "2026-08-31T10:19:07.283Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 9,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "The africanhomeadventure.com domain is not verified. Please, add and verify your domain on https://resend.com/domains",
+  "payload": {
+   "method": "Cash",
+   "guestName": "Bradley Ouko",
+   "paymentId": 310,
+   "amountLabel": "KSh 50,000",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-08-31T11:53:18.939Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 10,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Booking received — 3 DAYS AMBOSELI",
+  "status": "sent",
+  "provider_message_id": "b57df6d1-f2fb-4880-9523-273635efa2a9",
+  "error": null,
+  "payload": {
+   "bookingId": 33,
+   "guestName": "Bradley Ouko",
+   "travelDate": "2026-08-31",
+   "amountLabel": "KSh 400,000",
+   "companyName": "African Home Adventure",
+   "safariPackage": "3 DAYS AMBOSELI",
+   "travellersLabel": "2 adults"
+  },
+  "created_at": {
+   "$date": "2026-08-31T13:01:59.057Z"
+  },
+  "sent_at": {
+   "$date": "2026-08-31T13:01:58.482Z"
+  }
+ },
+ {
+  "_id": 11,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "claudiasagini@gmail.com",
+  "subject": "Booking received — 2 DAYS HONEYMOON WITH BOOBOO",
+  "status": "sent",
+  "provider_message_id": "0c4e5c85-3d06-40b5-a22f-7a81f8f06dc0",
+  "error": null,
+  "payload": {
+   "bookingId": 34,
+   "guestName": "Boobies Ouko",
+   "travelDate": "2026-09-01",
+   "amountLabel": "KSh 100,000,001",
+   "companyName": "African Home Adventure",
+   "safariPackage": "2 DAYS HONEYMOON WITH BOOBOO",
+   "travellersLabel": "2 adults"
+  },
+  "created_at": {
+   "$date": "2026-08-31T13:05:41.890Z"
+  },
+  "sent_at": {
+   "$date": "2026-08-31T13:05:41.321Z"
+  }
+ },
+ {
+  "_id": 12,
+  "company_id": "aha",
+  "template": "itinerary_generated",
+  "recipient": "ada@example.com",
+  "subject": "Your itinerary is ready — 5-Day Amboseli Safari",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "Invalid `to` field. Please use our testing email address instead of domains like `example.com`. See our documentation for more information.",
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/t9PAkBvr5hd2zY6rJElRiaLSfMt3Ypqg",
+   "guestName": "Ada Traveller",
+   "travelDate": null,
+   "amountLabel": "USD 3,400",
+   "companyName": "African Home Adventure",
+   "destination": "5-Day Amboseli Safari",
+   "itineraryId": 1
+  },
+  "created_at": {
+   "$date": "2026-09-02T18:24:57.713Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 13,
+  "company_id": "aha",
+  "template": "itinerary_updated",
+  "recipient": "ada@example.com",
+  "subject": "Your itinerary was updated — 5-Day Amboseli Safari",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "Invalid `to` field. Please use our testing email address instead of domains like `example.com`. See our documentation for more information.",
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/t9PAkBvr5hd2zY6rJElRiaLSfMt3Ypqg",
+   "guestName": "Ada Traveller",
+   "travelDate": null,
+   "amountLabel": "USD 3,020",
+   "companyName": "African Home Adventure",
+   "destination": "5-Day Amboseli Safari",
+   "itineraryId": 1
+  },
+  "created_at": {
+   "$date": "2026-09-02T18:26:14.600Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 14,
+  "company_id": "aha",
+  "template": "itinerary_accepted",
+  "recipient": "ada@example.com",
+  "subject": "We received your itinerary — 5-Day Amboseli Safari",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "Invalid `to` field. Please use our testing email address instead of domains like `example.com`. See our documentation for more information.",
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/t9PAkBvr5hd2zY6rJElRiaLSfMt3Ypqg",
+   "guestName": "Ada Traveller",
+   "travelDate": null,
+   "amountLabel": "USD 3,020",
+   "companyName": "African Home Adventure",
+   "destination": "5-Day Amboseli Safari",
+   "itineraryId": 1
+  },
+  "created_at": {
+   "$date": "2026-09-02T18:28:30.851Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 15,
+  "company_id": "aha",
+  "template": "itinerary_converted",
+  "recipient": "ada@example.com",
+  "subject": "Your itinerary is now a booking — 5-Day Amboseli Safari",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "Invalid `to` field. Please use our testing email address instead of domains like `example.com`. See our documentation for more information.",
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/t9PAkBvr5hd2zY6rJElRiaLSfMt3Ypqg",
+   "guestName": "Ada Traveller",
+   "travelDate": null,
+   "amountLabel": "USD 3,020",
+   "companyName": "African Home Adventure",
+   "destination": "5-Day Amboseli Safari",
+   "itineraryId": 1
+  },
+  "created_at": {
+   "$date": "2026-09-02T18:34:29.613Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 16,
+  "company_id": "aha",
+  "template": "booking_confirmation",
+  "recipient": "ada@example.com",
+  "subject": "Booking received — 5-Day Amboseli Safari",
+  "status": "failed",
+  "provider_message_id": null,
+  "error": "Invalid `to` field. Please use our testing email address instead of domains like `example.com`. See our documentation for more information.",
+  "payload": {
+   "bookingId": 35,
+   "guestName": "Ada Traveller",
+   "travelDate": "2026-09-02",
+   "amountLabel": "USD 3,020",
+   "companyName": "African Home Adventure",
+   "safariPackage": "5-Day Amboseli Safari",
+   "travellersLabel": "2 adults"
+  },
+  "created_at": {
+   "$date": "2026-09-02T18:34:29.907Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 17,
+  "company_id": "aha",
+  "template": "itinerary_generated",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Your itinerary is ready — 3-Day Maasai Mara Safari",
+  "status": "sent",
+  "provider_message_id": "01a06381-97ca-74b2-add9-5301a7f51aaf",
+  "error": null,
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/FXsKMqmsA94fcLw_ugIKu8zBDdJOu8Qb",
+   "guestName": "boob",
+   "travelDate": "2026-09-03",
+   "amountLabel": "USD 1,190",
+   "companyName": "African Home Adventure",
+   "destination": "3-Day Maasai Mara Safari",
+   "itineraryId": 2
+  },
+  "created_at": {
+   "$date": "2026-09-02T19:03:56.608Z"
+  },
+  "sent_at": {
+   "$date": "2026-09-02T19:03:56.091Z"
+  }
+ },
+ {
+  "_id": 18,
+  "company_id": "aha",
+  "template": "itinerary_updated",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Your itinerary was updated — 3-Day Maasai Mara Safari",
+  "status": "sent",
+  "provider_message_id": "01a06383-613a-747c-9bb1-6c036df0d461",
+  "error": null,
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/FXsKMqmsA94fcLw_ugIKu8zBDdJOu8Qb",
+   "guestName": "boob",
+   "travelDate": "2026-09-03",
+   "amountLabel": "USD 1,190",
+   "companyName": "African Home Adventure",
+   "destination": "3-Day Maasai Mara Safari",
+   "itineraryId": 2
+  },
+  "created_at": {
+   "$date": "2026-09-02T19:05:50.743Z"
+  },
+  "sent_at": {
+   "$date": "2026-09-02T19:05:50.204Z"
+  }
+ },
+ {
+  "_id": 19,
+  "company_id": "aha",
+  "template": "itinerary_updated",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Your itinerary was updated — 3-Day Maasai Mara Safari",
+  "status": "sent",
+  "provider_message_id": "01a06383-89ec-724a-9db2-eafd9c7e7891",
+  "error": null,
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/FXsKMqmsA94fcLw_ugIKu8zBDdJOu8Qb",
+   "guestName": "boob",
+   "travelDate": "2026-09-03",
+   "amountLabel": "USD 1,730",
+   "companyName": "African Home Adventure",
+   "destination": "3-Day Maasai Mara Safari",
+   "itineraryId": 2
+  },
+  "created_at": {
+   "$date": "2026-09-02T19:06:00.215Z"
+  },
+  "sent_at": {
+   "$date": "2026-09-02T19:05:59.670Z"
+  }
+ },
+ {
+  "_id": 20,
+  "company_id": "aha",
+  "template": "itinerary_updated",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Your itinerary was updated — 3-Day Maasai Mara Safari",
+  "status": "sent",
+  "provider_message_id": "01a06383-afe7-760f-9017-1550159902d8",
+  "error": null,
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/FXsKMqmsA94fcLw_ugIKu8zBDdJOu8Qb",
+   "guestName": "boob",
+   "travelDate": "2026-09-03",
+   "amountLabel": "USD 1,230",
+   "companyName": "African Home Adventure",
+   "destination": "3-Day Maasai Mara Safari",
+   "itineraryId": 2
+  },
+  "created_at": {
+   "$date": "2026-09-02T19:06:10.008Z"
+  },
+  "sent_at": {
+   "$date": "2026-09-02T19:06:09.484Z"
+  }
+ },
+ {
+  "_id": 21,
+  "company_id": "aha",
+  "template": "itinerary_updated",
+  "recipient": "bradleyouko911@gmail.com",
+  "subject": "Your itinerary was updated — 3-Day Maasai Mara Safari",
+  "status": "sent",
+  "provider_message_id": "01a06384-aade-7177-9f85-863b1c0c4541",
+  "error": null,
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/FXsKMqmsA94fcLw_ugIKu8zBDdJOu8Qb",
+   "guestName": "boob",
+   "travelDate": "2026-09-03",
+   "amountLabel": "USD 1,190",
+   "companyName": "African Home Adventure",
+   "destination": "3-Day Maasai Mara Safari",
+   "itineraryId": 2
+  },
+  "created_at": {
+   "$date": "2026-09-02T19:07:14.191Z"
+  },
+  "sent_at": {
+   "$date": "2026-09-02T19:07:13.681Z"
+  }
+ },
+ {
+  "_id": 22,
+  "company_id": "aha",
+  "template": "itinerary_generated",
+  "recipient": "claudiasagini@gmail.com",
+  "subject": "Your itinerary is ready — 4-Day Tsavo West Safari",
+  "status": "sent",
+  "provider_message_id": "01a06387-571a-708d-84f3-62cbc9b459b0",
+  "error": null,
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/g1iPI00KMsOYyeyDSUqUrkm72dIK13xr",
+   "guestName": "boobies",
+   "travelDate": "2026-09-30",
+   "amountLabel": "USD 4,170",
+   "companyName": "African Home Adventure",
+   "destination": "4-Day Tsavo West Safari",
+   "itineraryId": 4
+  },
+  "created_at": {
+   "$date": "2026-09-02T19:10:10.925Z"
+  },
+  "sent_at": {
+   "$date": "2026-09-02T19:10:12.003Z"
+  }
+ },
+ {
+  "_id": 23,
+  "company_id": "aha",
+  "template": "itinerary_updated",
+  "recipient": "claudiasagini@gmail.com",
+  "subject": "Your itinerary was updated — 4-Day Tsavo West Safari",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "viewUrl": "https://africanhomeadventure.com/itineraries/g1iPI00KMsOYyeyDSUqUrkm72dIK13xr",
+   "guestName": "boobies",
+   "travelDate": "2026-09-30",
+   "amountLabel": "USD 4,170",
+   "companyName": "African Home Adventure",
+   "destination": "4-Day Tsavo West Safari",
+   "itineraryId": 4
+  },
+  "created_at": {
+   "$date": "2026-09-25T13:01:55.700Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 24,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "claudiasagini@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "method": null,
+   "guestName": "Patel  Nilesh",
+   "paymentId": 274,
+   "amountLabel": "KSh 1,360,169",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:46:04.345Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 25,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "jonas.prenn@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "method": null,
+   "guestName": "Jonas  Prenn",
+   "paymentId": 273,
+   "amountLabel": "KSh 245,594",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:46:36.330Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 26,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "aljimespi@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "method": null,
+   "guestName": "Ingve  Tomren",
+   "paymentId": 182,
+   "amountLabel": "KSh 433,321",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:46:59.720Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 27,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "britany.goulet@icloud.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "method": null,
+   "guestName": "Britany  Goulet",
+   "paymentId": 17,
+   "amountLabel": "KSh 595,010",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:47:22.610Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 28,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "julien198331@hotmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "method": null,
+   "guestName": "Julien  Toppan",
+   "paymentId": 16,
+   "amountLabel": "KSh 1,552,201",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:48:10.156Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 29,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "grahamf900@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "method": null,
+   "guestName": "Graham  Francis",
+   "paymentId": 15,
+   "amountLabel": "KSh 470,834",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:48:24.884Z"
+  },
+  "sent_at": null
+ },
+ {
+  "_id": 30,
+  "company_id": "aha",
+  "template": "payment_received",
+  "recipient": "aljimespi@gmail.com",
+  "subject": "Payment received — African Home Adventure",
+  "status": "skipped",
+  "provider_message_id": null,
+  "error": "RESEND_API_KEY not set",
+  "payload": {
+   "method": null,
+   "guestName": "Alvaro Jimenez  Linan",
+   "paymentId": 14,
+   "amountLabel": "KSh 939,081",
+   "companyName": "African Home Adventure"
+  },
+  "created_at": {
+   "$date": "2026-10-15T18:48:37.209Z"
+  },
+  "sent_at": null
+ }
+]

@@ -1,0 +1,41 @@
+[
+ {
+  "_id": 1,
+  "company_id": "aha",
+  "ownership": "owned",
+  "type": "landcruiser",
+  "capacity": 7,
+  "registration": "KDA 001A",
+  "status": "available",
+  "provider_id": null,
+  "created_at": {
+   "$date": "2026-08-31T16:19:33.836Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "aha",
+  "ownership": "owned",
+  "type": "landcruiser",
+  "capacity": 7,
+  "registration": "KDA 002B",
+  "status": "available",
+  "provider_id": null,
+  "created_at": {
+   "$date": "2026-08-31T16:19:34.087Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "aha",
+  "ownership": "owned",
+  "type": "safari_van",
+  "capacity": 9,
+  "registration": "KDA 003C",
+  "status": "available",
+  "provider_id": null,
+  "created_at": {
+   "$date": "2026-08-31T16:19:34.312Z"
+  }
+ }
+]

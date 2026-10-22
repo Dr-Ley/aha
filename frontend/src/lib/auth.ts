@@ -1,15 +1,11 @@
 import NextAuth from "next-auth";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db } from "@/lib/db";
-import { users } from "@/lib/schema";
-import { eq } from "drizzle-orm";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 import { authConfig } from "@/lib/auth.config";
+import { findUserByEmail, findUserById } from "@/lib/users-store";
 
 const nextAuth = NextAuth({
   ...authConfig,
-  adapter: DrizzleAdapter(db),
   callbacks: {
     ...authConfig.callbacks,
     async jwt({ token, user }) {
@@ -21,15 +17,8 @@ const nextAuth = NextAuth({
             : undefined;
         token.avatar = (user as { avatar?: string | null }).avatar ?? undefined;
       } else if (token.sub && (token.role === undefined || token.role === "")) {
-        const userId = parseInt(String(token.sub), 10);
-        if (!Number.isNaN(userId)) {
-          const [row] = await db
-            .select({ role: users.role })
-            .from(users)
-            .where(eq(users.id, userId))
-            .limit(1);
-          if (row?.role != null) token.role = String(row.role);
-        }
+        const row = await findUserById(String(token.sub));
+        if (row?.role) token.role = row.role;
       }
       return token;
     },
@@ -45,23 +34,14 @@ const nextAuth = NextAuth({
       authorize: async (credentials) => {
         if (!credentials?.email || !credentials?.password) return null;
 
-        const [user] = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, credentials.email as string))
-          .limit(1);
+        const user = await findUserByEmail(String(credentials.email));
+        if (!user?.passwordHash) return null;
 
-        if (!user) return null;
-
-        const passwordMatch = await compare(
-          credentials.password as string,
-          user.passwordHash
-        );
-
+        const passwordMatch = await compare(String(credentials.password), user.passwordHash);
         if (!passwordMatch) return null;
 
         return {
-          id: String(user.id),
+          id: user.id,
           email: user.email,
           name: user.name,
           role: user.role,

@@ -1,0 +1,44 @@
+[
+ {
+  "_id": 1,
+  "user_id": null,
+  "name": "Sarah Thompson",
+  "country": "United Kingdom",
+  "avatar": "ST",
+  "rating": 5,
+  "text": "Booked with them for a 7 day safari across Kenya. Our friend and guide Peter was the best choice we could have made. Highly recommend African Home Adventure Safaris. Hakuna Matata!",
+  "tour_id": 8,
+  "created_at": {
+   "$date": "2026-02-26T23:04:58.446Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 2,
+  "user_id": null,
+  "name": "Michael & Lisa Chen",
+  "country": "United States",
+  "avatar": "MC",
+  "rating": 5,
+  "text": "Very nice experience with Jared who knew how to adapt to our aspirations. Thank you for his answers. A very good memory for us of these 3 days in Masai Mara.",
+  "tour_id": 1,
+  "created_at": {
+   "$date": "2026-02-26T23:04:58.820Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 3,
+  "user_id": null,
+  "name": "Hans Mueller",
+  "country": "Germany",
+  "avatar": "HM",
+  "rating": 5,
+  "text": "African Home is very professional, our driver was savvy, safe and organised. Their choice in accommodation is great. It was a perfect week. I recommend African Home Adventure.",
+  "tour_id": 8,
+  "created_at": {
+   "$date": "2026-02-26T23:04:59.177Z"
+  },
+  "company_id": "aha"
+ }
+]

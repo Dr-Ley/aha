@@ -1,0 +1,13 @@
+[
+ {
+  "_id": 1,
+  "name": "Nairobi Safari Fleet Hire",
+  "contact": {
+   "email": "hire@example.com",
+   "phone": "+254700000001"
+  },
+  "created_at": {
+   "$date": "2026-08-31T16:19:33.609Z"
+  }
+ }
+]

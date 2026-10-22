@@ -1,0 +1,22 @@
+[
+ {
+  "_id": 1,
+  "company_id": "bth",
+  "name": "Mains",
+  "description": null,
+  "sort_order": 0,
+  "created_at": {
+   "$date": "2026-04-28T00:47:00.381Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "bth",
+  "name": "Historical import",
+  "description": "Holds imported daily totals from the 2026 restaurant sheet. Not for sale.",
+  "sort_order": 999,
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  }
+ }
+]

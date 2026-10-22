@@ -2,12 +2,22 @@
 
 import { LogOut, Search } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { useCompany } from "@/store/company-context";
 import { NotificationBell } from "@/components/dashboard/notification-bell";
 
 export function DashboardTopbar() {
   const { data: session } = useSession();
   const { selectedCompanyId, setSelectedCompanyId, companies } = useCompany();
+  const [showDesktopBell, setShowDesktopBell] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const apply = () => setShowDesktopBell(media.matches);
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, []);
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-base-content/10 bg-base-100 px-4 md:px-6">
@@ -47,7 +57,7 @@ export function DashboardTopbar() {
       </div>
 
       <div className="ml-auto hidden items-center gap-2 md:flex md:ml-0">
-        <NotificationBell />
+        {showDesktopBell ? <NotificationBell /> : null}
 
         <div className="dropdown dropdown-end">
           <button type="button" tabIndex={0} className="btn btn-ghost btn-md my-2 gap-2 py-2">

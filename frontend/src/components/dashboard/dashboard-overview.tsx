@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useState, type ReactNode } from "react";
 import {
   CalendarRange,
+  ChevronLeft,
+  ChevronRight,
   CircleDollarSign,
   ClipboardList,
   FileWarning,
@@ -11,15 +13,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import { useCompany } from "@/store/company-context";
-import type {
-  TrendPoint,
-  CountryAmount,
-  SafariSlice,
-  ProductSale,
-  MonthlyProductSales,
-  DepartmentRevenuePoint,
-  RevenueStackPoint,
-} from "@/components/dashboard/dashboard-charts";
+import type { OverviewChartFacts } from "@/components/dashboard/dashboard-charts";
 import { EntityViewModal } from "@/components/dashboard/entity-view-modal";
 import { useCurrency } from "@/lib/currency-context";
 import { formatKesForDisplay } from "@/lib/data";
@@ -95,10 +89,7 @@ type OverviewPayload = {
     upcomingTrips: number;
     unpaidInvoices: number;
   };
-  revenueTrend: TrendPoint[];
-  revenueStack: RevenueStackPoint[];
-  revenueByCountry: CountryAmount[];
-  safariDistribution: SafariSlice[];
+  chartFacts: OverviewChartFacts;
   hospitalityKpis: {
     hotelStays: number;
     hotelRevenueMonth: number;
@@ -107,13 +98,6 @@ type OverviewPayload = {
     weeklyBarRecords: number;
     restaurantSales: number;
   };
-  hotelStayTrend: TrendPoint[];
-  barWeeklySales: { label: string; amount: number }[];
-  barProductSales: ProductSale[];
-  barProductSalesByMonth: MonthlyProductSales[];
-  restaurantSalesTrend: TrendPoint[];
-  restaurantProductSales: ProductSale[];
-  departmentRevenue: DepartmentRevenuePoint[];
   recentStays: Array<{
     id: number;
     guest: string;
@@ -183,17 +167,13 @@ export function DashboardOverview() {
             weeklyBarRecords: 0,
             restaurantSales: 0,
           },
-          revenueTrend: json.revenueTrend ?? [],
-          revenueStack: json.revenueStack ?? [],
-          revenueByCountry: json.revenueByCountry ?? [],
-          safariDistribution: json.safariDistribution ?? [],
-          hotelStayTrend: json.hotelStayTrend ?? [],
-          barWeeklySales: json.barWeeklySales ?? [],
-          barProductSales: json.barProductSales ?? [],
-          barProductSalesByMonth: json.barProductSalesByMonth ?? [],
-          restaurantSalesTrend: json.restaurantSalesTrend ?? [],
-          restaurantProductSales: json.restaurantProductSales ?? [],
-          departmentRevenue: json.departmentRevenue ?? [],
+          chartFacts: {
+            revenue: json.chartFacts?.revenue ?? [],
+            safariBookings: json.chartFacts?.safariBookings ?? [],
+            hotelStays: json.chartFacts?.hotelStays ?? [],
+            barOrders: json.chartFacts?.barOrders ?? [],
+            restaurantOrders: json.chartFacts?.restaurantOrders ?? [],
+          },
           recentBookings: json.recentBookings ?? [],
           recentStays: json.recentStays ?? [],
           recentPayments: json.recentPayments ?? [],
@@ -371,32 +351,16 @@ export function DashboardOverview() {
 
       {companyUsesHotelStays(selectedCompanyId) ? (
         <HospitalityCharts
-          hotelStayTrend={data.hotelStayTrend}
-          barWeeklySales={data.barWeeklySales}
-          barProductSales={data.barProductSales}
-          barProductSalesByMonth={data.barProductSalesByMonth}
-          restaurantSalesTrend={data.restaurantSalesTrend}
-          restaurantProductSales={data.restaurantProductSales}
+          facts={data.chartFacts}
           showRestaurant={companyUsesRestaurant(selectedCompanyId)}
-          barTrendTitle="Monthly bar sales"
-          showBarProductFilter={selectedCompanyId === "ewc"}
-          departmentRevenue={selectedCompanyId === "bth" ? data.departmentRevenue : undefined}
+          showDepartment={selectedCompanyId === "bth"}
         />
       ) : (
-        <DashboardCharts
-          revenueTrend={data.revenueTrend}
-          revenueByCountry={data.revenueByCountry}
-          safariDistribution={data.safariDistribution}
-        />
+        <DashboardCharts facts={data.chartFacts} />
       )}
 
       {companyUsesSafariTours(selectedCompanyId) && companyUsesHotelStays(selectedCompanyId) ? (
-        <DashboardCharts
-          revenueTrend={data.revenueTrend}
-          revenueByCountry={data.revenueByCountry}
-          safariDistribution={data.safariDistribution}
-          revenueStack={data.revenueStack}
-        />
+        <DashboardCharts facts={data.chartFacts} stacked />
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -517,6 +481,8 @@ export function DashboardOverview() {
   );
 }
 
+const CARD_PAGE_SIZE = 5;
+
 function PeriodCard<T>({
   title,
   period,
@@ -532,6 +498,15 @@ function PeriodCard<T>({
   rows: T[];
   render: (row: T) => ReactNode;
 }) {
+  const [page, setPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(rows.length / CARD_PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const visible = rows.slice((safePage - 1) * CARD_PAGE_SIZE, safePage * CARD_PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [period]);
+
   return (
     <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
       <div className="flex items-center justify-between gap-3">
@@ -550,13 +525,38 @@ function PeriodCard<T>({
           ))}
         </select>
       </div>
-      <ul className="mt-4 h-72 divide-y divide-base-content/10 overflow-y-auto">
-        {rows.length === 0 ? (
+      <ul className="mt-4 min-h-72 divide-y divide-base-content/10">
+        {visible.length === 0 ? (
           <li className="py-6 text-center text-sm text-base-content/50">{empty}</li>
         ) : (
-          rows.map((row) => render(row))
+          visible.map((row) => render(row))
         )}
       </ul>
+      {pageCount > 1 ? (
+        <div className="mt-3 flex items-center justify-end gap-1">
+          <button
+            type="button"
+            className="btn btn-ghost btn-xs px-1"
+            aria-label={`Previous ${title} page`}
+            disabled={safePage <= 1}
+            onClick={() => setPage(safePage - 1)}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <span className="min-w-12 text-center text-xs tabular-nums text-base-content/60">
+            {safePage} / {pageCount}
+          </span>
+          <button
+            type="button"
+            className="btn btn-ghost btn-xs px-1"
+            aria-label={`Next ${title} page`}
+            disabled={safePage >= pageCount}
+            onClick={() => setPage(safePage + 1)}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

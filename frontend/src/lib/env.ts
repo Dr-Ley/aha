@@ -20,7 +20,8 @@ export function getAuthSecret(): string {
 }
 
 const serverEnvSchema = z.object({
-  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  MONGODB_URI: z.string().min(1, "MONGODB_URI is required"),
+  MONGODB_DB: z.string().min(1).optional(),
 });
 
 type ServerEnv = z.infer<typeof serverEnvSchema> & { AUTH_SECRET: string };
@@ -31,7 +32,8 @@ let cached: ServerEnv | null = null;
 export function getServerEnv(): ServerEnv {
   if (cached) return cached;
   const parsed = serverEnvSchema.safeParse({
-    DATABASE_URL: process.env.DATABASE_URL,
+    MONGODB_URI: process.env.MONGODB_URI,
+    MONGODB_DB: process.env.MONGODB_DB,
   });
   if (!parsed.success) {
     throw new Error(

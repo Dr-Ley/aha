@@ -1,0 +1,19 @@
+[
+ {
+  "_id": 1,
+  "company_id": "aha",
+  "name": "Peter Guide",
+  "type": "employee",
+  "languages": [
+   "English",
+   "Swahili"
+  ],
+  "certifications": [
+   "KPSGA silver"
+  ],
+  "status": "active",
+  "created_at": {
+   "$date": "2026-08-31T16:19:34.543Z"
+  }
+ }
+]

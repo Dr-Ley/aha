@@ -1,0 +1,3668 @@
+[
+ {
+  "_id": 1,
+  "company_id": "bth",
+  "order_id": 1,
+  "item_id": 2,
+  "quantity": 1,
+  "unit_price": 600,
+  "line_total": 600,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-08-01T14:36:38.258Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "bth",
+  "order_id": 1,
+  "item_id": 1,
+  "quantity": 1,
+  "unit_price": 1200,
+  "line_total": 1200,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-08-01T14:36:38.258Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "bth",
+  "order_id": 274,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1950,
+  "line_total": 1950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 4,
+  "company_id": "bth",
+  "order_id": 273,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2760,
+  "line_total": 2760,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 5,
+  "company_id": "bth",
+  "order_id": 272,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3635,
+  "line_total": 3635,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 6,
+  "company_id": "bth",
+  "order_id": 271,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4925,
+  "line_total": 4925,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 7,
+  "company_id": "bth",
+  "order_id": 270,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10900,
+  "line_total": 10900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 8,
+  "company_id": "bth",
+  "order_id": 269,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 18525,
+  "line_total": 18525,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 9,
+  "company_id": "bth",
+  "order_id": 268,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4750,
+  "line_total": 4750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 10,
+  "company_id": "bth",
+  "order_id": 267,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6020,
+  "line_total": 6020,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 11,
+  "company_id": "bth",
+  "order_id": 266,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1675,
+  "line_total": 1675,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 12,
+  "company_id": "bth",
+  "order_id": 265,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4475,
+  "line_total": 4475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 13,
+  "company_id": "bth",
+  "order_id": 264,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6050,
+  "line_total": 6050,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 14,
+  "company_id": "bth",
+  "order_id": 263,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 12960,
+  "line_total": 12960,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 15,
+  "company_id": "bth",
+  "order_id": 262,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2910,
+  "line_total": 2910,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 16,
+  "company_id": "bth",
+  "order_id": 261,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1950,
+  "line_total": 1950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 17,
+  "company_id": "bth",
+  "order_id": 260,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2750,
+  "line_total": 2750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 18,
+  "company_id": "bth",
+  "order_id": 259,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3750,
+  "line_total": 3750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 19,
+  "company_id": "bth",
+  "order_id": 258,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2850,
+  "line_total": 2850,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 20,
+  "company_id": "bth",
+  "order_id": 257,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 11750,
+  "line_total": 11750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 21,
+  "company_id": "bth",
+  "order_id": 256,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10875,
+  "line_total": 10875,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 22,
+  "company_id": "bth",
+  "order_id": 255,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4700,
+  "line_total": 4700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 23,
+  "company_id": "bth",
+  "order_id": 254,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3075,
+  "line_total": 3075,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 24,
+  "company_id": "bth",
+  "order_id": 253,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1300,
+  "line_total": 1300,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 25,
+  "company_id": "bth",
+  "order_id": 252,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3050,
+  "line_total": 3050,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 26,
+  "company_id": "bth",
+  "order_id": 251,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2200,
+  "line_total": 2200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 27,
+  "company_id": "bth",
+  "order_id": 250,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2900,
+  "line_total": 2900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 28,
+  "company_id": "bth",
+  "order_id": 249,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7400,
+  "line_total": 7400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 29,
+  "company_id": "bth",
+  "order_id": 248,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 350,
+  "line_total": 350,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 30,
+  "company_id": "bth",
+  "order_id": 247,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5675,
+  "line_total": 5675,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 31,
+  "company_id": "bth",
+  "order_id": 246,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2115,
+  "line_total": 2115,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 32,
+  "company_id": "bth",
+  "order_id": 245,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8400,
+  "line_total": 8400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-09-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 33,
+  "company_id": "bth",
+  "order_id": 244,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4050,
+  "line_total": 4050,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 34,
+  "company_id": "bth",
+  "order_id": 243,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7600,
+  "line_total": 7600,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 35,
+  "company_id": "bth",
+  "order_id": 242,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7085,
+  "line_total": 7085,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 36,
+  "company_id": "bth",
+  "order_id": 241,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4700,
+  "line_total": 4700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 37,
+  "company_id": "bth",
+  "order_id": 240,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6500,
+  "line_total": 6500,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 38,
+  "company_id": "bth",
+  "order_id": 239,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3950,
+  "line_total": 3950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 39,
+  "company_id": "bth",
+  "order_id": 238,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5350,
+  "line_total": 5350,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 40,
+  "company_id": "bth",
+  "order_id": 237,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1175,
+  "line_total": 1175,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 41,
+  "company_id": "bth",
+  "order_id": 236,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7250,
+  "line_total": 7250,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 42,
+  "company_id": "bth",
+  "order_id": 235,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6770,
+  "line_total": 6770,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 43,
+  "company_id": "bth",
+  "order_id": 234,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4275,
+  "line_total": 4275,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 44,
+  "company_id": "bth",
+  "order_id": 233,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10175,
+  "line_total": 10175,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 45,
+  "company_id": "bth",
+  "order_id": 232,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8000,
+  "line_total": 8000,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 46,
+  "company_id": "bth",
+  "order_id": 231,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2625,
+  "line_total": 2625,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 47,
+  "company_id": "bth",
+  "order_id": 230,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3800,
+  "line_total": 3800,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 48,
+  "company_id": "bth",
+  "order_id": 229,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4700,
+  "line_total": 4700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 49,
+  "company_id": "bth",
+  "order_id": 228,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 11275,
+  "line_total": 11275,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 50,
+  "company_id": "bth",
+  "order_id": 227,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1210,
+  "line_total": 1210,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 51,
+  "company_id": "bth",
+  "order_id": 226,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2810,
+  "line_total": 2810,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 52,
+  "company_id": "bth",
+  "order_id": 225,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3000,
+  "line_total": 3000,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 53,
+  "company_id": "bth",
+  "order_id": 224,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2410,
+  "line_total": 2410,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 54,
+  "company_id": "bth",
+  "order_id": 223,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1775,
+  "line_total": 1775,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 55,
+  "company_id": "bth",
+  "order_id": 222,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6345,
+  "line_total": 6345,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 56,
+  "company_id": "bth",
+  "order_id": 221,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2950,
+  "line_total": 2950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 57,
+  "company_id": "bth",
+  "order_id": 220,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2600,
+  "line_total": 2600,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 58,
+  "company_id": "bth",
+  "order_id": 219,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6600,
+  "line_total": 6600,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 59,
+  "company_id": "bth",
+  "order_id": 218,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2050,
+  "line_total": 2050,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 60,
+  "company_id": "bth",
+  "order_id": 217,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4375,
+  "line_total": 4375,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 61,
+  "company_id": "bth",
+  "order_id": 216,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 570,
+  "line_total": 570,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 62,
+  "company_id": "bth",
+  "order_id": 215,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6300,
+  "line_total": 6300,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 63,
+  "company_id": "bth",
+  "order_id": 214,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4320,
+  "line_total": 4320,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 64,
+  "company_id": "bth",
+  "order_id": 213,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2475,
+  "line_total": 2475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 65,
+  "company_id": "bth",
+  "order_id": 212,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3525,
+  "line_total": 3525,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 66,
+  "company_id": "bth",
+  "order_id": 211,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2750,
+  "line_total": 2750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 67,
+  "company_id": "bth",
+  "order_id": 210,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2400,
+  "line_total": 2400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 68,
+  "company_id": "bth",
+  "order_id": 209,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4645,
+  "line_total": 4645,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 69,
+  "company_id": "bth",
+  "order_id": 208,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5900,
+  "line_total": 5900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 70,
+  "company_id": "bth",
+  "order_id": 207,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 19305,
+  "line_total": 19305,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 71,
+  "company_id": "bth",
+  "order_id": 206,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5395,
+  "line_total": 5395,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 72,
+  "company_id": "bth",
+  "order_id": 205,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 850,
+  "line_total": 850,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 73,
+  "company_id": "bth",
+  "order_id": 204,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6160,
+  "line_total": 6160,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 74,
+  "company_id": "bth",
+  "order_id": 203,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2425,
+  "line_total": 2425,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 75,
+  "company_id": "bth",
+  "order_id": 202,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3460,
+  "line_total": 3460,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 76,
+  "company_id": "bth",
+  "order_id": 201,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5600,
+  "line_total": 5600,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 77,
+  "company_id": "bth",
+  "order_id": 200,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 19385,
+  "line_total": 19385,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 78,
+  "company_id": "bth",
+  "order_id": 199,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2900,
+  "line_total": 2900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 79,
+  "company_id": "bth",
+  "order_id": 198,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10035,
+  "line_total": 10035,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 80,
+  "company_id": "bth",
+  "order_id": 197,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4300,
+  "line_total": 4300,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 81,
+  "company_id": "bth",
+  "order_id": 196,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 21100,
+  "line_total": 21100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 82,
+  "company_id": "bth",
+  "order_id": 195,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1010,
+  "line_total": 1010,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 83,
+  "company_id": "bth",
+  "order_id": 194,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4775,
+  "line_total": 4775,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 84,
+  "company_id": "bth",
+  "order_id": 193,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10605,
+  "line_total": 10605,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 85,
+  "company_id": "bth",
+  "order_id": 192,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6935,
+  "line_total": 6935,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 86,
+  "company_id": "bth",
+  "order_id": 191,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6095,
+  "line_total": 6095,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 87,
+  "company_id": "bth",
+  "order_id": 190,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6775,
+  "line_total": 6775,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 88,
+  "company_id": "bth",
+  "order_id": 189,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4400,
+  "line_total": 4400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 89,
+  "company_id": "bth",
+  "order_id": 188,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3335,
+  "line_total": 3335,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 90,
+  "company_id": "bth",
+  "order_id": 187,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 24700,
+  "line_total": 24700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 91,
+  "company_id": "bth",
+  "order_id": 186,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2248,
+  "line_total": 2248,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 92,
+  "company_id": "bth",
+  "order_id": 185,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3550,
+  "line_total": 3550,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 93,
+  "company_id": "bth",
+  "order_id": 184,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 320,
+  "line_total": 320,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 94,
+  "company_id": "bth",
+  "order_id": 183,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3360,
+  "line_total": 3360,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-07-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 95,
+  "company_id": "bth",
+  "order_id": 182,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7850,
+  "line_total": 7850,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 96,
+  "company_id": "bth",
+  "order_id": 181,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1940,
+  "line_total": 1940,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 97,
+  "company_id": "bth",
+  "order_id": 180,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 840,
+  "line_total": 840,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 98,
+  "company_id": "bth",
+  "order_id": 179,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4625,
+  "line_total": 4625,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 99,
+  "company_id": "bth",
+  "order_id": 178,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 810,
+  "line_total": 810,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 100,
+  "company_id": "bth",
+  "order_id": 177,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3450,
+  "line_total": 3450,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 101,
+  "company_id": "bth",
+  "order_id": 176,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 795,
+  "line_total": 795,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 102,
+  "company_id": "bth",
+  "order_id": 175,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2030,
+  "line_total": 2030,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 103,
+  "company_id": "bth",
+  "order_id": 174,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2220,
+  "line_total": 2220,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 104,
+  "company_id": "bth",
+  "order_id": 173,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1890,
+  "line_total": 1890,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 105,
+  "company_id": "bth",
+  "order_id": 172,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2390,
+  "line_total": 2390,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 106,
+  "company_id": "bth",
+  "order_id": 171,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7145,
+  "line_total": 7145,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 107,
+  "company_id": "bth",
+  "order_id": 170,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7450,
+  "line_total": 7450,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 108,
+  "company_id": "bth",
+  "order_id": 169,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7460,
+  "line_total": 7460,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 109,
+  "company_id": "bth",
+  "order_id": 168,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7250,
+  "line_total": 7250,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 110,
+  "company_id": "bth",
+  "order_id": 167,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3900,
+  "line_total": 3900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 111,
+  "company_id": "bth",
+  "order_id": 166,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2650,
+  "line_total": 2650,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 112,
+  "company_id": "bth",
+  "order_id": 165,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6260,
+  "line_total": 6260,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 113,
+  "company_id": "bth",
+  "order_id": 164,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4760,
+  "line_total": 4760,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 114,
+  "company_id": "bth",
+  "order_id": 163,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3385,
+  "line_total": 3385,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 115,
+  "company_id": "bth",
+  "order_id": 162,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2110,
+  "line_total": 2110,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 116,
+  "company_id": "bth",
+  "order_id": 161,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6700,
+  "line_total": 6700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 117,
+  "company_id": "bth",
+  "order_id": 160,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4820,
+  "line_total": 4820,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 118,
+  "company_id": "bth",
+  "order_id": 159,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 28300,
+  "line_total": 28300,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 119,
+  "company_id": "bth",
+  "order_id": 158,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8550,
+  "line_total": 8550,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 120,
+  "company_id": "bth",
+  "order_id": 157,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 15250,
+  "line_total": 15250,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 121,
+  "company_id": "bth",
+  "order_id": 156,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 9620,
+  "line_total": 9620,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 122,
+  "company_id": "bth",
+  "order_id": 155,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1750,
+  "line_total": 1750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 123,
+  "company_id": "bth",
+  "order_id": 154,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4920,
+  "line_total": 4920,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 124,
+  "company_id": "bth",
+  "order_id": 153,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1840,
+  "line_total": 1840,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-06-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 125,
+  "company_id": "bth",
+  "order_id": 152,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6760,
+  "line_total": 6760,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 126,
+  "company_id": "bth",
+  "order_id": 151,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8825,
+  "line_total": 8825,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 127,
+  "company_id": "bth",
+  "order_id": 150,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10020,
+  "line_total": 10020,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 128,
+  "company_id": "bth",
+  "order_id": 149,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5785,
+  "line_total": 5785,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 129,
+  "company_id": "bth",
+  "order_id": 148,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6350,
+  "line_total": 6350,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 130,
+  "company_id": "bth",
+  "order_id": 147,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5495,
+  "line_total": 5495,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 131,
+  "company_id": "bth",
+  "order_id": 146,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3125,
+  "line_total": 3125,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 132,
+  "company_id": "bth",
+  "order_id": 145,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5170,
+  "line_total": 5170,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 133,
+  "company_id": "bth",
+  "order_id": 144,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4550,
+  "line_total": 4550,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 134,
+  "company_id": "bth",
+  "order_id": 143,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10520,
+  "line_total": 10520,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 135,
+  "company_id": "bth",
+  "order_id": 142,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1585,
+  "line_total": 1585,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 136,
+  "company_id": "bth",
+  "order_id": 141,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5625,
+  "line_total": 5625,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 137,
+  "company_id": "bth",
+  "order_id": 140,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4860,
+  "line_total": 4860,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 138,
+  "company_id": "bth",
+  "order_id": 139,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3630,
+  "line_total": 3630,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 139,
+  "company_id": "bth",
+  "order_id": 138,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8750,
+  "line_total": 8750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 140,
+  "company_id": "bth",
+  "order_id": 137,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 9100,
+  "line_total": 9100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 141,
+  "company_id": "bth",
+  "order_id": 136,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6150,
+  "line_total": 6150,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 142,
+  "company_id": "bth",
+  "order_id": 135,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3500,
+  "line_total": 3500,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 143,
+  "company_id": "bth",
+  "order_id": 134,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4310,
+  "line_total": 4310,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 144,
+  "company_id": "bth",
+  "order_id": 133,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3175,
+  "line_total": 3175,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 145,
+  "company_id": "bth",
+  "order_id": 132,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3420,
+  "line_total": 3420,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 146,
+  "company_id": "bth",
+  "order_id": 131,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5120,
+  "line_total": 5120,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 147,
+  "company_id": "bth",
+  "order_id": 130,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5905,
+  "line_total": 5905,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 148,
+  "company_id": "bth",
+  "order_id": 129,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3475,
+  "line_total": 3475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 149,
+  "company_id": "bth",
+  "order_id": 128,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3740,
+  "line_total": 3740,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 150,
+  "company_id": "bth",
+  "order_id": 127,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5650,
+  "line_total": 5650,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 151,
+  "company_id": "bth",
+  "order_id": 126,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 980,
+  "line_total": 980,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 152,
+  "company_id": "bth",
+  "order_id": 125,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 250,
+  "line_total": 250,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 153,
+  "company_id": "bth",
+  "order_id": 124,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3910,
+  "line_total": 3910,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 154,
+  "company_id": "bth",
+  "order_id": 123,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 11980,
+  "line_total": 11980,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 155,
+  "company_id": "bth",
+  "order_id": 122,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6675,
+  "line_total": 6675,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-05-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 156,
+  "company_id": "bth",
+  "order_id": 121,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6200,
+  "line_total": 6200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 157,
+  "company_id": "bth",
+  "order_id": 120,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3300,
+  "line_total": 3300,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 158,
+  "company_id": "bth",
+  "order_id": 119,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4350,
+  "line_total": 4350,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 159,
+  "company_id": "bth",
+  "order_id": 118,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3100,
+  "line_total": 3100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 160,
+  "company_id": "bth",
+  "order_id": 117,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5125,
+  "line_total": 5125,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 161,
+  "company_id": "bth",
+  "order_id": 116,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2375,
+  "line_total": 2375,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 162,
+  "company_id": "bth",
+  "order_id": 115,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5225,
+  "line_total": 5225,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 163,
+  "company_id": "bth",
+  "order_id": 114,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3325,
+  "line_total": 3325,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 164,
+  "company_id": "bth",
+  "order_id": 113,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5400,
+  "line_total": 5400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 165,
+  "company_id": "bth",
+  "order_id": 112,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8525,
+  "line_total": 8525,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 166,
+  "company_id": "bth",
+  "order_id": 111,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4080,
+  "line_total": 4080,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 167,
+  "company_id": "bth",
+  "order_id": 110,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4250,
+  "line_total": 4250,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 168,
+  "company_id": "bth",
+  "order_id": 109,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7175,
+  "line_total": 7175,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 169,
+  "company_id": "bth",
+  "order_id": 108,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3675,
+  "line_total": 3675,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 170,
+  "company_id": "bth",
+  "order_id": 107,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5400,
+  "line_total": 5400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 171,
+  "company_id": "bth",
+  "order_id": 106,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5095,
+  "line_total": 5095,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 172,
+  "company_id": "bth",
+  "order_id": 105,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2365,
+  "line_total": 2365,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 173,
+  "company_id": "bth",
+  "order_id": 104,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6100,
+  "line_total": 6100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 174,
+  "company_id": "bth",
+  "order_id": 103,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5325,
+  "line_total": 5325,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 175,
+  "company_id": "bth",
+  "order_id": 102,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 425,
+  "line_total": 425,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 176,
+  "company_id": "bth",
+  "order_id": 101,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 350,
+  "line_total": 350,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 177,
+  "company_id": "bth",
+  "order_id": 100,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2400,
+  "line_total": 2400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 178,
+  "company_id": "bth",
+  "order_id": 99,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2700,
+  "line_total": 2700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 179,
+  "company_id": "bth",
+  "order_id": 98,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1550,
+  "line_total": 1550,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 180,
+  "company_id": "bth",
+  "order_id": 97,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5675,
+  "line_total": 5675,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 181,
+  "company_id": "bth",
+  "order_id": 96,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8975,
+  "line_total": 8975,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 182,
+  "company_id": "bth",
+  "order_id": 95,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 23800,
+  "line_total": 23800,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 183,
+  "company_id": "bth",
+  "order_id": 94,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5750,
+  "line_total": 5750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 184,
+  "company_id": "bth",
+  "order_id": 93,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4175,
+  "line_total": 4175,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 185,
+  "company_id": "bth",
+  "order_id": 92,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5200,
+  "line_total": 5200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-04-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 186,
+  "company_id": "bth",
+  "order_id": 91,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 450,
+  "line_total": 450,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 187,
+  "company_id": "bth",
+  "order_id": 90,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2675,
+  "line_total": 2675,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 188,
+  "company_id": "bth",
+  "order_id": 89,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4075,
+  "line_total": 4075,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 189,
+  "company_id": "bth",
+  "order_id": 88,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1700,
+  "line_total": 1700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 190,
+  "company_id": "bth",
+  "order_id": 87,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1600,
+  "line_total": 1600,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 191,
+  "company_id": "bth",
+  "order_id": 86,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1900,
+  "line_total": 1900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 192,
+  "company_id": "bth",
+  "order_id": 85,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2400,
+  "line_total": 2400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 193,
+  "company_id": "bth",
+  "order_id": 84,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6975,
+  "line_total": 6975,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 194,
+  "company_id": "bth",
+  "order_id": 83,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4900,
+  "line_total": 4900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 195,
+  "company_id": "bth",
+  "order_id": 82,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3475,
+  "line_total": 3475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 196,
+  "company_id": "bth",
+  "order_id": 81,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 18950,
+  "line_total": 18950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 197,
+  "company_id": "bth",
+  "order_id": 80,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5700,
+  "line_total": 5700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 198,
+  "company_id": "bth",
+  "order_id": 79,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8375,
+  "line_total": 8375,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 199,
+  "company_id": "bth",
+  "order_id": 78,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1200,
+  "line_total": 1200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 200,
+  "company_id": "bth",
+  "order_id": 77,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1050,
+  "line_total": 1050,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 201,
+  "company_id": "bth",
+  "order_id": 76,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4100,
+  "line_total": 4100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 202,
+  "company_id": "bth",
+  "order_id": 75,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4100,
+  "line_total": 4100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 203,
+  "company_id": "bth",
+  "order_id": 74,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1105,
+  "line_total": 1105,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 204,
+  "company_id": "bth",
+  "order_id": 73,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2790,
+  "line_total": 2790,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 205,
+  "company_id": "bth",
+  "order_id": 72,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4200,
+  "line_total": 4200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 206,
+  "company_id": "bth",
+  "order_id": 71,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2950,
+  "line_total": 2950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 207,
+  "company_id": "bth",
+  "order_id": 70,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2300,
+  "line_total": 2300,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 208,
+  "company_id": "bth",
+  "order_id": 69,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3775,
+  "line_total": 3775,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 209,
+  "company_id": "bth",
+  "order_id": 68,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 13700,
+  "line_total": 13700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 210,
+  "company_id": "bth",
+  "order_id": 67,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 22750,
+  "line_total": 22750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 211,
+  "company_id": "bth",
+  "order_id": 66,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10260,
+  "line_total": 10260,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 212,
+  "company_id": "bth",
+  "order_id": 65,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4590,
+  "line_total": 4590,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 213,
+  "company_id": "bth",
+  "order_id": 64,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6740,
+  "line_total": 6740,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 214,
+  "company_id": "bth",
+  "order_id": 63,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 9885,
+  "line_total": 9885,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 215,
+  "company_id": "bth",
+  "order_id": 62,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6800,
+  "line_total": 6800,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 216,
+  "company_id": "bth",
+  "order_id": 61,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7500,
+  "line_total": 7500,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-03-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 217,
+  "company_id": "bth",
+  "order_id": 60,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1350,
+  "line_total": 1350,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 218,
+  "company_id": "bth",
+  "order_id": 59,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4725,
+  "line_total": 4725,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 219,
+  "company_id": "bth",
+  "order_id": 58,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4800,
+  "line_total": 4800,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 220,
+  "company_id": "bth",
+  "order_id": 57,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1580,
+  "line_total": 1580,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 221,
+  "company_id": "bth",
+  "order_id": 56,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7550,
+  "line_total": 7550,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 222,
+  "company_id": "bth",
+  "order_id": 55,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2900,
+  "line_total": 2900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 223,
+  "company_id": "bth",
+  "order_id": 54,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 14700,
+  "line_total": 14700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 224,
+  "company_id": "bth",
+  "order_id": 53,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 18275,
+  "line_total": 18275,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 225,
+  "company_id": "bth",
+  "order_id": 52,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7900,
+  "line_total": 7900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 226,
+  "company_id": "bth",
+  "order_id": 51,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6150,
+  "line_total": 6150,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 227,
+  "company_id": "bth",
+  "order_id": 50,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3500,
+  "line_total": 3500,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 228,
+  "company_id": "bth",
+  "order_id": 49,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5200,
+  "line_total": 5200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 229,
+  "company_id": "bth",
+  "order_id": 48,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 200,
+  "line_total": 200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 230,
+  "company_id": "bth",
+  "order_id": 47,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1000,
+  "line_total": 1000,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 231,
+  "company_id": "bth",
+  "order_id": 46,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8900,
+  "line_total": 8900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 232,
+  "company_id": "bth",
+  "order_id": 45,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 18850,
+  "line_total": 18850,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 233,
+  "company_id": "bth",
+  "order_id": 44,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2800,
+  "line_total": 2800,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 234,
+  "company_id": "bth",
+  "order_id": 43,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 21500,
+  "line_total": 21500,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 235,
+  "company_id": "bth",
+  "order_id": 42,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2345,
+  "line_total": 2345,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 236,
+  "company_id": "bth",
+  "order_id": 41,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2940,
+  "line_total": 2940,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 237,
+  "company_id": "bth",
+  "order_id": 40,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6450,
+  "line_total": 6450,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 238,
+  "company_id": "bth",
+  "order_id": 39,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8200,
+  "line_total": 8200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 239,
+  "company_id": "bth",
+  "order_id": 38,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 10800,
+  "line_total": 10800,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 240,
+  "company_id": "bth",
+  "order_id": 37,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4900,
+  "line_total": 4900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 241,
+  "company_id": "bth",
+  "order_id": 36,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3900,
+  "line_total": 3900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 242,
+  "company_id": "bth",
+  "order_id": 35,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5000,
+  "line_total": 5000,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 243,
+  "company_id": "bth",
+  "order_id": 34,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4150,
+  "line_total": 4150,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 244,
+  "company_id": "bth",
+  "order_id": 33,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2500,
+  "line_total": 2500,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-02-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 245,
+  "company_id": "bth",
+  "order_id": 32,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4025,
+  "line_total": 4025,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 246,
+  "company_id": "bth",
+  "order_id": 31,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3900,
+  "line_total": 3900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 247,
+  "company_id": "bth",
+  "order_id": 30,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2100,
+  "line_total": 2100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 248,
+  "company_id": "bth",
+  "order_id": 29,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5550,
+  "line_total": 5550,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 249,
+  "company_id": "bth",
+  "order_id": 28,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5700,
+  "line_total": 5700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 250,
+  "company_id": "bth",
+  "order_id": 27,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5125,
+  "line_total": 5125,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 251,
+  "company_id": "bth",
+  "order_id": 26,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 9475,
+  "line_total": 9475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 252,
+  "company_id": "bth",
+  "order_id": 25,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3750,
+  "line_total": 3750,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 253,
+  "company_id": "bth",
+  "order_id": 24,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1700,
+  "line_total": 1700,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 254,
+  "company_id": "bth",
+  "order_id": 23,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1900,
+  "line_total": 1900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 255,
+  "company_id": "bth",
+  "order_id": 22,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2200,
+  "line_total": 2200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 256,
+  "company_id": "bth",
+  "order_id": 21,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4400,
+  "line_total": 4400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 257,
+  "company_id": "bth",
+  "order_id": 20,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3650,
+  "line_total": 3650,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 258,
+  "company_id": "bth",
+  "order_id": 19,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3950,
+  "line_total": 3950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 259,
+  "company_id": "bth",
+  "order_id": 18,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1350,
+  "line_total": 1350,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 260,
+  "company_id": "bth",
+  "order_id": 17,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3250,
+  "line_total": 3250,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 261,
+  "company_id": "bth",
+  "order_id": 16,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1400,
+  "line_total": 1400,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 262,
+  "company_id": "bth",
+  "order_id": 15,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2175,
+  "line_total": 2175,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 263,
+  "company_id": "bth",
+  "order_id": 14,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 6200,
+  "line_total": 6200,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 264,
+  "company_id": "bth",
+  "order_id": 13,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3600,
+  "line_total": 3600,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 265,
+  "company_id": "bth",
+  "order_id": 12,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 8420,
+  "line_total": 8420,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 266,
+  "company_id": "bth",
+  "order_id": 11,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5900,
+  "line_total": 5900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 267,
+  "company_id": "bth",
+  "order_id": 10,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5950,
+  "line_total": 5950,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 268,
+  "company_id": "bth",
+  "order_id": 9,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1475,
+  "line_total": 1475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 269,
+  "company_id": "bth",
+  "order_id": 8,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2475,
+  "line_total": 2475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 270,
+  "company_id": "bth",
+  "order_id": 7,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3900,
+  "line_total": 3900,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 271,
+  "company_id": "bth",
+  "order_id": 6,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3475,
+  "line_total": 3475,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 272,
+  "company_id": "bth",
+  "order_id": 5,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 1550,
+  "line_total": 1550,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 273,
+  "company_id": "bth",
+  "order_id": 4,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 13600,
+  "line_total": 13600,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 274,
+  "company_id": "bth",
+  "order_id": 3,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 2275,
+  "line_total": 2275,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 275,
+  "company_id": "bth",
+  "order_id": 2,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4125,
+  "line_total": 4125,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-01-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 277,
+  "company_id": "bth",
+  "order_id": 279,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 7720,
+  "line_total": 7720,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 278,
+  "company_id": "bth",
+  "order_id": 278,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4100,
+  "line_total": 4100,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-10-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 279,
+  "company_id": "bth",
+  "order_id": 281,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3150,
+  "line_total": 3150,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-10-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 280,
+  "company_id": "bth",
+  "order_id": 277,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 3800,
+  "line_total": 3800,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-10-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 281,
+  "company_id": "bth",
+  "order_id": 280,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4725,
+  "line_total": 4725,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-10-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 282,
+  "company_id": "bth",
+  "order_id": 282,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 5425,
+  "line_total": 5425,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-10-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 283,
+  "company_id": "bth",
+  "order_id": 276,
+  "item_id": 3,
+  "quantity": 1,
+  "unit_price": 4520,
+  "line_total": 4520,
+  "notes": "Imported daily total",
+  "created_at": {
+   "$date": "2026-10-01T12:00:00.000Z"
+  }
+ }
+]

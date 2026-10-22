@@ -1,0 +1,160 @@
+[
+ {
+  "_id": 2,
+  "name": "Bondo Travellers Hotel",
+  "contact": null,
+  "type": "tenant",
+  "company_id": "bth",
+  "created_at": {
+   "$date": "2026-08-31T16:19:31.631Z"
+  }
+ },
+ {
+  "_id": 3,
+  "name": "Sarova Lion Hill Game Lodge",
+  "contact": null,
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-08-31T16:19:32.548Z"
+  }
+ },
+ {
+  "_id": 21,
+  "name": "City Max Hotel",
+  "contact": null,
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 22,
+  "name": "Leisure Apex Hotel",
+  "contact": null,
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 23,
+  "name": "Villa Leone Boutique Hotel",
+  "contact": {
+   "address": "UN Avenue, Daisy Drive, Gigiri, 00620 Nairobi, Kenya"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 1,
+  "name": "Enchoro Wildlife Camp",
+  "contact": {
+   "website": "https://www.enchorowildlifecamp.com"
+  },
+  "type": "tenant",
+  "company_id": "ewc",
+  "created_at": {
+   "$date": "2026-08-31T16:19:30.924Z"
+  }
+ },
+ {
+  "_id": 24,
+  "name": "Sopa Lodges",
+  "contact": {
+   "website": "https://www.sopalodges.com"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T05:51:33.632Z"
+  }
+ },
+ {
+  "_id": 25,
+  "name": "Nyati Safari Camp",
+  "contact": null,
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T05:51:33.632Z"
+  }
+ },
+ {
+  "_id": 26,
+  "name": "Zebra Plains Collection",
+  "contact": {
+   "website": "https://zebraplainscollection.com"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T05:51:33.632Z"
+  }
+ },
+ {
+  "_id": 27,
+  "name": "Eagle Palace Hotel",
+  "contact": {
+   "website": "https://eaglepalacehotel.com"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T05:51:33.632Z"
+  }
+ },
+ {
+  "_id": 28,
+  "name": "Angata Camps",
+  "contact": {
+   "website": "https://www.angatacamps.com"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T07:51:53.875Z"
+  }
+ },
+ {
+  "_id": 29,
+  "name": "Baobab Beach Resort",
+  "contact": {
+   "website": "https://baobab-beach-resort.com"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T08:49:44.951Z"
+  }
+ },
+ {
+  "_id": 30,
+  "name": "Serena Hotels",
+  "contact": {
+   "website": "https://www.serenahotels.com"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T09:16:50.767Z"
+  }
+ },
+ {
+  "_id": 31,
+  "name": "Dove Nest Lodge",
+  "contact": {
+   "website": "https://dovenestlodge.com"
+  },
+  "type": "partner",
+  "company_id": null,
+  "created_at": {
+   "$date": "2026-09-24T09:16:50.767Z"
+  }
+ }
+]

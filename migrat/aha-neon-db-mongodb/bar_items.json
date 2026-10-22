@@ -1,0 +1,122 @@
+[
+ {
+  "_id": 1,
+  "company_id": "bth",
+  "category_id": 1,
+  "name": "Tusker 500ml",
+  "description": null,
+  "price": 250,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-04-28T00:47:00.967Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "bth",
+  "category_id": 1,
+  "name": "Soda",
+  "description": null,
+  "price": 150,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-04-28T00:47:00.967Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "ewc",
+  "category_id": 2,
+  "name": "Tusker 500ml",
+  "description": null,
+  "price": 250,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-04-28T00:47:01.467Z"
+  }
+ },
+ {
+  "_id": 4,
+  "company_id": "ewc",
+  "category_id": 2,
+  "name": "Soda",
+  "description": null,
+  "price": 150,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-04-28T00:47:01.467Z"
+  }
+ },
+ {
+  "_id": 5,
+  "company_id": "ewc",
+  "category_id": 3,
+  "name": "pilsner",
+  "description": null,
+  "price": 350,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-05-11T18:52:30.221Z"
+  }
+ },
+ {
+  "_id": 6,
+  "company_id": "ewc",
+  "category_id": 3,
+  "name": "Beer",
+  "description": null,
+  "price": 400,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-07-06T09:39:16.533Z"
+  }
+ },
+ {
+  "_id": 7,
+  "company_id": "ewc",
+  "category_id": 3,
+  "name": "Water",
+  "description": null,
+  "price": 200,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-07-06T09:40:58.833Z"
+  }
+ },
+ {
+  "_id": 8,
+  "company_id": "ewc",
+  "category_id": 3,
+  "name": "Sodas",
+  "description": null,
+  "price": 100,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-07-06T09:41:59.681Z"
+  }
+ },
+ {
+  "_id": 9,
+  "company_id": "ewc",
+  "category_id": 3,
+  "name": "Wine",
+  "description": null,
+  "price": 400,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-07-06T09:50:49.061Z"
+  }
+ },
+ {
+  "_id": 10,
+  "company_id": "bth",
+  "category_id": 4,
+  "name": "Daily bar sales (imported)",
+  "description": "Placeholder for imported daily totals. Safe to leave hidden.",
+  "price": 0,
+  "is_available": false,
+  "created_at": {
+   "$date": "2026-10-01T16:24:45.792Z"
+  }
+ }
+]

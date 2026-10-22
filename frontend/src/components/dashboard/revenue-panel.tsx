@@ -8,8 +8,11 @@ const MonthlyReportChart = dynamic(
   () => import("@/components/dashboard/dashboard-charts").then((m) => m.MonthlyReportChart),
   { ssr: false, loading: () => <div className="skeleton h-64 rounded-xl" /> }
 );
+import { ChartPeriodFilter } from "@/components/dashboard/chart-period-filter";
 import { useCompany } from "@/store/company-context";
+import { amountSeries, type ChartPeriod } from "@/lib/chart-period";
 import { formatKesForDisplay } from "@/lib/data";
+import { nairobiYmd } from "@/lib/nairobi-date";
 import { EntityViewModal, type EntityPreviewKind } from "@/components/dashboard/entity-view-modal";
 import {
   DashboardPagination,
@@ -58,19 +61,14 @@ const exportColumns: ExportColumn<RevenueRow>[] = [
   { key: "recognizedAt", header: "Recognized", value: (r) => r.recognizedAt },
 ];
 
-function shortMonthLabel(ym: string): string {
-  const match = /^(\d{4})-(\d{2})$/.exec(ym);
-  if (!match) return ym;
-  return new Date(Number(match[1]), Number(match[2]) - 1, 1).toLocaleString("en-US", { month: "short" });
-}
-
-function monthTrendLabel(ym: string): string {
-  const match = /^(\d{4})-(\d{2})$/.exec(ym);
-  if (!match) return ym;
-  return new Date(Number(match[1]), Number(match[2]) - 1, 1).toLocaleString("en-US", {
-    month: "short",
-    year: "numeric",
-  });
+function revenueYmd(row: RevenueRow): string {
+  const raw = row.recognizedAt ? String(row.recognizedAt) : "";
+  if (/^\d{4}-\d{2}-\d{2}/.test(raw)) return raw.slice(0, 10);
+  if (raw) {
+    const parsed = new Date(raw);
+    if (!Number.isNaN(parsed.getTime())) return nairobiYmd(parsed);
+  }
+  return row.periodMonth && /^\d{4}-\d{2}$/.test(row.periodMonth) ? `${row.periodMonth}-01` : "";
 }
 
 function previewForRevenue(r: RevenueRow): { kind: EntityPreviewKind; id: number } | null {
@@ -90,6 +88,18 @@ export function RevenuePanel() {
   const [error, setError] = useState<string | null>(null);
   const [monthF, setMonthF] = useState("");
   const [bookingRF, setBookingRF] = useState<"" | "linked" | "none">("");
+  const [reportPeriod, setReportPeriodState] = useState<ChartPeriod>("month");
+  const [reportShift, setReportShift] = useState(0);
+  const [sparkPeriod, setSparkPeriodState] = useState<ChartPeriod>("month");
+  const [sparkShift, setSparkShift] = useState(0);
+  const setReportPeriod = (period: ChartPeriod) => {
+    setReportPeriodState(period);
+    setReportShift(0);
+  };
+  const setSparkPeriod = (period: ChartPeriod) => {
+    setSparkPeriodState(period);
+    setSparkShift(0);
+  };
   const [view, setView] = useState<{ kind: EntityPreviewKind; id: number } | null>(null);
 
   const inputStyle = { outline: "1px solid gray" };
@@ -136,17 +146,6 @@ export function RevenuePanel() {
     void load();
   }, [load]);
 
-  const byMonth = useMemo(() => {
-    const m = new Map<string, number>();
-    for (const r of rows) {
-      const key = r.periodMonth ?? "—";
-      m.set(key, (m.get(key) ?? 0) + r.amount);
-    }
-    return [...m.entries()]
-      .sort((a, b) => b[0].localeCompare(a[0]))
-      .map(([month, total]) => ({ month, total }));
-  }, [rows]);
-
   const topPackages = useMemo(() => {
     const m = new Map<string, number>();
     for (const r of rows) {
@@ -159,19 +158,32 @@ export function RevenuePanel() {
       .map(([name, total]) => ({ name, total }));
   }, [rows]);
 
-  const trendSpark = useMemo(() => {
-    const last = [...byMonth].slice(0, 6).reverse();
-    const max = Math.max(1, ...last.map((x) => x.total));
-    return last.map((x) => ({ ...x, pct: Math.round((x.total / max) * 100), monthText: shortMonthLabel(x.month) }));
-  }, [byMonth]);
+  const datedRevenue = useMemo(
+    () =>
+      rows
+        .map((row) => ({ date: revenueYmd(row), amount: row.amount }))
+        .filter((row) => row.date),
+    [rows]
+  );
 
   const monthlyTrend = useMemo(
     () =>
-      [...byMonth]
-        .sort((a, b) => a.month.localeCompare(b.month))
-        .map((row) => ({ label: monthTrendLabel(row.month), total: row.total })),
-    [byMonth]
+      amountSeries(datedRevenue, reportPeriod, undefined, reportShift).map((point) => ({
+        label: point.label,
+        total: point.amount,
+      })),
+    [datedRevenue, reportPeriod, reportShift]
   );
+
+  const trendSpark = useMemo(() => {
+    const points = amountSeries(datedRevenue, sparkPeriod, undefined, sparkShift);
+    const max = Math.max(1, ...points.map((point) => point.amount));
+    return points.map((point) => ({
+      label: point.label,
+      total: point.amount,
+      pct: Math.round((point.amount / max) * 100),
+    }));
+  }, [datedRevenue, sparkPeriod, sparkShift]);
 
   const monthChoices = useMemo(() => {
     const s = new Set<string>();
@@ -209,30 +221,48 @@ export function RevenuePanel() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm lg:col-span-2">
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-base-content">
-            <TrendingUp className="h-4 w-4 text-primary" />
-            Monthly report
-          </h2>
-          {monthlyTrend.length === 0 ? (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-base-content">
+              <TrendingUp className="h-4 w-4 text-primary" />
+              Revenue report
+            </h2>
+            <ChartPeriodFilter
+              value={reportPeriod}
+              onChange={setReportPeriod}
+              shift={reportShift}
+              onShift={setReportShift}
+              label="Revenue report time range"
+            />
+          </div>
+          {rows.length === 0 ? (
             <p className="text-sm text-base-content/50">No revenue rows yet.</p>
           ) : (
             <MonthlyReportChart points={monthlyTrend} />
           )}
         </div>
         <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-          <h2 className="mb-3 text-sm font-semibold text-base-content">6-month trend (relative)</h2>
-          <div className="flex h-40 items-end gap-1">
-            {trendSpark.length === 0 ? (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-sm font-semibold text-base-content">Relative trend</h2>
+            <ChartPeriodFilter
+              value={sparkPeriod}
+              onChange={setSparkPeriod}
+              shift={sparkShift}
+              onShift={setSparkShift}
+              label="Relative trend time range"
+            />
+          </div>
+          <div className="flex h-40 items-end gap-1 overflow-x-auto">
+            {rows.length === 0 ? (
               <p className="text-xs text-base-content/50">Add data to see bars.</p>
             ) : (
               trendSpark.map((b) => (
-                <div key={b.month} className="flex h-full min-h-24 flex-1 flex-col items-center justify-end gap-1">
+                <div key={b.label} className="flex h-full min-h-24 min-w-8 flex-1 flex-col items-center justify-end gap-1">
                   <div
                     className="w-full max-w-10 rounded-t-md bg-primary/80"
-                    style={{ height: `${Math.max(12, b.pct)}%` }}
-                    title={`${b.month}: ${formatKesForDisplay(b.total)}`}
+                    style={{ height: `${Math.max(b.total > 0 ? 12 : 0, b.pct)}%` }}
+                    title={`${b.label}: ${formatKesForDisplay(b.total)}`}
                   />
-                  <span className="max-w-12 truncate text-[0.65rem] text-base-content/50">{b.monthText}</span>
+                  <span className="max-w-14 truncate text-[0.65rem] text-base-content/50">{b.label}</span>
                 </div>
               ))
             )}

@@ -1,0 +1,278 @@
+[
+ {
+  "_id": 2,
+  "destination_id": 1,
+  "name": "Game drive",
+  "type": "activity",
+  "duration": "half-day",
+  "best_time": "Year-round; dry season June–October",
+  "description": "Morning or afternoon 4x4 game drive for Big Five viewing.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:28.011Z"
+  }
+ },
+ {
+  "_id": 3,
+  "destination_id": 1,
+  "name": "Maasai village visit",
+  "type": "cultural",
+  "duration": "2 hours",
+  "best_time": "Year-round",
+  "description": "Guided visit to a Maasai manyatta with cultural explanation and dance.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:28.238Z"
+  }
+ },
+ {
+  "_id": 4,
+  "destination_id": 1,
+  "name": "Hot air balloon safari",
+  "type": "activity",
+  "duration": "3 hours",
+  "best_time": "June–October",
+  "description": "Dawn balloon flight over the reserve followed by a bush breakfast.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:28.460Z"
+  }
+ },
+ {
+  "_id": 5,
+  "destination_id": 2,
+  "name": "Elephant herds",
+  "type": "wildlife",
+  "duration": "half-day",
+  "best_time": "June–October and January–February",
+  "description": "Large elephant families on the Amboseli swamps with Kilimanjaro as backdrop.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:28.717Z"
+  }
+ },
+ {
+  "_id": 6,
+  "destination_id": 2,
+  "name": "Observation Hill",
+  "type": "viewpoint",
+  "duration": "1 hour",
+  "best_time": "Year-round; clearest Kilimanjaro views at dawn",
+  "description": "Panoramic lookout over the park, wetlands, and Mount Kilimanjaro.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:28.945Z"
+  }
+ },
+ {
+  "_id": 7,
+  "destination_id": 3,
+  "name": "Lake Nakuru flamingos and rhinos",
+  "type": "wildlife",
+  "duration": "half-day",
+  "best_time": "Year-round",
+  "description": "Shores of Lake Nakuru for flamingos, both rhino species, and Rothschild giraffe.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:29.179Z"
+  }
+ },
+ {
+  "_id": 8,
+  "destination_id": 4,
+  "name": "Lake Naivasha boat ride",
+  "type": "activity",
+  "duration": "1–2 hours",
+  "best_time": "Year-round",
+  "description": "Boat safari for hippos, fish eagles, and shoreline birdlife.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:29.409Z"
+  }
+ },
+ {
+  "_id": 9,
+  "destination_id": 5,
+  "name": "Mzima Springs",
+  "type": "attraction",
+  "duration": "2 hours",
+  "best_time": "Year-round",
+  "description": "Crystal springs with underwater hippo and fish viewing in Tsavo West.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:29.638Z"
+  }
+ },
+ {
+  "_id": 10,
+  "destination_id": 6,
+  "name": "Red elephants of Tsavo",
+  "type": "wildlife",
+  "duration": "half-day",
+  "best_time": "June–October",
+  "description": "Dust-red elephants along the Galana River in Tsavo East.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:29.864Z"
+  }
+ },
+ {
+  "_id": 11,
+  "destination_id": 8,
+  "name": "Serengeti endless plains",
+  "type": "park",
+  "duration": "full-day",
+  "best_time": "June–October (migration); year-round for resident game",
+  "description": "Open-plain game viewing and seasonal wildebeest migration routes.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:30.088Z"
+  }
+ },
+ {
+  "_id": 12,
+  "destination_id": 9,
+  "name": "Ngorongoro Crater descent",
+  "type": "park",
+  "duration": "full-day",
+  "best_time": "June–October",
+  "description": "Full-day crater floor game drive among dense Big Five populations.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:30.355Z"
+  }
+ },
+ {
+  "_id": 13,
+  "destination_id": 10,
+  "name": "Lake Manyara game drive",
+  "type": "park",
+  "duration": "half-day",
+  "best_time": "Year-round",
+  "description": "Groundwater forest, tree-climbing lions, and flamingo-lined soda lake.",
+  "created_at": {
+   "$date": "2026-08-31T16:19:30.580Z"
+  }
+ },
+ {
+  "_id": 14,
+  "destination_id": 1,
+  "name": "Maasai Mara National Reserve",
+  "type": "park",
+  "duration": "Full day",
+  "best_time": "Year-round; peak July–October",
+  "description": "Kenya's finest wildlife sanctuary, with well over 450 recorded species and resident wildlife year-round in addition to the seasonal migration.",
+  "created_at": {
+   "$date": "2026-09-07T17:26:12.988Z"
+  }
+ },
+ {
+  "_id": 15,
+  "destination_id": 1,
+  "name": "Great Wildebeest Migration",
+  "type": "natural_phenomenon",
+  "duration": "Seasonal",
+  "best_time": "July–September",
+  "description": "Over a million wildebeest and zebra cross the Mara plains and the Mara River during the migration, drawing predators and dramatic river crossings.",
+  "created_at": {
+   "$date": "2026-09-07T17:26:12.988Z"
+  }
+ },
+ {
+  "_id": 16,
+  "destination_id": 1,
+  "name": "Maasai Village (Manyatta) Visit",
+  "type": "cultural",
+  "duration": "Half day (optional)",
+  "best_time": "Year-round",
+  "description": "Guided visit to a local Maasai village to learn about traditional homes, customs, and dances. Optional add-on, bookable in advance.",
+  "created_at": {
+   "$date": "2026-09-07T17:26:12.988Z"
+  }
+ },
+ {
+  "_id": 17,
+  "destination_id": 1,
+  "name": "Hot Air Balloon Safari",
+  "type": "activity",
+  "duration": "Early morning (optional)",
+  "best_time": "Year-round",
+  "description": "Sunrise hot air balloon float over the Mara plains for an aerial view of the wildlife and landscape, typically followed by a bush breakfast. Optional add-on, extra cost.",
+  "created_at": {
+   "$date": "2026-09-07T17:26:12.988Z"
+  }
+ },
+ {
+  "_id": 18,
+  "destination_id": 1,
+  "name": "Guided Nature Walk",
+  "type": "activity",
+  "duration": "1–2 hours (optional)",
+  "best_time": "Year-round",
+  "description": "Walking excursion near camp led by a guide, covering local flora, animal tracks, and bird life. Optional add-on.",
+  "created_at": {
+   "$date": "2026-09-07T17:26:12.988Z"
+  }
+ },
+ {
+  "_id": 64,
+  "destination_id": 4,
+  "name": "Hell's Gate National Park",
+  "type": "park",
+  "duration": "Half day",
+  "best_time": "Dry season (Jun–Oct, Dec–Feb)",
+  "description": "Renowned for dramatic cliffs, gorges, geothermal features, hot springs and steam vents. One of the few Kenyan parks where visitors can walk or cycle among wildlife, including zebra, buffalo, antelope, and rare vultures and eagles. Fischer's Tower (climbing) and Olkaria Geothermal Spa are nearby.",
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 65,
+  "destination_id": 4,
+  "name": "Crescent Island Game Sanctuary",
+  "type": "wildlife_sanctuary",
+  "duration": "Half day (boat + walk)",
+  "best_time": "Dry season (Jul–Oct, Jan–Mar)",
+  "description": "Private, predator-free wildlife sanctuary on Lake Naivasha reached by boat, known for close walking safaris among giraffe, zebra, waterbuck and antelope, plus strong birdwatching.",
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 66,
+  "destination_id": 4,
+  "name": "Lake Naivasha Boat Ride",
+  "type": "activity",
+  "duration": "1 hour (optional)",
+  "best_time": "Year-round",
+  "description": "Boat ride on Lake Naivasha, often combined with a Crescent Island visit.",
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 67,
+  "destination_id": 7,
+  "name": "David Sheldrick Wildlife Trust Nairobi Nursery",
+  "type": "wildlife_sanctuary",
+  "duration": "1 hour",
+  "best_time": "Daily public visiting hour (11:00am–12:00pm)",
+  "description": "Elephant and rhino orphanage supporting Kenya's conservation work; the public visiting hour lets guests watch and learn about the hand-reared orphans.",
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 68,
+  "destination_id": 7,
+  "name": "Giraffe Centre (AFEW)",
+  "type": "wildlife_sanctuary",
+  "duration": "1 hour",
+  "best_time": "Daily, 9:00am–5:00pm",
+  "description": "Conservation centre for the endangered Rothschild's giraffe, with a raised platform allowing visitors to feed and interact with giraffes up close.",
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ },
+ {
+  "_id": 63,
+  "destination_id": 3,
+  "name": "Lake Nakuru Rhino Sanctuary & Bird Watching",
+  "type": "park",
+  "duration": "Half day / Full day",
+  "best_time": "Year-round",
+  "description": "Game drive around the alkaline lake for flamingos, pelicans and other water birds, plus a dedicated black and white rhino sanctuary. Waterbuck, impala, buffalo and gazelle are found in the surrounding gardens.",
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  }
+ }
+]

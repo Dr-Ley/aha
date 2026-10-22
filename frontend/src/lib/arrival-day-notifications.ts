@@ -28,12 +28,32 @@ async function reminderExists(companyId: string, reminderKey: string): Promise<b
   return row != null;
 }
 
+const recentArrivalScan = new Map<string, number>();
+const ARRIVAL_SCAN_GAP_MS = 60_000;
+
 /**
  * Creates one unread notification per safari booking / hotel stay on the arrival calendar day,
  * after 00:01 Africa/Nairobi. `createdAt` is stamped at that 00:01 for consistent ordering.
  * Idempotent via `metadata.reminderKey`.
+ *
+ * Only today's arrivals are read. A short gap collapses the duplicate polls from the bell
+ * and the bookings/stays pages so the same company is not scanned twice in one minute.
  */
 export async function ensureArrivalDayNotifications(companyId: string): Promise<void> {
+  const now = Date.now();
+  const last = recentArrivalScan.get(companyId) ?? 0;
+  if (now - last < ARRIVAL_SCAN_GAP_MS) return;
+  recentArrivalScan.set(companyId, now);
+
+  try {
+    await scanArrivalDayNotifications(companyId);
+  } catch (error) {
+    recentArrivalScan.delete(companyId);
+    throw error;
+  }
+}
+
+async function scanArrivalDayNotifications(companyId: string): Promise<void> {
   await ensureBookingCustomerColumn();
   await ensureBookingTravellerColumns();
   await ensureHotelStayPartyColumns();
@@ -41,11 +61,27 @@ export async function ensureArrivalDayNotifications(companyId: string): Promise<
   if (!nairobi001HasPassedOnCalendarDate(todayYmd)) return;
 
   const createdAt = nairobiWallClock001(todayYmd);
+  const arrivalDay = sql`(
+    case
+      when length(trim(coalesce(${bookings.startDate}, ''))) >= 10
+      then left(trim(${bookings.startDate}), 10)
+      else left(trim(${bookings.travelDate}), 10)
+    end
+  ) = ${todayYmd}`;
 
   const safariRows = await db
-    .select()
+    .select({
+      id: bookings.id,
+      startDate: bookings.startDate,
+      travelDate: bookings.travelDate,
+      firstName: bookings.firstName,
+      lastName: bookings.lastName,
+      email: bookings.email,
+    })
     .from(bookings)
-    .where(and(eq(bookings.companyId, companyId), notInArray(bookings.status, ["cancelled", "refunded"])));
+    .where(
+      and(eq(bookings.companyId, companyId), notInArray(bookings.status, ["cancelled", "refunded"]), arrivalDay)
+    );
 
   for (const b of safariRows) {
     const d = safariStartYmd(b);
@@ -67,9 +103,18 @@ export async function ensureArrivalDayNotifications(companyId: string): Promise<
   }
 
   const hotelRows = await db
-    .select()
+    .select({
+      id: hotelBookings.id,
+      checkInDate: hotelBookings.checkInDate,
+    })
     .from(hotelBookings)
-    .where(and(eq(hotelBookings.companyId, companyId), notInArray(hotelBookings.status, ["cancelled"])));
+    .where(
+      and(
+        eq(hotelBookings.companyId, companyId),
+        notInArray(hotelBookings.status, ["cancelled"]),
+        eq(hotelBookings.checkInDate, todayYmd)
+      )
+    );
 
   for (const h of hotelRows) {
     const d = hotelCheckInYmd(h);

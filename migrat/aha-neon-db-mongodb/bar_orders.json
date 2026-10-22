@@ -1,0 +1,2578 @@
+[
+ {
+  "_id": 2,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "27/06/2026 - 3/07/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:44:21.520Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T09:44:27.528Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "20/06/2026 - 26/06/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:46:29.739Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T09:46:35.409Z"
+  }
+ },
+ {
+  "_id": 20,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "28/03/2026 - 03/04/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T10:09:42.748Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:09:46.717Z"
+  }
+ },
+ {
+  "_id": 19,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "14/03/2026 - 20/03/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T10:08:29.025Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:09:49.085Z"
+  }
+ },
+ {
+  "_id": 17,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "07/03/2026 - 13/03/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T10:05:00.158Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:09:51.341Z"
+  }
+ },
+ {
+  "_id": 16,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "01/03/2026 - 06/03/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T10:04:03.877Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:09:53.700Z"
+  }
+ },
+ {
+  "_id": 15,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "21/03/2026 - 27/03/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T10:01:55.274Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:09:56.309Z"
+  }
+ },
+ {
+  "_id": 14,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "11/04/2026 - 17/04/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:59:40.756Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:00.823Z"
+  }
+ },
+ {
+  "_id": 13,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "18/04/2026 - 24/04/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:58:40.661Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:03.274Z"
+  }
+ },
+ {
+  "_id": 12,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "25/04/2026 - 01/05/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:57:20.362Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:05.875Z"
+  }
+ },
+ {
+  "_id": 11,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "02/05/2026 - 08/05/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:56:27.796Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:08.690Z"
+  }
+ },
+ {
+  "_id": 10,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "09/05/2026 - 15/05/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:55:33.666Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:11.694Z"
+  }
+ },
+ {
+  "_id": 9,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "16/05/2026 - 22/05/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:54:15.027Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:20.053Z"
+  }
+ },
+ {
+  "_id": 8,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "23/05/2026 - 29/05/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:53:31.651Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:22.463Z"
+  }
+ },
+ {
+  "_id": 6,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "06/06/2026 - 12/06/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:50:53.233Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:25.097Z"
+  }
+ },
+ {
+  "_id": 4,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "13/06/2026 - 19/06/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:47:23.631Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:29.724Z"
+  }
+ },
+ {
+  "_id": 7,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "30/05/2026 - 05/06/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-06T09:51:53.372Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T10:10:32.082Z"
+  }
+ },
+ {
+  "_id": 21,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": "04/07/2026 - 10/07/2026",
+  "customer_name": null,
+  "notes": null,
+  "created_at": {
+   "$date": "2026-07-13T05:12:55.728Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-01T15:01:58.979Z"
+  }
+ },
+ {
+  "_id": 22,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-2]",
+  "created_at": {
+   "$date": "2026-03-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 23,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-3]",
+  "created_at": {
+   "$date": "2026-03-05T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 24,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-5]",
+  "created_at": {
+   "$date": "2026-03-07T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 25,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-6]",
+  "created_at": {
+   "$date": "2026-03-08T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 26,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-13]",
+  "created_at": {
+   "$date": "2026-03-15T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 27,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-14]",
+  "created_at": {
+   "$date": "2026-03-16T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 28,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-15]",
+  "created_at": {
+   "$date": "2026-03-17T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 29,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-17]",
+  "created_at": {
+   "$date": "2026-03-19T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 30,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-19]",
+  "created_at": {
+   "$date": "2026-03-21T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 31,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-20]",
+  "created_at": {
+   "$date": "2026-03-22T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 32,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-21]",
+  "created_at": {
+   "$date": "2026-03-23T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 33,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-22]",
+  "created_at": {
+   "$date": "2026-03-24T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 34,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-23]",
+  "created_at": {
+   "$date": "2026-03-25T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 35,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-25]",
+  "created_at": {
+   "$date": "2026-03-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 36,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAR-29]",
+  "created_at": {
+   "$date": "2026-03-31T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-03-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 37,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-7]",
+  "created_at": {
+   "$date": "2026-04-06T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 38,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-13]",
+  "created_at": {
+   "$date": "2026-04-12T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 39,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-14]",
+  "created_at": {
+   "$date": "2026-04-13T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 40,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-16]",
+  "created_at": {
+   "$date": "2026-04-15T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 41,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-17]",
+  "created_at": {
+   "$date": "2026-04-16T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 42,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-20]",
+  "created_at": {
+   "$date": "2026-04-19T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 43,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-24]",
+  "created_at": {
+   "$date": "2026-04-23T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 44,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-25]",
+  "created_at": {
+   "$date": "2026-04-24T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 45,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-26]",
+  "created_at": {
+   "$date": "2026-04-25T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 46,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-28]",
+  "created_at": {
+   "$date": "2026-04-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 47,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX APR-31]",
+  "created_at": {
+   "$date": "2026-04-30T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-04-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 48,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-3]",
+  "created_at": {
+   "$date": "2026-05-02T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 49,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-5]",
+  "created_at": {
+   "$date": "2026-05-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 50,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-6]",
+  "created_at": {
+   "$date": "2026-05-05T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 51,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-7]",
+  "created_at": {
+   "$date": "2026-05-06T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 52,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-8]",
+  "created_at": {
+   "$date": "2026-05-07T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 53,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-9]",
+  "created_at": {
+   "$date": "2026-05-08T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 54,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-12]",
+  "created_at": {
+   "$date": "2026-05-11T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 55,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-14]",
+  "created_at": {
+   "$date": "2026-05-13T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 56,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-15]",
+  "created_at": {
+   "$date": "2026-05-14T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 57,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-16]",
+  "created_at": {
+   "$date": "2026-05-15T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 58,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-17]",
+  "created_at": {
+   "$date": "2026-05-16T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 59,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-18]",
+  "created_at": {
+   "$date": "2026-05-17T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 60,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-19]",
+  "created_at": {
+   "$date": "2026-05-18T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 61,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-20]",
+  "created_at": {
+   "$date": "2026-05-19T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 62,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-21]",
+  "created_at": {
+   "$date": "2026-05-20T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 63,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-22]",
+  "created_at": {
+   "$date": "2026-05-21T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 64,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-23]",
+  "created_at": {
+   "$date": "2026-05-22T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 65,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-24]",
+  "created_at": {
+   "$date": "2026-05-23T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 66,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-25]",
+  "created_at": {
+   "$date": "2026-05-24T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 67,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-26]",
+  "created_at": {
+   "$date": "2026-05-25T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 68,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-27]",
+  "created_at": {
+   "$date": "2026-05-26T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 69,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-28]",
+  "created_at": {
+   "$date": "2026-05-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 70,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-30]",
+  "created_at": {
+   "$date": "2026-05-29T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 71,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-31]",
+  "created_at": {
+   "$date": "2026-05-30T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 72,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX MAY-32]",
+  "created_at": {
+   "$date": "2026-05-31T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-05-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 73,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-3]",
+  "created_at": {
+   "$date": "2026-06-02T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 74,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-5]",
+  "created_at": {
+   "$date": "2026-06-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 75,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-7]",
+  "created_at": {
+   "$date": "2026-06-06T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 76,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-8]",
+  "created_at": {
+   "$date": "2026-06-07T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 77,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-9]",
+  "created_at": {
+   "$date": "2026-06-08T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 78,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-10]",
+  "created_at": {
+   "$date": "2026-06-09T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 79,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-12]",
+  "created_at": {
+   "$date": "2026-06-11T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 80,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-13]",
+  "created_at": {
+   "$date": "2026-06-12T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 81,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-14]",
+  "created_at": {
+   "$date": "2026-06-13T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 82,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-15]",
+  "created_at": {
+   "$date": "2026-06-14T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 83,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-16]",
+  "created_at": {
+   "$date": "2026-06-15T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 84,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-17]",
+  "created_at": {
+   "$date": "2026-06-16T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 85,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-19]",
+  "created_at": {
+   "$date": "2026-06-18T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 86,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-21]",
+  "created_at": {
+   "$date": "2026-06-20T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 87,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-22]",
+  "created_at": {
+   "$date": "2026-06-21T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 88,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-23]",
+  "created_at": {
+   "$date": "2026-06-22T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 89,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-26]",
+  "created_at": {
+   "$date": "2026-06-25T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 90,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-27]",
+  "created_at": {
+   "$date": "2026-06-26T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 91,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-28]",
+  "created_at": {
+   "$date": "2026-06-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 92,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-30]",
+  "created_at": {
+   "$date": "2026-06-29T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 93,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUN-31]",
+  "created_at": {
+   "$date": "2026-06-30T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 94,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-2]",
+  "created_at": {
+   "$date": "2026-07-01T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 95,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-4]",
+  "created_at": {
+   "$date": "2026-07-03T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 96,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-5]",
+  "created_at": {
+   "$date": "2026-07-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 97,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-7]",
+  "created_at": {
+   "$date": "2026-07-06T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 98,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-9]",
+  "created_at": {
+   "$date": "2026-07-08T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 99,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-10]",
+  "created_at": {
+   "$date": "2026-07-09T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 100,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-11]",
+  "created_at": {
+   "$date": "2026-07-10T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 101,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-12]",
+  "created_at": {
+   "$date": "2026-07-11T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 102,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-13]",
+  "created_at": {
+   "$date": "2026-07-12T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 103,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-15]",
+  "created_at": {
+   "$date": "2026-07-14T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 104,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-17]",
+  "created_at": {
+   "$date": "2026-07-16T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 105,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-18]",
+  "created_at": {
+   "$date": "2026-07-17T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 106,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-19]",
+  "created_at": {
+   "$date": "2026-07-18T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 107,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-20]",
+  "created_at": {
+   "$date": "2026-07-19T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 108,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-21]",
+  "created_at": {
+   "$date": "2026-07-20T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 109,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-22]",
+  "created_at": {
+   "$date": "2026-07-21T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 110,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-23]",
+  "created_at": {
+   "$date": "2026-07-22T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 111,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-25]",
+  "created_at": {
+   "$date": "2026-07-24T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 112,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-26]",
+  "created_at": {
+   "$date": "2026-07-25T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 113,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-27]",
+  "created_at": {
+   "$date": "2026-07-26T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 114,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-28]",
+  "created_at": {
+   "$date": "2026-07-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 115,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-29]",
+  "created_at": {
+   "$date": "2026-07-28T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 116,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-30]",
+  "created_at": {
+   "$date": "2026-07-29T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 117,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-31]",
+  "created_at": {
+   "$date": "2026-07-30T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 118,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX JUL-32]",
+  "created_at": {
+   "$date": "2026-07-31T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 119,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-2]",
+  "created_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 120,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-3]",
+  "created_at": {
+   "$date": "2026-08-02T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 121,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-5]",
+  "created_at": {
+   "$date": "2026-08-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 122,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-6]",
+  "created_at": {
+   "$date": "2026-08-05T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 123,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-7]",
+  "created_at": {
+   "$date": "2026-08-06T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 124,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-8]",
+  "created_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 125,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-9]",
+  "created_at": {
+   "$date": "2026-08-08T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 126,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-10]",
+  "created_at": {
+   "$date": "2026-08-09T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 127,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-13]",
+  "created_at": {
+   "$date": "2026-08-12T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 128,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-14]",
+  "created_at": {
+   "$date": "2026-08-13T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 129,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-16]",
+  "created_at": {
+   "$date": "2026-08-15T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 130,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-17]",
+  "created_at": {
+   "$date": "2026-08-16T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-16T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 131,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-19]",
+  "created_at": {
+   "$date": "2026-08-18T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 132,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-20]",
+  "created_at": {
+   "$date": "2026-08-19T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 133,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-21]",
+  "created_at": {
+   "$date": "2026-08-20T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 134,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-22]",
+  "created_at": {
+   "$date": "2026-08-21T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 135,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-23]",
+  "created_at": {
+   "$date": "2026-08-22T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 136,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-24]",
+  "created_at": {
+   "$date": "2026-08-23T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 137,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-26]",
+  "created_at": {
+   "$date": "2026-08-25T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-25T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 138,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-27]",
+  "created_at": {
+   "$date": "2026-08-26T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 139,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-28]",
+  "created_at": {
+   "$date": "2026-08-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 140,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-29]",
+  "created_at": {
+   "$date": "2026-08-28T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 141,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-30]",
+  "created_at": {
+   "$date": "2026-08-29T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 142,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-31]",
+  "created_at": {
+   "$date": "2026-08-30T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 143,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX AUG-32]",
+  "created_at": {
+   "$date": "2026-08-31T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-31T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 144,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-2]",
+  "created_at": {
+   "$date": "2026-09-01T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 145,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-3]",
+  "created_at": {
+   "$date": "2026-09-02T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 146,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-4]",
+  "created_at": {
+   "$date": "2026-09-03T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 147,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-5]",
+  "created_at": {
+   "$date": "2026-09-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 148,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-6]",
+  "created_at": {
+   "$date": "2026-09-05T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 149,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-7]",
+  "created_at": {
+   "$date": "2026-09-06T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 150,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-8]",
+  "created_at": {
+   "$date": "2026-09-07T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 151,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-9]",
+  "created_at": {
+   "$date": "2026-09-08T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-08T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 152,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-10]",
+  "created_at": {
+   "$date": "2026-09-09T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-09T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 153,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-11]",
+  "created_at": {
+   "$date": "2026-09-10T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 154,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-12]",
+  "created_at": {
+   "$date": "2026-09-11T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-11T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 155,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-13]",
+  "created_at": {
+   "$date": "2026-09-12T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 156,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-14]",
+  "created_at": {
+   "$date": "2026-09-13T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-13T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 157,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-15]",
+  "created_at": {
+   "$date": "2026-09-14T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-14T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 158,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-16]",
+  "created_at": {
+   "$date": "2026-09-15T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-15T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 159,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-18]",
+  "created_at": {
+   "$date": "2026-09-17T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-17T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 160,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-19]",
+  "created_at": {
+   "$date": "2026-09-18T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-18T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 161,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-20]",
+  "created_at": {
+   "$date": "2026-09-19T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 162,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-21]",
+  "created_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 163,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-22]",
+  "created_at": {
+   "$date": "2026-09-21T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-21T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 164,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-23]",
+  "created_at": {
+   "$date": "2026-09-22T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-22T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 165,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-24]",
+  "created_at": {
+   "$date": "2026-09-23T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-23T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 166,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-25]",
+  "created_at": {
+   "$date": "2026-09-24T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-24T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 167,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-27]",
+  "created_at": {
+   "$date": "2026-09-26T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-26T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 168,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-28]",
+  "created_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 169,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-29]",
+  "created_at": {
+   "$date": "2026-09-28T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-28T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 170,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-30]",
+  "created_at": {
+   "$date": "2026-09-29T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-29T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 171,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX SEP-31]",
+  "created_at": {
+   "$date": "2026-09-30T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-30T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 172,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX OCT-2]",
+  "created_at": {
+   "$date": "2026-10-01T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 173,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX OCT-4]",
+  "created_at": {
+   "$date": "2026-10-03T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 174,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX OCT-5]",
+  "created_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 175,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX OCT-6]",
+  "created_at": {
+   "$date": "2026-10-05T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-05T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 176,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX OCT-7]",
+  "created_at": {
+   "$date": "2026-10-06T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-06T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 177,
+  "company_id": "bth",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Daily sales (imported)",
+  "notes": "[BTH26-BAR-XLSX OCT-8]",
+  "created_at": {
+   "$date": "2026-10-07T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 178,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (imported)",
+  "notes": "[EWC26-WA BAR-0410] Week 27/09-04/10. Cash to deposit 10,100 (sales 18,500 - purchases 7,600 - till float 800 held 02/10). Stock 04/10: Tusker 41, soda 29, water 24, wine 2 ltr+",
+  "created_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-04T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 179,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (imported)",
+  "notes": "[EWC26-WA BAR-1010] Week 04/10-10/10. Cash 11,400 deposited to Stanbic Bank 11/10/26 11:53, ref UJBKG98OXU. Stock 10/10: Tusker 20, soda 51, water 27, wine 1 ltr+",
+  "created_at": {
+   "$date": "2026-10-10T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-10-10T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 180,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA SEP-BAR-0927] Week 20/09-27/09. Cash 5,500 deposited to Stanbic Bank 27/9/26, ref UIRKG7J5N7; till 1,000 held 20/9; 1 crate Tusker 4,600 still to be bought. Stock 27/9: Tusker 14+25=39, soda 26, water 24, wine 2 ltr+. Message said 32 beers / 10,400; recorded as 27 beers / 10,800 so the lines match the stated total 17,700",
+  "created_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-27T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 181,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA SEP-BAR-0920] Week 13/09-20/09. Cash 5,500 deposited to Stanbic Bank 20/9/26 12:02 PM, ref UIKKG6PM4F. Stock 13/9: Tusker 21, soda 33, water 13, wine 2 ltr+",
+  "created_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-20T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 182,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA AUG-BAR-0807] Week 01/08-07/08. Tills 500 and 200 held 1/8; 2 dozen water and soda still to buy. Cash 11,100 deposited. Stock 7/8: Tusker 55, soda 41, water 14, wine 5 ltr",
+  "created_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-07T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 183,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA AUG-BAR-0801] Week 25/07-01/08. Till 500 held 31/7. Cash 14,900 deposited (35,100 - 15,200 purchases - 4,500 wine still to buy - 500 till). Stock 1/8: Tusker 32, soda 33, water 24",
+  "created_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-08-01T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 184,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA JUL-BAR-0703] Week 27/06-03/07. Cash 4,800 deposited to Stanbic Bank 3/7/26 9:42 PM, ref UG3CAA2WKS. Stock 3/7: Tusker 50, soda 48, water 48",
+  "created_at": {
+   "$date": "2026-07-03T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-07-03T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 185,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA JUN-BAR-0619] Week 13/06-19/06. Stock 19/6: Tusker 38, soda 89, water 34",
+  "created_at": {
+   "$date": "2026-06-19T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-19T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 186,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA JUN-BAR-0612] Week 06/06-12/06. Cash 5,100 deposited to Stanbic Bank 12/6/26 10:12 PM, ref UFCCA7NTTG (8,100 less 3,000 for 3 crates soda still to buy). Stock 12/6: Tusker 45, soda 29, water 37",
+  "created_at": {
+   "$date": "2026-06-12T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-12T12:00:00.000Z"
+  }
+ },
+ {
+  "_id": 187,
+  "company_id": "ewc",
+  "status": "paid",
+  "table_label": null,
+  "customer_name": "Weekly bar record (WhatsApp)",
+  "notes": "[EWC26-WA JUN-BAR-0605] Week 30/05-05/06. Cash 4,100 deposited to Stanbic Bank 5/6/26 9:27 PM, ref UF5CA6TWMU (5,100 less 1,000 for 2 dozen water still to buy). Stock 5/6: Tusker 55, soda 46, water 17",
+  "created_at": {
+   "$date": "2026-06-05T12:00:00.000Z"
+  },
+  "updated_at": {
+   "$date": "2026-06-05T12:00:00.000Z"
+  }
+ }
+]

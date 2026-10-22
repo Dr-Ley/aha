@@ -1,0 +1,258 @@
+[
+ {
+  "_id": 12,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "extra_adult",
+  "season": "low",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 6000,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:23.751Z"
+  }
+ },
+ {
+  "_id": 1,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "single",
+  "season": "low",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 100,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:18.307Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "double",
+  "season": "low",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 180,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:18.494Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "triple",
+  "season": "low",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 250,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:18.679Z"
+  }
+ },
+ {
+  "_id": 4,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "extra_adult",
+  "season": "low",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 70,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:18.858Z"
+  }
+ },
+ {
+  "_id": 5,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "single",
+  "season": "high",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 120,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:19.112Z"
+  }
+ },
+ {
+  "_id": 6,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "double",
+  "season": "high",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 200,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:20.333Z"
+  }
+ },
+ {
+  "_id": 7,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "triple",
+  "season": "high",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 270,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:21.352Z"
+  }
+ },
+ {
+  "_id": 8,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "extra_adult",
+  "season": "high",
+  "guest_category": "non_resident",
+  "currency": "USD",
+  "amount": 90,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:22.024Z"
+  }
+ },
+ {
+  "_id": 9,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "single",
+  "season": "low",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 7500,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:22.481Z"
+  }
+ },
+ {
+  "_id": 10,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "double",
+  "season": "low",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 14000,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:23.334Z"
+  }
+ },
+ {
+  "_id": 11,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "triple",
+  "season": "low",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 18000,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:23.526Z"
+  }
+ },
+ {
+  "_id": 14,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "double",
+  "season": "high",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 17000,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:24.308Z"
+  }
+ },
+ {
+  "_id": 15,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "triple",
+  "season": "high",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 21000,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:25.144Z"
+  }
+ },
+ {
+  "_id": 16,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "extra_adult",
+  "season": "high",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 7000,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:25.576Z"
+  }
+ },
+ {
+  "_id": 13,
+  "company_id": "ewc",
+  "room_type_id": null,
+  "occupancy": "single",
+  "season": "high",
+  "guest_category": "resident",
+  "currency": "KES",
+  "amount": 9000,
+  "year": 2026,
+  "meal_basis": "full_board",
+  "notes": "Accommodation, full board, tea and coffee, service charges and all taxes. Infant until two years is free of charge. Child is between 2 and 12 years and pays 75% of adult rate.",
+  "created_at": {
+   "$date": "2026-09-28T10:22:24.035Z"
+  }
+ }
+]

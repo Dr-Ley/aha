@@ -1,0 +1,46 @@
+[
+ {
+  "_id": 2,
+  "company_id": "aha",
+  "name": "Safari van",
+  "vehicle_type": "safari_van",
+  "daily_rate_usd": 120,
+  "capacity": 8,
+  "created_at": {
+   "$date": "2026-09-02T18:22:54.921Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "aha",
+  "name": "4x4 Land Cruiser Safari Vehicle (Private, with Driver-Guide)",
+  "vehicle_type": "4x4 Land Cruiser",
+  "daily_rate_usd": 250,
+  "capacity": 6,
+  "created_at": {
+   "$date": "2026-09-07T17:26:14.243Z"
+  }
+ },
+ {
+  "_id": 1,
+  "company_id": "aha",
+  "name": "Safari Land Cruiser",
+  "vehicle_type": "landcruiser",
+  "daily_rate_usd": 230,
+  "capacity": 7,
+  "created_at": {
+   "$date": "2026-09-02T18:22:54.688Z"
+  }
+ },
+ {
+  "_id": 4,
+  "company_id": "ewc",
+  "name": "Enchoro Wildlife Camp safari vehicle",
+  "vehicle_type": "landcruiser",
+  "daily_rate_usd": 230,
+  "capacity": 7,
+  "created_at": {
+   "$date": "2026-09-28T10:22:32.093Z"
+  }
+ }
+]

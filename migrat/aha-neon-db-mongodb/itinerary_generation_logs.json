@@ -1,0 +1,495 @@
+[
+ {
+  "_id": 1,
+  "itinerary_id": 1,
+  "company_id": "aha",
+  "request_id": "23da1caf-369f-4940-ae9d-e559d5379735",
+  "provider": "heuristic",
+  "model": "enzi-heuristic-v1",
+  "status": "succeeded",
+  "validation_status": "accepted",
+  "failure_reason": null,
+  "duration_ms": 2491,
+  "retry_count": 0,
+  "estimated_cost_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:24:54.579Z"
+  }
+ },
+ {
+  "_id": 2,
+  "itinerary_id": 2,
+  "company_id": "aha",
+  "request_id": "0ccb5bb6-086e-4fca-a891-85b213e00199",
+  "provider": "heuristic",
+  "model": "enzi-heuristic-v1",
+  "status": "succeeded",
+  "validation_status": "accepted",
+  "failure_reason": null,
+  "duration_ms": 2759,
+  "retry_count": 0,
+  "estimated_cost_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T19:03:49.706Z"
+  }
+ },
+ {
+  "_id": 3,
+  "itinerary_id": 3,
+  "company_id": "aha",
+  "request_id": "3a879f27-8944-4a00-be79-9dfac00a4d8c",
+  "provider": "heuristic",
+  "model": "enzi-heuristic-v1",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Enchoro Wildlife Camp is not at Lake Naivasha; Enchoro Wildlife Camp is not at Lake Naivasha; Enchoro Wildlife Camp is not at Serengeti; Enchoro Wildlife Camp is not at Serengeti",
+  "duration_ms": 16,
+  "retry_count": 0,
+  "estimated_cost_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T19:08:59.919Z"
+  }
+ },
+ {
+  "_id": 4,
+  "itinerary_id": 3,
+  "company_id": "aha",
+  "request_id": "3a879f27-8944-4a00-be79-9dfac00a4d8c",
+  "provider": "heuristic",
+  "model": "enzi-heuristic-v1",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Enchoro Wildlife Camp is not at Lake Naivasha; Enchoro Wildlife Camp is not at Lake Naivasha; Enchoro Wildlife Camp is not at Serengeti; Enchoro Wildlife Camp is not at Serengeti",
+  "duration_ms": 146,
+  "retry_count": 1,
+  "estimated_cost_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T19:09:00.049Z"
+  }
+ },
+ {
+  "_id": 5,
+  "itinerary_id": 4,
+  "company_id": "aha",
+  "request_id": "550bee78-3d8b-4e74-a3be-6774d7bbcb14",
+  "provider": "heuristic",
+  "model": "enzi-heuristic-v1",
+  "status": "succeeded",
+  "validation_status": "accepted",
+  "failure_reason": null,
+  "duration_ms": 2584,
+  "retry_count": 0,
+  "estimated_cost_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T19:10:08.529Z"
+  }
+ },
+ {
+  "_id": 6,
+  "itinerary_id": 5,
+  "company_id": "aha",
+  "request_id": "8b4b9d66-aab1-458e-b0cc-b45531d3a6ef",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (401): {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: AQ.Ab8RN*****************************************bo1A. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }",
+  "duration_ms": 1124,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:15:25.505Z"
+  }
+ },
+ {
+  "_id": 7,
+  "itinerary_id": 5,
+  "company_id": "aha",
+  "request_id": "8b4b9d66-aab1-458e-b0cc-b45531d3a6ef",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (401): {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: AQ.Ab8RN*****************************************bo1A. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }",
+  "duration_ms": 2336,
+  "retry_count": 1,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:15:26.718Z"
+  }
+ },
+ {
+  "_id": 8,
+  "itinerary_id": 6,
+  "company_id": "aha",
+  "request_id": "c9ae2831-39de-415e-b5c3-3cdbce91d27a",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (401): {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: AQ.Ab8RN*****************************************bo1A. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }",
+  "duration_ms": 948,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:21:07.964Z"
+  }
+ },
+ {
+  "_id": 9,
+  "itinerary_id": 6,
+  "company_id": "aha",
+  "request_id": "c9ae2831-39de-415e-b5c3-3cdbce91d27a",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (401): {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: AQ.Ab8RN*****************************************bo1A. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }",
+  "duration_ms": 2149,
+  "retry_count": 1,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:21:09.170Z"
+  }
+ },
+ {
+  "_id": 10,
+  "itinerary_id": 7,
+  "company_id": "aha",
+  "request_id": "65c61b76-281f-4ec8-a409-085915afe54b",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (429): {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
+  "duration_ms": 1855,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:21:56.081Z"
+  }
+ },
+ {
+  "_id": 11,
+  "itinerary_id": 7,
+  "company_id": "aha",
+  "request_id": "65c61b76-281f-4ec8-a409-085915afe54b",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (429): {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
+  "duration_ms": 2215,
+  "retry_count": 1,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:21:56.361Z"
+  }
+ },
+ {
+  "_id": 12,
+  "itinerary_id": 8,
+  "company_id": "aha",
+  "request_id": "4e1391a2-d93b-495b-848a-732c13b81d70",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (401): {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: AQ.Ab8RN*****************************************m_Mg. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }",
+  "duration_ms": 495,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:23:28.537Z"
+  }
+ },
+ {
+  "_id": 13,
+  "itinerary_id": 8,
+  "company_id": "aha",
+  "request_id": "4e1391a2-d93b-495b-848a-732c13b81d70",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (401): {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: AQ.Ab8RN*****************************************m_Mg. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }",
+  "duration_ms": 900,
+  "retry_count": 1,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:23:28.947Z"
+  }
+ },
+ {
+  "_id": 14,
+  "itinerary_id": 9,
+  "company_id": "aha",
+  "request_id": "04e479cd-34a9-4071-9250-a63de324f162",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (429): {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
+  "duration_ms": 1411,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:38:44.593Z"
+  }
+ },
+ {
+  "_id": 15,
+  "itinerary_id": 9,
+  "company_id": "aha",
+  "request_id": "04e479cd-34a9-4071-9250-a63de324f162",
+  "provider": "openai",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "OpenAI request failed (429): {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
+  "duration_ms": 1947,
+  "retry_count": 1,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:38:45.129Z"
+  }
+ },
+ {
+  "_id": 16,
+  "itinerary_id": 10,
+  "company_id": "aha",
+  "request_id": "870cfd9a-0c97-44b1-ad6f-44582b1b68ce",
+  "provider": "gemini",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "Gemini request failed (400): API key not valid. Please pass a valid API key.",
+  "duration_ms": 183,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:49:54.090Z"
+  }
+ },
+ {
+  "_id": 17,
+  "itinerary_id": 10,
+  "company_id": "aha",
+  "request_id": "870cfd9a-0c97-44b1-ad6f-44582b1b68ce",
+  "provider": "gemini",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "Gemini request failed (400): API key not valid. Please pass a valid API key.",
+  "duration_ms": 375,
+  "retry_count": 1,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:49:54.280Z"
+  }
+ },
+ {
+  "_id": 18,
+  "itinerary_id": 11,
+  "company_id": "aha",
+  "request_id": "42a513f8-2322-4b91-a276-035421f0b87a",
+  "provider": "gemini",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "Gemini request failed (404): This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.6-flash for the latest features and improvements. We recommend you to use the Interactions API.",
+  "duration_ms": 241,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:51:46.070Z"
+  }
+ },
+ {
+  "_id": 19,
+  "itinerary_id": 11,
+  "company_id": "aha",
+  "request_id": "42a513f8-2322-4b91-a276-035421f0b87a",
+  "provider": "gemini",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "Gemini request failed (404): This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.6-flash for the latest features and improvements. We recommend you to use the Interactions API.",
+  "duration_ms": 464,
+  "retry_count": 1,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:51:46.292Z"
+  }
+ },
+ {
+  "_id": 20,
+  "itinerary_id": 12,
+  "company_id": "aha",
+  "request_id": "c12fbf40-3fbb-4809-86ad-92c3519077e1",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Unknown transport_id 1001000000000000000; Requested destination 4 is missing from the daily plan",
+  "duration_ms": 11533,
+  "retry_count": 0,
+  "estimated_cost_usd": 0.0004125,
+  "created_at": {
+   "$date": "2026-09-02T19:52:49.949Z"
+  }
+ },
+ {
+  "_id": 21,
+  "itinerary_id": 12,
+  "company_id": "aha",
+  "request_id": "c12fbf40-3fbb-4809-86ad-92c3519077e1",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Requested destination 4 is missing from the daily plan",
+  "duration_ms": 34259,
+  "retry_count": 1,
+  "estimated_cost_usd": 0.0003777,
+  "created_at": {
+   "$date": "2026-09-02T19:53:12.454Z"
+  }
+ },
+ {
+  "_id": 22,
+  "itinerary_id": 13,
+  "company_id": "aha",
+  "request_id": "37e7114b-f014-460a-a121-3369b717bd88",
+  "provider": "gemini",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "AI response did not contain a JSON object",
+  "duration_ms": 237468,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T19:58:50.285Z"
+  }
+ },
+ {
+  "_id": 23,
+  "itinerary_id": 13,
+  "company_id": "aha",
+  "request_id": "37e7114b-f014-460a-a121-3369b717bd88",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Expected 3 daily entries, received 1; Unknown transport_id 1.0010101010101e+308",
+  "duration_ms": 269971,
+  "retry_count": 1,
+  "estimated_cost_usd": 0.00050145,
+  "created_at": {
+   "$date": "2026-09-02T19:59:22.760Z"
+  }
+ },
+ {
+  "_id": 24,
+  "itinerary_id": 14,
+  "company_id": "aha",
+  "request_id": "a4a08967-81b8-4a87-91f5-b0554e5496c5",
+  "provider": "gemini",
+  "model": null,
+  "status": "failed",
+  "validation_status": "error",
+  "failure_reason": "AI response did not contain a JSON object",
+  "duration_ms": 239420,
+  "retry_count": 0,
+  "estimated_cost_usd": null,
+  "created_at": {
+   "$date": "2026-09-02T20:01:51.674Z"
+  }
+ },
+ {
+  "_id": 25,
+  "itinerary_id": 14,
+  "company_id": "aha",
+  "request_id": "a4a08967-81b8-4a87-91f5-b0554e5496c5",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Unknown transport_id 12",
+  "duration_ms": 249061,
+  "retry_count": 1,
+  "estimated_cost_usd": 0.00038325,
+  "created_at": {
+   "$date": "2026-09-02T20:02:00.998Z"
+  }
+ },
+ {
+  "_id": 26,
+  "itinerary_id": 15,
+  "company_id": "aha",
+  "request_id": "d4a47bd4-7cb4-48d5-a52d-68ab0db6594d",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Unknown transport_id 1000101010000000000",
+  "duration_ms": 8900,
+  "retry_count": 0,
+  "estimated_cost_usd": 0.00025755,
+  "created_at": {
+   "$date": "2026-09-02T20:59:28.565Z"
+  }
+ },
+ {
+  "_id": 27,
+  "itinerary_id": 15,
+  "company_id": "aha",
+  "request_id": "d4a47bd4-7cb4-48d5-a52d-68ab0db6594d",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Unknown transport_id 101; Unknown transport_id 101; Unknown transport_id 101",
+  "duration_ms": 26079,
+  "retry_count": 1,
+  "estimated_cost_usd": 0.00025635,
+  "created_at": {
+   "$date": "2026-09-02T20:59:45.471Z"
+  }
+ },
+ {
+  "_id": 28,
+  "itinerary_id": 16,
+  "company_id": "aha",
+  "request_id": "1b9cdd92-a49f-45f8-b4c3-54612a8d06b6",
+  "provider": "heuristic",
+  "model": "enzi-heuristic-v1",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Expected 3 daily entries, received 4; Sarova Lion Hill Game Lodge is not at Lake Naivasha; Sarova Lion Hill Game Lodge is not at Amboseli; Sarova Lion Hill Game Lodge is not at Maasai Mara",
+  "duration_ms": 2,
+  "retry_count": 0,
+  "estimated_cost_usd": 0,
+  "created_at": {
+   "$date": "2026-09-29T11:07:33.370Z"
+  }
+ },
+ {
+  "_id": 29,
+  "itinerary_id": 16,
+  "company_id": "aha",
+  "request_id": "1b9cdd92-a49f-45f8-b4c3-54612a8d06b6",
+  "provider": "heuristic",
+  "model": "enzi-heuristic-v1",
+  "status": "invalid_business",
+  "validation_status": "rejected",
+  "failure_reason": "invalid_business: Expected 3 daily entries, received 4; Sarova Lion Hill Game Lodge is not at Lake Naivasha; Sarova Lion Hill Game Lodge is not at Amboseli; Sarova Lion Hill Game Lodge is not at Maasai Mara",
+  "duration_ms": 15,
+  "retry_count": 1,
+  "estimated_cost_usd": 0,
+  "created_at": {
+   "$date": "2026-09-29T11:07:33.383Z"
+  }
+ }
+]

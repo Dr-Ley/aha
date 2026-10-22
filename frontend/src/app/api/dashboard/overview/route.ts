@@ -53,6 +53,21 @@ function monthKeyFromLoose(value: string | Date | null | undefined): string | nu
   return Number.isNaN(parsed.getTime()) ? null : monthKey(parsed);
 }
 
+function ymdFromLoose(value: string | Date | null | undefined): string | null {
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : nairobiYmd(value);
+  const text = String(value ?? "");
+  if (/^\d{4}-\d{2}-\d{2}/.test(text)) return text.slice(0, 10);
+  if (!text) return null;
+  const parsed = new Date(text);
+  return Number.isNaN(parsed.getTime()) ? null : nairobiYmd(parsed);
+}
+
+function barOrderYmd(order: { tableLabel: string | null; createdAt: Date | null }): string | null {
+  const period = parseWeekPeriod(order.tableLabel);
+  if (period) return period.start;
+  return parseDayLabel(order.tableLabel) ?? ymdFromLoose(order.createdAt);
+}
+
 function monthLabel(ym: string): string {
   const [y, m] = ym.split("-").map(Number);
   return new Date(y, m - 1, 1).toLocaleString("en-US", { month: "short", year: "numeric" });
@@ -526,6 +541,78 @@ export async function GET(request: NextRequest) {
       };
     });
 
+    const chartFacts = {
+      revenue: revenueRows
+        .map((row) => ({
+          date: ymdFromLoose(row.recognizedAt) ?? (row.periodMonth ? `${row.periodMonth}-01` : ""),
+          amount: row.amount ?? 0,
+        }))
+        .filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date)),
+      safariBookings: bookingRows
+        .filter((booking) => booking.status !== "cancelled")
+        .map((booking) => {
+          const start = booking.startDate || booking.travelDate;
+          const end = booking.endDate;
+          let days: number | null = null;
+          if (start && end) {
+            const startMs = new Date(start).getTime();
+            const endMs = new Date(end).getTime();
+            if (!Number.isNaN(startMs) && !Number.isNaN(endMs) && endMs >= startMs) {
+              days = Math.max(1, Math.round((endMs - startMs) / (1000 * 60 * 60 * 24)));
+            }
+          }
+          const pay = String(booking.paymentStatus ?? "").toLowerCase();
+          return {
+            date: ymdFromLoose(start) ?? "",
+            amount: booking.totalPrice ?? 0,
+            country: booking.tripCountry ?? "Unknown",
+            days,
+            paid: pay === "paid" || pay === "partial",
+          };
+        })
+        .filter((booking) => /^\d{4}-\d{2}-\d{2}$/.test(booking.date)),
+      hotelStays: hotelRows
+        .filter((stay) => stay.status !== "cancelled")
+        .map((stay) => ({
+          date: String(stay.checkInDate).slice(0, 10),
+          amount: stay.totalAmount ?? 0,
+          paid: String(stay.paymentStatus ?? "").toLowerCase() === "paid",
+        }))
+        .filter((stay) => /^\d{4}-\d{2}-\d{2}$/.test(stay.date)),
+      barOrders: barOrderRows
+        .map((order) => {
+          const lines = (barByOrder.get(order.id) ?? []).filter((line) => line.quantity > 0 || line.sales > 0);
+          return {
+            date: barOrderYmd(order) ?? "",
+            amount: lines.reduce((sum, line) => sum + line.sales, 0),
+            paid: String(order.status ?? "").toLowerCase() === "paid",
+            products: lines.map((line) => ({
+              name: line.name,
+              quantity: line.quantity,
+              amount: line.sales,
+            })),
+          };
+        })
+        .filter((order) => /^\d{4}-\d{2}-\d{2}$/.test(order.date) && order.amount > 0),
+      restaurantOrders: restaurantOrderRows
+        .map((order) => {
+          const products = restaurantLines
+            .filter((line) => line.orderId === order.id && ((line.quantity ?? 0) > 0 || (line.lineTotal ?? 0) > 0))
+            .map((line) => ({
+              name: line.itemName ?? "Product",
+              quantity: line.quantity ?? 0,
+              amount: line.lineTotal ?? 0,
+            }));
+          return {
+            date: ymdFromLoose(order.createdAt) ?? "",
+            amount: products.reduce((sum, line) => sum + line.amount, 0),
+            paid: String(order.status ?? "").toLowerCase() === "paid",
+            products,
+          };
+        })
+        .filter((order) => /^\d{4}-\d{2}-\d{2}$/.test(order.date)),
+    };
+
     return NextResponse.json({
       success: true,
       companyId,
@@ -544,6 +631,7 @@ export async function GET(request: NextRequest) {
         weeklyBarRecords,
         restaurantSales,
       },
+      chartFacts,
       revenueTrend,
       revenueStack,
       revenueByCountry,

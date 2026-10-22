@@ -1,0 +1,29 @@
+[
+ {
+  "_id": "ewc",
+  "name": "Enchoro Wildlife Camp",
+  "created_at": {
+   "$date": "2026-04-21T02:57:44.360Z"
+  },
+  "logo": null,
+  "markup_percent": 20
+ },
+ {
+  "_id": "bth",
+  "name": "Bondo Travellers Hotel",
+  "created_at": {
+   "$date": "2026-04-28T00:46:58.942Z"
+  },
+  "logo": null,
+  "markup_percent": 20
+ },
+ {
+  "_id": "aha",
+  "name": "African Home Adventure",
+  "created_at": {
+   "$date": "2026-04-21T02:57:44.360Z"
+  },
+  "logo": "/AHA_logo.png",
+  "markup_percent": 20
+ }
+]

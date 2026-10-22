@@ -1,0 +1,1451 @@
+[
+ {
+  "_id": 8,
+  "public_token": "ZDawsfcIKoColDDQaflFIzA_SAQa3f3T",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:23:26.239Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:23:26.192Z"
+  }
+ },
+ {
+  "_id": 13,
+  "public_token": "fQxzviUGguxqag2R-TRVWdwG_8wWAhc5",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-16",
+  "end_date": "2026-09-18",
+  "duration_days": 3,
+  "adults": 2,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 2,
+   "country": null,
+   "endDate": "2026-09-18",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": null,
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-16",
+   "guestEmail": null,
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 3,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": null,
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": null,
+  "guest_name": null,
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:54:47.858Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:54:47.795Z"
+  }
+ },
+ {
+  "_id": 14,
+  "public_token": "Zman20Isz4ZfSGqIvCdwq8JBl6qngDZ6",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-16",
+  "end_date": "2026-09-18",
+  "duration_days": 3,
+  "adults": 2,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 2,
+   "country": null,
+   "endDate": "2026-09-18",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "MUXA",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-16",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 3,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": null,
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "MUXA",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:57:50.050Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:57:50.175Z"
+  }
+ },
+ {
+  "_id": 9,
+  "public_token": "w5PTQbOIqd2zZzhsZwYaqJ_MhVHqiJYW",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:38:41.123Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:38:41.056Z"
+  }
+ },
+ {
+  "_id": 10,
+  "public_token": "6z7HJSQc3L9zIVzFPJ7p8Aujw7uFLKkd",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:49:52.237Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:49:52.167Z"
+  }
+ },
+ {
+  "_id": 11,
+  "public_token": "BuqPa0i-aHjWuhlSLttRjqBBqvhsoEVp",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:51:43.028Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:51:43.730Z"
+  }
+ },
+ {
+  "_id": 15,
+  "public_token": "0FvBQNsvti7XEEcQHPWq-D0ay3d9tIxL",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-16",
+  "end_date": "2026-09-18",
+  "duration_days": 3,
+  "adults": 2,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 2,
+   "country": null,
+   "endDate": "2026-09-18",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "MUXA",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-16",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 3,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    1
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": null,
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "MUXA",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T20:59:17.587Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T20:59:18.197Z"
+  }
+ },
+ {
+  "_id": 1,
+  "public_token": "t9PAkBvr5hd2zY6rJElRiaLSfMt3Ypqg",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": 35,
+  "status": "converted",
+  "country": null,
+  "start_date": null,
+  "end_date": null,
+  "duration_days": 5,
+  "adults": 2,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 2,
+   "country": null,
+   "endDate": null,
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "Ada Traveller",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": null,
+   "guestEmail": "ada@example.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    2
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": null,
+   "accommodationPreferences": null
+  },
+  "title": "5-Day Amboseli Safari",
+  "summary": "A 5-day safari visiting Amboseli for 2 adults.",
+  "plan": {
+   "days": [
+    {
+     "day": 1,
+     "notes": "Arrive Amboseli",
+     "transferId": 1,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 2,
+     "accommodationId": null
+    },
+    {
+     "day": 2,
+     "notes": "Game viewing in Amboseli",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 2,
+     "accommodationId": 15
+    },
+    {
+     "day": 3,
+     "notes": "Game viewing in Amboseli",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 2,
+     "accommodationId": 15
+    },
+    {
+     "day": 4,
+     "notes": "Game viewing in Amboseli",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 2,
+     "accommodationId": 15
+    },
+    {
+     "day": 5,
+     "notes": "Game viewing in Amboseli",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 2,
+     "accommodationId": 15
+    }
+   ],
+   "notes": [
+    "Heuristic plan sequenced from Enzi catalog records."
+   ],
+   "title": "5-Day Amboseli Safari",
+   "summary": "A 5-day safari visiting Amboseli for 2 adults.",
+   "assumptions": [
+    "Park fees apply on each destination day.",
+    "Last day is treated as departure (no extra night)."
+   ],
+   "durationDays": 5,
+   "destinationIds": [
+    2
+   ],
+   "recommendations": [
+    "Staff should confirm lodge availability before converting to a booking."
+   ]
+  },
+  "quote": {
+   "currency": "USD",
+   "costTotal": 2510,
+   "components": [
+    {
+     "cost": 960,
+     "type": "accommodation",
+     "label": "Amboseli Sopa Lodge × 3 nights",
+     "config": {
+      "label": "Amboseli Sopa Lodge",
+      "nights": 3,
+      "source": "enzi_catalog",
+      "accommodation_id": 15
+     },
+     "sequence": 0
+    },
+    {
+     "cost": 600,
+     "type": "park_fee",
+     "label": "Amboseli park fee × 5 days",
+     "config": {
+      "days": 5,
+      "label": "Amboseli park fee",
+      "source": "enzi_catalog",
+      "park_fee_id": 3,
+      "destination_id": 2
+     },
+     "sequence": 1
+    },
+    {
+     "cost": 900,
+     "type": "transport",
+     "label": "Safari Land Cruiser × 5 days",
+     "config": {
+      "days": 5,
+      "label": "Safari Land Cruiser",
+      "source": "enzi_catalog",
+      "transport_id": 1
+     },
+     "sequence": 2
+    },
+    {
+     "cost": 50,
+     "type": "transfer",
+     "label": "JKIA – Nairobi hotel transfer",
+     "config": {
+      "label": "JKIA – Nairobi hotel transfer",
+      "source": "enzi_catalog",
+      "transfer_id": 1
+     },
+     "sequence": 3
+    }
+   ],
+   "roundedUpBy": 8,
+   "markupAmount": 502,
+   "sellingPrice": 3020,
+   "markupPercent": 20,
+   "travellerCounts": {
+    "adults": 2,
+    "infants": 0,
+    "children": 0
+   },
+   "baseSellingPrice": 3012
+  },
+  "currency": "USD",
+  "cost_total": 2510,
+  "markup_percent": 20,
+  "selling_price": 3020,
+  "current_version": 6,
+  "guest_email": "ada@example.com",
+  "guest_name": "Ada Traveller",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T18:24:49.387Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T18:34:27.477Z"
+  }
+ },
+ {
+  "_id": 12,
+  "public_token": "9A7LDthyQOjY1sQ5cNGPjY4govKly7V1",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:52:35.774Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:52:35.806Z"
+  }
+ },
+ {
+  "_id": 3,
+  "public_token": "BVa2puF7E2FKh0jx6QYE6Z41IdwOv55m",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-30",
+  "end_date": "2026-10-03",
+  "duration_days": 4,
+  "adults": 3,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 3,
+   "country": null,
+   "endDate": "2026-10-03",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "boobies",
+   "interests": [
+    "wildlife",
+    "adventure",
+    "culture"
+   ],
+   "startDate": "2026-09-30",
+   "guestEmail": "claudiasagini@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 4,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "claudiasagini@gmail.com",
+  "guest_name": "boobies",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:08:57.923Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:08:57.958Z"
+  }
+ },
+ {
+  "_id": 2,
+  "public_token": "FXsKMqmsA94fcLw_ugIKu8zBDdJOu8Qb",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "modified",
+  "country": null,
+  "start_date": "2026-09-03",
+  "end_date": "2026-09-05",
+  "duration_days": 3,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-05",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "boob",
+   "interests": [
+    "wildlife",
+    "culture"
+   ],
+   "startDate": "2026-09-03",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 3,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    1
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": null,
+   "accommodationPreferences": null
+  },
+  "title": "3-Day Maasai Mara Safari",
+  "summary": "A 3-day safari visiting Maasai Mara for 1 adult.",
+  "plan": {
+   "days": [
+    {
+     "day": 1,
+     "notes": "Arrive Maasai Mara",
+     "transferId": 1,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 1,
+     "accommodationId": 11
+    },
+    {
+     "day": 2,
+     "notes": "Game viewing in Maasai Mara",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 1,
+     "accommodationId": 11
+    },
+    {
+     "day": 3,
+     "notes": "Game viewing in Maasai Mara",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 1,
+     "accommodationId": 11
+    }
+   ],
+   "notes": [
+    "Heuristic plan sequenced from Enzi catalog records."
+   ],
+   "title": "3-Day Maasai Mara Safari",
+   "summary": "A 3-day safari visiting Maasai Mara for 1 adult.",
+   "assumptions": [
+    "Park fees apply on each destination day.",
+    "Last day is treated as departure (no extra night)."
+   ],
+   "durationDays": 3,
+   "destinationIds": [
+    1
+   ],
+   "recommendations": [
+    "Staff should confirm lodge availability before converting to a booking."
+   ]
+  },
+  "quote": {
+   "currency": "USD",
+   "costTotal": 990,
+   "components": [
+    {
+     "cost": 160,
+     "type": "accommodation",
+     "label": "Enchoro Wildlife Camp × 2 nights",
+     "config": {
+      "label": "Enchoro Wildlife Camp",
+      "nights": 2,
+      "source": "enzi_catalog",
+      "accommodation_id": 11
+     },
+     "sequence": 0
+    },
+    {
+     "cost": 240,
+     "type": "park_fee",
+     "label": "Maasai Mara reserve fee × 3 days",
+     "config": {
+      "days": 3,
+      "label": "Maasai Mara reserve fee",
+      "source": "enzi_catalog",
+      "park_fee_id": 2,
+      "destination_id": 1
+     },
+     "sequence": 1
+    },
+    {
+     "cost": 540,
+     "type": "transport",
+     "label": "Safari Land Cruiser × 3 days",
+     "config": {
+      "days": 3,
+      "label": "Safari Land Cruiser",
+      "source": "enzi_catalog",
+      "transport_id": 1
+     },
+     "sequence": 2
+    },
+    {
+     "cost": 50,
+     "type": "transfer",
+     "label": "JKIA – Nairobi hotel transfer",
+     "config": {
+      "label": "JKIA – Nairobi hotel transfer",
+      "source": "enzi_catalog",
+      "transfer_id": 1
+     },
+     "sequence": 3
+    }
+   ],
+   "roundedUpBy": 2,
+   "markupAmount": 198,
+   "sellingPrice": 1190,
+   "markupPercent": 20,
+   "travellerCounts": {
+    "adults": 1,
+    "infants": 0,
+    "children": 0
+   },
+   "baseSellingPrice": 1188
+  },
+  "currency": "USD",
+  "cost_total": 990,
+  "markup_percent": 20,
+  "selling_price": 1190,
+  "current_version": 6,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "boob",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:03:44.020Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:07:13.062Z"
+  }
+ },
+ {
+  "_id": 5,
+  "public_token": "mEgWXACtOJxJTE9KVoZs5ch-GbUMhJMe",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:15:22.608Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:15:22.575Z"
+  }
+ },
+ {
+  "_id": 6,
+  "public_token": "WPyUpUDg2Ypm1cnYF_8N84wA9yG6jSs-",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:21:04.766Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:21:04.765Z"
+  }
+ },
+ {
+  "_id": 7,
+  "public_token": "cY-ajnWaIOIe9pzQfJIZVU3Hl7XdWrak",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-09-10",
+  "end_date": "2026-09-14",
+  "duration_days": 5,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-09-14",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "brods",
+   "interests": [
+    "wildlife"
+   ],
+   "startDate": "2026-09-10",
+   "guestEmail": "bradleyouko911@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 5,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    4,
+    3,
+    1,
+    2,
+    7
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "bradleyouko911@gmail.com",
+  "guest_name": "brods",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:21:50.685Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-02T19:21:51.560Z"
+  }
+ },
+ {
+  "_id": 4,
+  "public_token": "g1iPI00KMsOYyeyDSUqUrkm72dIK13xr",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": 4,
+  "booking_id": null,
+  "status": "modified",
+  "country": null,
+  "start_date": "2026-09-30",
+  "end_date": "2026-10-03",
+  "duration_days": 4,
+  "adults": 3,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 3,
+   "country": null,
+   "endDate": "2026-10-03",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "boobies",
+   "interests": [
+    "wildlife",
+    "adventure",
+    "culture"
+   ],
+   "startDate": "2026-09-30",
+   "guestEmail": "claudiasagini@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 4,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    5
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "mid-range",
+   "accommodationPreferences": null
+  },
+  "title": "4-Day Tsavo West Safari",
+  "summary": "A 4-day safari visiting Tsavo West for 3 adults.",
+  "plan": {
+   "days": [
+    {
+     "day": 1,
+     "notes": "Arrive Tsavo West",
+     "transferId": 1,
+     "activityIds": [
+      9
+     ],
+     "transportId": 1,
+     "destinationId": 5,
+     "accommodationId": 19
+    },
+    {
+     "day": 2,
+     "notes": "Game viewing in Tsavo West",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 5,
+     "accommodationId": 19
+    },
+    {
+     "day": 3,
+     "notes": "Game viewing in Tsavo West",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 5,
+     "accommodationId": 19
+    },
+    {
+     "day": 4,
+     "notes": "Game viewing in Tsavo West",
+     "transferId": null,
+     "activityIds": [],
+     "transportId": 1,
+     "destinationId": 5,
+     "accommodationId": 19
+    }
+   ],
+   "notes": [
+    "Heuristic plan sequenced from Enzi catalog records."
+   ],
+   "title": "4-Day Tsavo West Safari",
+   "summary": "A 4-day safari visiting Tsavo West for 3 adults.",
+   "assumptions": [
+    "Park fees apply on each destination day.",
+    "Last day is treated as departure (no extra night)."
+   ],
+   "durationDays": 4,
+   "destinationIds": [
+    5
+   ],
+   "recommendations": [
+    "Staff should confirm lodge availability before converting to a booking."
+   ]
+  },
+  "quote": {
+   "currency": "USD",
+   "costTotal": 3470,
+   "components": [
+    {
+     "cost": 1980,
+     "type": "accommodation",
+     "label": "Kilaguni Serena Safari Lodge × 3 nights",
+     "config": {
+      "label": "Kilaguni Serena Safari Lodge",
+      "nights": 3,
+      "source": "enzi_catalog",
+      "accommodation_id": 19
+     },
+     "sequence": 0
+    },
+    {
+     "cost": 720,
+     "type": "park_fee",
+     "label": "Tsavo West park fee × 4 days",
+     "config": {
+      "days": 4,
+      "label": "Tsavo West park fee",
+      "source": "enzi_catalog",
+      "park_fee_id": 6,
+      "destination_id": 5
+     },
+     "sequence": 1
+    },
+    {
+     "cost": 720,
+     "type": "transport",
+     "label": "Safari Land Cruiser × 4 days",
+     "config": {
+      "days": 4,
+      "label": "Safari Land Cruiser",
+      "source": "enzi_catalog",
+      "transport_id": 1
+     },
+     "sequence": 2
+    },
+    {
+     "cost": 50,
+     "type": "transfer",
+     "label": "JKIA – Nairobi hotel transfer",
+     "config": {
+      "label": "JKIA – Nairobi hotel transfer",
+      "source": "enzi_catalog",
+      "transfer_id": 1
+     },
+     "sequence": 3
+    }
+   ],
+   "roundedUpBy": 6,
+   "markupAmount": 694,
+   "sellingPrice": 4170,
+   "markupPercent": 20,
+   "travellerCounts": {
+    "adults": 3,
+    "infants": 0,
+    "children": 0
+   },
+   "baseSellingPrice": 4164
+  },
+  "currency": "USD",
+  "cost_total": 3470,
+  "markup_percent": 20,
+  "selling_price": 4170,
+  "current_version": 3,
+  "guest_email": "claudiasagini@gmail.com",
+  "guest_name": "boobies",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-02T19:10:03.852Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-25T13:01:53.922Z"
+  }
+ },
+ {
+  "_id": 16,
+  "public_token": "yNZa2tqDx0eZvsCOJnjKeqA-dWqa-dMo",
+  "company_id": "aha",
+  "customer_id": null,
+  "user_id": null,
+  "booking_id": null,
+  "status": "draft",
+  "country": null,
+  "start_date": "2026-10-05",
+  "end_date": "2026-10-07",
+  "duration_days": 3,
+  "adults": 1,
+  "children": 0,
+  "infants": 0,
+  "child_ages": [],
+  "requirements": {
+   "notes": null,
+   "adults": 1,
+   "country": null,
+   "endDate": "2026-10-07",
+   "infants": 0,
+   "children": 0,
+   "currency": "USD",
+   "childAges": [],
+   "companyId": "aha",
+   "guestName": "mjolnir",
+   "interests": [
+    "wildlife",
+    "relaxation",
+    "culture",
+    "adventure"
+   ],
+   "startDate": "2026-10-05",
+   "guestEmail": "mjolinr@gmail.com",
+   "guestPhone": null,
+   "activityIds": [],
+   "budgetAmount": null,
+   "durationDays": 3,
+   "attractionIds": [],
+   "budgetCurrency": null,
+   "destinationIds": [
+    1,
+    3,
+    2,
+    4
+   ],
+   "airportTransfer": true,
+   "wildlifeInterests": null,
+   "preferredTransport": null,
+   "accommodationCategory": "budget",
+   "accommodationPreferences": null
+  },
+  "title": null,
+  "summary": null,
+  "plan": null,
+  "quote": null,
+  "currency": "USD",
+  "cost_total": null,
+  "markup_percent": null,
+  "selling_price": null,
+  "current_version": 1,
+  "guest_email": "mjolinr@gmail.com",
+  "guest_name": "mjolnir",
+  "guest_phone": null,
+  "created_at": {
+   "$date": "2026-09-29T11:07:33.246Z"
+  },
+  "updated_at": {
+   "$date": "2026-09-29T11:07:33.300Z"
+  }
+ }
+]

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { userPermissions, users } from "@/lib/schema";
+import { userPermissions } from "@/lib/schema";
+import { findUserById } from "@/lib/users-store";
 import { canAccessDashboard, isAdminRole } from "@/lib/roles";
 import type { DashboardModuleId } from "@/lib/dashboard-modules";
 import { isDashboardModuleId } from "@/lib/dashboard-modules";
@@ -35,12 +36,8 @@ export async function getEffectiveUserRole(
   userId: number,
   sessionRole: string | undefined | null
 ): Promise<string | undefined> {
-  const [row] = await db
-    .select({ role: users.role })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
-  const dbRole = row?.role != null ? String(row.role) : undefined;
+  const row = await findUserById(userId);
+  const dbRole = row?.role;
   const jwtRole =
     sessionRole != null && String(sessionRole).trim() !== ""
       ? String(sessionRole).trim()

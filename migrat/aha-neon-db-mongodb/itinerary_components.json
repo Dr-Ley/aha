@@ -1,0 +1,194 @@
+[
+ {
+  "_id": 5,
+  "itinerary_id": 1,
+  "type": "accommodation",
+  "config": {
+   "label": "Amboseli Sopa Lodge × 3 nights",
+   "nights": 3,
+   "source": "enzi_catalog",
+   "accommodation_id": 15
+  },
+  "cost": 960,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:26:12.672Z"
+  }
+ },
+ {
+  "_id": 6,
+  "itinerary_id": 1,
+  "type": "park_fee",
+  "config": {
+   "days": 5,
+   "label": "Amboseli park fee × 5 days",
+   "source": "enzi_catalog",
+   "park_fee_id": 3,
+   "destination_id": 2
+  },
+  "cost": 600,
+  "sequence": 1,
+  "created_at": {
+   "$date": "2026-09-02T18:26:12.672Z"
+  }
+ },
+ {
+  "_id": 7,
+  "itinerary_id": 1,
+  "type": "transport",
+  "config": {
+   "days": 5,
+   "label": "Safari Land Cruiser × 5 days",
+   "source": "enzi_catalog",
+   "transport_id": 1
+  },
+  "cost": 900,
+  "sequence": 2,
+  "created_at": {
+   "$date": "2026-09-02T18:26:12.672Z"
+  }
+ },
+ {
+  "_id": 8,
+  "itinerary_id": 1,
+  "type": "transfer",
+  "config": {
+   "label": "JKIA – Nairobi hotel transfer",
+   "source": "enzi_catalog",
+   "transfer_id": 1
+  },
+  "cost": 50,
+  "sequence": 3,
+  "created_at": {
+   "$date": "2026-09-02T18:26:12.672Z"
+  }
+ },
+ {
+  "_id": 27,
+  "itinerary_id": 2,
+  "type": "accommodation",
+  "config": {
+   "label": "Enchoro Wildlife Camp × 2 nights",
+   "nights": 2,
+   "source": "enzi_catalog",
+   "accommodation_id": 11
+  },
+  "cost": 160,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-09-02T19:07:13.093Z"
+  }
+ },
+ {
+  "_id": 28,
+  "itinerary_id": 2,
+  "type": "park_fee",
+  "config": {
+   "days": 3,
+   "label": "Maasai Mara reserve fee × 3 days",
+   "source": "enzi_catalog",
+   "park_fee_id": 2,
+   "destination_id": 1
+  },
+  "cost": 240,
+  "sequence": 1,
+  "created_at": {
+   "$date": "2026-09-02T19:07:13.093Z"
+  }
+ },
+ {
+  "_id": 29,
+  "itinerary_id": 2,
+  "type": "transport",
+  "config": {
+   "days": 3,
+   "label": "Safari Land Cruiser × 3 days",
+   "source": "enzi_catalog",
+   "transport_id": 1
+  },
+  "cost": 540,
+  "sequence": 2,
+  "created_at": {
+   "$date": "2026-09-02T19:07:13.093Z"
+  }
+ },
+ {
+  "_id": 30,
+  "itinerary_id": 2,
+  "type": "transfer",
+  "config": {
+   "label": "JKIA – Nairobi hotel transfer",
+   "source": "enzi_catalog",
+   "transfer_id": 1
+  },
+  "cost": 50,
+  "sequence": 3,
+  "created_at": {
+   "$date": "2026-09-02T19:07:13.093Z"
+  }
+ },
+ {
+  "_id": 35,
+  "itinerary_id": 4,
+  "type": "accommodation",
+  "config": {
+   "label": "Kilaguni Serena Safari Lodge × 3 nights",
+   "nights": 3,
+   "source": "enzi_catalog",
+   "accommodation_id": 19
+  },
+  "cost": 1980,
+  "sequence": 0,
+  "created_at": {
+   "$date": "2026-09-25T13:01:54.193Z"
+  }
+ },
+ {
+  "_id": 36,
+  "itinerary_id": 4,
+  "type": "park_fee",
+  "config": {
+   "days": 4,
+   "label": "Tsavo West park fee × 4 days",
+   "source": "enzi_catalog",
+   "park_fee_id": 6,
+   "destination_id": 5
+  },
+  "cost": 720,
+  "sequence": 1,
+  "created_at": {
+   "$date": "2026-09-25T13:01:54.193Z"
+  }
+ },
+ {
+  "_id": 37,
+  "itinerary_id": 4,
+  "type": "transport",
+  "config": {
+   "days": 4,
+   "label": "Safari Land Cruiser × 4 days",
+   "source": "enzi_catalog",
+   "transport_id": 1
+  },
+  "cost": 720,
+  "sequence": 2,
+  "created_at": {
+   "$date": "2026-09-25T13:01:54.193Z"
+  }
+ },
+ {
+  "_id": 38,
+  "itinerary_id": 4,
+  "type": "transfer",
+  "config": {
+   "label": "JKIA – Nairobi hotel transfer",
+   "source": "enzi_catalog",
+   "transfer_id": 1
+  },
+  "cost": 50,
+  "sequence": 3,
+  "created_at": {
+   "$date": "2026-09-25T13:01:54.193Z"
+  }
+ }
+]

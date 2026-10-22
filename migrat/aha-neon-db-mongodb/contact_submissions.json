@@ -1,0 +1,17 @@
+[
+ {
+  "_id": 1,
+  "user_id": null,
+  "first_name": "Victory ",
+  "last_name": "Ray",
+  "email": "victoryray001@gmail.com",
+  "phone": "+2348164742638",
+  "subject": "Group Safari Inquiry",
+  "message": "How much for a private Lake Nakuru National Park half-day trip from Nairobi. ",
+  "status": "new",
+  "created_at": {
+   "$date": "2026-09-16T17:30:54.108Z"
+  },
+  "company_id": "aha"
+ }
+]

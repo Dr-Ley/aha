@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["@react-pdf/renderer"],
+  serverExternalPackages: ["@react-pdf/renderer", "mongodb"],
   outputFileTracingIncludes: {
     "/sitemap.xml": ["./src/app/**/page.tsx", "./src/app/**/layout.tsx", "./src/app/home-page.tsx"],
   },

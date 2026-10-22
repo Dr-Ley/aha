@@ -1,0 +1,137 @@
+[
+ {
+  "_id": 1,
+  "invoice_id": 1,
+  "description": "3 DAYS MASAI MARA PACKAGE",
+  "quantity": 1,
+  "unit_amount": 1500,
+  "line_total": 1500,
+  "sequence": 0
+ },
+ {
+  "_id": 2,
+  "invoice_id": 2,
+  "description": "4 DAYS MASAI MARA PACKAGE",
+  "quantity": 1,
+  "unit_amount": 3750,
+  "line_total": 3750,
+  "sequence": 0
+ },
+ {
+  "_id": 4,
+  "invoice_id": 3,
+  "description": "2 days amboseli",
+  "quantity": 1,
+  "unit_amount": 50000,
+  "line_total": 50000,
+  "sequence": 0
+ },
+ {
+  "_id": 6,
+  "invoice_id": 4,
+  "description": "2 days amboseli",
+  "quantity": 1,
+  "unit_amount": 49977,
+  "line_total": 49977,
+  "sequence": 0
+ },
+ {
+  "_id": 8,
+  "invoice_id": 5,
+  "description": "2 days amboseli",
+  "quantity": 1,
+  "unit_amount": 60000,
+  "line_total": 60000,
+  "sequence": 0
+ },
+ {
+  "_id": 12,
+  "invoice_id": 6,
+  "description": "2 days mara",
+  "quantity": 1,
+  "unit_amount": 50000,
+  "line_total": 50000,
+  "sequence": 0
+ },
+ {
+  "_id": 13,
+  "invoice_id": 7,
+  "description": "3 DAYS AMBOSELI",
+  "quantity": 1,
+  "unit_amount": 400000,
+  "line_total": 400000,
+  "sequence": 0
+ },
+ {
+  "_id": 14,
+  "invoice_id": 8,
+  "description": "2 DAYS HONEYMOON WITH BOOBOO",
+  "quantity": 1,
+  "unit_amount": 100000001,
+  "line_total": 100000001,
+  "sequence": 0
+ },
+ {
+  "_id": 15,
+  "invoice_id": 9,
+  "description": "6-DAY MAASAI MARA-L.NAKURU-L.NAIVASHA MIGRATION SAFARI",
+  "quantity": 1,
+  "unit_amount": 1360169,
+  "line_total": 1360169,
+  "sequence": 0
+ },
+ {
+  "_id": 16,
+  "invoice_id": 10,
+  "description": "4 DAYS MAASAI MARA BIG 5 TOUR",
+  "quantity": 1,
+  "unit_amount": 245594,
+  "line_total": 245594,
+  "sequence": 0
+ },
+ {
+  "_id": 17,
+  "invoice_id": 11,
+  "description": "4 DAYS MASAI MARA",
+  "quantity": 1,
+  "unit_amount": 433321,
+  "line_total": 433321,
+  "sequence": 0
+ },
+ {
+  "_id": 18,
+  "invoice_id": 12,
+  "description": "4 DAYS LAKE NAKURU & MASAI MARA",
+  "quantity": 1,
+  "unit_amount": 595010,
+  "line_total": 595010,
+  "sequence": 0
+ },
+ {
+  "_id": 19,
+  "invoice_id": 13,
+  "description": "17 DAYS KENYA VOLUNTEER MISSION & SAFARI",
+  "quantity": 1,
+  "unit_amount": 1552201,
+  "line_total": 1552201,
+  "sequence": 0
+ },
+ {
+  "_id": 20,
+  "invoice_id": 14,
+  "description": "6 DAYS MASAI MARA NAKURU NAIVASHA",
+  "quantity": 1,
+  "unit_amount": 470834,
+  "line_total": 470834,
+  "sequence": 0
+ },
+ {
+  "_id": 21,
+  "invoice_id": 15,
+  "description": "8 DAYS KENYA TANZANIA SAFARI",
+  "quantity": 1,
+  "unit_amount": 939081,
+  "line_total": 939081,
+  "sequence": 0
+ }
+]

@@ -1,0 +1,38 @@
+[
+ {
+  "_id": 1,
+  "company_id": "bth",
+  "category_id": 1,
+  "name": "Grilled fish",
+  "description": null,
+  "price": 1200,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-04-28T00:47:00.539Z"
+  }
+ },
+ {
+  "_id": 2,
+  "company_id": "bth",
+  "category_id": 1,
+  "name": "Ugali & greens",
+  "description": null,
+  "price": 600,
+  "is_available": true,
+  "created_at": {
+   "$date": "2026-04-28T00:47:00.539Z"
+  }
+ },
+ {
+  "_id": 3,
+  "company_id": "bth",
+  "category_id": 2,
+  "name": "Daily restaurant sales (imported)",
+  "description": "Placeholder for imported daily totals. Safe to leave hidden.",
+  "price": 0,
+  "is_available": false,
+  "created_at": {
+   "$date": "2026-10-02T11:54:54.769Z"
+  }
+ }
+]

@@ -1,0 +1,138 @@
+[
+ {
+  "_id": 2,
+  "company_id": "aha",
+  "destination_id": 1,
+  "name": "Maasai Mara park entrance",
+  "adult_usd": 200,
+  "child_usd": 100,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:22:49.030Z"
+  },
+  "adult_usd_low": 100,
+  "child_usd_low": 50,
+  "adult_kes": 5000,
+  "child_kes": 2500,
+  "infant_kes": 0
+ },
+ {
+  "_id": 1,
+  "company_id": "aha",
+  "destination_id": 7,
+  "name": "Nairobi National Park fee",
+  "adult_usd": 50,
+  "child_usd": 25,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:22:48.669Z"
+  },
+  "adult_usd_low": 50,
+  "child_usd_low": 25,
+  "adult_kes": null,
+  "child_kes": null,
+  "infant_kes": 0
+ },
+ {
+  "_id": 3,
+  "company_id": "aha",
+  "destination_id": 2,
+  "name": "Amboseli park fee",
+  "adult_usd": 60,
+  "child_usd": 30,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:22:49.383Z"
+  },
+  "adult_usd_low": 60,
+  "child_usd_low": 30,
+  "adult_kes": null,
+  "child_kes": null,
+  "infant_kes": 0
+ },
+ {
+  "_id": 5,
+  "company_id": "aha",
+  "destination_id": 6,
+  "name": "Tsavo East park fee",
+  "adult_usd": 60,
+  "child_usd": 30,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:22:50.071Z"
+  },
+  "adult_usd_low": 60,
+  "child_usd_low": 30,
+  "adult_kes": null,
+  "child_kes": null,
+  "infant_kes": 0
+ },
+ {
+  "_id": 6,
+  "company_id": "aha",
+  "destination_id": 5,
+  "name": "Tsavo West park fee",
+  "adult_usd": 60,
+  "child_usd": 30,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:22:50.447Z"
+  },
+  "adult_usd_low": 60,
+  "child_usd_low": 30,
+  "adult_kes": null,
+  "child_kes": null,
+  "infant_kes": 0
+ },
+ {
+  "_id": 13,
+  "company_id": "aha",
+  "destination_id": 4,
+  "name": "Hell's Gate National Park Entry Fee (Non-Resident)",
+  "adult_usd": 50,
+  "child_usd": 25,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-08T19:02:41.850Z"
+  },
+  "adult_usd_low": 50,
+  "child_usd_low": 25,
+  "adult_kes": null,
+  "child_kes": null,
+  "infant_kes": 0
+ },
+ {
+  "_id": 4,
+  "company_id": "aha",
+  "destination_id": 3,
+  "name": "Lake Nakuru National Park Entry Fee (Non-Resident)",
+  "adult_usd": 90,
+  "child_usd": 45,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-02T18:22:49.732Z"
+  },
+  "adult_usd_low": 90,
+  "child_usd_low": 45,
+  "adult_kes": null,
+  "child_kes": null,
+  "infant_kes": 0
+ },
+ {
+  "_id": 14,
+  "company_id": "ewc",
+  "destination_id": 1,
+  "name": "Maasai Mara park entrance",
+  "adult_usd": 200,
+  "child_usd": 100,
+  "infant_usd": 0,
+  "created_at": {
+   "$date": "2026-09-28T10:22:31.007Z"
+  },
+  "adult_usd_low": 100,
+  "child_usd_low": 50,
+  "adult_kes": 5000,
+  "child_kes": 2500,
+  "infant_kes": 0
+ }
+]

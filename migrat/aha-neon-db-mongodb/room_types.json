@@ -1,0 +1,206 @@
+[
+ {
+  "_id": 142,
+  "company_id": "ewc",
+  "name": "Group stay (room not recorded)",
+  "description": "Placeholder for stays imported from WhatsApp messages, where no room was given.",
+  "max_occupancy": 20,
+  "base_rate": null,
+  "created_at": {
+   "$date": "2026-10-16T16:53:02.286Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 1,
+  "company_id": "bth",
+  "name": "Deluxe",
+  "description": "Deluxe guest room",
+  "max_occupancy": 2,
+  "base_rate": 8000,
+  "created_at": {
+   "$date": "2026-04-28T00:46:59.291Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 129,
+  "company_id": "ewc",
+  "name": "Standard",
+  "description": null,
+  "max_occupancy": 2,
+  "base_rate": null,
+  "created_at": {
+   "$date": "2026-09-28T09:59:47.107Z"
+  },
+  "property_id": null
+ },
+ {
+  "_id": 136,
+  "company_id": "bth",
+  "name": "Single Self-Contained (SSC)",
+  "description": "Private single room, self-contained (own bathroom). Hotel category: Private Single Room Ensuite.",
+  "max_occupancy": 2,
+  "base_rate": 1500,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 137,
+  "company_id": "bth",
+  "name": "Double Room Ensuite (DRE)",
+  "description": "Private double room, self-contained (own bathroom). Hotel category: Private Double Room Ensuite.",
+  "max_occupancy": 2,
+  "base_rate": 2000,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 138,
+  "company_id": "bth",
+  "name": "Deluxe Double Ensuite (DEL)",
+  "description": "Deluxe double room, self-contained (own bathroom). Hotel category: Deluxe Double Room Ensuite.",
+  "max_occupancy": 2,
+  "base_rate": 2500,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 139,
+  "company_id": "bth",
+  "name": "Standard Room, Shared Bath (SRB)",
+  "description": "Standard double/twin room, bathroom shared on the floor. Hotel category: Standard Room for Two. (Meaning of code inferred - confirm.)",
+  "max_occupancy": 2,
+  "base_rate": 1000,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 140,
+  "company_id": "bth",
+  "name": "Bunk Room (BUNKED)",
+  "description": "Shared bunk-bed room sleeping up to 4, shared showers/toilets. Hotel category: Standard Room for Four.",
+  "max_occupancy": 4,
+  "base_rate": 650,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 141,
+  "company_id": "bth",
+  "name": "Executive / Special (S.P)",
+  "description": "Top-tier room, sleeps 2. Closest hotel category: Executive Room. (Meaning of code inferred - confirm.)",
+  "max_occupancy": 2,
+  "base_rate": 3000,
+  "created_at": {
+   "$date": "2026-10-01T14:43:50.270Z"
+  },
+  "property_id": 2
+ },
+ {
+  "_id": 126,
+  "company_id": "ewc",
+  "name": "Superior Tent - Triple",
+  "description": "Superior en-suite canvas tent configured for triple occupancy.",
+  "max_occupancy": 3,
+  "base_rate": 18000,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 122,
+  "company_id": "ewc",
+  "name": "Standard Tent - Triple",
+  "description": "Standard canvas tent configured for triple occupancy.",
+  "max_occupancy": 3,
+  "base_rate": 18000,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 124,
+  "company_id": "ewc",
+  "name": "Superior Tent - Double",
+  "description": "Superior en-suite canvas tent configured for double occupancy.",
+  "max_occupancy": 2,
+  "base_rate": 14000,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 125,
+  "company_id": "ewc",
+  "name": "Superior Tent - Single",
+  "description": "Superior en-suite canvas tent configured for single occupancy.",
+  "max_occupancy": 1,
+  "base_rate": 7500,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 128,
+  "company_id": "ewc",
+  "name": "Superior Tent - Family",
+  "description": "Superior en-suite canvas tent configured for family occupancy.",
+  "max_occupancy": 4,
+  "base_rate": 24000,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 121,
+  "company_id": "ewc",
+  "name": "Standard Tent - Single",
+  "description": "Standard canvas tent configured for single occupancy.",
+  "max_occupancy": 1,
+  "base_rate": 7500,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 127,
+  "company_id": "ewc",
+  "name": "Standard Tent - Family",
+  "description": "Standard canvas tent configured for family occupancy.",
+  "max_occupancy": 4,
+  "base_rate": 24000,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ },
+ {
+  "_id": 123,
+  "company_id": "ewc",
+  "name": "Standard Tent - Double",
+  "description": "Standard canvas tent configured for double occupancy.",
+  "max_occupancy": 2,
+  "base_rate": 14000,
+  "created_at": {
+   "$date": "2026-09-25T09:37:44.343Z"
+  },
+  "property_id": 1
+ }
+]

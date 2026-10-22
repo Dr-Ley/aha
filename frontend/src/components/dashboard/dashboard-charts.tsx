@@ -1,6 +1,15 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import { ChartPeriodFilter } from "@/components/dashboard/chart-period-filter";
+import {
+  amountSeries,
+  countByName,
+  namedAmountSeries,
+  productSeries,
+  stackedSeries,
+  type ChartPeriod,
+} from "@/lib/chart-period";
 import {
   ResponsiveContainer,
   LineChart,
@@ -20,34 +29,44 @@ import { formatKesForDisplay } from "@/lib/data";
 
 const COLORS = ["#2d5a3d", "#d4a84b", "#5a7d6a", "#8b6914", "#4a7c59", "#6b6560"];
 
-export type TrendPoint = { month: string; label: string; amount: number };
-export type CountryAmount = { country: string; amount: number };
-export type SafariSlice = { name: string; value: number };
-
 export type ProductSale = { name: string; quantity: number; amount: number };
-export type MonthlyProductSales = { month: string; label: string; products: ProductSale[] };
-export type RevenueStackPoint = { label: string; safari: number; hotel: number; bar: number };
-export type DepartmentRevenuePoint = { label: string; hotel: number; bar: number; restaurant: number };
 
-type DashboardChartsProps = {
-  revenueTrend: TrendPoint[];
-  revenueByCountry: CountryAmount[];
-  safariDistribution: SafariSlice[];
-  revenueStack?: RevenueStackPoint[];
+export type ChartOrderFact = {
+  date: string;
+  amount: number;
+  paid: boolean;
+  products: ProductSale[];
 };
 
-type HospitalityChartsProps = {
-  hotelStayTrend: TrendPoint[];
-  barWeeklySales: TrendPoint[] | { label: string; amount: number }[];
-  barProductSales: ProductSale[];
-  barProductSalesByMonth?: MonthlyProductSales[];
-  restaurantSalesTrend?: TrendPoint[];
-  restaurantProductSales?: ProductSale[];
-  showRestaurant?: boolean;
-  barTrendTitle?: string;
-  showBarProductFilter?: boolean;
-  departmentRevenue?: DepartmentRevenuePoint[];
+export type OverviewChartFacts = {
+  revenue: { date: string; amount: number }[];
+  safariBookings: { date: string; amount: number; country: string; days: number | null; paid: boolean }[];
+  hotelStays: { date: string; amount: number; paid: boolean }[];
+  barOrders: ChartOrderFact[];
+  restaurantOrders: ChartOrderFact[];
 };
+
+const EMPTY_PRODUCT: ProductSale = { name: "No products sold", quantity: 0, amount: 0 };
+
+function timeAxis(count: number) {
+  if (count > 16) {
+    return { interval: 0 as const, angle: -40, textAnchor: "end" as const, height: 52, tick: { fontSize: 10 } };
+  }
+  if (count > 8) {
+    return { interval: 0 as const, angle: -25, textAnchor: "end" as const, height: 44, tick: { fontSize: 10 } };
+  }
+  return { interval: 0 as const, tick: { fontSize: 11 } };
+}
+
+function orderProductLines(orders: ChartOrderFact[]) {
+  const lines: { date: string; name: string; quantity: number; amount: number }[] = [];
+  for (const order of orders) {
+    for (const product of order.products) {
+      lines.push({ date: order.date, name: product.name, quantity: product.quantity, amount: product.amount });
+    }
+  }
+  return lines;
+}
 
 function SafariLegend({ payload }: { payload?: { value?: unknown; color?: string }[] }) {
   if (!payload || payload.length === 0) return null;
@@ -79,208 +98,252 @@ function chartCompactFromKes(kes: number) {
   return `KSh${v}`;
 }
 
-export function DashboardCharts({
-  revenueTrend,
-  revenueByCountry,
-  safariDistribution,
-  revenueStack,
-}: DashboardChartsProps) {
-  const pieData =
-    safariDistribution.length > 0 ? safariDistribution : [{ name: "No bookings", value: 1 }];
-  const stackedRevenue = revenueStack != null;
-
-  return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm lg:col-span-2">
-        <h3 className="mb-4 text-sm font-semibold text-base-content">Revenue trend</h3>
-        <div className="h-80 w-full min-w-0 overflow-hidden">
-          <ResponsiveContainer width="100%" height="100%">
-            {stackedRevenue ? (
-              <BarChart data={revenueStack} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-                <YAxis
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
-                />
-                <Tooltip
-                  formatter={(value, name) => [
-                    formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-                    String(name),
-                  ]}
-                  contentStyle={{
-                    borderRadius: "0.75rem",
-                    border: "1px solid oklch(var(--bc) / 0.12)",
-                  }}
-                />
-                <Legend />
-                <Bar dataKey="safari" name="Safari (paid/partial)" stackId="revenue" fill="#2d5a3d" />
-                <Bar dataKey="hotel" name="Hotel stays (paid)" stackId="revenue" fill="#d4a84b" />
-                <Bar dataKey="bar" name="Bar orders (paid)" stackId="revenue" fill="#5a7d6a" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            ) : (
-              <LineChart data={revenueTrend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} className="text-base-content/60" />
-                <YAxis
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
-                  className="text-base-content/60"
-                />
-                <Tooltip
-                  formatter={(value) => [
-                    formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-                    "Revenue",
-                  ]}
-                  contentStyle={{
-                    borderRadius: "0.75rem",
-                    border: "1px solid oklch(var(--bc) / 0.12)",
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="amount"
-                  stroke="#2d5a3d"
-                  strokeWidth={2}
-                  dot={{ fill: "#d4a84b", strokeWidth: 0, r: 3 }}
-                  activeDot={{ r: 5 }}
-                />
-              </LineChart>
-            )}
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
-        <h3 className="mb-4 text-sm font-semibold text-base-content">Revenue by country</h3>
-        <div className="h-72 w-full min-w-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={revenueByCountry} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
-              <XAxis
-                type="number"
-                tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
-                tick={{ fontSize: 11 }}
-              />
-              <YAxis type="category" dataKey="country" width={72} tick={{ fontSize: 11 }} />
-              <Tooltip
-                formatter={(value) => [
-                  formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-                  "Booked value",
-                ]}
-              />
-              <Bar dataKey="amount" fill="#2d5a3d" radius={[0, 6, 6, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
-        <h3 className="mb-4 text-sm font-semibold text-base-content">Safari duration distribution</h3>
-        <div className="h-72 w-full min-w-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={52}
-                outerRadius={88}
-                paddingAngle={2}
-              >
-                {pieData.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Pie>
-              <Legend
-                verticalAlign="bottom"
-                height={64}
-                content={<SafariLegend />}
-              />
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
+function moneyTooltip(value: unknown, name: string) {
+  return [formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0), name] as [string, string];
 }
 
 function ChartCard({
   title,
+  period,
+  onPeriod,
+  shift,
+  onShift,
   children,
   wide,
-  headerExtra,
 }: {
   title: string;
+  period: ChartPeriod;
+  onPeriod: (period: ChartPeriod) => void;
+  shift: number;
+  onShift: (shift: number) => void;
   children: ReactNode;
   wide?: boolean;
-  headerExtra?: ReactNode;
 }) {
   return (
     <div className={`rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm ${wide ? "lg:col-span-2" : ""}`}>
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="text-sm font-semibold text-base-content">{title}</h3>
-        {headerExtra ? <div className="shrink-0">{headerExtra}</div> : null}
+        <ChartPeriodFilter
+          value={period}
+          onChange={onPeriod}
+          shift={shift}
+          onShift={onShift}
+          label={`${title} time range`}
+        />
       </div>
-      <div className={wide ? "h-80 w-full min-w-0 overflow-hidden" : "h-72 w-full min-w-0"}>
+      <div className={wide ? "h-80 w-full min-w-0 overflow-hidden" : "h-72 w-full min-w-0 overflow-hidden"}>
         {children}
       </div>
     </div>
   );
 }
 
-export function HospitalityCharts({
-  hotelStayTrend,
-  barWeeklySales,
-  barProductSales,
-  barProductSalesByMonth = [],
-  restaurantSalesTrend = [],
-  restaurantProductSales = [],
-  showRestaurant = false,
-  barTrendTitle = "Monthly bar sales",
-  showBarProductFilter = false,
-  departmentRevenue,
-}: HospitalityChartsProps) {
-  const [barProductPeriod, setBarProductPeriod] = useState("all");
-  const barTrend = barWeeklySales.map((row) => ({
-    label: row.label,
-    amount: row.amount,
-  }));
-  const productPeriod = showBarProductFilter ? barProductPeriod : "all";
-  const selectedMonthProducts =
-    productPeriod === "all"
-      ? barProductSales
-      : (barProductSalesByMonth.find((month) => month.month === productPeriod)?.products ?? []);
-  const productRows =
-    selectedMonthProducts.length > 0
-      ? selectedMonthProducts
-      : [{ name: "No products sold", quantity: 0, amount: 0 }];
-  const restaurantProducts =
-    restaurantProductSales.length > 0
-      ? restaurantProductSales
-      : [{ name: "No products sold", quantity: 0, amount: 0 }];
+function useChartPeriod(): [ChartPeriod, (period: ChartPeriod) => void, number, (shift: number) => void] {
+  const [period, setPeriodState] = useState<ChartPeriod>("month");
+  const [shift, setShift] = useState(0);
+  const setPeriod = (next: ChartPeriod) => {
+    setPeriodState(next);
+    setShift(0);
+  };
+  return [period, setPeriod, shift, setShift];
+}
+
+export function DashboardCharts({ facts, stacked = false }: { facts: OverviewChartFacts; stacked?: boolean }) {
+  const [revenuePeriod, setRevenuePeriod, revenueShift, setRevenueShift] = useChartPeriod();
+  const [countryPeriod, setCountryPeriod, countryShift, setCountryShift] = useChartPeriod();
+  const [safariPeriod, setSafariPeriod, safariShift, setSafariShift] = useChartPeriod();
+
+  const revenueLine = useMemo(
+    () => amountSeries(facts.revenue, revenuePeriod, undefined, revenueShift),
+    [facts.revenue, revenuePeriod, revenueShift]
+  );
+  const revenueStack = useMemo(
+    () =>
+      stackedSeries(
+        [
+          ...facts.safariBookings
+            .filter((booking) => booking.paid)
+            .map((booking) => ({ date: booking.date, safari: booking.amount, hotel: 0, bar: 0 })),
+          ...facts.hotelStays
+            .filter((stay) => stay.paid)
+            .map((stay) => ({ date: stay.date, safari: 0, hotel: stay.amount, bar: 0 })),
+          ...facts.barOrders
+            .filter((order) => order.paid)
+            .map((order) => ({ date: order.date, safari: 0, hotel: 0, bar: order.amount })),
+        ],
+        ["safari", "hotel", "bar"] as const,
+        revenuePeriod,
+        undefined,
+        revenueShift
+      ),
+    [facts.safariBookings, facts.hotelStays, facts.barOrders, revenuePeriod, revenueShift]
+  );
+  const countries = useMemo(() => {
+    const rows = namedAmountSeries(
+      facts.safariBookings.map((booking) => ({
+        date: booking.date,
+        name: booking.country,
+        amount: booking.amount,
+      })),
+      countryPeriod,
+      undefined,
+      countryShift
+    ).map((row) => ({ country: row.name, amount: row.amount }));
+    return rows.length > 0 ? rows : [{ country: "No bookings", amount: 0 }];
+  }, [facts.safariBookings, countryPeriod, countryShift]);
+  const safariSlices = useMemo(() => {
+    const rows = countByName(
+      facts.safariBookings
+        .filter((booking) => booking.days != null)
+        .map((booking) => ({
+          date: booking.date,
+          name: booking.days === 1 ? "1 Day" : `${booking.days} Days`,
+        })),
+      safariPeriod,
+      undefined,
+      safariShift
+    );
+    return rows.length > 0 ? rows : [{ name: "No bookings", value: 1 }];
+  }, [facts.safariBookings, safariPeriod, safariShift]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      {departmentRevenue ? (
-        <ChartCard title="Revenue trend" wide>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={departmentRevenue} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+      <ChartCard title="Revenue trend" period={revenuePeriod} onPeriod={setRevenuePeriod} shift={revenueShift} onShift={setRevenueShift} wide>
+        <ResponsiveContainer width="100%" height="100%">
+          {stacked ? (
+            <BarChart data={revenueStack} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-              <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-              <YAxis
-                tick={{ fontSize: 11 }}
-                tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
+              <XAxis dataKey="label" {...timeAxis(revenueStack.length)} />
+              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+              <Tooltip formatter={(value, name) => moneyTooltip(value, String(name))} />
+              <Legend />
+              <Bar dataKey="safari" name="Safari (paid/partial)" stackId="revenue" fill="#2d5a3d" />
+              <Bar dataKey="hotel" name="Hotel stays (paid)" stackId="revenue" fill="#d4a84b" />
+              <Bar dataKey="bar" name="Bar orders (paid)" stackId="revenue" fill="#5a7d6a" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          ) : (
+            <LineChart data={revenueLine} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
+              <XAxis dataKey="label" {...timeAxis(revenueLine.length)} />
+              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+              <Tooltip formatter={(value) => moneyTooltip(value, "Revenue")} />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke="#2d5a3d"
+                strokeWidth={2}
+                dot={{ fill: "#d4a84b", strokeWidth: 0, r: 3 }}
+                activeDot={{ r: 5 }}
               />
-              <Tooltip
-                formatter={(value, name) => [
-                  formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-                  String(name),
-                ]}
-              />
+            </LineChart>
+          )}
+        </ResponsiveContainer>
+      </ChartCard>
+
+      <ChartCard title="Revenue by country" period={countryPeriod} onPeriod={setCountryPeriod} shift={countryShift} onShift={setCountryShift}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={countries} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
+            <XAxis type="number" tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} tick={{ fontSize: 11 }} />
+            <YAxis type="category" dataKey="country" width={72} tick={{ fontSize: 11 }} />
+            <Tooltip formatter={(value) => moneyTooltip(value, "Booked value")} />
+            <Bar dataKey="amount" fill="#2d5a3d" radius={[0, 6, 6, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
+
+      <ChartCard title="Safari duration distribution" period={safariPeriod} onPeriod={setSafariPeriod} shift={safariShift} onShift={setSafariShift}>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie data={safariSlices} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={52} outerRadius={88} paddingAngle={2}>
+              {safariSlices.map((_, index) => (
+                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Legend verticalAlign="bottom" height={64} content={<SafariLegend />} />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      </ChartCard>
+    </div>
+  );
+}
+
+export function HospitalityCharts({
+  facts,
+  showRestaurant = false,
+  showDepartment = false,
+}: {
+  facts: OverviewChartFacts;
+  showRestaurant?: boolean;
+  showDepartment?: boolean;
+}) {
+  const [departmentPeriod, setDepartmentPeriod, departmentShift, setDepartmentShift] = useChartPeriod();
+  const [stayPeriod, setStayPeriod, stayShift, setStayShift] = useChartPeriod();
+  const [barPeriod, setBarPeriod, barShift, setBarShift] = useChartPeriod();
+  const [barProductPeriod, setBarProductPeriod, barProductShift, setBarProductShift] = useChartPeriod();
+  const [restaurantPeriod, setRestaurantPeriod, restaurantShift, setRestaurantShift] = useChartPeriod();
+  const [restaurantProductPeriod, setRestaurantProductPeriod, restaurantProductShift, setRestaurantProductShift] =
+    useChartPeriod();
+
+  const department = useMemo(
+    () =>
+      stackedSeries(
+        [
+          ...facts.hotelStays
+            .filter((stay) => stay.paid)
+            .map((stay) => ({ date: stay.date, hotel: stay.amount, bar: 0, restaurant: 0 })),
+          ...facts.barOrders
+            .filter((order) => order.paid)
+            .map((order) => ({ date: order.date, hotel: 0, bar: order.amount, restaurant: 0 })),
+          ...facts.restaurantOrders
+            .filter((order) => order.paid)
+            .map((order) => ({ date: order.date, hotel: 0, bar: 0, restaurant: order.amount })),
+        ],
+        ["hotel", "bar", "restaurant"] as const,
+        departmentPeriod,
+        undefined,
+        departmentShift
+      ),
+    [facts.hotelStays, facts.barOrders, facts.restaurantOrders, departmentPeriod, departmentShift]
+  );
+  const stays = useMemo(
+    () => amountSeries(facts.hotelStays.map((stay) => ({ date: stay.date, amount: stay.amount })), stayPeriod, undefined, stayShift),
+    [facts.hotelStays, stayPeriod, stayShift]
+  );
+  const barSales = useMemo(
+    () => amountSeries(facts.barOrders.map((order) => ({ date: order.date, amount: order.amount })), barPeriod, undefined, barShift),
+    [facts.barOrders, barPeriod, barShift]
+  );
+  const barProducts = useMemo(() => {
+    const rows = productSeries(orderProductLines(facts.barOrders), barProductPeriod, undefined, barProductShift);
+    return rows.length > 0 ? rows : [EMPTY_PRODUCT];
+  }, [facts.barOrders, barProductPeriod, barProductShift]);
+  const restaurantSales = useMemo(
+    () =>
+      amountSeries(
+        facts.restaurantOrders.map((order) => ({ date: order.date, amount: order.amount })),
+        restaurantPeriod,
+        undefined,
+        restaurantShift
+      ),
+    [facts.restaurantOrders, restaurantPeriod, restaurantShift]
+  );
+  const restaurantProducts = useMemo(() => {
+    const rows = productSeries(orderProductLines(facts.restaurantOrders), restaurantProductPeriod, undefined, restaurantProductShift);
+    return rows.length > 0 ? rows : [EMPTY_PRODUCT];
+  }, [facts.restaurantOrders, restaurantProductPeriod, restaurantProductShift]);
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      {showDepartment ? (
+        <ChartCard title="Revenue trend" period={departmentPeriod} onPeriod={setDepartmentPeriod} shift={departmentShift} onShift={setDepartmentShift} wide>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={department} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
+              <XAxis dataKey="label" {...timeAxis(department.length)} />
+              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+              <Tooltip formatter={(value, name) => moneyTooltip(value, String(name))} />
               <Legend />
               <Bar dataKey="hotel" name="Hotel stays (paid)" stackId="department" fill="#2d5a3d" />
               <Bar dataKey="bar" name="Bar (paid)" stackId="department" fill="#d4a84b" />
@@ -289,137 +352,67 @@ export function HospitalityCharts({
           </ResponsiveContainer>
         </ChartCard>
       ) : null}
-      <ChartCard title="Hotel stay revenue" wide>
+      <ChartCard title="Hotel stay revenue" period={stayPeriod} onPeriod={setStayPeriod} shift={stayShift} onShift={setStayShift} wide>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={hotelStayTrend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+          <LineChart data={stays} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-            <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-            <YAxis
-              tick={{ fontSize: 11 }}
-              tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
-            />
-            <Tooltip
-              formatter={(value) => [
-                formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-                "Stay revenue",
-              ]}
-            />
-            <Line
-              type="monotone"
-              dataKey="amount"
-              stroke="#2d5a3d"
-              strokeWidth={2}
-              dot={{ fill: "#d4a84b", strokeWidth: 0, r: 3 }}
-            />
+            <XAxis dataKey="label" {...timeAxis(stays.length)} />
+            <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+            <Tooltip formatter={(value) => moneyTooltip(value, "Stay revenue")} />
+            <Line type="monotone" dataKey="amount" stroke="#2d5a3d" strokeWidth={2} dot={{ fill: "#d4a84b", strokeWidth: 0, r: 3 }} />
           </LineChart>
         </ResponsiveContainer>
       </ChartCard>
-
-      <ChartCard title={barTrendTitle} wide>
+      <ChartCard title="Bar sales" period={barPeriod} onPeriod={setBarPeriod} shift={barShift} onShift={setBarShift} wide>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={barTrend} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
+          <BarChart data={barSales} margin={{ top: 8, right: 8, left: 0, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-            <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" height={48} />
-            <YAxis
-              tick={{ fontSize: 11 }}
-              tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
-            />
-            <Tooltip
-              formatter={(value) => [
-                formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-                "Sales",
-              ]}
-            />
+            <XAxis dataKey="label" {...timeAxis(barSales.length)} />
+            <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+            <Tooltip formatter={(value) => moneyTooltip(value, "Sales")} />
             <Bar dataKey="amount" fill="#2d5a3d" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
-
-      <ChartCard
-        title="Bar products"
-        wide={!showRestaurant}
-        headerExtra={
-          showBarProductFilter ? (
-            <select
-              className="select select-bordered select-xs max-w-40 rounded-md"
-              style={{ outline: "1px solid gray" }}
-              value={barProductPeriod}
-              aria-label="Bar products period"
-              onChange={(event) => setBarProductPeriod(event.target.value)}
-            >
-              <option value="all">Grand total</option>
-              <optgroup label="Monthly">
-                {barProductSalesByMonth.map((month) => (
-                  <option key={month.month} value={month.month}>
-                    {month.label}
-                  </option>
-                ))}
-              </optgroup>
-            </select>
-          ) : null
-        }
-      >
+      <ChartCard title="Bar products" period={barProductPeriod} onPeriod={setBarProductPeriod} shift={barProductShift} onShift={setBarProductShift} wide={!showRestaurant}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={productRows} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
+          <BarChart data={barProducts} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
-            <XAxis
-              type="number"
-              tick={{ fontSize: 11 }}
-              tickFormatter={(v) => String(Math.round(typeof v === "number" ? v : Number(v) || 0))}
-            />
+            <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => String(Math.round(Number(v) || 0))} />
             <YAxis type="category" dataKey="name" width={72} tick={{ fontSize: 11 }} />
             <Tooltip
               formatter={(value, _name, item) => {
                 const row = item?.payload as ProductSale | undefined;
-                return [
-                  `${row?.quantity ?? value} sold · ${formatKesForDisplay(row?.amount ?? 0)}`,
-                  "Product",
-                ];
+                return [`${row?.quantity ?? value} sold · ${formatKesForDisplay(row?.amount ?? 0)}`, "Product"];
               }}
             />
             <Bar dataKey="quantity" fill="#d4a84b" radius={[0, 6, 6, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
-
       {showRestaurant ? (
         <>
-          <ChartCard title="Restaurant sales">
+          <ChartCard title="Restaurant sales" period={restaurantPeriod} onPeriod={setRestaurantPeriod} shift={restaurantShift} onShift={setRestaurantShift}>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={restaurantSalesTrend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <LineChart data={restaurantSales} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-                <YAxis
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
-                />
-                <Tooltip
-                  formatter={(value) => [
-                    formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-                    "Sales",
-                  ]}
-                />
+                <XAxis dataKey="label" {...timeAxis(restaurantSales.length)} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+                <Tooltip formatter={(value) => moneyTooltip(value, "Sales")} />
                 <Line type="monotone" dataKey="amount" stroke="#5a7d6a" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </ChartCard>
-          <ChartCard title="Restaurant products">
+          <ChartCard title="Restaurant products" period={restaurantProductPeriod} onPeriod={setRestaurantProductPeriod} shift={restaurantProductShift} onShift={setRestaurantProductShift}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={restaurantProducts} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(v) => String(Math.round(typeof v === "number" ? v : Number(v) || 0))}
-                />
+                <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => String(Math.round(Number(v) || 0))} />
                 <YAxis type="category" dataKey="name" width={88} tick={{ fontSize: 11 }} />
                 <Tooltip
                   formatter={(value, _name, item) => {
                     const row = item?.payload as ProductSale | undefined;
-                    return [
-                      `${row?.quantity ?? value} sold · ${formatKesForDisplay(row?.amount ?? 0)}`,
-                      "Product",
-                    ];
+                    return [`${row?.quantity ?? value} sold · ${formatKesForDisplay(row?.amount ?? 0)}`, "Product"];
                   }}
                 />
                 <Bar dataKey="quantity" fill="#8b6914" radius={[0, 6, 6, 0]} />
@@ -438,17 +431,9 @@ export function MonthlyReportChart({ points }: { points: { label: string; total:
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={points} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-          <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-          <YAxis
-            tick={{ fontSize: 11 }}
-            tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
-          />
-          <Tooltip
-            formatter={(value) => [
-              formatKesForDisplay(typeof value === "number" ? value : Number(value) || 0),
-              "Recognized",
-            ]}
-          />
+          <XAxis dataKey="label" {...timeAxis(points.length)} />
+          <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+          <Tooltip formatter={(value) => moneyTooltip(value, "Recognized")} />
           <Line
             type="monotone"
             dataKey="total"

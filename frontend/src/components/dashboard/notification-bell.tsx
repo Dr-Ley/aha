@@ -35,6 +35,27 @@ type NotificationBellProps = {
   buttonClassName?: string;
 };
 
+type NotificationPayload = {
+  notificationsDisabled?: boolean;
+  success?: boolean;
+  notifications?: NotificationRow[];
+};
+
+const notificationLoads = new Map<string, Promise<NotificationPayload>>();
+
+function loadNotifications(companyId: string): Promise<NotificationPayload> {
+  const hit = notificationLoads.get(companyId);
+  if (hit) return hit;
+  const promise = fetch(`/api/notifications?companyId=${encodeURIComponent(companyId)}`)
+    .then((response) => response.json() as Promise<NotificationPayload>)
+    .catch(() => ({ success: false, notifications: [] }))
+    .finally(() => {
+      notificationLoads.delete(companyId);
+    });
+  notificationLoads.set(companyId, promise);
+  return promise;
+}
+
 export function NotificationBell({ buttonClassName }: NotificationBellProps) {
   const { selectedCompanyId } = useCompany();
   const [disabled, setDisabled] = useState(false);
@@ -47,8 +68,7 @@ export function NotificationBell({ buttonClassName }: NotificationBellProps) {
   const load = useCallback(async () => {
     const companyId = selectedCompanyId;
     try {
-      const r = await fetch(`/api/notifications?companyId=${encodeURIComponent(companyId)}`);
-      const j = await r.json();
+      const j = await loadNotifications(companyId);
       if (j.notificationsDisabled) {
         setDisabled(true);
         setItems([]);
@@ -56,7 +76,7 @@ export function NotificationBell({ buttonClassName }: NotificationBellProps) {
         return;
       }
       setDisabled(false);
-      if (!r.ok || !j.success) {
+      if (!j.success) {
         setItems([]);
         setUnreadCount(0);
         return;
@@ -80,14 +100,8 @@ export function NotificationBell({ buttonClassName }: NotificationBellProps) {
   }, [load]);
 
   useEffect(() => {
-    const id = window.setInterval(() => void load(), 45000);
+    const id = window.setInterval(() => void load(), 120_000);
     return () => window.clearInterval(id);
-  }, [load]);
-
-  useEffect(() => {
-    const onFocus = () => void load();
-    window.addEventListener("focus", onFocus);
-    return () => window.removeEventListener("focus", onFocus);
   }, [load]);
 
   useEffect(() => {

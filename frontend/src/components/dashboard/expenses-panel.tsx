@@ -23,6 +23,8 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import { ChartPeriodFilter } from "@/components/dashboard/chart-period-filter";
+import { amountSeries, inChartPeriod, type ChartPeriod } from "@/lib/chart-period";
 import { useCompany } from "@/store/company-context";
 import { DashboardModal } from "@/components/dashboard/dashboard-modal";
 import {
@@ -109,25 +111,6 @@ function chartCompactFromKes(kes: number): string {
   return `KSh${v}`;
 }
 
-function daysBetween(from: string, to: string): number {
-  const a = Date.parse(`${from}T12:00:00+03:00`);
-  const b = Date.parse(`${to}T12:00:00+03:00`);
-  if (!Number.isFinite(a) || !Number.isFinite(b)) return 0;
-  return Math.round((b - a) / 86_400_000) + 1;
-}
-
-function addDaysYmd(value: string, days: number): string {
-  const t = Date.parse(`${value}T12:00:00+03:00`);
-  if (!Number.isFinite(t)) return value;
-  return nairobiYmd(new Date(t + days * 86_400_000));
-}
-
-function mondayOf(ymd: string): string {
-  const dow = new Date(`${ymd}T12:00:00+03:00`).getUTCDay();
-  const mon0 = dow === 0 ? 6 : dow - 1;
-  return addDaysYmd(ymd, -mon0);
-}
-
 function expenseRefKind(row: ExpenseRow): ReferenceType | "" {
   if (row.referenceType) return row.referenceType;
   if (row.bookingId != null) return "tour";
@@ -178,6 +161,18 @@ export function ExpensesPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [preset, setPreset] = useState<WeeklyDatePreset>("this_year");
+  const [trendPeriod, setTrendPeriodState] = useState<ChartPeriod>("month");
+  const [trendShift, setTrendShift] = useState(0);
+  const [categoryPeriod, setCategoryPeriodState] = useState<ChartPeriod>("month");
+  const [categoryShift, setCategoryShift] = useState(0);
+  const setTrendPeriod = (period: ChartPeriod) => {
+    setTrendPeriodState(period);
+    setTrendShift(0);
+  };
+  const setCategoryPeriod = (period: ChartPeriod) => {
+    setCategoryPeriodState(period);
+    setCategoryShift(0);
+  };
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
   const [catF, setCatF] = useState("");
@@ -360,45 +355,23 @@ export function ExpensesPanel() {
     return { total, count, average, thisMonth };
   }, [filtered, displayRows, thisMonthRange]);
 
-  const trendPoints = useMemo(() => {
-    if (filtered.length === 0) return [];
-    const range =
-      dateRange ??
-      (() => {
-        const dates = filtered.map((r) => expenseYmd(r.incurredAt)).filter(Boolean).sort();
-        if (dates.length === 0) return null;
-        return { from: dates[0], to: dates[dates.length - 1] };
-      })();
-    if (!range) return [];
-    const span = daysBetween(range.from, range.to);
-    const buckets = new Map<string, { label: string; amount: number; order: string }>();
-
-    for (const row of filtered) {
-      const ymd = expenseYmd(row.incurredAt);
-      if (!ymd) continue;
-      let key = ymd;
-      let label = formatExpenseDate(ymd);
-      if (span > 92) {
-        key = ymd.slice(0, 7);
-        const [y, m] = key.split("-");
-        label = `${MONTHS_SHORT[Number(m) - 1] ?? m} ${y}`;
-      } else if (span > 21) {
-        key = mondayOf(ymd);
-        label = formatExpenseDate(key);
-      }
-      const current = buckets.get(key) ?? { label, amount: 0, order: key };
-      current.amount += Number(row.amount) || 0;
-      buckets.set(key, current);
-    }
-
-    return [...buckets.values()]
-      .sort((a, b) => a.order.localeCompare(b.order))
-      .filter((row) => row.amount > 0);
-  }, [filtered, dateRange]);
+  const trendPoints = useMemo(
+    () =>
+      amountSeries(
+        displayRows
+          .map((row) => ({ date: expenseYmd(row.incurredAt), amount: Number(row.amount) || 0 }))
+          .filter((row) => row.date),
+        trendPeriod,
+        undefined,
+        trendShift
+      ),
+    [displayRows, trendPeriod, trendShift]
+  );
 
   const categoryBreakdown = useMemo(() => {
     const buckets = new Map<string, number>();
-    for (const row of filtered) {
+    for (const row of displayRows) {
+      if (!inChartPeriod(expenseYmd(row.incurredAt), categoryPeriod, undefined, categoryShift)) continue;
       const name = row.category?.trim();
       if (!name) continue;
       buckets.set(name, (buckets.get(name) ?? 0) + (Number(row.amount) || 0));
@@ -407,7 +380,7 @@ export function ExpensesPanel() {
       .map(([name, amount]) => ({ name, amount }))
       .filter((row) => row.amount > 0)
       .sort((a, b) => b.amount - a.amount);
-  }, [filtered]);
+  }, [displayRows, categoryPeriod, categoryShift]);
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) {
@@ -936,14 +909,30 @@ export function ExpensesPanel() {
         <DashboardTableExport title="Expenses" rows={filtered} columns={exportColumns} />
       </div>
 
-      {!loading && trendPoints.length > 0 ? (
+      {!loading ? (
         <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
-          <h2 className="mb-4 text-sm font-semibold">Expense trend</h2>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-sm font-semibold">Expense trend</h2>
+            <ChartPeriodFilter
+              value={trendPeriod}
+              onChange={setTrendPeriod}
+              shift={trendShift}
+              onShift={setTrendShift}
+              label="Expense trend time range"
+            />
+          </div>
           <div className="h-64 w-full min-w-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendPoints} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+                <XAxis
+                  dataKey="label"
+                  tick={{ fontSize: trendPoints.length > 8 ? 10 : 11 }}
+                  interval={0}
+                  angle={trendPoints.length > 8 ? -40 : 0}
+                  textAnchor={trendPoints.length > 8 ? "end" : "middle"}
+                  height={trendPoints.length > 8 ? 52 : 30}
+                />
                 <YAxis
                   tick={{ fontSize: 11 }}
                   tickFormatter={(v) => chartCompactFromKes(typeof v === "number" ? v : Number(v) || 0)}
@@ -967,10 +956,24 @@ export function ExpensesPanel() {
         </div>
       ) : null}
 
-      {!loading && categoryBreakdown.length > 0 ? (
+      {!loading ? (
         <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
-          <h2 className="mb-4 text-sm font-semibold">Expense categories</h2>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-sm font-semibold">Expense categories</h2>
+            <ChartPeriodFilter
+              value={categoryPeriod}
+              onChange={setCategoryPeriod}
+              shift={categoryShift}
+              onShift={setCategoryShift}
+              label="Expense categories time range"
+            />
+          </div>
           <div className="h-72 w-full min-w-0">
+            {categoryBreakdown.length === 0 ? (
+              <p className="flex h-full items-center justify-center text-sm text-base-content/50">
+                No expenses in this period.
+              </p>
+            ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={categoryBreakdown}
@@ -993,6 +996,7 @@ export function ExpensesPanel() {
                 <Bar dataKey="amount" fill="#2d5a3d" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
+            )}
           </div>
         </div>
       ) : null}

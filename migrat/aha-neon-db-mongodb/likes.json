@@ -1,0 +1,182 @@
+[
+ {
+  "_id": 3,
+  "user_id": 2,
+  "tour_id": 8,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-02-26T23:05:00.725Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 14,
+  "user_id": 1,
+  "tour_id": 3,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-02-27T00:49:25.151Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 23,
+  "user_id": 1,
+  "tour_id": 4,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-03-26T14:55:05.722Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 26,
+  "user_id": 1,
+  "tour_id": 2,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-03-26T14:55:40.567Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 27,
+  "user_id": 1,
+  "tour_id": 5,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-03-26T14:55:45.724Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 28,
+  "user_id": 1,
+  "tour_id": 7,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-03-26T14:55:47.607Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 30,
+  "user_id": 1,
+  "tour_id": 6,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-03-26T14:55:51.850Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 31,
+  "user_id": 1,
+  "tour_id": 1,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-03-26T14:55:55.611Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 32,
+  "user_id": 1,
+  "tour_id": 8,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-03-27T16:36:20.205Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 35,
+  "user_id": 4,
+  "tour_id": null,
+  "accommodation_id": 11,
+  "created_at": {
+   "$date": "2026-05-23T08:52:31.434Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 36,
+  "user_id": 4,
+  "tour_id": 5,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-05-25T17:19:56.282Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 39,
+  "user_id": 6,
+  "tour_id": 3,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-06-05T04:27:54.919Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 42,
+  "user_id": 4,
+  "tour_id": 4,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-09-06T17:18:36.325Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 43,
+  "user_id": 4,
+  "tour_id": 6,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-09-06T17:18:37.660Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 44,
+  "user_id": 4,
+  "tour_id": 2,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-09-06T17:18:38.919Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 45,
+  "user_id": 4,
+  "tour_id": 1,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-09-06T17:18:40.127Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 46,
+  "user_id": 4,
+  "tour_id": 3,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-09-06T17:18:41.214Z"
+  },
+  "company_id": "aha"
+ },
+ {
+  "_id": 47,
+  "user_id": 4,
+  "tour_id": 10,
+  "accommodation_id": null,
+  "created_at": {
+   "$date": "2026-09-06T17:18:42.613Z"
+  },
+  "company_id": "aha"
+ }
+]
