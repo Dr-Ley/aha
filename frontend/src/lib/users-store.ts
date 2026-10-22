@@ -27,7 +27,7 @@ function asUser(doc: Record<string, unknown> | null): UserRecord | null {
 
 function idFilter(userId: number | string): Filter<Record<string, unknown>> {
   const asString = String(userId);
-  const clauses: Filter<Record<string, unknown>>[] = [{ id: asString }, { _id: asString }];
+  const clauses: Record<string, unknown>[] = [{ id: asString }, { _id: asString }];
   const numeric = typeof userId === "number" ? userId : Number(asString);
   if (!Number.isNaN(numeric)) {
     clauses.push({ id: numeric }, { _id: numeric });
@@ -35,7 +35,7 @@ function idFilter(userId: number | string): Filter<Record<string, unknown>> {
   if (ObjectId.isValid(asString) && asString.length === 24) {
     clauses.push({ _id: new ObjectId(asString) });
   }
-  return { $or: clauses };
+  return { $or: clauses } as Filter<Record<string, unknown>>;
 }
 
 export async function findUserByEmail(email: string): Promise<UserRecord | null> {

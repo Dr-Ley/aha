@@ -83,7 +83,7 @@ async function seedIdCounters(database: Db): Promise<void> {
       .toArray();
     const seq = Number(row?.max ?? 0);
     if (!Number.isFinite(seq) || seq <= 0) continue;
-    await counters.updateOne({ _id: name }, { $max: { seq } }, { upsert: true });
+    await counters.updateOne({ _id: name } as never, { $max: { seq } }, { upsert: true });
   }
 }
 

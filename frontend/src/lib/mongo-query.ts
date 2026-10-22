@@ -41,9 +41,9 @@ function chunkText(value: unknown): string {
 
 function columnKey(column: ColumnLike): string {
   try {
-    const columns = getTableColumns(column.table as never);
+    const columns = getTableColumns(column.table as never) as Record<string, { name: string }>;
     for (const [key, candidate] of Object.entries(columns)) {
-      if (candidate === column || candidate.name === column.name) return key;
+      if (candidate === (column as object) || candidate.name === column.name) return key;
     }
   } catch {
     /* fall through */
@@ -371,7 +371,8 @@ function assignment(value: unknown, current: Row): unknown {
   return value;
 }
 
-class Query {
+class Query implements Promise<any[]> {
+  readonly [Symbol.toStringTag] = "Query";
   private table?: object;
   private selection?: Record<string, unknown> | null;
   private filter: Row | ((row: Row) => boolean) = {};
@@ -380,7 +381,7 @@ class Query {
   private lim?: number;
   private off = 0;
   private mode: "select" | "insert" | "update" | "delete" = "select";
-  private values?: Row | Row[];
+  private pendingValues?: Row | Row[];
   private setValues?: Row;
   private returnShape?: Record<string, unknown> | null;
 
@@ -426,7 +427,7 @@ class Query {
   }
 
   values(values: Row | Row[]) {
-    this.values = values;
+    this.pendingValues = values;
     return this;
   }
 
@@ -440,14 +441,24 @@ class Query {
     return this;
   }
 
-  then<TResult1 = unknown, TResult2 = never>(
-    onfulfilled?: ((value: unknown) => TResult1 | PromiseLike<TResult1>) | null,
-    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
-  ) {
-    return this.run().then(onfulfilled, onrejected);
+  catch<TResult = never>(
+    onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+  ): Promise<any[] | TResult> {
+    return this.run().catch(onRejected);
   }
 
-  private async run(): Promise<unknown> {
+  finally(onFinally?: (() => void) | null): Promise<any[]> {
+    return this.run().finally(onFinally);
+  }
+
+  then<TResult1 = any[], TResult2 = never>(
+    onFulfilled?: ((value: any[]) => TResult1 | PromiseLike<TResult1>) | null,
+    onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+  ): Promise<TResult1 | TResult2> {
+    return this.run().then(onFulfilled, onRejected);
+  }
+
+  private async run(): Promise<any[]> {
     if (!this.table) return [];
     if (this.mode === "select") return this.runSelect();
     if (this.mode === "insert") return this.runInsert();
@@ -583,7 +594,7 @@ class Query {
   private async runInsert(): Promise<Row[]> {
     const collection = await collectionFor(this.table!);
     const name = tableName(this.table!);
-    const incoming = Array.isArray(this.values) ? this.values : this.values ? [this.values] : [];
+    const incoming = Array.isArray(this.pendingValues) ? this.pendingValues : this.pendingValues ? [this.pendingValues] : [];
     const stored: Row[] = [];
     for (const value of incoming) {
       const doc: Row = { ...value };
@@ -603,7 +614,7 @@ class Query {
       for (const [key, value] of Object.entries(this.setValues ?? {})) {
         next[key] = assignment(value, doc);
       }
-      await collection.updateOne({ $or: [{ id: doc.id }, { _id: doc.id }] }, { $set: next });
+      await collection.updateOne({ $or: [{ id: doc.id }, { _id: doc.id }] } as never, { $set: next });
       updated.push(next);
     }
     return this.returnShape === undefined ? updated : updated.map((row) => this.projectReturning(row));
@@ -632,7 +643,16 @@ function sqlStatement(query: unknown): string {
   return sqlText(query).trim();
 }
 
-export const db = {
+type Database = {
+  select(selection?: Record<string, unknown>): Query;
+  insert(table: object): Query;
+  update(table: object): Query;
+  delete(table: object): Query;
+  execute(query: unknown): Promise<{ rows: Row[] }>;
+  transaction<T>(fn: (tx: Database) => Promise<T>): Promise<T>;
+};
+
+export const db: Database = {
   select(selection?: Record<string, unknown>) {
     return new Query("select", undefined, selection ?? null);
   },
@@ -652,7 +672,7 @@ export const db = {
     }
     return { rows: [] as Row[] };
   },
-  async transaction<T>(fn: (tx: typeof db) => Promise<T>): Promise<T> {
+  async transaction<T>(fn: (tx: Database) => Promise<T>): Promise<T> {
     return fn(db);
   },
 };

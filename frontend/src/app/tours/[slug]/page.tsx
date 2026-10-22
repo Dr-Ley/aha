@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { TourDetail } from "@/components/tour-detail";
 import { JsonLd } from "@/components/json-ld";
-import { getTourBySlug, getTourSlugs } from "@/lib/tours-db";
+import { getTourBySlug } from "@/lib/tours-db";
 import { tourJsonLd } from "@/lib/json-ld";
 import type { Metadata } from "next";
 import { DEFAULT_COMPANY_ID } from "@/types/company";
@@ -9,9 +9,9 @@ import { withCanonical } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 
-export async function generateStaticParams() {
-  const slugs = await getTourSlugs(DEFAULT_COMPANY_ID);
-  return slugs.map((slug) => ({ slug }));
+/** Rendered on request. Build-time slug lookup was failing the production build. */
+export function generateStaticParams() {
+  return [];
 }
 
 export async function generateMetadata({

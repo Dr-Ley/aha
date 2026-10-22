@@ -124,13 +124,15 @@ export async function loadUserPermissionPayload(
   const matrix: PermissionMatrix = {};
 
   for (const r of rows) {
-    if (!isDashboardModuleId(r.module)) continue;
+    const moduleId = r.module as DashboardModuleId;
+    if (!isDashboardModuleId(moduleId)) continue;
     if (!memberSet.has(r.companyId as CompanyId)) continue;
     if (r.canView || r.canEdit) {
       companySet.add(r.companyId as CompanyId);
     }
-    matrix[r.companyId] = matrix[r.companyId] || {};
-    matrix[r.companyId]![r.module] = {
+    const companyKey = r.companyId as CompanyId;
+    matrix[companyKey] = matrix[companyKey] || {};
+    matrix[companyKey]![moduleId] = {
       view: r.canView,
       edit: r.canEdit,
     };

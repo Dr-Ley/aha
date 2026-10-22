@@ -97,6 +97,10 @@ export async function POST(request: NextRequest) {
       roomTypeId = defaultType.id;
     }
 
+    if (roomTypeId == null) {
+      return NextResponse.json({ error: "Room type not found for this company" }, { status: 400 });
+    }
+
     const [rt] = await db
       .select()
       .from(roomTypes)

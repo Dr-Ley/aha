@@ -262,6 +262,8 @@ export async function ensureInvoiceForSource(
     invoice = { ...(updated ?? invoice), items: invoice.items };
   }
 
+  if (!invoice) return null;
+
   if (invoice.status !== "void") {
     await replaceItems(invoice.id, source.lines);
   }

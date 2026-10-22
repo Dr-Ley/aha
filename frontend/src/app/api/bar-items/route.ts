@@ -91,6 +91,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    if (categoryId == null) {
+      return NextResponse.json({ error: "Category not found for this company" }, { status: 400 });
+    }
+
     const [cat] = await db
       .select()
       .from(barCategories)
