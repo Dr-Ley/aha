@@ -8,10 +8,10 @@ import { DEFAULT_COMPANY_ID } from "@/types/company";
 import { withCanonical } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
-/** Rendered on request. Build-time slug lookup was failing the production build. */
-export function generateStaticParams() {
-  return [];
+function duringProductionBuild() {
+  return process.env.NEXT_PHASE === "phase-production-build";
 }
 
 export async function generateMetadata({
@@ -19,6 +19,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  if (duringProductionBuild()) {
+    return { title: "Safari Tour | African Home Adventure" };
+  }
   const { slug } = await params;
   const tour = await getTourBySlug(slug, DEFAULT_COMPANY_ID);
   if (!tour) return { title: "Tour Not Found", robots: { index: false, follow: false } };
@@ -33,6 +36,7 @@ export default async function TourDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  if (duringProductionBuild()) return null;
   const { slug } = await params;
   const tour = await getTourBySlug(slug, DEFAULT_COMPANY_ID);
   if (!tour) notFound();
