@@ -453,7 +453,10 @@ async function insertScratch(
         inserted = asNumber(result.insertedCount);
       } catch (error) {
         const written = asNumber(await scratch.countDocuments());
-        const detail = error instanceof MongoBulkWriteError ? `writeErrors=${error.writeErrors.length}` : "";
+        const writeErrors = error instanceof MongoBulkWriteError ? error.writeErrors : undefined;
+        const detail = writeErrors
+          ? `writeErrors=${Array.isArray(writeErrors) ? writeErrors.length : 1}`
+          : "";
         const message = error instanceof Error ? error.message : "insert failed";
         throw new ImportError(
           `${loaded.name}: insert stopped after ${written} of ${loaded.docs.length} documents. ${detail} ${message}`.trim()
