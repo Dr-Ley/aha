@@ -1,7 +1,7 @@
 import { getTableColumns, getTableName, is } from "drizzle-orm";
 import { Table } from "drizzle-orm";
-import type { Collection, Document } from "mongodb";
 import { getDb } from "@/lib/mongo-client";
+import { allocateIntegerId, readMaxIntegerId, storeIdentity } from "@/lib/mongo-ids";
 
 type SqlNode = { queryChunks: unknown[] };
 type ColumnLike = { name: string; table: object; keyAsName?: boolean };
@@ -55,26 +55,76 @@ function tableName(table: object): string {
   return getTableName(table as never);
 }
 
-async function collectionFor(table: object): Promise<Collection<Row>> {
-  const database = await getDb();
-  return database.collection<Row>(tableName(table));
+/**
+ * Stored documents use the Postgres column name (`company_id`) and keep the
+ * primary key in `_id`. Drizzle keys (`companyId`, `id`) exist only in memory.
+ * Filters and writes name exactly one stored field. They do not $or a
+ * camelCase twin, so two disagreeing company fields cannot both match.
+ */
+export type DocumentCollection = {
+  find(filter: Row): { toArray(): Promise<Row[]> };
+  insertOne(doc: Row): Promise<unknown>;
+  updateOne(
+    filter: Row,
+    update: { $set?: Row; $max?: Row },
+    options?: { upsert?: boolean }
+  ): Promise<unknown>;
+  deleteMany(filter: Row): Promise<unknown>;
+  findOneAndUpdate(
+    filter: Row,
+    update: { $inc?: Record<string, number>; $set?: Row },
+    options: { upsert?: boolean; returnDocument?: "before" | "after" }
+  ): Promise<Row | null>;
+  aggregate?(pipeline: Row[]): { toArray(): Promise<Row[]> };
+};
+
+export type DocumentStore = {
+  collection(name: string): DocumentCollection;
+  /** Stable per database so id floors are not repeated or mixed across databases. */
+  idScope?: string;
+};
+
+const MONGO_ID = Symbol("mongoId");
+
+type StoredColumn = { name: string; columnType?: string };
+
+function tableColumns(table: object): Record<string, StoredColumn> {
+  return getTableColumns(table as never) as Record<string, StoredColumn>;
 }
 
-async function nextId(name: string): Promise<number> {
-  const database = await getDb();
-  const counters = database.collection<{ seq: number }>("counters");
-  const updated = await counters.findOneAndUpdate(
-    { _id: name } as Document,
-    { $inc: { seq: 1 } },
-    { upsert: true, returnDocument: "after" }
-  );
-  return Number(updated?.seq ?? 1);
+function columnForField(columns: Record<string, StoredColumn>, field: string): StoredColumn | undefined {
+  const direct = columns[field];
+  if (direct) return direct;
+  for (const column of Object.values(columns)) {
+    if (column.name === field) return column;
+  }
+  return undefined;
+}
+
+/** SQL `date` columns are calendar days. BSON dates from the import stay on that UTC day. */
+function presentStoredValue(column: StoredColumn | undefined, value: unknown): unknown {
+  const unwrapped = unwrapExtended(value);
+  if (
+    column?.columnType === "PgDateString" &&
+    unwrapped instanceof Date &&
+    !Number.isNaN(unwrapped.getTime())
+  ) {
+    return unwrapped.toISOString().slice(0, 10);
+  }
+  return unwrapped;
+}
+
+/** One stored name for a Drizzle key. `id` is `_id`, never a second `id` field. */
+function storedFieldName(table: object, key: string): string {
+  if (key === "id" || key === "_id") return "_id";
+  const column = tableColumns(table)[key];
+  if (column?.name) return column.name;
+  return key;
 }
 
 function columnMap(table: object): Map<string, string> {
   const map = new Map<string, string>();
-  const columns = getTableColumns(table as never) as Record<string, { name: string }>;
-  for (const [key, column] of Object.entries(columns)) {
+  for (const [key, column] of Object.entries(tableColumns(table))) {
     map.set(column.name, key);
     map.set(key, key);
   }
@@ -110,22 +160,23 @@ function isScalarId(value: unknown): value is string | number {
 }
 
 /**
- * Imported Neon JSON uses SQL names (`company_id`) and stores the primary key in `_id`.
- * The app addresses columns by their Drizzle keys (`companyId`, `id`).
+ * App-facing row. Canonical SQL names win when a camelCase twin is also present.
+ * A scalar `_id` is the record id, including when a stale `id` field disagrees.
  */
 function normalizeDocument(doc: Row | null | undefined, table?: object): Row | null {
   if (!doc) return null;
   const columns = table ? columnMap(table) : new Map<string, string>();
+  const stored = table ? tableColumns(table) : {};
   const row: Row = {};
   for (const [key, value] of Object.entries(doc)) {
     if (key === "_id") continue;
     const mapped = columns.get(key);
-    if (mapped && mapped !== key) row[mapped] = unwrapExtended(value);
+    if (mapped && mapped !== key) row[mapped] = presentStoredValue(columnForField(stored, key), value);
   }
   for (const [key, value] of Object.entries(doc)) {
     if (key === "_id") continue;
     if (columns.get(key) === key) {
-      row[key] = unwrapExtended(value);
+      if (!(key in row)) row[key] = presentStoredValue(columnForField(stored, key), value);
       continue;
     }
     if (!columns.has(key)) {
@@ -133,37 +184,50 @@ function normalizeDocument(doc: Row | null | undefined, table?: object): Row | n
       if (!(camel in row)) row[camel] = unwrapExtended(value);
     }
   }
-  if (!isScalarId(row.id) && isScalarId(doc._id)) row.id = doc._id;
+  if (isScalarId(doc._id)) row.id = doc._id;
+  else if (!isScalarId(row.id) && isScalarId(doc._id)) row.id = doc._id;
+  Object.defineProperty(row, MONGO_ID, { value: doc._id, enumerable: false });
   return row;
 }
 
-function fieldAliases(table: object, key: string): string[] {
-  const columns = getTableColumns(table as never) as Record<string, { name: string }>;
-  const names = new Set<string>([key]);
-  if (columns[key]?.name) names.add(columns[key].name);
-  if (key === "id") names.add("_id");
-  return [...names];
+function mongoIdOf(row: Row): unknown {
+  const tagged = (row as Row & { [MONGO_ID]?: unknown })[MONGO_ID];
+  return tagged !== undefined ? tagged : row.id;
 }
 
-/** Match documents stored with either Drizzle keys or the imported SQL column names. */
-function widenFilter(filter: Row, table: object): Row {
+/** Persist Drizzle keys under their SQL names. Does not write camelCase aliases. */
+function toStoredDocument(value: Row, table: object): Row {
+  const columns = tableColumns(table);
+  const stored: Row = {};
+  for (const [key, val] of Object.entries(value)) {
+    if (val === undefined) continue;
+    if (key === "id" || key === "_id") {
+      if (stored._id == null && isScalarId(val)) stored._id = val;
+      continue;
+    }
+    const sqlName = columns[key]?.name;
+    if (sqlName) {
+      stored[sqlName] = val;
+      continue;
+    }
+    if (!(key in stored)) stored[key] = val;
+  }
+  return stored;
+}
+
+/** Rename filter keys to stored names. One field per key — no alias $or. */
+function toStoredFilter(filter: Row, table: object): Row {
   const parts: Row[] = [];
   for (const [key, expected] of Object.entries(filter)) {
     if ((key === "$and" || key === "$or") && Array.isArray(expected)) {
-      parts.push({ [key]: expected.map((part) => widenFilter(part as Row, table)) });
+      parts.push({ [key]: expected.map((part) => toStoredFilter(part as Row, table)) });
       continue;
     }
-    const aliases = fieldAliases(table, key);
-    if (aliases.length === 1) parts.push({ [aliases[0]]: expected });
-    else parts.push({ $or: aliases.map((alias) => ({ [alias]: expected })) });
+    parts.push({ [storedFieldName(table, key)]: expected });
   }
   if (parts.length === 0) return {};
   if (parts.length === 1) return parts[0];
   return { $and: parts };
-}
-
-function idsFilter(ids: unknown[]): Row {
-  return { $or: [{ id: { $in: ids } }, { _id: { $in: ids } }] };
 }
 
 type Token =
@@ -384,11 +448,33 @@ class Query implements Promise<any[]> {
   private pendingValues?: Row | Row[];
   private setValues?: Row;
   private returnShape?: Record<string, unknown> | null;
+  private source: () => Promise<DocumentStore>;
 
-  constructor(mode: Query["mode"], table?: object, selection?: Record<string, unknown> | null) {
+  constructor(
+    mode: Query["mode"],
+    table: object | undefined,
+    selection: Record<string, unknown> | null | undefined,
+    source: () => Promise<DocumentStore>
+  ) {
     this.mode = mode;
     this.table = table;
     this.selection = selection;
+    this.source = source;
+  }
+
+  private async collectionFor(table: object): Promise<DocumentCollection> {
+    const store = await this.source();
+    return store.collection(tableName(table));
+  }
+
+  private async nextId(name: string): Promise<number> {
+    const store = await this.source();
+    return allocateIntegerId(
+      store.collection("counters"),
+      name,
+      () => readMaxIntegerId(store.collection(name)),
+      storeIdentity(store, store.idScope)
+    );
   }
 
   from(table: object) {
@@ -467,9 +553,9 @@ class Query implements Promise<any[]> {
   }
 
   private async matchedDocs(): Promise<Row[]> {
-    const collection = await collectionFor(this.table!);
+    const collection = await this.collectionFor(this.table!);
     const translated = mongoFilter(this.filter);
-    const query = translated ? widenFilter(translated, this.table!) : null;
+    const query = translated ? toStoredFilter(translated, this.table!) : null;
     const docs = (query ? await collection.find(query).toArray() : await collection.find({}).toArray())
       .map((doc) => normalizeDocument(doc, this.table!)!)
       .filter((row) => matches(row, this.filter));
@@ -507,7 +593,7 @@ class Query implements Promise<any[]> {
     for (const join of this.joins) {
       const next: Array<Map<string, Row | null>> = [];
       const joinName = tableName(join.table);
-      const related = (await (await collectionFor(join.table)).find({}).toArray()).map(
+      const related = (await (await this.collectionFor(join.table)).find({}).toArray()).map(
         (doc) => normalizeDocument(doc, join.table)!
       );
       for (const bundle of bundles) {
@@ -592,13 +678,13 @@ class Query implements Promise<any[]> {
   }
 
   private async runInsert(): Promise<Row[]> {
-    const collection = await collectionFor(this.table!);
+    const collection = await this.collectionFor(this.table!);
     const name = tableName(this.table!);
     const incoming = Array.isArray(this.pendingValues) ? this.pendingValues : this.pendingValues ? [this.pendingValues] : [];
     const stored: Row[] = [];
     for (const value of incoming) {
-      const doc: Row = { ...value };
-      if (doc.id == null) doc.id = await nextId(name);
+      const doc = toStoredDocument(value, this.table!);
+      if (doc._id == null) doc._id = await this.nextId(name);
       await collection.insertOne(doc);
       stored.push(normalizeDocument(doc, this.table!)!);
     }
@@ -606,25 +692,32 @@ class Query implements Promise<any[]> {
   }
 
   private async runUpdate(): Promise<Row[]> {
-    const collection = await collectionFor(this.table!);
+    const collection = await this.collectionFor(this.table!);
     const docs = await this.matchedDocs();
     const updated: Row[] = [];
     for (const doc of docs) {
       const next: Row = { ...doc };
+      const assigned: Row = {};
       for (const [key, value] of Object.entries(this.setValues ?? {})) {
-        next[key] = assignment(value, doc);
+        const resolved = assignment(value, doc);
+        next[key] = resolved;
+        assigned[key] = resolved;
       }
-      await collection.updateOne({ $or: [{ id: doc.id }, { _id: doc.id }] } as never, { $set: next });
+      const patch = toStoredDocument(assigned, this.table!);
+      delete patch._id;
+      if (Object.keys(patch).length > 0) {
+        await collection.updateOne({ _id: mongoIdOf(doc) }, { $set: patch });
+      }
       updated.push(next);
     }
     return this.returnShape === undefined ? updated : updated.map((row) => this.projectReturning(row));
   }
 
   private async runDelete(): Promise<Row[]> {
-    const collection = await collectionFor(this.table!);
+    const collection = await this.collectionFor(this.table!);
     const docs = await this.matchedDocs();
     if (docs.length > 0) {
-      await collection.deleteMany(idsFilter(docs.map((doc) => doc.id)));
+      await collection.deleteMany({ _id: { $in: docs.map((doc) => mongoIdOf(doc)) } });
     }
     return this.returnShape === undefined ? docs : docs.map((row) => this.projectReturning(row));
   }
@@ -652,27 +745,41 @@ type Database = {
   transaction<T>(fn: (tx: Database) => Promise<T>): Promise<T>;
 };
 
-export const db: Database = {
-  select(selection?: Record<string, unknown>) {
-    return new Query("select", undefined, selection ?? null);
-  },
-  insert(table: object) {
-    return new Query("insert", table);
-  },
-  update(table: object) {
-    return new Query("update", table);
-  },
-  delete(table: object) {
-    return new Query("delete", table);
-  },
-  async execute(query: unknown) {
-    const statement = sqlStatement(query);
-    if (process.env.NODE_ENV !== "production" && statement && !/^(select|create|alter|drop|do|comment|grant|insert|update|delete)\b/i.test(statement)) {
-      console.warn("Ignored non-Mongo SQL:", statement.slice(0, 180));
-    }
-    return { rows: [] as Row[] };
-  },
-  async transaction<T>(fn: (tx: Database) => Promise<T>): Promise<T> {
-    return fn(db);
-  },
-};
+export function createQueryDatabase(source: () => Promise<DocumentStore>): Database {
+  return {
+    select(selection?: Record<string, unknown>) {
+      return new Query("select", undefined, selection ?? null, source);
+    },
+    insert(table: object) {
+      return new Query("insert", table, undefined, source);
+    },
+    update(table: object) {
+      return new Query("update", table, undefined, source);
+    },
+    delete(table: object) {
+      return new Query("delete", table, undefined, source);
+    },
+    async execute(query: unknown) {
+      const statement = sqlStatement(query);
+      if (process.env.NODE_ENV !== "production" && statement && !/^(select|create|alter|drop|do|comment|grant|insert|update|delete)\b/i.test(statement)) {
+        console.warn("Ignored non-Mongo SQL:", statement.slice(0, 180));
+      }
+      return { rows: [] as Row[] };
+    },
+    async transaction<T>(fn: (tx: Database) => Promise<T>): Promise<T> {
+      return fn(createQueryDatabase(source));
+    },
+  };
+}
+
+async function liveStore(): Promise<DocumentStore> {
+  const database = await getDb();
+  return {
+    idScope: database.databaseName,
+    collection(name: string) {
+      return database.collection(name) as unknown as DocumentCollection;
+    },
+  };
+}
+
+export const db: Database = createQueryDatabase(liveStore);

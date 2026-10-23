@@ -1,0 +1,51 @@
+{
+  "companyId": "ewc",
+  "currency": "KES",
+  "source": "Purchases inside the 10–18 October 2026 weekly bar message. They are stock bought from the till, not sales.",
+  "assumptions": [
+    "1 crate Tusker, 1 dozen water, and 1 crate soda are three expense lines. The message does not give a bottle count for the crate or the dozen.",
+    "Link referenceType bar and referenceId to the saved BAR-1018 order once it has an id.",
+    "Incurred at the bar message time, 18 October 2026, 11:13 am, Africa/Nairobi."
+  ],
+  "expenses": [
+    {
+      "ref": "EXP-BAR-1018-TUSKER",
+      "barRef": "BAR-1018",
+      "companyId": "ewc",
+      "bookingId": null,
+      "referenceType": "bar",
+      "referenceId": null,
+      "category": "Bar stock",
+      "amount": 5400,
+      "currency": "KES",
+      "incurredAt": "2026-10-18T11:13:00+03:00",
+      "description": "[EWC26-WA EXP-BAR-1018-TUSKER] 1 crate of Tusker, weekly bar record 10/10/2026 to 18/10/2026. Paid from the bar till before the Stanbic deposit."
+    },
+    {
+      "ref": "EXP-BAR-1018-WATER",
+      "barRef": "BAR-1018",
+      "companyId": "ewc",
+      "bookingId": null,
+      "referenceType": "bar",
+      "referenceId": null,
+      "category": "Bar stock",
+      "amount": 1000,
+      "currency": "KES",
+      "incurredAt": "2026-10-18T11:13:00+03:00",
+      "description": "[EWC26-WA EXP-BAR-1018-WATER] 1 dozen water, weekly bar record 10/10/2026 to 18/10/2026. Paid from the bar till before the Stanbic deposit."
+    },
+    {
+      "ref": "EXP-BAR-1018-SODA",
+      "barRef": "BAR-1018",
+      "companyId": "ewc",
+      "bookingId": null,
+      "referenceType": "bar",
+      "referenceId": null,
+      "category": "Bar stock",
+      "amount": 2000,
+      "currency": "KES",
+      "incurredAt": "2026-10-18T11:13:00+03:00",
+      "description": "[EWC26-WA EXP-BAR-1018-SODA] 1 crate of soda, weekly bar record 10/10/2026 to 18/10/2026. Paid from the bar till before the Stanbic deposit."
+    }
+  ]
+}

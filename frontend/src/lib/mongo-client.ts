@@ -1,122 +1,192 @@
 import { MongoClient, type Db, type MongoClientOptions } from "mongodb";
 
 const globalForMongo = globalThis as typeof globalThis & {
-  _mongoClientPromise?: Promise<MongoClient>;
-  _mongoDbNamePromise?: Promise<string>;
-  _mongoCountersReady?: Promise<void>;
+  _mongoClientCache?: MongoClientCache<MongoClient>;
 };
 
-function mongoUri(): string {
-  const uri = process.env.MONGODB_URI?.trim();
-  if (!uri) {
-    throw new Error("MONGODB_URI is not defined");
+/** Serverless pool: small, idle sockets close, fail fast when Atlas is unreachable. */
+export const mongoClientOptions: MongoClientOptions = {
+  maxPoolSize: 10,
+  minPoolSize: 0,
+  maxConnecting: 2,
+  maxIdleTimeMS: 60_000,
+  waitQueueTimeoutMS: 5_000,
+  serverSelectionTimeoutMS: 5_000,
+  connectTimeoutMS: 10_000,
+  socketTimeoutMS: 45_000,
+  retryWrites: true,
+  appName: "aha",
+};
+
+type MongoEnv = {
+  NODE_ENV?: string;
+  MONGODB_URI?: string;
+  MONGODB_DB?: string;
+  MONGODB_ALLOW_REMOTE?: string;
+};
+
+const INVALID_DB_NAME = /[\s/\\."$*<>:|?\u0000]/;
+
+export function createMongoClientCache<T>() {
+  let currentUri: string | undefined;
+  let current: Promise<T> | undefined;
+  return {
+    connect(uri: string, factory: (uri: string) => Promise<T>): Promise<T> {
+      if (current && currentUri === uri) return current;
+      currentUri = uri;
+      const pending = factory(uri).catch((error: unknown) => {
+        if (currentUri === uri) {
+          current = undefined;
+          currentUri = undefined;
+        }
+        throw error;
+      });
+      current = pending;
+      return pending;
+    },
+  };
+}
+
+type MongoClientCache<T> = ReturnType<typeof createMongoClientCache<T>>;
+
+function clientCache(): MongoClientCache<MongoClient> {
+  if (!globalForMongo._mongoClientCache) {
+    globalForMongo._mongoClientCache = createMongoClientCache<MongoClient>();
   }
-  return uri;
+  return globalForMongo._mongoClientCache;
 }
 
-function configuredDatabaseName(): string | null {
-  const name = process.env.MONGODB_DB?.trim();
-  return name && name.length > 0 ? name : null;
+export function databaseNameFromUri(uri: string): string | null {
+  const trimmed = uri.trim();
+  const scheme = trimmed.startsWith("mongodb+srv://")
+    ? "mongodb+srv://"
+    : trimmed.startsWith("mongodb://")
+      ? "mongodb://"
+      : null;
+  if (!scheme) return null;
+  const rest = trimmed.slice(scheme.length);
+  const slash = rest.indexOf("/");
+  if (slash === -1) return null;
+  const path = rest.slice(slash + 1);
+  const queryAt = path.indexOf("?");
+  const name = (queryAt === -1 ? path : path.slice(0, queryAt)).replace(/\/+$/, "").trim();
+  if (!name) return null;
+  try {
+    return decodeURIComponent(name);
+  } catch {
+    return null;
+  }
 }
 
-/** Database name from MONGODB_DB. The URI has no path, so the fallback is `aha`. */
-export function mongoDatabaseName(): string {
-  return configuredDatabaseName() ?? "aha";
+export function assertValidDatabaseName(name: string, source: string): void {
+  if (!name || name.length > 64 || INVALID_DB_NAME.test(name)) {
+    throw new Error(
+      `${source} must be a database name of 1–64 characters without spaces or / \\ . " $ * < > : | ?`
+    );
+  }
+}
+
+/** `MONGODB_DB` wins. Otherwise the path in `MONGODB_URI`. No silent default. */
+export function resolveDatabaseName(uri: string, configuredName?: string | null): string {
+  const configured = configuredName?.trim() ?? "";
+  if (configured) {
+    assertValidDatabaseName(configured, "MONGODB_DB");
+    return configured;
+  }
+  const fromUri = databaseNameFromUri(uri);
+  if (!fromUri) {
+    throw new Error(
+      "MongoDB database name is missing. Set MONGODB_DB or add a database name to MONGODB_URI (for example mongodb://127.0.0.1:27017/aha_dev)."
+    );
+  }
+  assertValidDatabaseName(fromUri, "The database name in MONGODB_URI");
+  return fromUri;
+}
+
+export function mongoDatabaseName(env: MongoEnv = process.env): string {
+  return resolveDatabaseName(env.MONGODB_URI?.trim() ?? "", env.MONGODB_DB);
+}
+
+/** Hosts in a mongodb or mongodb+srv URI, without userinfo, port, or path. */
+export function mongoHosts(uri: string): string[] {
+  const trimmed = uri.trim();
+  const scheme = trimmed.startsWith("mongodb+srv://")
+    ? "mongodb+srv://"
+    : trimmed.startsWith("mongodb://")
+      ? "mongodb://"
+      : null;
+  if (!scheme) return [];
+  const rest = trimmed.slice(scheme.length);
+  const at = rest.lastIndexOf("@");
+  const hostPart = at === -1 ? rest : rest.slice(at + 1);
+  const slash = hostPart.indexOf("/");
+  const authority = (slash === -1 ? hostPart : hostPart.slice(0, slash)).split("?")[0];
+  return authority
+    .split(",")
+    .map((entry) => {
+      const host = entry.trim();
+      if (host.startsWith("[")) {
+        const end = host.indexOf("]");
+        return end === -1 ? host : host.slice(1, end);
+      }
+      return host.split(":")[0] ?? "";
+    })
+    .filter((host) => host.length > 0);
+}
+
+export function isLocalMongoHost(host: string): boolean {
+  const normalized = host.trim().toLowerCase();
+  return normalized === "localhost" || normalized === "127.0.0.1" || normalized === "::1";
+}
+
+function remoteOptIn(value: string | undefined): boolean {
+  const flag = value?.trim().toLowerCase();
+  return flag === "1" || flag === "true" || flag === "yes";
 }
 
 /**
- * Compass imports landed in a database other than the app default.
- * When MONGODB_DB is unset, use the database that actually contains tours.
+ * `next dev` may not open Atlas unless MONGODB_ALLOW_REMOTE=true.
+ * Production and test runs are unchanged.
  */
-async function detectDatabaseName(client: MongoClient): Promise<string> {
-  const fallback = "aha";
-  try {
-    const { databases } = await client.db().admin().listDatabases();
-    const names = new Set<string>([fallback, ...databases.map((entry) => entry.name)]);
-    let best = fallback;
-    let bestCount = 0;
-    for (const name of names) {
-      if (name === "admin" || name === "local" || name === "config") continue;
-      const count = await client.db(name).collection("tours").estimatedDocumentCount();
-      if (count > bestCount) {
-        best = name;
-        bestCount = count;
-      }
-    }
-    return bestCount > 0 ? best : fallback;
-  } catch (error) {
-    console.error("Mongo database detection failed", error);
-    return fallback;
+export function assertLocalMongoInDevelopment(uri: string, env: MongoEnv = process.env): void {
+  if (env.NODE_ENV !== "development") return;
+  if (remoteOptIn(env.MONGODB_ALLOW_REMOTE)) return;
+  const hosts = mongoHosts(uri);
+  if (hosts.length === 0 || hosts.some((host) => !isLocalMongoHost(host))) {
+    throw new Error(
+      "Development refused a non-local MongoDB host. Use 127.0.0.1, localhost, or ::1, or set MONGODB_ALLOW_REMOTE=true to opt in to a remote database."
+    );
   }
 }
 
-async function databaseName(client: MongoClient): Promise<string> {
-  const configured = configuredDatabaseName();
-  if (configured) return configured;
-  if (!globalForMongo._mongoDbNamePromise) {
-    globalForMongo._mongoDbNamePromise = detectDatabaseName(client).catch((error: unknown) => {
-      globalForMongo._mongoDbNamePromise = undefined;
-      throw error;
-    });
-  }
-  return globalForMongo._mongoDbNamePromise;
+function mongoUri(env: MongoEnv = process.env): string {
+  const uri = env.MONGODB_URI?.trim();
+  if (!uri) throw new Error("MONGODB_URI is not defined");
+  return uri;
 }
 
-/** Keep autoincrement ids above the numeric `_id` values from the JSON import. */
-async function seedIdCounters(database: Db): Promise<void> {
-  const collections = await database.listCollections({}, { nameOnly: true }).toArray();
-  const counters = database.collection<{ seq: number }>("counters");
-  for (const { name } of collections) {
-    if (!name || name === "counters" || name.startsWith("system.")) continue;
-    const [row] = await database
-      .collection(name)
-      .aggregate<{ max: number }>([
-        {
-          $project: {
-            n: {
-              $cond: [{ $isNumber: "$id" }, "$id", { $cond: [{ $isNumber: "$_id" }, "$_id", 0] }],
-            },
-          },
-        },
-        { $group: { _id: null, max: { $max: "$n" } } },
-      ])
-      .toArray();
-    const seq = Number(row?.max ?? 0);
-    if (!Number.isFinite(seq) || seq <= 0) continue;
-    await counters.updateOne({ _id: name } as never, { $max: { seq } }, { upsert: true });
+function safeConnectionError(error: unknown): Error {
+  const message = error instanceof Error ? error.message : "MongoDB connection failed";
+  if (/mongodb(\+srv)?:\/\//i.test(message)) {
+    return new Error("MongoDB connection failed");
   }
-}
-
-async function ensureIdCounters(database: Db): Promise<void> {
-  if (!globalForMongo._mongoCountersReady) {
-    globalForMongo._mongoCountersReady = seedIdCounters(database)
-      .catch((error: unknown) => {
-        console.error("Unable to seed Mongo id counters", error);
-      })
-      .then(() => undefined);
-  }
-  await globalForMongo._mongoCountersReady;
-}
-
-function clientPromise(): Promise<MongoClient> {
-  if (!globalForMongo._mongoClientPromise) {
-    const options: MongoClientOptions = {};
-    const client = new MongoClient(mongoUri(), options);
-    globalForMongo._mongoClientPromise = client.connect().catch((error: unknown) => {
-      globalForMongo._mongoClientPromise = undefined;
-      throw error;
-    });
-  }
-  return globalForMongo._mongoClientPromise;
+  return error instanceof Error ? error : new Error("MongoDB connection failed");
 }
 
 export async function getMongoClient(): Promise<MongoClient> {
-  return clientPromise();
+  const uri = mongoUri();
+  assertLocalMongoInDevelopment(uri);
+  mongoDatabaseName();
+  return clientCache().connect(uri, async (nextUri) => {
+    try {
+      return await new MongoClient(nextUri, mongoClientOptions).connect();
+    } catch (error) {
+      throw safeConnectionError(error);
+    }
+  });
 }
 
 export async function getDb(): Promise<Db> {
   const client = await getMongoClient();
-  const database = client.db(await databaseName(client));
-  await ensureIdCounters(database);
-  return database;
+  return client.db(mongoDatabaseName());
 }

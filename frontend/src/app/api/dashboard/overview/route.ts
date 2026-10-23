@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { ensureInvoiceTables } from "@/lib/ensure-finance-documents";
+import { paymentCountsTowardRevenue } from "@/lib/overview-metrics";
 import {
   barItems,
   barOrderItems,
   barOrders,
   bookings,
+  contactSubmissions,
   hotelBookingRooms,
   hotelBookings,
+  invoices,
   payments,
   restaurantItems,
   restaurantOrderItems,
@@ -102,13 +106,14 @@ export async function GET(request: NextRequest) {
     const companyId = tenant.ctx.companyId as CompanyId;
 
     await ensureBookingCustomerColumn();
+    await ensureInvoiceTables();
 
     const showSafari = companyUsesSafariTours(companyId);
     const showHotel = companyUsesHotelStays(companyId);
     const showBar = companyUsesBar(companyId);
     const showRestaurant = companyUsesRestaurant(companyId);
 
-    const [bookingRows, revenueRows, recentPaymentRows, hotelRows, barOrderRows, restaurantOrderRows] =
+    const [bookingRows, revenueRows, recentPaymentRows, hotelRows, barOrderRows, restaurantOrderRows, enquiryRows, invoiceRows] =
       await Promise.all([
         showSafari ? db.select().from(bookings).where(eq(bookings.companyId, companyId)) : Promise.resolve([]),
         db.select().from(revenueEntries).where(eq(revenueEntries.companyId, companyId)),
@@ -124,6 +129,14 @@ export async function GET(request: NextRequest) {
         showRestaurant
           ? db.select().from(restaurantOrders).where(eq(restaurantOrders.companyId, companyId))
           : Promise.resolve([]),
+        db
+          .select({ createdAt: contactSubmissions.createdAt })
+          .from(contactSubmissions)
+          .where(eq(contactSubmissions.companyId, companyId)),
+        db
+          .select({ status: invoices.status, balance: invoices.balance })
+          .from(invoices)
+          .where(eq(invoices.companyId, companyId)),
       ]);
 
     const barIds = barOrderRows.map((o) => o.id);
@@ -243,7 +256,7 @@ export async function GET(request: NextRequest) {
     for (const stay of hotelRows) {
       if (stay.status === "cancelled") continue;
       hotelStays += 1;
-      const checkIn = String(stay.checkInDate).slice(0, 10);
+      const checkIn = ymdFromLoose(stay.checkInDate) ?? "";
       const ym = monthKeyFromYmd(checkIn);
       if (ym && hotelStayMap.has(ym)) {
         hotelStayMap.set(ym, (hotelStayMap.get(ym) ?? 0) + (stay.totalAmount ?? 0));
@@ -331,7 +344,7 @@ export async function GET(request: NextRequest) {
           guest: s.primaryGuestName || "Guest",
           roomType: roomType === "Room" ? "—" : roomType,
           nights: s.nights,
-          checkInDate: s.checkInDate,
+          checkInDate: ymdFromLoose(s.checkInDate) ?? "",
           status: s.status,
           paymentStatus: s.paymentStatus,
           totalAmount: s.totalAmount,
@@ -441,7 +454,7 @@ export async function GET(request: NextRequest) {
       for (const stay of hotelRows) {
         if (stay.status === "cancelled") continue;
         if (String(stay.paymentStatus ?? "").toLowerCase() !== "paid") continue;
-        const ym = monthKeyFromYmd(stay.checkInDate);
+        const ym = monthKeyFromYmd(ymdFromLoose(stay.checkInDate));
         if (!ym || !departmentRevenueMap.has(ym)) continue;
         departmentRevenueMap.get(ym)!.hotel += stay.totalAmount ?? 0;
       }
@@ -483,7 +496,7 @@ export async function GET(request: NextRequest) {
       for (const stay of hotelRows) {
         if (stay.status === "cancelled") continue;
         if (String(stay.paymentStatus ?? "").toLowerCase() !== "paid") continue;
-        const ym = monthKeyFromYmd(stay.checkInDate);
+        const ym = monthKeyFromYmd(ymdFromLoose(stay.checkInDate));
         if (!ym || !revenueStackMap.has(ym)) continue;
         const bucket = revenueStackMap.get(ym)!;
         bucket.hotel += stay.totalAmount ?? 0;
@@ -574,7 +587,7 @@ export async function GET(request: NextRequest) {
       hotelStays: hotelRows
         .filter((stay) => stay.status !== "cancelled")
         .map((stay) => ({
-          date: String(stay.checkInDate).slice(0, 10),
+          date: ymdFromLoose(stay.checkInDate) ?? "",
           amount: stay.totalAmount ?? 0,
           paid: String(stay.paymentStatus ?? "").toLowerCase() === "paid",
         }))
@@ -613,6 +626,95 @@ export async function GET(request: NextRequest) {
         .filter((order) => /^\d{4}-\d{2}-\d{2}$/.test(order.date)),
     };
 
+    const receivedBySource = new Map<string, number>();
+    for (const payment of recentPaymentRows) {
+      if (!paymentCountsTowardRevenue(payment.status)) continue;
+      const link = normalizePaymentLink(payment);
+      if (!link.referenceType || link.referenceId == null) continue;
+      const key = `${link.referenceType}:${link.referenceId}`;
+      receivedBySource.set(key, (receivedBySource.get(key) ?? 0) + (payment.amount ?? 0));
+    }
+    const orderBalance = (referenceType: string, orderId: number, status: string, gross: number) => {
+      if (String(status ?? "").toLowerCase() === "paid") return 0;
+      return Math.max(0, gross - (receivedBySource.get(`${referenceType}:${orderId}`) ?? 0));
+    };
+
+    const ledger = {
+      confirmedBookings: bookingRows
+        .filter((booking) => booking.status === "confirmed")
+        .map((booking) => ({
+          date: ymdFromLoose(booking.startDate || booking.travelDate) ?? "",
+          status: "confirmed" as const,
+        }))
+        .filter((booking) => /^\d{4}-\d{2}-\d{2}$/.test(booking.date)),
+      payments: recentPaymentRows
+        .map((payment) => {
+          const link = normalizePaymentLink(payment);
+          return {
+            id: payment.id,
+            date: payment.recordedAt ? nairobiYmd(payment.recordedAt) : "",
+            amount: payment.amount ?? 0,
+            status: payment.status,
+            referenceType: link.referenceType,
+            referenceId: link.referenceId,
+          };
+        })
+        .filter((payment) => /^\d{4}-\d{2}-\d{2}$/.test(payment.date)),
+      revenue: revenueRows
+        .map((row) => ({
+          date: ymdFromLoose(row.recognizedAt) ?? (row.periodMonth ? `${row.periodMonth}-01` : ""),
+          amount: row.amount ?? 0,
+          paymentId: row.referenceType === "payment" ? row.referenceId : null,
+          referenceType: row.referenceType,
+          referenceId: row.referenceId,
+        }))
+        .filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date)),
+      enquiries: enquiryRows
+        .map((row) => ({ date: row.createdAt ? nairobiYmd(row.createdAt) : "" }))
+        .filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date)),
+      outstandingBalance: invoiceRows.reduce((sum, invoice) => {
+        if (invoice.status !== "issued" && invoice.status !== "partial") return sum;
+        return sum + Math.max(0, invoice.balance ?? 0);
+      }, 0),
+      hotelStays: hotelRows
+        .filter((stay) => stay.status !== "cancelled")
+        .map((stay) => {
+          const party = (stay.adults ?? 0) + (stay.children ?? 0) + (stay.infants ?? 0);
+          const owed = stay.paymentStatus === "unpaid" || stay.paymentStatus === "partial";
+          return {
+            checkIn: ymdFromLoose(stay.checkInDate) ?? "",
+            checkOut: ymdFromLoose(stay.checkOutDate) ?? "",
+            amount: stay.totalAmount ?? 0,
+            guests: party > 0 ? party : 1,
+            status: stay.status,
+            balance: owed ? Math.max(0, (stay.totalAmount ?? 0) - (stay.amountPaid ?? 0)) : 0,
+          };
+        })
+        .filter((stay) => /^\d{4}-\d{2}-\d{2}$/.test(stay.checkIn)),
+      barOrders: barOrderRows
+        .map((order) => {
+          const amount = (barByOrder.get(order.id) ?? []).reduce((sum, line) => sum + line.sales, 0);
+          return {
+            date: barOrderYmd(order) ?? "",
+            amount,
+            balance: orderBalance("bar", order.id, String(order.status ?? ""), amount),
+          };
+        })
+        .filter((order) => /^\d{4}-\d{2}-\d{2}$/.test(order.date)),
+      restaurantOrders: restaurantOrderRows
+        .map((order) => {
+          const amount = restaurantLines
+            .filter((line) => line.orderId === order.id)
+            .reduce((sum, line) => sum + (line.lineTotal ?? 0), 0);
+          return {
+            date: ymdFromLoose(order.createdAt) ?? "",
+            amount,
+            balance: orderBalance("restaurant", order.id, String(order.status ?? ""), amount),
+          };
+        })
+        .filter((order) => /^\d{4}-\d{2}-\d{2}$/.test(order.date)),
+    };
+
     return NextResponse.json({
       success: true,
       companyId,
@@ -632,6 +734,7 @@ export async function GET(request: NextRequest) {
         restaurantSales,
       },
       chartFacts,
+      ledger,
       revenueTrend,
       revenueStack,
       revenueByCountry,

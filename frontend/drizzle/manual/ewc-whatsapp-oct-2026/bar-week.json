@@ -1,0 +1,74 @@
+{
+  "companyId": "ewc",
+  "currency": "KES",
+  "source": "WhatsApp, 18 October 2026, 11:13 am, from +254 710 999726. Bank confirmation at 11:25 am.",
+  "assumptions": [
+    "The message date 10/10/026 is 10/10/2026. tableLabel is the range the bar screen parses.",
+    "Beers at KES 400 are the Tusker line. Stock on the same message is Tusker bottles. Match the bar item whose name starts with Tusker, Water, Soda, or Wine.",
+    "Listed lines sum to the stated total of KES 20,500.",
+    "Purchases are expenses, not a reduction of sales. See expenses.json.",
+    "The week is paid in full. Sales of KES 20,500 are the revenue. KES 12,100 of that cash was deposited and KES 8,400 was spent on stock.",
+    "Stock has no table of its own. It is copied into notes so the count is kept with the week."
+  ],
+  "order": {
+    "ref": "BAR-1018",
+    "companyId": "ewc",
+    "status": "paid",
+    "tableLabel": "10/10/2026 - 18/10/2026",
+    "customerName": null,
+    "periodStart": "2026-10-10",
+    "periodEnd": "2026-10-18",
+    "salesTotal": 20500,
+    "amountDeposited": 12100,
+    "purchasesTotal": 8400,
+    "sourceMessageAt": "2026-10-18T11:13:00+03:00",
+    "notes": "[EWC26-WA BAR-1018] Weekly bar sales 10/10/2026 to 18/10/2026. Message wrote 10/10/026. Paid in full. Sales KES 20,500, recognized as revenue. Purchases KES 8,400. Cash deposited KES 12,100 to Stanbic Bank account 0100002141258 on 18/10/2026 at 1:23 pm. Receipt UJIKGA3056. Stock as at 18/10/2026: Tusker 16 bottles, soda 42 bottles, water 17 bottles, wine 3 glasses.",
+    "items": [
+      {
+        "itemName": "Tusker",
+        "messageName": "Beers",
+        "quantity": 18,
+        "unit": "bottles",
+        "unitPrice": 400,
+        "lineTotal": 7200,
+        "notes": "[EWC26-WA BAR-1018 Tusker] Beers, 18 bottles at 400."
+      },
+      {
+        "itemName": "Water",
+        "messageName": "Water",
+        "quantity": 34,
+        "unit": "bottles",
+        "unitPrice": 200,
+        "lineTotal": 6800,
+        "notes": "[EWC26-WA BAR-1018 Water] Water, 34 bottles at 200."
+      },
+      {
+        "itemName": "Soda",
+        "messageName": "Sodas",
+        "quantity": 57,
+        "unit": "bottles",
+        "unitPrice": 100,
+        "lineTotal": 5700,
+        "notes": "[EWC26-WA BAR-1018 Soda] Sodas, 57 bottles at 100."
+      },
+      {
+        "itemName": "Wine",
+        "messageName": "Wine",
+        "quantity": 2,
+        "unit": "glasses",
+        "unitPrice": 400,
+        "lineTotal": 800,
+        "notes": "[EWC26-WA BAR-1018 Wine] Wine, 2 glasses at 400."
+      }
+    ],
+    "stockAsAt": {
+      "date": "2026-10-18",
+      "lines": [
+        { "itemName": "Tusker", "quantity": 16, "unit": "bottles" },
+        { "itemName": "Soda", "quantity": 42, "unit": "bottles" },
+        { "itemName": "Water", "quantity": 17, "unit": "bottles" },
+        { "itemName": "Wine", "quantity": 3, "unit": "glasses" }
+      ]
+    }
+  }
+}

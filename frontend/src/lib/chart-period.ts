@@ -270,3 +270,186 @@ export function countByName(
       return a.name.localeCompare(b.name);
     });
 }
+
+/** How overview charts group a shared date window. */
+export type SeriesGrain = "day" | "month" | "year";
+
+export type SeriesWindow = {
+  bounds: { start: string; end: string } | null;
+  grain: SeriesGrain;
+};
+
+function grainKey(date: string, grain: SeriesGrain): string | null {
+  if (!parseYmd(date)) return null;
+  if (grain === "year") return date.slice(0, 4);
+  if (grain === "month") return date.slice(0, 7);
+  return date.slice(0, 10);
+}
+
+export function inSeriesWindow(date: string | null | undefined, window: SeriesWindow): boolean {
+  const ymd = String(date ?? "").slice(0, 10);
+  if (!parseYmd(ymd)) return false;
+  if (!window.bounds) return true;
+  return ymd >= window.bounds.start && ymd <= window.bounds.end;
+}
+
+export function seriesBuckets(
+  window: SeriesWindow,
+  today = nairobiYmd(),
+  observedDates: string[] = []
+): { key: string; label: string }[] {
+  if (!window.bounds) {
+    const years = observedDates
+      .map((date) => Number(String(date).slice(0, 4)))
+      .filter((year) => Number.isFinite(year) && year > 1900 && year < 3000);
+    const current = Number(today.slice(0, 4));
+    const min = years.length > 0 ? Math.min(current, ...years) : current;
+    const max = years.length > 0 ? Math.max(current, ...years) : current;
+    const buckets: { key: string; label: string }[] = [];
+    for (let year = min; year <= max; year += 1) {
+      buckets.push({ key: String(year), label: String(year) });
+    }
+    return buckets;
+  }
+
+  const start = parseYmd(window.bounds.start);
+  const end = parseYmd(window.bounds.end);
+  if (!start || !end) return [];
+
+  if (window.grain === "year") {
+    const buckets: { key: string; label: string }[] = [];
+    for (let year = start.y; year <= end.y; year += 1) {
+      buckets.push({ key: String(year), label: String(year) });
+    }
+    return buckets;
+  }
+
+  if (window.grain === "month") {
+    const showYear = start.y !== end.y;
+    const buckets: { key: string; label: string }[] = [];
+    let year = start.y;
+    let month = start.m;
+    while (year < end.y || (year === end.y && month <= end.m)) {
+      const name = MONTHS[month - 1] ?? String(month);
+      buckets.push({
+        key: `${year}-${pad2(month)}`,
+        label: showYear ? `${name} ${year}` : name,
+      });
+      month += 1;
+      if (month > 12) {
+        month = 1;
+        year += 1;
+      }
+    }
+    return buckets;
+  }
+
+  const withYear = window.bounds.start === window.bounds.end || start.y !== end.y;
+  const buckets: { key: string; label: string }[] = [];
+  let cursor = window.bounds.start;
+  let guard = 0;
+  while (cursor <= window.bounds.end && guard < 40) {
+    buckets.push({ key: cursor, label: dayLabel(cursor, withYear) });
+    cursor = addDays(cursor, 1);
+    guard += 1;
+  }
+  return buckets;
+}
+
+export function amountSeriesWindow(
+  rows: { date: string; amount: number }[],
+  window: SeriesWindow,
+  today = nairobiYmd()
+): { label: string; amount: number }[] {
+  const buckets = seriesBuckets(
+    window,
+    today,
+    rows.map((row) => row.date)
+  );
+  const totals = new Map(buckets.map((bucket) => [bucket.key, 0]));
+  for (const row of rows) {
+    if (!inSeriesWindow(row.date, window)) continue;
+    const key = grainKey(row.date, window.grain);
+    if (!key || !totals.has(key)) continue;
+    totals.set(key, (totals.get(key) ?? 0) + (Number(row.amount) || 0));
+  }
+  return buckets.map((bucket) => ({ label: bucket.label, amount: totals.get(bucket.key) ?? 0 }));
+}
+
+export function stackedSeriesWindow<K extends string>(
+  rows: Array<{ date: string } & Partial<Record<K, number>>>,
+  keys: readonly K[],
+  window: SeriesWindow,
+  today = nairobiYmd()
+): Array<{ label: string } & Record<K, number>> {
+  const buckets = seriesBuckets(
+    window,
+    today,
+    rows.map((row) => row.date)
+  );
+  const totals = new Map(
+    buckets.map((bucket) => [bucket.key, Object.fromEntries(keys.map((key) => [key, 0])) as Record<K, number>])
+  );
+  for (const row of rows) {
+    if (!inSeriesWindow(row.date, window)) continue;
+    const key = grainKey(row.date, window.grain);
+    const bucket = key ? totals.get(key) : undefined;
+    if (!bucket) continue;
+    for (const name of keys) bucket[name] += Number(row[name] ?? 0) || 0;
+  }
+  return buckets.map((bucket) => ({ label: bucket.label, ...totals.get(bucket.key)! }));
+}
+
+export function namedAmountSeriesWindow(
+  rows: { date: string; name: string; amount: number }[],
+  window: SeriesWindow
+): { name: string; amount: number }[] {
+  const totals = new Map<string, number>();
+  for (const row of rows) {
+    if (!inSeriesWindow(row.date, window)) continue;
+    const name = row.name.trim() || "Unknown";
+    totals.set(name, (totals.get(name) ?? 0) + (Number(row.amount) || 0));
+  }
+  return [...totals.entries()]
+    .map(([name, amount]) => ({ name, amount }))
+    .filter((row) => row.amount !== 0)
+    .sort((a, b) => b.amount - a.amount);
+}
+
+export function productSeriesWindow(
+  rows: { date: string; name: string; quantity: number; amount: number }[],
+  window: SeriesWindow
+): { name: string; quantity: number; amount: number }[] {
+  const totals = new Map<string, { name: string; quantity: number; amount: number }>();
+  for (const row of rows) {
+    if (!inSeriesWindow(row.date, window)) continue;
+    const name = row.name.trim() || "Product";
+    const current = totals.get(name) ?? { name, quantity: 0, amount: 0 };
+    current.quantity += Number(row.quantity) || 0;
+    current.amount += Number(row.amount) || 0;
+    totals.set(name, current);
+  }
+  return [...totals.values()]
+    .filter((row) => row.quantity > 0 || row.amount > 0)
+    .sort((a, b) => b.quantity - a.quantity || b.amount - a.amount);
+}
+
+export function countByNameWindow(
+  rows: { date: string; name: string }[],
+  window: SeriesWindow
+): { name: string; value: number }[] {
+  const totals = new Map<string, number>();
+  for (const row of rows) {
+    if (!inSeriesWindow(row.date, window)) continue;
+    const name = row.name.trim() || "Unknown";
+    totals.set(name, (totals.get(name) ?? 0) + 1);
+  }
+  return [...totals.entries()]
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => {
+      const aDays = Number.parseInt(a.name, 10);
+      const bDays = Number.parseInt(b.name, 10);
+      if (Number.isFinite(aDays) && Number.isFinite(bDays) && aDays !== bDays) return aDays - bDays;
+      return a.name.localeCompare(b.name);
+    });
+}

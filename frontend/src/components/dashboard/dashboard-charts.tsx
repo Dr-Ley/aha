@@ -1,15 +1,15 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { ChartPeriodFilter } from "@/components/dashboard/chart-period-filter";
+import { useMemo, type ReactNode } from "react";
 import {
-  amountSeries,
-  countByName,
-  namedAmountSeries,
-  productSeries,
-  stackedSeries,
-  type ChartPeriod,
+  amountSeriesWindow,
+  countByNameWindow,
+  namedAmountSeriesWindow,
+  productSeriesWindow,
+  stackedSeriesWindow,
 } from "@/lib/chart-period";
+import { nairobiYmd } from "@/lib/nairobi-date";
+import { overviewWindow, type OverviewPeriod } from "@/lib/overview-period";
 import {
   ResponsiveContainer,
   LineChart,
@@ -104,32 +104,17 @@ function moneyTooltip(value: unknown, name: string) {
 
 function ChartCard({
   title,
-  period,
-  onPeriod,
-  shift,
-  onShift,
   children,
   wide,
 }: {
   title: string;
-  period: ChartPeriod;
-  onPeriod: (period: ChartPeriod) => void;
-  shift: number;
-  onShift: (shift: number) => void;
   children: ReactNode;
   wide?: boolean;
 }) {
   return (
     <div className={`rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm ${wide ? "lg:col-span-2" : ""}`}>
-      <div className="mb-4 flex items-center justify-between gap-3">
+      <div className="mb-4">
         <h3 className="text-sm font-semibold text-base-content">{title}</h3>
-        <ChartPeriodFilter
-          value={period}
-          onChange={onPeriod}
-          shift={shift}
-          onShift={onShift}
-          label={`${title} time range`}
-        />
       </div>
       <div className={wide ? "h-80 w-full min-w-0 overflow-hidden" : "h-72 w-full min-w-0 overflow-hidden"}>
         {children}
@@ -138,28 +123,25 @@ function ChartCard({
   );
 }
 
-function useChartPeriod(): [ChartPeriod, (period: ChartPeriod) => void, number, (shift: number) => void] {
-  const [period, setPeriodState] = useState<ChartPeriod>("month");
-  const [shift, setShift] = useState(0);
-  const setPeriod = (next: ChartPeriod) => {
-    setPeriodState(next);
-    setShift(0);
-  };
-  return [period, setPeriod, shift, setShift];
-}
-
-export function DashboardCharts({ facts, stacked = false }: { facts: OverviewChartFacts; stacked?: boolean }) {
-  const [revenuePeriod, setRevenuePeriod, revenueShift, setRevenueShift] = useChartPeriod();
-  const [countryPeriod, setCountryPeriod, countryShift, setCountryShift] = useChartPeriod();
-  const [safariPeriod, setSafariPeriod, safariShift, setSafariShift] = useChartPeriod();
+export function DashboardCharts({
+  facts,
+  period,
+  stacked = false,
+}: {
+  facts: OverviewChartFacts;
+  period: OverviewPeriod;
+  stacked?: boolean;
+}) {
+  const today = nairobiYmd();
+  const window = useMemo(() => overviewWindow(period, today), [period, today]);
 
   const revenueLine = useMemo(
-    () => amountSeries(facts.revenue, revenuePeriod, undefined, revenueShift),
-    [facts.revenue, revenuePeriod, revenueShift]
+    () => amountSeriesWindow(facts.revenue, window, today),
+    [facts.revenue, window, today]
   );
   const revenueStack = useMemo(
     () =>
-      stackedSeries(
+      stackedSeriesWindow(
         [
           ...facts.safariBookings
             .filter((booking) => booking.paid)
@@ -172,43 +154,38 @@ export function DashboardCharts({ facts, stacked = false }: { facts: OverviewCha
             .map((order) => ({ date: order.date, safari: 0, hotel: 0, bar: order.amount })),
         ],
         ["safari", "hotel", "bar"] as const,
-        revenuePeriod,
-        undefined,
-        revenueShift
+        window,
+        today
       ),
-    [facts.safariBookings, facts.hotelStays, facts.barOrders, revenuePeriod, revenueShift]
+    [facts.safariBookings, facts.hotelStays, facts.barOrders, window, today]
   );
   const countries = useMemo(() => {
-    const rows = namedAmountSeries(
+    const rows = namedAmountSeriesWindow(
       facts.safariBookings.map((booking) => ({
         date: booking.date,
         name: booking.country,
         amount: booking.amount,
       })),
-      countryPeriod,
-      undefined,
-      countryShift
+      window
     ).map((row) => ({ country: row.name, amount: row.amount }));
     return rows.length > 0 ? rows : [{ country: "No bookings", amount: 0 }];
-  }, [facts.safariBookings, countryPeriod, countryShift]);
+  }, [facts.safariBookings, window]);
   const safariSlices = useMemo(() => {
-    const rows = countByName(
+    const rows = countByNameWindow(
       facts.safariBookings
         .filter((booking) => booking.days != null)
         .map((booking) => ({
           date: booking.date,
           name: booking.days === 1 ? "1 Day" : `${booking.days} Days`,
         })),
-      safariPeriod,
-      undefined,
-      safariShift
+      window
     );
     return rows.length > 0 ? rows : [{ name: "No bookings", value: 1 }];
-  }, [facts.safariBookings, safariPeriod, safariShift]);
+  }, [facts.safariBookings, window]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <ChartCard title="Revenue trend" period={revenuePeriod} onPeriod={setRevenuePeriod} shift={revenueShift} onShift={setRevenueShift} wide>
+      <ChartCard title="Revenue trend" wide>
         <ResponsiveContainer width="100%" height="100%">
           {stacked ? (
             <BarChart data={revenueStack} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -240,7 +217,7 @@ export function DashboardCharts({ facts, stacked = false }: { facts: OverviewCha
         </ResponsiveContainer>
       </ChartCard>
 
-      <ChartCard title="Revenue by country" period={countryPeriod} onPeriod={setCountryPeriod} shift={countryShift} onShift={setCountryShift}>
+      <ChartCard title="Revenue by country">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={countries} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
@@ -252,7 +229,7 @@ export function DashboardCharts({ facts, stacked = false }: { facts: OverviewCha
         </ResponsiveContainer>
       </ChartCard>
 
-      <ChartCard title="Safari duration distribution" period={safariPeriod} onPeriod={setSafariPeriod} shift={safariShift} onShift={setSafariShift}>
+      <ChartCard title="Safari duration distribution">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie data={safariSlices} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={52} outerRadius={88} paddingAngle={2}>
@@ -271,24 +248,21 @@ export function DashboardCharts({ facts, stacked = false }: { facts: OverviewCha
 
 export function HospitalityCharts({
   facts,
+  period,
   showRestaurant = false,
   showDepartment = false,
 }: {
   facts: OverviewChartFacts;
+  period: OverviewPeriod;
   showRestaurant?: boolean;
   showDepartment?: boolean;
 }) {
-  const [departmentPeriod, setDepartmentPeriod, departmentShift, setDepartmentShift] = useChartPeriod();
-  const [stayPeriod, setStayPeriod, stayShift, setStayShift] = useChartPeriod();
-  const [barPeriod, setBarPeriod, barShift, setBarShift] = useChartPeriod();
-  const [barProductPeriod, setBarProductPeriod, barProductShift, setBarProductShift] = useChartPeriod();
-  const [restaurantPeriod, setRestaurantPeriod, restaurantShift, setRestaurantShift] = useChartPeriod();
-  const [restaurantProductPeriod, setRestaurantProductPeriod, restaurantProductShift, setRestaurantProductShift] =
-    useChartPeriod();
+  const today = nairobiYmd();
+  const window = useMemo(() => overviewWindow(period, today), [period, today]);
 
   const department = useMemo(
     () =>
-      stackedSeries(
+      stackedSeriesWindow(
         [
           ...facts.hotelStays
             .filter((stay) => stay.paid)
@@ -301,43 +275,41 @@ export function HospitalityCharts({
             .map((order) => ({ date: order.date, hotel: 0, bar: 0, restaurant: order.amount })),
         ],
         ["hotel", "bar", "restaurant"] as const,
-        departmentPeriod,
-        undefined,
-        departmentShift
+        window,
+        today
       ),
-    [facts.hotelStays, facts.barOrders, facts.restaurantOrders, departmentPeriod, departmentShift]
+    [facts.hotelStays, facts.barOrders, facts.restaurantOrders, window, today]
   );
   const stays = useMemo(
-    () => amountSeries(facts.hotelStays.map((stay) => ({ date: stay.date, amount: stay.amount })), stayPeriod, undefined, stayShift),
-    [facts.hotelStays, stayPeriod, stayShift]
+    () => amountSeriesWindow(facts.hotelStays.map((stay) => ({ date: stay.date, amount: stay.amount })), window, today),
+    [facts.hotelStays, window, today]
   );
   const barSales = useMemo(
-    () => amountSeries(facts.barOrders.map((order) => ({ date: order.date, amount: order.amount })), barPeriod, undefined, barShift),
-    [facts.barOrders, barPeriod, barShift]
+    () => amountSeriesWindow(facts.barOrders.map((order) => ({ date: order.date, amount: order.amount })), window, today),
+    [facts.barOrders, window, today]
   );
   const barProducts = useMemo(() => {
-    const rows = productSeries(orderProductLines(facts.barOrders), barProductPeriod, undefined, barProductShift);
+    const rows = productSeriesWindow(orderProductLines(facts.barOrders), window);
     return rows.length > 0 ? rows : [EMPTY_PRODUCT];
-  }, [facts.barOrders, barProductPeriod, barProductShift]);
+  }, [facts.barOrders, window]);
   const restaurantSales = useMemo(
     () =>
-      amountSeries(
+      amountSeriesWindow(
         facts.restaurantOrders.map((order) => ({ date: order.date, amount: order.amount })),
-        restaurantPeriod,
-        undefined,
-        restaurantShift
+        window,
+        today
       ),
-    [facts.restaurantOrders, restaurantPeriod, restaurantShift]
+    [facts.restaurantOrders, window, today]
   );
   const restaurantProducts = useMemo(() => {
-    const rows = productSeries(orderProductLines(facts.restaurantOrders), restaurantProductPeriod, undefined, restaurantProductShift);
+    const rows = productSeriesWindow(orderProductLines(facts.restaurantOrders), window);
     return rows.length > 0 ? rows : [EMPTY_PRODUCT];
-  }, [facts.restaurantOrders, restaurantProductPeriod, restaurantProductShift]);
+  }, [facts.restaurantOrders, window]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       {showDepartment ? (
-        <ChartCard title="Revenue trend" period={departmentPeriod} onPeriod={setDepartmentPeriod} shift={departmentShift} onShift={setDepartmentShift} wide>
+        <ChartCard title="Revenue trend" wide>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={department} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
@@ -352,7 +324,7 @@ export function HospitalityCharts({
           </ResponsiveContainer>
         </ChartCard>
       ) : null}
-      <ChartCard title="Hotel stay revenue" period={stayPeriod} onPeriod={setStayPeriod} shift={stayShift} onShift={setStayShift} wide>
+      <ChartCard title="Hotel stay revenue" wide>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={stays} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
@@ -363,7 +335,7 @@ export function HospitalityCharts({
           </LineChart>
         </ResponsiveContainer>
       </ChartCard>
-      <ChartCard title="Bar sales" period={barPeriod} onPeriod={setBarPeriod} shift={barShift} onShift={setBarShift} wide>
+      <ChartCard title="Bar sales" wide>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={barSales} margin={{ top: 8, right: 8, left: 0, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
@@ -374,7 +346,7 @@ export function HospitalityCharts({
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
-      <ChartCard title="Bar products" period={barProductPeriod} onPeriod={setBarProductPeriod} shift={barProductShift} onShift={setBarProductShift} wide={!showRestaurant}>
+      <ChartCard title="Bar products" wide={!showRestaurant}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={barProducts} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />
@@ -392,7 +364,7 @@ export function HospitalityCharts({
       </ChartCard>
       {showRestaurant ? (
         <>
-          <ChartCard title="Restaurant sales" period={restaurantPeriod} onPeriod={setRestaurantPeriod} shift={restaurantShift} onShift={setRestaurantShift}>
+          <ChartCard title="Restaurant sales">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={restaurantSales} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
@@ -403,7 +375,7 @@ export function HospitalityCharts({
               </LineChart>
             </ResponsiveContainer>
           </ChartCard>
-          <ChartCard title="Restaurant products" period={restaurantProductPeriod} onPeriod={setRestaurantProductPeriod} shift={restaurantProductShift} onShift={setRestaurantProductShift}>
+          <ChartCard title="Restaurant products">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={restaurantProducts} layout="vertical" margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" horizontal={false} />

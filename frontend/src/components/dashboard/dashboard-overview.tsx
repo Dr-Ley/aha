@@ -1,68 +1,52 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
+  BedDouble,
   CalendarRange,
   ChevronLeft,
   ChevronRight,
   CircleDollarSign,
   ClipboardList,
   FileWarning,
+  Mail,
+  Users,
   Wine,
   UtensilsCrossed,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useCompany } from "@/store/company-context";
 import type { OverviewChartFacts } from "@/components/dashboard/dashboard-charts";
 import { EntityViewModal } from "@/components/dashboard/entity-view-modal";
 import { useCurrency } from "@/lib/currency-context";
 import { formatKesForDisplay } from "@/lib/data";
 import { nairobiYmd } from "@/lib/nairobi-date";
+import {
+  countConfirmedBookings,
+  countInPeriod,
+  guestCount,
+  openBalance,
+  recognizedRevenue,
+  sumAmountsInPeriod,
+  upcomingArrivals,
+  type HotelStayFact,
+  type OrderFact,
+  type RevenueEntryFact,
+  type RevenuePaymentFact,
+} from "@/lib/overview-metrics";
+import {
+  DEFAULT_OVERVIEW_PERIOD,
+  OVERVIEW_PERIODS,
+  inOverviewPeriod,
+  isOverviewPeriod,
+  overviewPeriodStorageKey,
+  overviewRangeCaption,
+  overviewScopeLabel,
+  upcomingScopeLabel,
+  type OverviewPeriod,
+} from "@/lib/overview-period";
 import { companyUsesHotelStays, companyUsesRestaurant, companyUsesSafariTours } from "@/types/company";
-
-type CardPeriod = "today" | "week" | "month" | "last3" | "year" | "all";
-
-const CARD_PERIODS: { id: CardPeriod; label: string }[] = [
-  { id: "today", label: "Today" },
-  { id: "week", label: "This week" },
-  { id: "month", label: "This month" },
-  { id: "last3", label: "Last 3 months" },
-  { id: "year", label: "This year" },
-  { id: "all", label: "All" },
-];
-
-function periodBounds(period: CardPeriod, today: string): { start: string; end: string } | null {
-  if (period === "all") return null;
-  if (period === "today") return { start: today, end: today };
-  const [year, month, day] = today.split("-").map(Number);
-  if (period === "week") {
-    const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
-    const mondayOffset = weekday === 0 ? 6 : weekday - 1;
-    const startDate = new Date(Date.UTC(year, month - 1, day - mondayOffset));
-    const endDate = new Date(startDate.getTime() + 6 * 86_400_000);
-    return { start: startDate.toISOString().slice(0, 10), end: endDate.toISOString().slice(0, 10) };
-  }
-  if (period === "month" || period === "last3") {
-    const last = new Date(Date.UTC(year, month, 0)).getUTCDate();
-    const end = `${today.slice(0, 7)}-${String(last).padStart(2, "0")}`;
-    if (period === "month") return { start: `${today.slice(0, 7)}-01`, end };
-    const startIndex = year * 12 + (month - 1) - 2;
-    const startYear = Math.floor(startIndex / 12);
-    const startMonth = (startIndex % 12) + 1;
-    return {
-      start: `${startYear}-${String(startMonth).padStart(2, "0")}-01`,
-      end,
-    };
-  }
-  return { start: `${year}-01-01`, end: `${year}-12-31` };
-}
-
-function ymdInPeriod(value: string | null | undefined, period: CardPeriod, today: string): boolean {
-  const bounds = periodBounds(period, today);
-  if (!bounds) return true;
-  const day = String(value ?? "").slice(0, 10);
-  return /^\d{4}-\d{2}-\d{2}$/.test(day) && day >= bounds.start && day <= bounds.end;
-}
 
 const chartLoading = (
   <div className="grid gap-6 lg:grid-cols-2">
@@ -82,22 +66,31 @@ const HospitalityCharts = dynamic(
   { ssr: false, loading: () => chartLoading }
 );
 
+type OverviewLedger = {
+  confirmedBookings: { date: string; status: string }[];
+  payments: RevenuePaymentFact[];
+  revenue: RevenueEntryFact[];
+  enquiries: { date: string }[];
+  outstandingBalance: number;
+  hotelStays: HotelStayFact[];
+  barOrders: OrderFact[];
+  restaurantOrders: OrderFact[];
+};
+
+const EMPTY_LEDGER: OverviewLedger = {
+  confirmedBookings: [],
+  payments: [],
+  revenue: [],
+  enquiries: [],
+  outstandingBalance: 0,
+  hotelStays: [],
+  barOrders: [],
+  restaurantOrders: [],
+};
+
 type OverviewPayload = {
-  kpis: {
-    totalBookings: number;
-    monthlyRevenue: number;
-    upcomingTrips: number;
-    unpaidInvoices: number;
-  };
   chartFacts: OverviewChartFacts;
-  hospitalityKpis: {
-    hotelStays: number;
-    hotelRevenueMonth: number;
-    upcomingArrivals: number;
-    barSales: number;
-    weeklyBarRecords: number;
-    restaurantSales: number;
-  };
+  ledger: OverviewLedger;
   recentStays: Array<{
     id: number;
     guest: string;
@@ -127,16 +120,34 @@ type OverviewPayload = {
   }>;
 };
 
+function emptyChartFacts(): OverviewChartFacts {
+  return { revenue: [], safariBookings: [], hotelStays: [], barOrders: [], restaurantOrders: [] };
+}
+
 export function DashboardOverview() {
   const { formatMoney } = useCurrency();
+  const { data: session, status: sessionStatus } = useSession();
   const { selectedCompanyId, selectedCompany, hasOverviewAccess, permissionsLoading } = useCompany();
   const [data, setData] = useState<OverviewPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stayPeriod, setStayPeriod] = useState<CardPeriod>("month");
-  const [bookingPeriod, setBookingPeriod] = useState<CardPeriod>("month");
-  const [paymentPeriod, setPaymentPeriod] = useState<CardPeriod>("month");
+  const [period, setPeriod] = useState<OverviewPeriod>(DEFAULT_OVERVIEW_PERIOD);
+  const [periodReady, setPeriodReady] = useState(false);
   const [bookingViewId, setBookingViewId] = useState<number | null>(null);
+  const userId = session?.user?.id;
+  const today = nairobiYmd();
+
+  useEffect(() => {
+    if (sessionStatus === "loading") return;
+    const stored = window.localStorage.getItem(overviewPeriodStorageKey(userId));
+    if (isOverviewPeriod(stored)) setPeriod(stored);
+    setPeriodReady(true);
+  }, [sessionStatus, userId]);
+
+  function selectPeriod(next: OverviewPeriod) {
+    setPeriod(next);
+    window.localStorage.setItem(overviewPeriodStorageKey(userId), next);
+  }
 
   useEffect(() => {
     if (permissionsLoading) return;
@@ -158,21 +169,22 @@ export function DashboardOverview() {
         if (!res.ok) throw new Error(json.error ?? "Failed to load");
         if (cancelled) return;
         setData({
-          kpis: json.kpis,
-          hospitalityKpis: json.hospitalityKpis ?? {
-            hotelStays: 0,
-            hotelRevenueMonth: 0,
-            upcomingArrivals: 0,
-            barSales: 0,
-            weeklyBarRecords: 0,
-            restaurantSales: 0,
-          },
           chartFacts: {
             revenue: json.chartFacts?.revenue ?? [],
             safariBookings: json.chartFacts?.safariBookings ?? [],
             hotelStays: json.chartFacts?.hotelStays ?? [],
             barOrders: json.chartFacts?.barOrders ?? [],
             restaurantOrders: json.chartFacts?.restaurantOrders ?? [],
+          },
+          ledger: {
+            confirmedBookings: json.ledger?.confirmedBookings ?? [],
+            payments: json.ledger?.payments ?? [],
+            revenue: json.ledger?.revenue ?? [],
+            enquiries: json.ledger?.enquiries ?? [],
+            outstandingBalance: Number(json.ledger?.outstandingBalance) || 0,
+            hotelStays: json.ledger?.hotelStays ?? [],
+            barOrders: json.ledger?.barOrders ?? [],
+            restaurantOrders: json.ledger?.restaurantOrders ?? [],
           },
           recentBookings: json.recentBookings ?? [],
           recentStays: json.recentStays ?? [],
@@ -194,7 +206,42 @@ export function DashboardOverview() {
     };
   }, [selectedCompanyId, permissionsLoading, hasOverviewAccess]);
 
-  if (permissionsLoading) {
+  const ledger = data?.ledger ?? EMPTY_LEDGER;
+  const scope = overviewScopeLabel(period);
+  const cards = useMemo(() => {
+    const hotelRevenue = sumAmountsInPeriod(
+      ledger.hotelStays.map((stay) => ({ date: stay.checkIn, amount: stay.amount })),
+      period,
+      today
+    );
+    const barSales = sumAmountsInPeriod(ledger.barOrders, period, today);
+    const restaurantSales = sumAmountsInPeriod(ledger.restaurantOrders, period, today);
+    const unpaid = openBalance([...ledger.hotelStays, ...ledger.barOrders, ...ledger.restaurantOrders]);
+    if (selectedCompanyId === "bth") {
+      return [
+        { key: "hotel", label: "Hotel revenue", scope, value: formatKesForDisplay(hotelRevenue), hint: "Stay totals by check-in", icon: "bed" as const },
+        { key: "restaurant", label: "Restaurant sales", scope, value: formatKesForDisplay(restaurantSales), hint: "Orders in this range", icon: "restaurant" as const },
+        { key: "bar", label: "Bar sales", scope, value: formatKesForDisplay(barSales), hint: "Orders in this range", icon: "bar" as const },
+        { key: "unpaid", label: "Unpaid and partial", scope: "Open balance", value: formatKesForDisplay(unpaid), hint: "Hotel, restaurant, and bar. Not limited by the date range.", icon: "warning" as const },
+      ];
+    }
+    if (selectedCompanyId === "ewc") {
+      return [
+        { key: "hotel", label: "Hotel revenue", scope, value: formatKesForDisplay(hotelRevenue), hint: "Stay totals by check-in", icon: "bed" as const },
+        { key: "bar", label: "Bar sales", scope, value: formatKesForDisplay(barSales), hint: "Orders in this range", icon: "bar" as const },
+        { key: "guests", label: "Guests", scope, value: String(guestCount(ledger.hotelStays, period, today)), hint: "People on stays in this range", icon: "guests" as const },
+        { key: "arrivals", label: "Upcoming arrivals", scope: upcomingScopeLabel(period), value: String(upcomingArrivals(ledger.hotelStays, period, today)), hint: "Confirmed or pending check-ins", icon: "calendar" as const },
+      ];
+    }
+    return [
+      { key: "bookings", label: "Active bookings", scope, value: String(countConfirmedBookings(ledger.confirmedBookings, period, today)), hint: "Confirmed departures", icon: "clipboard" as const },
+      { key: "revenue", label: "Revenue", scope, value: formatKesForDisplay(recognizedRevenue(ledger.payments, ledger.revenue, period, today)), hint: "Paid and partial payments, plus recognized revenue", icon: "money" as const },
+      { key: "outstanding", label: "Outstanding balance", scope: "Open balance", value: formatKesForDisplay(ledger.outstandingBalance), hint: "Issued or partial invoices. Not limited by the date range.", icon: "warning" as const },
+      { key: "enquiries", label: "Total enquiries", scope, value: String(countInPeriod(ledger.enquiries, period, today)), hint: "Contact form submissions", icon: "mail" as const },
+    ];
+  }, [ledger, period, today, scope, selectedCompanyId]);
+
+  if (permissionsLoading || !periodReady || (hasOverviewAccess && loading)) {
     return (
       <div className="space-y-8">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -215,19 +262,6 @@ export function DashboardOverview() {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="space-y-8">
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="skeleton h-28 rounded-2xl" />
-          ))}
-        </div>
-        <div className="skeleton h-96 rounded-2xl" />
-      </div>
-    );
-  }
-
   if (error || !data) {
     return (
       <div className="rounded-2xl border border-error/20 bg-error/5 p-6 text-sm text-error">
@@ -236,6 +270,12 @@ export function DashboardOverview() {
     );
   }
 
+  const staysInPeriod = data.recentStays.filter((stay) => inOverviewPeriod(stay.checkInDate, period, today));
+  const bookingsInPeriod = data.recentBookings.filter((booking) => inOverviewPeriod(booking.startDate, period, today));
+  const paymentsInPeriod = data.recentPayments.filter((payment) =>
+    inOverviewPeriod(payment.recordedAt ? nairobiYmd(new Date(payment.recordedAt)) : null, period, today)
+  );
+
   return (
     <div className="space-y-10">
       <div>
@@ -243,138 +283,56 @@ export function DashboardOverview() {
         <h1 className="mt-1 font-serif text-2xl font-bold text-base-content md:text-3xl">
           Operations — {selectedCompany.name}
         </h1>
-        <p className="mt-1 text-sm text-base-content/60">
-          KPIs and charts
-        </p>
       </div>
 
-      {companyUsesHotelStays(selectedCompanyId) ? (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-base-content/60">Hotel stays</p>
-              <ClipboardList className="h-4 w-4 text-primary opacity-80" aria-hidden />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-              {data.hospitalityKpis.hotelStays}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-base-content/60">Hotel revenue this month</p>
-              <CircleDollarSign className="h-4 w-4 text-primary opacity-80" aria-hidden />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-              {formatKesForDisplay(data.hospitalityKpis.hotelRevenueMonth)}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-base-content/60">Bar sales</p>
-              <Wine className="h-4 w-4 text-primary opacity-80" aria-hidden />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-              {formatKesForDisplay(data.hospitalityKpis.barSales)}
-            </p>
-            <p className="mt-1 text-xs text-base-content/50">
-              {selectedCompanyId === "ewc"
-                ? `${data.hospitalityKpis.weeklyBarRecords} weekly records`
-                : `${data.hospitalityKpis.weeklyBarRecords} daily records`}
-            </p>
-          </div>
-          {companyUsesRestaurant(selectedCompanyId) ? (
-            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-xs font-medium text-base-content/60">Restaurant sales</p>
-                <UtensilsCrossed className="h-4 w-4 text-primary opacity-80" aria-hidden />
-              </div>
-              <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-                {formatKesForDisplay(data.hospitalityKpis.restaurantSales)}
-              </p>
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-xs font-medium text-base-content/60">Upcoming arrivals</p>
-                <CalendarRange className="h-4 w-4 text-primary opacity-80" aria-hidden />
-              </div>
-              <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-                {data.hospitalityKpis.upcomingArrivals}
-              </p>
-              <p className="mt-1 text-xs text-base-content/50">Check-in on or after today</p>
-            </div>
-          )}
+      <div className="sticky top-16 z-10 -mx-4 border-b border-base-content/10 bg-base-100/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Date range">
+          {OVERVIEW_PERIODS.map((option) => {
+            const active = period === option.id;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                aria-pressed={active}
+                className={`btn btn-sm rounded-full ${active ? "btn-primary" : "btn-outline border-base-content/20"}`}
+                onClick={() => selectPeriod(option.id)}
+              >
+                {option.label}
+              </button>
+            );
+          })}
         </div>
-      ) : (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-base-content/60">Total bookings</p>
-              <ClipboardList className="h-4 w-4 text-primary opacity-80" aria-hidden />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-              {data.kpis.totalBookings}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-base-content/60">Monthly revenue</p>
-              <CircleDollarSign className="h-4 w-4 text-primary opacity-80" aria-hidden />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-              {formatKesForDisplay(data.kpis.monthlyRevenue)}
-            </p>
-            <p className="mt-1 text-xs text-base-content/50">From revenue entries this month</p>
-          </div>
-          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-base-content/60">Upcoming trips</p>
-              <CalendarRange className="h-4 w-4 text-primary opacity-80" aria-hidden />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-              {data.kpis.upcomingTrips}
-            </p>
-            <p className="mt-1 text-xs text-base-content/50">Non-cancelled, start on or after today</p>
-          </div>
-          <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-base-content/60">Unpaid invoices</p>
-              <FileWarning className="h-4 w-4 text-accent opacity-90" aria-hidden />
-            </div>
-            <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">
-              {data.kpis.unpaidInvoices}
-            </p>
-            <p className="mt-1 text-xs text-base-content/50">Bookings unpaid or partially paid</p>
-          </div>
-        </div>
-      )}
+        <p className="mt-2 text-xs text-base-content/60">{overviewRangeCaption(period, today)}</p>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {cards.map((card) => (
+          <KpiCard key={card.key} label={card.label} scope={card.scope} value={card.value} hint={card.hint} icon={card.icon} />
+        ))}
+      </div>
 
       {companyUsesHotelStays(selectedCompanyId) ? (
         <HospitalityCharts
           facts={data.chartFacts}
+          period={period}
           showRestaurant={companyUsesRestaurant(selectedCompanyId)}
           showDepartment={selectedCompanyId === "bth"}
         />
       ) : (
-        <DashboardCharts facts={data.chartFacts} />
+        <DashboardCharts facts={data.chartFacts ?? emptyChartFacts()} period={period} />
       )}
 
       {companyUsesSafariTours(selectedCompanyId) && companyUsesHotelStays(selectedCompanyId) ? (
-        <DashboardCharts facts={data.chartFacts} stacked />
+        <DashboardCharts facts={data.chartFacts} period={period} stacked />
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
         {companyUsesHotelStays(selectedCompanyId) ? (
           <PeriodCard
+            key={`stays-${period}`}
             title="Recent stays"
-            period={stayPeriod}
-            onPeriod={setStayPeriod}
-            empty={
-              data.recentStays.length === 0
-                ? "No hotel stays yet."
-                : "No stays in this period."
-            }
-            rows={data.recentStays.filter((stay) => ymdInPeriod(stay.checkInDate, stayPeriod, nairobiYmd()))}
+            empty={data.recentStays.length === 0 ? "No hotel stays yet." : "No stays in this period."}
+            rows={staysInPeriod}
             render={(stay) => (
               <li key={stay.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
                 <div>
@@ -396,17 +354,10 @@ export function DashboardOverview() {
           />
         ) : (
           <PeriodCard
+            key={`bookings-${period}`}
             title="Recent bookings"
-            period={bookingPeriod}
-            onPeriod={setBookingPeriod}
-            empty={
-              data.recentBookings.length === 0
-                ? "No bookings yet."
-                : "No bookings in this period."
-            }
-            rows={data.recentBookings.filter((booking) =>
-              ymdInPeriod(booking.startDate, bookingPeriod, nairobiYmd())
-            )}
+            empty={data.recentBookings.length === 0 ? "No bookings yet." : "No bookings in this period."}
+            rows={bookingsInPeriod}
             render={(booking) => (
               <li key={booking.id}>
                 <button
@@ -430,21 +381,10 @@ export function DashboardOverview() {
           />
         )}
         <PeriodCard
+          key={`payments-${period}`}
           title="Payments received"
-          period={paymentPeriod}
-          onPeriod={setPaymentPeriod}
-          empty={
-            data.recentPayments.length === 0
-              ? "No payments recorded."
-              : "No payments in this period."
-          }
-          rows={data.recentPayments.filter((payment) =>
-            ymdInPeriod(
-              payment.recordedAt ? nairobiYmd(new Date(payment.recordedAt)) : null,
-              paymentPeriod,
-              nairobiYmd()
-            )
-          )}
+          empty={data.recentPayments.length === 0 ? "No payments recorded." : "No payments in this period."}
+          rows={paymentsInPeriod}
           render={(payment) => (
             <li key={payment.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
               <div>
@@ -481,19 +421,56 @@ export function DashboardOverview() {
   );
 }
 
+function KpiIcon({ name }: { name: "bed" | "restaurant" | "bar" | "warning" | "guests" | "calendar" | "clipboard" | "money" | "mail" }) {
+  const className = name === "warning" ? "h-4 w-4 text-accent opacity-90" : "h-4 w-4 text-primary opacity-80";
+  if (name === "bed") return <BedDouble className={className} aria-hidden />;
+  if (name === "restaurant") return <UtensilsCrossed className={className} aria-hidden />;
+  if (name === "bar") return <Wine className={className} aria-hidden />;
+  if (name === "warning") return <FileWarning className={className} aria-hidden />;
+  if (name === "guests") return <Users className={className} aria-hidden />;
+  if (name === "calendar") return <CalendarRange className={className} aria-hidden />;
+  if (name === "money") return <CircleDollarSign className={className} aria-hidden />;
+  if (name === "mail") return <Mail className={className} aria-hidden />;
+  return <ClipboardList className={className} aria-hidden />;
+}
+
+function KpiCard({
+  label,
+  scope,
+  value,
+  hint,
+  icon,
+}: {
+  label: string;
+  scope: string;
+  value: string;
+  hint: string;
+  icon: "bed" | "restaurant" | "bar" | "warning" | "guests" | "calendar" | "clipboard" | "money" | "mail";
+}) {
+  return (
+    <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-xs font-medium text-base-content/60">{label}</p>
+          <p className="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-primary">{scope}</p>
+        </div>
+        <KpiIcon name={icon} />
+      </div>
+      <p className="mt-3 text-3xl font-semibold tabular-nums text-base-content">{value}</p>
+      <p className="mt-1 text-xs text-base-content/50">{hint}</p>
+    </div>
+  );
+}
+
 const CARD_PAGE_SIZE = 5;
 
 function PeriodCard<T>({
   title,
-  period,
-  onPeriod,
   empty,
   rows,
   render,
 }: {
   title: string;
-  period: CardPeriod;
-  onPeriod: (period: CardPeriod) => void;
   empty: string;
   rows: T[];
   render: (row: T) => ReactNode;
@@ -503,28 +480,9 @@ function PeriodCard<T>({
   const safePage = Math.min(page, pageCount);
   const visible = rows.slice((safePage - 1) * CARD_PAGE_SIZE, safePage * CARD_PAGE_SIZE);
 
-  useEffect(() => {
-    setPage(1);
-  }, [period]);
-
   return (
     <div className="rounded-2xl border border-base-content/10 bg-base-100 p-5 shadow-sm">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-base-content">{title}</h2>
-        <select
-          className="select select-bordered select-xs w-40 shrink-0 rounded-md"
-          style={{ outline: "1px solid gray" }}
-          aria-label={`${title} period`}
-          value={period}
-          onChange={(event) => onPeriod(event.target.value as CardPeriod)}
-        >
-          {CARD_PERIODS.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      <h2 className="text-sm font-semibold text-base-content">{title}</h2>
       <ul className="mt-4 min-h-72 divide-y divide-base-content/10">
         {visible.length === 0 ? (
           <li className="py-6 text-center text-sm text-base-content/50">{empty}</li>
