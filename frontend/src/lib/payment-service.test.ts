@@ -93,4 +93,8 @@ describe("periodMonthFromDate", () => {
   it("formats YYYY-MM", () => {
     assert.equal(periodMonthFromDate(new Date("2026-08-26T00:00:00.000Z")), "2026-08");
   });
+
+  it("uses the Nairobi month when UTC is still the previous day", () => {
+    assert.equal(periodMonthFromDate(new Date("2026-08-31T22:00:00.000Z")), "2026-09");
+  });
 });

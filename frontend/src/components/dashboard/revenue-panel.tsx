@@ -18,7 +18,6 @@ import {
   DashboardPagination,
   DashboardTableExport,
   type ExportColumn,
-  useDashboardPagination,
 } from "@/components/dashboard/dashboard-table-tools";
 import { safariSourceLabel, staySourceLabel } from "@/lib/stay-labels";
 import { companyUsesHotelStays, companyUsesSafariTours } from "@/types/company";
@@ -33,10 +32,6 @@ type RevenueRow = {
   referenceId: number | null;
   recognizedAt: string | null;
 };
-
-function revenueRowLinked(r: RevenueRow): boolean {
-  return r.bookingId != null || (r.referenceType != null && r.referenceId != null);
-}
 
 function formatRevenueLinkCell(r: RevenueRow, labels: Record<string, string>): string {
   if (r.referenceType === "hotel" && r.referenceId != null) {
@@ -83,6 +78,9 @@ function previewForRevenue(r: RevenueRow): { kind: EntityPreviewKind; id: number
 export function RevenuePanel() {
   const { selectedCompanyId } = useCompany();
   const [rows, setRows] = useState<RevenueRow[]>([]);
+  const [series, setSeries] = useState<RevenueRow[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [sourceLabels, setSourceLabels] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,20 +101,44 @@ export function RevenuePanel() {
   const [view, setView] = useState<{ kind: EntityPreviewKind; id: number } | null>(null);
 
   const inputStyle = { outline: "1px solid gray" };
+  const listKey = `${selectedCompanyId}|${monthF}|${bookingRF}`;
+  const [seenList, setSeenList] = useState(listKey);
+  if (seenList !== listKey) {
+    setSeenList(listKey);
+    setPage(1);
+  }
+  const pageCount = Math.max(1, Math.ceil(total / 10));
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const qs = new URLSearchParams({ companyId: selectedCompanyId });
+      const qs = new URLSearchParams({
+        companyId: selectedCompanyId,
+        page: String(page),
+        pageSize: "10",
+      });
+      if (monthF) qs.set("month", monthF);
+      if (bookingRF) qs.set("linked", bookingRF);
+      const lookup = new URLSearchParams({ companyId: selectedCompanyId, view: "link" });
       const parts: Promise<Response>[] = [fetch(`/api/revenue?${qs}`)];
-      if (companyUsesSafariTours(selectedCompanyId)) parts.push(fetch(`/api/bookings?${qs}`));
-      if (companyUsesHotelStays(selectedCompanyId)) parts.push(fetch(`/api/hotel-bookings?${qs}`));
+      if (companyUsesSafariTours(selectedCompanyId)) parts.push(fetch(`/api/bookings?${lookup}`));
+      if (companyUsesHotelStays(selectedCompanyId)) parts.push(fetch(`/api/hotel-bookings?${lookup}`));
       const results = await Promise.all(parts);
       const rRes = results[0];
       const rJson = await rRes.json();
       if (!rRes.ok) throw new Error(typeof rJson.error === "string" ? rJson.error : "Failed to load revenue");
       setRows(rJson.revenue ?? []);
+      setSeries(
+        (rJson.series ?? rJson.revenue ?? []).map((row: RevenueRow) => ({
+          ...row,
+          id: row.id ?? 0,
+          bookingId: row.bookingId ?? null,
+          referenceType: row.referenceType ?? null,
+          referenceId: row.referenceId ?? null,
+        }))
+      );
+      setTotal(Number(rJson.total ?? rJson.revenue?.length ?? 0));
 
       const labels: Record<string, string> = {};
       let idx = 1;
@@ -140,7 +162,7 @@ export function RevenuePanel() {
     } finally {
       setLoading(false);
     }
-  }, [selectedCompanyId]);
+  }, [selectedCompanyId, page, monthF, bookingRF]);
 
   useEffect(() => {
     void load();
@@ -148,22 +170,22 @@ export function RevenuePanel() {
 
   const topPackages = useMemo(() => {
     const m = new Map<string, number>();
-    for (const r of rows) {
+    for (const r of series) {
       const k = r.packageLabel?.trim() || "Unspecified";
       m.set(k, (m.get(k) ?? 0) + r.amount);
     }
     return [...m.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6)
-      .map(([name, total]) => ({ name, total }));
-  }, [rows]);
+      .map(([name, amount]) => ({ name, total: amount }));
+  }, [series]);
 
   const datedRevenue = useMemo(
     () =>
-      rows
+      series
         .map((row) => ({ date: revenueYmd(row), amount: row.amount }))
         .filter((row) => row.date),
-    [rows]
+    [series]
   );
 
   const monthlyTrend = useMemo(
@@ -187,23 +209,21 @@ export function RevenuePanel() {
 
   const monthChoices = useMemo(() => {
     const s = new Set<string>();
-    rows.forEach((r) => {
+    series.forEach((r) => {
       if (r.periodMonth) s.add(r.periodMonth);
     });
     return [...s].sort((a, b) => b.localeCompare(a));
-  }, [rows]);
+  }, [series]);
 
-  const revenueTableRows = useMemo(() => {
-    return rows
-      .filter((r) => {
-        if (monthF && (r.periodMonth ?? "") !== monthF) return false;
-        if (bookingRF === "linked" && !revenueRowLinked(r)) return false;
-        if (bookingRF === "none" && revenueRowLinked(r)) return false;
-        return true;
-      })
-      .sort((a, b) => String(b.recognizedAt).localeCompare(String(a.recognizedAt)));
-  }, [rows, monthF, bookingRF]);
-  const { page, pageCount, setPage, pagedRows } = useDashboardPagination(revenueTableRows, 10);
+  async function loadRevenueExport(): Promise<RevenueRow[]> {
+    const qs = new URLSearchParams({ companyId: selectedCompanyId });
+    if (monthF) qs.set("month", monthF);
+    if (bookingRF) qs.set("linked", bookingRF);
+    const res = await fetch(`/api/revenue?${qs}`);
+    const json = await res.json();
+    if (!res.ok) throw new Error(typeof json.error === "string" ? json.error : "Failed to export revenue");
+    return json.revenue ?? [];
+  }
 
   return (
     <div className="space-y-8">
@@ -234,7 +254,7 @@ export function RevenuePanel() {
               label="Revenue report time range"
             />
           </div>
-          {rows.length === 0 ? (
+          {series.length === 0 ? (
             <p className="text-sm text-base-content/50">No revenue rows yet.</p>
           ) : (
             <MonthlyReportChart points={monthlyTrend} />
@@ -252,7 +272,7 @@ export function RevenuePanel() {
             />
           </div>
           <div className="flex h-40 items-end gap-1 overflow-x-auto">
-            {rows.length === 0 ? (
+            {series.length === 0 ? (
               <p className="text-xs text-base-content/50">Add data to see bars.</p>
             ) : (
               trendSpark.map((b) => (
@@ -341,13 +361,13 @@ export function RevenuePanel() {
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
-            ) : revenueTableRows.length === 0 ? (
+            ) : rows.length === 0 ? (
               <tr>
                 <td colSpan={4} className="py-10 text-center text-sm text-base-content/50">
-                  {rows.length === 0 ? "No revenue entries." : "No rows match filters."}
+                  {total === 0 && !monthF && !bookingRF ? "No revenue entries." : "No rows match filters."}
                 </td>
               </tr>
-            ) : pagedRows.map((r) => (
+            ) : rows.map((r) => (
                   <tr
                     key={r.id}
                     className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
@@ -368,7 +388,7 @@ export function RevenuePanel() {
 
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <DashboardPagination page={page} pageCount={pageCount} setPage={setPage} />
-        <DashboardTableExport title="Revenue" rows={revenueTableRows} columns={exportColumns} />
+        <DashboardTableExport title="Revenue" rows={rows} columns={exportColumns} loadRows={loadRevenueExport} />
       </div>
 
       <EntityViewModal

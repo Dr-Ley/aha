@@ -1,9 +1,11 @@
 /** Pure payment → revenue projections (no DB). */
 
+import { nairobiYearMonth } from "./nairobi-date";
+
 const REVENUE_STATUSES = new Set(["completed"]);
 
 export function periodMonthFromDate(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  return nairobiYearMonth(d);
 }
 
 export function paymentCountsAsRevenue(status: string | null | undefined): boolean {

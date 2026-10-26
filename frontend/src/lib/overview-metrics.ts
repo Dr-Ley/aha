@@ -65,14 +65,15 @@ export function recognizedRevenue(
   payments: RevenuePaymentFact[],
   entries: RevenueEntryFact[],
   period: OverviewPeriod,
-  today?: string
+  today?: string,
+  anchor?: string
 ): number {
   const countedPaymentIds = new Set<number>();
   const countedSources = new Set<string>();
   let sum = 0;
   for (const payment of payments) {
     if (!paymentCountsTowardRevenue(payment.status)) continue;
-    if (!inOverviewPeriod(payment.date, period, today)) continue;
+    if (!inOverviewPeriod(payment.date, period, today, anchor)) continue;
     sum += Number(payment.amount) || 0;
     countedPaymentIds.add(payment.id);
     const source = sourceKey(payment.referenceType, payment.referenceId);
@@ -82,7 +83,7 @@ export function recognizedRevenue(
     if (entry.paymentId != null && countedPaymentIds.has(entry.paymentId)) continue;
     const source = sourceKey(entry.referenceType, entry.referenceId);
     if (source && countedSources.has(source)) continue;
-    if (!inOverviewPeriod(entry.date, period, today)) continue;
+    if (!inOverviewPeriod(entry.date, period, today, anchor)) continue;
     sum += Number(entry.amount) || 0;
   }
   return sum;
@@ -91,29 +92,56 @@ export function recognizedRevenue(
 export function countConfirmedBookings(
   rows: { date: string; status: string }[],
   period: OverviewPeriod,
-  today?: string
+  today?: string,
+  anchor?: string
 ): number {
-  return rows.filter((row) => row.status === "confirmed" && inOverviewPeriod(row.date, period, today)).length;
+  return rows.filter((row) => row.status === "confirmed" && inOverviewPeriod(row.date, period, today, anchor)).length;
 }
 
-export function countInPeriod(rows: { date: string }[], period: OverviewPeriod, today?: string): number {
-  return rows.filter((row) => inOverviewPeriod(row.date, period, today)).length;
+export function countInPeriod(
+  rows: { date: string }[],
+  period: OverviewPeriod,
+  today?: string,
+  anchor?: string
+): number {
+  return rows.filter((row) => inOverviewPeriod(row.date, period, today, anchor)).length;
+}
+
+function isUnpaidOrPartial(status: string | null | undefined): boolean {
+  const normalized = String(status ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, "_");
+  return normalized === "unpaid" || normalized === "partial" || normalized === "partially_paid";
+}
+
+/** Bookings whose payment status is unpaid or partial, inside the selected window. */
+export function countUnpaidOrPartialBookings(
+  rows: { date: string; paymentStatus: string }[],
+  period: OverviewPeriod,
+  today?: string,
+  anchor?: string
+): number {
+  return rows.filter(
+    (row) => isUnpaidOrPartial(row.paymentStatus) && inOverviewPeriod(row.date, period, today, anchor)
+  ).length;
 }
 
 export function sumAmountsInPeriod(
   rows: { date: string; amount: number }[],
   period: OverviewPeriod,
-  today?: string
+  today?: string,
+  anchor?: string
 ): number {
   return rows.reduce(
-    (sum, row) => sum + (inOverviewPeriod(row.date, period, today) ? Number(row.amount) || 0 : 0),
+    (sum, row) => sum + (inOverviewPeriod(row.date, period, today, anchor) ? Number(row.amount) || 0 : 0),
     0
   );
 }
 
 /** Headcount on stays that overlap the recorded window. Cancelled stays are left out. */
-export function guestCount(stays: HotelStayFact[], period: OverviewPeriod, today?: string): number {
-  const bounds = overviewPeriodBounds(period, today);
+export function guestCount(stays: HotelStayFact[], period: OverviewPeriod, today?: string, anchor?: string): number {
+  const bounds = overviewPeriodBounds(period, today, anchor);
   return stays.reduce((sum, stay) => {
     if (stay.status === "cancelled") return sum;
     if (!rangesOverlap(stay.checkIn, stay.checkOut, bounds)) return sum;
@@ -122,8 +150,13 @@ export function guestCount(stays: HotelStayFact[], period: OverviewPeriod, today
 }
 
 /** Stays still due to arrive, from today through the end of the selected preset. */
-export function upcomingArrivals(stays: HotelStayFact[], period: OverviewPeriod, today?: string): number {
-  const window = upcomingArrivalBounds(period, today);
+export function upcomingArrivals(
+  stays: HotelStayFact[],
+  period: OverviewPeriod,
+  today?: string,
+  anchor?: string
+): number {
+  const window = upcomingArrivalBounds(period, today, anchor);
   return stays.filter((stay) => {
     if (stay.status !== "pending" && stay.status !== "confirmed") return false;
     const day = String(stay.checkIn ?? "").slice(0, 10);

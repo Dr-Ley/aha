@@ -7,9 +7,16 @@ import {
   PaymentService,
 } from "@/server/services/payments";
 import { requireTenantContext } from "@/server/tenancy";
-import { desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, isNull, lt, notInArray, or } from "drizzle-orm";
 import { z } from "zod";
 import { companyIdZod, financialReferenceTypeZod } from "@/lib/schemas/company-id";
+import { readListPage, readYmdParam } from "@/lib/list-page";
+import { utcDayRange } from "@/lib/nairobi-date";
+import {
+  CANCELLED_PAYMENT_STATUSES,
+  COMPLETED_PAYMENT_STATUSES,
+  isPaymentRecordStatus,
+} from "@/lib/payment-status";
 
 const paymentRecordStatusZod = z.enum(["pending", "completed", "cancelled"]);
 const paymentProviderZod = z.enum(["manual", "cash", "bank", "card", "m-pesa"]);
@@ -72,14 +79,52 @@ export async function GET(request: NextRequest) {
     });
     if (!tenant.ok) return tenant.response;
     const companyId = tenant.ctx.companyId;
+    const parsedPage = readListPage(searchParams);
+    if (!parsedPage.ok) return NextResponse.json({ error: parsedPage.error }, { status: 400 });
+    const from = readYmdParam(searchParams.get("from"));
+    const to = readYmdParam(searchParams.get("to"));
+    if (from === "invalid" || to === "invalid") {
+      return NextResponse.json({ error: "from and to must be YYYY-MM-DD" }, { status: 400 });
+    }
+    const status = searchParams.get("status");
+    if (status && !isPaymentRecordStatus(status)) {
+      return NextResponse.json({ error: "status must be pending, completed, or cancelled" }, { status: 400 });
+    }
+    const method = searchParams.get("method")?.trim() || "";
+    const currency = searchParams.get("currency")?.trim() || "";
 
-    const rows = await db
+    const filters = [eq(payments.companyId, companyId)];
+    if (status === "completed") filters.push(inArray(payments.status, [...COMPLETED_PAYMENT_STATUSES]));
+    else if (status === "cancelled") filters.push(inArray(payments.status, [...CANCELLED_PAYMENT_STATUSES]));
+    else if (status === "pending") {
+      filters.push(notInArray(payments.status, [...COMPLETED_PAYMENT_STATUSES, ...CANCELLED_PAYMENT_STATUSES]));
+    }
+    if (method) filters.push(eq(payments.method, method));
+    if (currency) filters.push(eq(payments.currency, currency));
+    if (from || to) {
+      const range = utcDayRange(from ?? "0001-01-01", to ?? "9999-12-31");
+      const dated = and(gte(payments.recordedAt, range.from), lt(payments.recordedAt, range.to));
+      filters.push(or(isNull(payments.recordedAt), dated)!);
+    }
+    const where = and(...filters);
+    const ordered = db
       .select()
       .from(payments)
-      .where(eq(payments.companyId, companyId))
-      .orderBy(desc(payments.recordedAt));
+      .where(where)
+      .orderBy(desc(payments.recordedAt), desc(payments.id));
 
-    return NextResponse.json({ success: true, payments: rows });
+    if (!parsedPage.page) {
+      const rows = await ordered;
+      return NextResponse.json({ success: true, payments: rows });
+    }
+
+    const { page, pageSize } = parsedPage.page;
+    const [rows, totals] = await Promise.all([
+      ordered.limit(pageSize).offset((page - 1) * pageSize),
+      db.select({ total: count() }).from(payments).where(where),
+    ]);
+    const total = Number(totals[0]?.total ?? 0);
+    return NextResponse.json({ success: true, payments: rows, page, pageSize, total });
   } catch (error) {
     console.error("Error fetching payments:", error);
     return NextResponse.json({ error: "Failed to fetch payments" }, { status: 500 });

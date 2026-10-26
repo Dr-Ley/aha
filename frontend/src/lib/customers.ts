@@ -1,6 +1,7 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { customers } from "@/lib/schema";
+import { bookings, customers, hotelBookings } from "@/lib/schema";
+import { nairobiYmd } from "@/lib/nairobi-date";
 import type { CompanyId } from "@/types/company";
 import {
   canAutoMatchCustomer,
@@ -374,9 +375,41 @@ export async function suggestCustomersForGuest(
   return ranked.slice(0, 8);
 }
 
-export async function listCustomersForCompany(companyId: CompanyId, query?: string) {
-  await ensureCustomersReady();
-  const rows = await db
+type CustomerQueryDb = typeof db;
+
+function activityDay(value: unknown): string | null {
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : nairobiYmd(value);
+  const text = String(value ?? "");
+  return /^\d{4}-\d{2}-\d{2}/.test(text) ? text.slice(0, 10) : null;
+}
+
+export async function customerDisplayNames(
+  database: CustomerQueryDb,
+  companyId: CompanyId,
+  ids: number[]
+): Promise<Record<number, string>> {
+  const names: Record<number, string> = {};
+  if (ids.length === 0) return names;
+  const rows = await database
+    .select({
+      id: customers.id,
+      firstName: customers.firstName,
+      lastName: customers.lastName,
+    })
+    .from(customers)
+    .where(and(eq(customers.companyId, companyId), inArray(customers.id, ids)));
+  for (const row of rows) {
+    names[row.id] = [row.firstName, row.lastName].filter(Boolean).join(" ").trim();
+  }
+  return names;
+}
+
+export async function queryCustomersForCompany(
+  database: CustomerQueryDb,
+  companyId: CompanyId,
+  query?: string
+) {
+  const rows = await database
     .select({
       id: customers.id,
       companyId: customers.companyId,
@@ -389,31 +422,53 @@ export async function listCustomersForCompany(companyId: CompanyId, query?: stri
       notes: customers.notes,
       preferences: customers.preferences,
       createdAt: customers.createdAt,
-      bookingCount: sql<number>`(
-        SELECT count(*)::int FROM "bookings" b WHERE b.customer_id = "customers"."id"
-      )`,
-      hotelStayCount: sql<number>`(
-        SELECT count(*)::int FROM "hotel_bookings" hb WHERE hb.customer_id = "customers"."id"
-      )`,
-      lastActivity: sql<string | null>`(
-        SELECT max(d)::text FROM (
-          SELECT b.created_at::date AS d FROM "bookings" b WHERE b.customer_id = "customers"."id"
-          UNION ALL
-          SELECT hb.check_in_date::date AS d
-          FROM "hotel_bookings" hb
-          WHERE hb.customer_id = "customers"."id"
-        ) activity
-      )`,
     })
     .from(customers)
     .where(eq(customers.companyId, companyId));
+  const safariRows = await database
+    .select({ customerId: bookings.customerId, createdAt: bookings.createdAt })
+    .from(bookings)
+    .where(eq(bookings.companyId, companyId));
+  const stayRows = await database
+    .select({ customerId: hotelBookings.customerId, checkInDate: hotelBookings.checkInDate })
+    .from(hotelBookings)
+    .where(eq(hotelBookings.companyId, companyId));
+  const safariCount = new Map<number, number>();
+  const stayCount = new Map<number, number>();
+  const lastActivity = new Map<number, string>();
+  const noteActivity = (customerId: number | null, day: string | null) => {
+    if (customerId == null || !day) return;
+    const current = lastActivity.get(customerId);
+    if (!current || day > current) lastActivity.set(customerId, day);
+  };
+  for (const row of safariRows) {
+    if (row.customerId == null) continue;
+    safariCount.set(row.customerId, (safariCount.get(row.customerId) ?? 0) + 1);
+    noteActivity(row.customerId, activityDay(row.createdAt));
+  }
+  for (const row of stayRows) {
+    if (row.customerId == null) continue;
+    stayCount.set(row.customerId, (stayCount.get(row.customerId) ?? 0) + 1);
+    noteActivity(row.customerId, activityDay(row.checkInDate));
+  }
+  const withActivity = rows.map((row) => ({
+    ...row,
+    bookingCount: safariCount.get(row.id) ?? 0,
+    hotelStayCount: stayCount.get(row.id) ?? 0,
+    lastActivity: lastActivity.get(row.id) ?? null,
+  }));
   const needle = query?.trim().toLowerCase();
-  if (!needle) return rows;
-  return rows.filter((row) =>
+  if (!needle) return withActivity;
+  return withActivity.filter((row) =>
     `${displayCustomerName(row)} ${row.email ?? ""} ${row.phone ?? ""} ${row.nationality ?? ""} ${row.notes ?? ""}`
       .toLowerCase()
       .includes(needle)
   );
+}
+
+export async function listCustomersForCompany(companyId: CompanyId, query?: string) {
+  await ensureCustomersReady();
+  return queryCustomersForCompany(db, companyId, query);
 }
 
 export async function getCustomerForCompany(companyId: CompanyId, id: number) {
@@ -426,10 +481,12 @@ export async function getCustomerForCompany(companyId: CompanyId, id: number) {
   return row ?? null;
 }
 
-export async function getCustomerHistory(companyId: CompanyId, customerId: number) {
-  await ensureCustomersReady();
-  const { bookings, hotelBookings } = await import("@/lib/schema");
-  const safariRows = await db
+export async function queryCustomerHistory(
+  database: CustomerQueryDb,
+  companyId: CompanyId,
+  customerId: number
+) {
+  const safariRows = await database
     .select({
       id: bookings.id,
       safariPackage: bookings.safariPackage,
@@ -443,7 +500,7 @@ export async function getCustomerHistory(companyId: CompanyId, customerId: numbe
     })
     .from(bookings)
     .where(and(eq(bookings.customerId, customerId), eq(bookings.companyId, companyId)));
-  const stayRows = await db
+  const stayRows = await database
     .select({
       id: hotelBookings.id,
       checkInDate: hotelBookings.checkInDate,
@@ -455,6 +512,11 @@ export async function getCustomerHistory(companyId: CompanyId, customerId: numbe
     .from(hotelBookings)
     .where(and(eq(hotelBookings.customerId, customerId), eq(hotelBookings.companyId, companyId)));
   return { safaris: safariRows, stays: stayRows };
+}
+
+export async function getCustomerHistory(companyId: CompanyId, customerId: number) {
+  await ensureCustomersReady();
+  return queryCustomerHistory(db, companyId, customerId);
 }
 
 export async function getCustomerWithHistory(companyId: CompanyId, id: number) {

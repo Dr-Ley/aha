@@ -132,6 +132,38 @@ export async function GET(request: NextRequest) {
       });
       if (!tenant.ok) return tenant.response;
       const companyId = tenant.ctx.companyId;
+      if (searchParams.get("view") === "link") {
+        const linkRows = await db
+          .select({
+            id: bookings.id,
+            firstName: bookings.firstName,
+            lastName: bookings.lastName,
+            email: bookings.email,
+            safariPackage: bookings.safariPackage,
+            totalPrice: bookings.totalPrice,
+            tourTitle: tours.title,
+            tourShortTitle: tours.shortTitle,
+          })
+          .from(bookings)
+          .leftJoin(tours, eq(bookings.tourId, tours.id))
+          .where(eq(bookings.companyId, companyId))
+          .orderBy(desc(bookings.createdAt));
+        return NextResponse.json({
+          success: true,
+          bookings: linkRows.map((row) => ({
+            id: row.id,
+            firstName: row.firstName,
+            lastName: row.lastName,
+            email: row.email,
+            safariPackage: row.safariPackage,
+            totalPrice: row.totalPrice,
+            tour:
+              row.tourTitle || row.tourShortTitle
+                ? { title: row.tourTitle, shortTitle: row.tourShortTitle }
+                : null,
+          })),
+        });
+      }
       const { ensureArrivalDayNotifications } = await import("@/lib/arrival-day-notifications");
       await ensureArrivalDayNotifications(companyId);
       allBookings = await db

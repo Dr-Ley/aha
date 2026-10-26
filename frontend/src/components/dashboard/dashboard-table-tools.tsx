@@ -40,17 +40,28 @@ export function DashboardTableExport<T>({
   title,
   rows,
   columns,
+  loadRows,
 }: {
   title: string;
   rows: T[];
   columns: ExportColumn<T>[];
+  /** Loads the filtered set for export when the table is showing one page. */
+  loadRows?: () => Promise<T[]>;
 }) {
-  function exportXls() {
-    downloadBlob(
-      tableHtml(title, rows, columns),
-      `${title.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}.xls`,
-      "application/vnd.ms-excel"
-    );
+  const [busy, setBusy] = useState(false);
+
+  async function exportXls() {
+    setBusy(true);
+    try {
+      const data = loadRows ? await loadRows() : rows;
+      downloadBlob(
+        tableHtml(title, data, columns),
+        `${title.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}.xls`,
+        "application/vnd.ms-excel"
+      );
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -58,7 +69,8 @@ export function DashboardTableExport<T>({
       <button
         type="button"
         className="btn btn-outline btn-xs min-w-0 max-w-full truncate px-2 sm:px-3"
-        onClick={exportXls}
+        onClick={() => void exportXls()}
+        disabled={busy}
       >
         <span className="sm:hidden">XLS</span>
         <span className="hidden sm:inline">Download XLS</span>

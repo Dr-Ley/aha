@@ -12,7 +12,6 @@ import {
   DashboardPagination,
   DashboardTableExport,
   type ExportColumn,
-  useDashboardPagination,
 } from "@/components/dashboard/dashboard-table-tools";
 import { paymentRecordBadgeClass } from "@/lib/dashboard-status-badges";
 import {
@@ -24,6 +23,7 @@ import {
 import { safariSourceLabel, staySourceLabel } from "@/lib/stay-labels";
 import { formatDayFromLabel, formatWeekFromLabel } from "@/lib/weekly-bar";
 import { nairobiYmd } from "@/lib/nairobi-date";
+import { normalizePaymentRecordStatus } from "@/lib/payment-status";
 
 type PaymentRow = {
   id: number;
@@ -70,17 +70,6 @@ function formatPaymentDate(value: string | null | undefined): string {
     month: "short",
     year: "numeric",
   });
-}
-
-/** Map legacy payment row statuses into the canonical dashboard set. */
-function normalizePaymentRecordStatus(raw: string): (typeof STATUSES)[number] {
-  const s = String(raw).toLowerCase();
-  if (s === "pending") return "pending";
-  if (s === "cancelled") return "cancelled";
-  if (s === "completed") return "completed";
-  if (s === "confirmed" || s === "paid" || s === "success" || s === "succeeded") return "completed";
-  if (s === "refunded") return "cancelled";
-  return "pending";
 }
 
 function primaryGuestName(stay: { primaryGuestName?: string | null; guests?: { fullName: string; isPrimary?: boolean | null }[] }): string {
@@ -164,6 +153,8 @@ export function PaymentsPanel() {
   const { selectedCompanyId } = useCompany();
   const { formatMoney } = useCurrency();
   const [rows, setRows] = useState<PaymentRow[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [linkOptions, setLinkOptions] = useState<LinkOption[]>([]);
   const [sourceLabels, setSourceLabels] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -194,22 +185,55 @@ export function PaymentsPanel() {
     setTimeout(() => setToast(null), 3000);
   }, []);
 
+  const filterKey = `${statusPF}|${methodPF}|${currencyPF}|${dateFromF}|${dateToF}|${selectedCompanyId}`;
+  const [seenFilter, setSeenFilter] = useState(filterKey);
+  if (seenFilter !== filterKey) {
+    setSeenFilter(filterKey);
+    setPage(1);
+  }
+  const pageCount = Math.max(1, Math.ceil(total / 10));
+
+  function paymentQuery(includePage: boolean) {
+    const qs = new URLSearchParams({ companyId: selectedCompanyId });
+    if (includePage) {
+      qs.set("page", String(page));
+      qs.set("pageSize", "10");
+    }
+    if (statusPF) qs.set("status", statusPF);
+    if (methodPF) qs.set("method", methodPF);
+    if (currencyPF) qs.set("currency", currencyPF);
+    if (dateFromF) qs.set("from", dateFromF);
+    if (dateToF) qs.set("to", dateToF);
+    return qs;
+  }
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const qs = new URLSearchParams({ companyId: selectedCompanyId });
+      const qs = new URLSearchParams({
+        companyId: selectedCompanyId,
+        page: String(page),
+        pageSize: "10",
+      });
+      if (statusPF) qs.set("status", statusPF);
+      if (methodPF) qs.set("method", methodPF);
+      if (currencyPF) qs.set("currency", currencyPF);
+      if (dateFromF) qs.set("from", dateFromF);
+      if (dateToF) qs.set("to", dateToF);
+      const lookup = new URLSearchParams({ companyId: selectedCompanyId, view: "link" });
       const parts: Promise<Response>[] = [fetch(`/api/payments?${qs}`)];
-      if (companyUsesSafariTours(selectedCompanyId)) parts.push(fetch(`/api/bookings?${qs}`));
-      if (companyUsesHotelStays(selectedCompanyId)) parts.push(fetch(`/api/hotel-bookings?${qs}`));
-      if (companyUsesBar(selectedCompanyId)) parts.push(fetch(`/api/bar-orders?${qs}`));
-      if (companyUsesRestaurant(selectedCompanyId)) parts.push(fetch(`/api/restaurant-orders?${qs}`));
+      if (companyUsesSafariTours(selectedCompanyId)) parts.push(fetch(`/api/bookings?${lookup}`));
+      if (companyUsesHotelStays(selectedCompanyId)) parts.push(fetch(`/api/hotel-bookings?${lookup}`));
+      if (companyUsesBar(selectedCompanyId)) parts.push(fetch(`/api/bar-orders?${lookup}`));
+      if (companyUsesRestaurant(selectedCompanyId)) parts.push(fetch(`/api/restaurant-orders?${lookup}`));
 
       const results = await Promise.all(parts);
       const pRes = results[0];
       const pJson = await pRes.json();
       if (!pRes.ok) throw new Error(typeof pJson.error === "string" ? pJson.error : "Failed to load payments");
       setRows(pJson.payments ?? []);
+      setTotal(Number(pJson.total ?? pJson.payments?.length ?? 0));
 
       const opts: LinkOption[] = [];
       const hints: Record<string, number> = {};
@@ -307,29 +331,18 @@ export function PaymentsPanel() {
     } finally {
       setLoading(false);
     }
-  }, [selectedCompanyId]);
+  }, [selectedCompanyId, page, statusPF, methodPF, currencyPF, dateFromF, dateToF]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
-  const sorted = useMemo(
-    () => [...rows].sort((a, b) => String(b.recordedAt).localeCompare(String(a.recordedAt))),
-    [rows]
-  );
-
-  const filteredPayments = useMemo(() => {
-    return sorted.filter((p) => {
-      if (statusPF && normalizePaymentRecordStatus(p.status) !== statusPF) return false;
-      if (methodPF && (p.method ?? "") !== methodPF) return false;
-      if (currencyPF && p.currency !== currencyPF) return false;
-      const ymd = paymentYmd(p.recordedAt);
-      if (dateFromF && ymd && ymd < dateFromF) return false;
-      if (dateToF && ymd && ymd > dateToF) return false;
-      return true;
-    });
-  }, [sorted, statusPF, methodPF, currencyPF, dateFromF, dateToF]);
-  const { page, pageCount, setPage, pagedRows } = useDashboardPagination(filteredPayments, 10);
+  async function loadExportRows(): Promise<PaymentRow[]> {
+    const res = await fetch(`/api/payments?${paymentQuery(false)}`);
+    const json = await res.json();
+    if (!res.ok) throw new Error(typeof json.error === "string" ? json.error : "Failed to export payments");
+    return json.payments ?? [];
+  }
 
   const linkGroups = useMemo(() => {
     const m = new Map<string, LinkOption[]>();
@@ -650,14 +663,14 @@ export function PaymentsPanel() {
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
-            ) : filteredPayments.length === 0 ? (
+            ) : rows.length === 0 ? (
               <tr>
                 <td colSpan={6} className="py-10 text-center text-sm text-base-content/50">
                   {rows.length === 0 ? "No payments for this company." : "No payments match filters."}
                 </td>
               </tr>
             ) : (
-              pagedRows.map((p) => (
+              rows.map((p) => (
                 <tr
                   key={p.id}
                   className="cursor-pointer transition-colors hover:bg-primary/5 active:bg-primary/10"
@@ -718,7 +731,7 @@ export function PaymentsPanel() {
 
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
         <DashboardPagination page={page} pageCount={pageCount} setPage={setPage} />
-        <DashboardTableExport title="Payments" rows={filteredPayments} columns={exportColumns} />
+        <DashboardTableExport title="Payments" rows={rows} columns={exportColumns} loadRows={loadExportRows} />
       </div>
 
       <DashboardModal open={modal === "create"} title="Log payment" onClose={() => setModal(null)}>

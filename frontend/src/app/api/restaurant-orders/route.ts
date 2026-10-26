@@ -42,29 +42,49 @@ export async function GET(request: NextRequest) {
     });
     if (!tenant.ok) return tenant.response;
     const companyId = tenant.ctx.companyId;
+    const linkView = request.nextUrl.searchParams.get("view") === "link";
 
-    const orderRows = await db
-      .select()
-      .from(restaurantOrders)
-      .where(eq(restaurantOrders.companyId, companyId))
-      .orderBy(desc(restaurantOrders.createdAt));
+    const orderRows = linkView
+      ? await db
+          .select({
+            id: restaurantOrders.id,
+            tableLabel: restaurantOrders.tableLabel,
+            customerName: restaurantOrders.customerName,
+            status: restaurantOrders.status,
+          })
+          .from(restaurantOrders)
+          .where(eq(restaurantOrders.companyId, companyId))
+          .orderBy(desc(restaurantOrders.createdAt))
+      : await db
+          .select()
+          .from(restaurantOrders)
+          .where(eq(restaurantOrders.companyId, companyId))
+          .orderBy(desc(restaurantOrders.createdAt));
     const ids = orderRows.map((o) => o.id);
     if (ids.length === 0) {
       return NextResponse.json({ success: true, orders: [] as unknown[] });
     }
-    const lines = await db
-      .select()
-      .from(restaurantOrderItems)
-      .where(inArray(restaurantOrderItems.orderId, ids));
-    const byOrder: Record<number, (typeof lines)[number][]> = {};
+    const lines = linkView
+      ? await db
+          .select({ orderId: restaurantOrderItems.orderId, lineTotal: restaurantOrderItems.lineTotal })
+          .from(restaurantOrderItems)
+          .where(and(eq(restaurantOrderItems.companyId, companyId), inArray(restaurantOrderItems.orderId, ids)))
+      : await db
+          .select()
+          .from(restaurantOrderItems)
+          .where(and(eq(restaurantOrderItems.companyId, companyId), inArray(restaurantOrderItems.orderId, ids)));
+    const byOrder = new Map<number, Array<{ lineTotal: number }>>();
     for (const line of lines) {
-      (byOrder[line.orderId] = byOrder[line.orderId] || []).push(line);
+      const list = byOrder.get(line.orderId) ?? [];
+      list.push(line);
+      byOrder.set(line.orderId, list);
     }
     return NextResponse.json({
       success: true,
       orders: orderRows.map((o) => {
-        const itemLines = byOrder[o.id] || [];
+        const itemLines = byOrder.get(o.id) ?? [];
         const total = itemLines.reduce((s, l) => s + l.lineTotal, 0);
+        if (linkView) return { ...o, total };
         return { ...o, lineItems: itemLines, total };
       }),
     });

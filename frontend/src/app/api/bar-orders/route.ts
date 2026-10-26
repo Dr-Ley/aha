@@ -41,28 +41,44 @@ export async function GET(request: NextRequest) {
     });
     if (!tenant.ok) return tenant.response;
     const companyId = tenant.ctx.companyId;
+    const linkView = request.nextUrl.searchParams.get("view") === "link";
 
-    const orderRows = await db
-      .select()
-      .from(barOrders)
-      .where(eq(barOrders.companyId, companyId))
-      .orderBy(desc(barOrders.createdAt));
+    const orderRows = linkView
+      ? await db
+          .select({
+            id: barOrders.id,
+            tableLabel: barOrders.tableLabel,
+            customerName: barOrders.customerName,
+            status: barOrders.status,
+          })
+          .from(barOrders)
+          .where(eq(barOrders.companyId, companyId))
+          .orderBy(desc(barOrders.createdAt))
+      : await db
+          .select()
+          .from(barOrders)
+          .where(eq(barOrders.companyId, companyId))
+          .orderBy(desc(barOrders.createdAt));
     const ids = orderRows.map((o) => o.id);
     if (ids.length === 0) {
       return NextResponse.json({ success: true, orders: [] as unknown[] });
     }
     const lines = await db
-      .select({
-        orderId: barOrderItems.orderId,
-        quantity: barOrderItems.quantity,
-        unitPrice: barOrderItems.unitPrice,
-        lineTotal: barOrderItems.lineTotal,
-        notes: barOrderItems.notes,
-        itemName: barItems.name,
-      })
+      .select(
+        linkView
+          ? { orderId: barOrderItems.orderId, lineTotal: barOrderItems.lineTotal }
+          : {
+              orderId: barOrderItems.orderId,
+              quantity: barOrderItems.quantity,
+              unitPrice: barOrderItems.unitPrice,
+              lineTotal: barOrderItems.lineTotal,
+              notes: barOrderItems.notes,
+              itemName: barItems.name,
+            }
+      )
       .from(barOrderItems)
       .leftJoin(barItems, eq(barOrderItems.itemId, barItems.id))
-      .where(inArray(barOrderItems.orderId, ids));
+      .where(and(eq(barOrderItems.companyId, companyId), inArray(barOrderItems.orderId, ids)));
     const byOrder: Record<number, (typeof lines)[number][]> = {};
     for (const line of lines) {
       (byOrder[line.orderId] = byOrder[line.orderId] || []).push(line);
@@ -70,16 +86,27 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       orders: orderRows.map((o) => {
-        const itemLines = (byOrder[o.id] || []).map((line) => ({
+        const itemLines = byOrder[o.id] || [];
+        const total = itemLines.reduce((s, l) => s + l.lineTotal, 0);
+        if (linkView) {
+          return { ...o, total };
+        }
+        const detailed = itemLines as Array<{
+          itemName: string | null;
+          quantity: number;
+          unitPrice: number;
+          lineTotal: number;
+          notes: string | null;
+        }>;
+        const lineItems = detailed.map((line) => ({
           itemName: line.itemName ?? "Product",
           quantity: line.quantity,
           unitPrice: line.unitPrice,
           lineTotal: line.lineTotal,
           notes: line.notes,
         }));
-        const total = itemLines.reduce((s, l) => s + l.lineTotal, 0);
-        const itemsSold = itemLines.reduce((s, l) => s + l.quantity, 0);
-        return { ...o, lineItems: itemLines, total, itemsSold };
+        const itemsSold = lineItems.reduce((s, l) => s + l.quantity, 0);
+        return { ...o, lineItems, total, itemsSold };
       }),
     });
   } catch (e) {

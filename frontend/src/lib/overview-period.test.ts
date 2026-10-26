@@ -6,6 +6,7 @@ import {
   overviewRangeCaption,
   overviewScopeLabel,
   overviewWindow,
+  shiftOverviewAnchor,
   upcomingArrivalBounds,
 } from "./overview-period";
 import { amountSeriesWindow } from "./chart-period";
@@ -23,6 +24,26 @@ describe("overviewPeriodBounds", () => {
 
   it("keeps a Sunday inside the same Monday–Sunday week", () => {
     assert.deepEqual(overviewPeriodBounds("week", "2026-10-25"), { start: "2026-10-19", end: "2026-10-25" });
+  });
+
+  it("uses the full previous and next period when the anchor leaves the current one", () => {
+    const previousMonth = shiftOverviewAnchor("month", today, -1);
+    assert.equal(previousMonth, "2026-09-23");
+    assert.deepEqual(overviewPeriodBounds("month", today, previousMonth), {
+      start: "2026-09-01",
+      end: "2026-09-30",
+    });
+    const nextWeek = shiftOverviewAnchor("week", today, 1);
+    assert.deepEqual(overviewPeriodBounds("week", today, nextWeek), {
+      start: "2026-10-26",
+      end: "2026-11-01",
+    });
+    assert.equal(shiftOverviewAnchor("today", today, -1), "2026-10-22");
+    assert.equal(shiftOverviewAnchor("year", today, 1), "2027-10-23");
+    assert.equal(shiftOverviewAnchor("all", today, 1), today);
+    assert.equal(overviewScopeLabel("month", today, previousMonth), "Sep 2026");
+    assert.equal(inOverviewPeriod("2026-09-30", "month", today, previousMonth), true);
+    assert.equal(inOverviewPeriod("2026-10-01", "month", today, previousMonth), false);
   });
 });
 

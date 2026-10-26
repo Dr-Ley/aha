@@ -2,11 +2,13 @@
 
 import { LogOut, Search } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCompany } from "@/store/company-context";
 import { NotificationBell } from "@/components/dashboard/notification-bell";
 
 export function DashboardTopbar() {
+  const router = useRouter();
   const { data: session } = useSession();
   const { selectedCompanyId, setSelectedCompanyId, companies } = useCompany();
   const [showDesktopBell, setShowDesktopBell] = useState(false);
@@ -32,7 +34,10 @@ export function DashboardTopbar() {
         <select
           className="select select-bordered select-sm w-[220px]"
           value={selectedCompanyId}
-          onChange={(event) => setSelectedCompanyId(event.target.value as typeof selectedCompanyId)}
+          onChange={(event) => {
+            setSelectedCompanyId(event.target.value as typeof selectedCompanyId);
+            router.refresh();
+          }}
           aria-label="Switch company"
         >
           {companies.map((company) => (

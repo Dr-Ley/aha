@@ -55,6 +55,64 @@ export function isOverviewPeriod(value: unknown): value is OverviewPeriod {
   return value === "today" || value === "week" || value === "month" || value === "year" || value === "all";
 }
 
+function periodKey(period: OverviewPeriod, ymd: string): string {
+  if (period === "today") return ymd;
+  if (period === "week") return mondayOf(ymd);
+  if (period === "month") return ymd.slice(0, 7);
+  if (period === "year") return ymd.slice(0, 4);
+  return "all";
+}
+
+function isCurrentPeriod(period: OverviewPeriod, anchor: string, today: string): boolean {
+  if (period === "all") return true;
+  return periodKey(period, anchor) === periodKey(period, today);
+}
+
+/** Full calendar period containing `anchor`. Month and year are not clipped to today. */
+function completePeriodBounds(period: OverviewPeriod, anchor: string): { start: string; end: string } | null {
+  if (period === "all") return null;
+  const parts = parseYmd(anchor);
+  if (!parts || period === "today") return { start: anchor, end: anchor };
+  if (period === "week") {
+    const start = mondayOf(anchor);
+    return { start, end: addDays(start, 6) };
+  }
+  if (period === "month") {
+    return {
+      start: `${parts.y}-${pad2(parts.m)}-01`,
+      end: `${parts.y}-${pad2(parts.m)}-${pad2(daysInMonth(parts.y, parts.m))}`,
+    };
+  }
+  return { start: `${parts.y}-01-01`, end: `${parts.y}-12-31` };
+}
+
+function addMonths(value: string, months: number): string {
+  const parts = parseYmd(value);
+  if (!parts) return value;
+  const total = parts.y * 12 + (parts.m - 1) + months;
+  const y = Math.floor(total / 12);
+  const m = total - y * 12 + 1;
+  const day = Math.min(parts.d, daysInMonth(y, m));
+  return `${y}-${pad2(m)}-${pad2(day)}`;
+}
+
+function addYears(value: string, years: number): string {
+  const parts = parseYmd(value);
+  if (!parts) return value;
+  const y = parts.y + years;
+  const day = Math.min(parts.d, daysInMonth(y, parts.m));
+  return `${y}-${pad2(parts.m)}-${pad2(day)}`;
+}
+
+/** Move the focused day, week, month, or year. All years does not move. */
+export function shiftOverviewAnchor(period: OverviewPeriod, anchor: string, delta: number): string {
+  if (delta === 0 || period === "all") return anchor;
+  if (period === "today") return addDays(anchor, delta);
+  if (period === "week") return addDays(anchor, delta * 7);
+  if (period === "month") return addMonths(anchor, delta);
+  return addYears(anchor, delta);
+}
+
 /** One saved preset per signed-in user, on this browser. */
 export function overviewPeriodStorageKey(userId: string | null | undefined): string {
   const id = String(userId ?? "").trim();
@@ -69,9 +127,11 @@ export function overviewPeriodStorageKey(userId: string | null | undefined): str
  */
 export function overviewPeriodBounds(
   period: OverviewPeriod,
-  today = nairobiYmd()
+  today = nairobiYmd(),
+  anchor = today
 ): { start: string; end: string } | null {
   if (period === "all") return null;
+  if (!isCurrentPeriod(period, anchor, today)) return completePeriodBounds(period, anchor);
   const parts = parseYmd(today);
   if (!parts || period === "today") return { start: today, end: today };
   if (period === "week") {
@@ -85,8 +145,12 @@ export function overviewPeriodBounds(
 /** Forward window for arrivals. Starts today and runs to the end of the preset. */
 export function upcomingArrivalBounds(
   period: OverviewPeriod,
-  today = nairobiYmd()
+  today = nairobiYmd(),
+  anchor = today
 ): { start: string; end: string } {
+  if (!isCurrentPeriod(period, anchor, today)) {
+    return overviewPeriodBounds(period, today, anchor) ?? { start: today, end: "9999-12-31" };
+  }
   const parts = parseYmd(today);
   if (!parts || period === "today") return { start: today, end: today };
   if (period === "week") {
@@ -101,7 +165,14 @@ export function upcomingArrivalBounds(
 }
 
 /** Card scope. Partial presets say "to date" so a mid-period total is not read as complete. */
-export function overviewScopeLabel(period: OverviewPeriod): string {
+export function overviewScopeLabel(period: OverviewPeriod, today = nairobiYmd(), anchor = today): string {
+  if (period !== "all" && !isCurrentPeriod(period, anchor, today)) {
+    const parts = parseYmd(anchor);
+    if (period === "today") return "Selected day";
+    if (period === "week") return "Selected week";
+    if (period === "month" && parts) return `${MONTHS[parts.m - 1]} ${parts.y}`;
+    if (period === "year" && parts) return String(parts.y);
+  }
   switch (period) {
     case "today":
       return "Today";
@@ -116,7 +187,8 @@ export function overviewScopeLabel(period: OverviewPeriod): string {
   }
 }
 
-export function upcomingScopeLabel(period: OverviewPeriod): string {
+export function upcomingScopeLabel(period: OverviewPeriod, today = nairobiYmd(), anchor = today): string {
+  if (period !== "all" && !isCurrentPeriod(period, anchor, today)) return "In selected range";
   switch (period) {
     case "today":
       return "Checking in today";
@@ -138,9 +210,9 @@ function formatDay(ymd: string): string {
 }
 
 /** Visible range next to the preset chip, including the partial-period wording. */
-export function overviewRangeCaption(period: OverviewPeriod, today = nairobiYmd()): string {
-  const scope = overviewScopeLabel(period);
-  const bounds = overviewPeriodBounds(period, today);
+export function overviewRangeCaption(period: OverviewPeriod, today = nairobiYmd(), anchor = today): string {
+  const scope = overviewScopeLabel(period, today, anchor);
+  const bounds = overviewPeriodBounds(period, today, anchor);
   if (!bounds) return scope;
   if (bounds.start === bounds.end) return `${scope} · ${formatDay(bounds.start)}`;
   return `${scope} · ${formatDay(bounds.start)} – ${formatDay(bounds.end)}`;
@@ -149,17 +221,18 @@ export function overviewRangeCaption(period: OverviewPeriod, today = nairobiYmd(
 export function inOverviewPeriod(
   value: string | null | undefined,
   period: OverviewPeriod,
-  today = nairobiYmd()
+  today = nairobiYmd(),
+  anchor = today
 ): boolean {
-  const bounds = overviewPeriodBounds(period, today);
+  const bounds = overviewPeriodBounds(period, today, anchor);
   if (!bounds) return true;
   const day = String(value ?? "").slice(0, 10);
   return /^\d{4}-\d{2}-\d{2}$/.test(day) && day >= bounds.start && day <= bounds.end;
 }
 
-export function overviewWindow(period: OverviewPeriod, today = nairobiYmd()): SeriesWindow {
+export function overviewWindow(period: OverviewPeriod, today = nairobiYmd(), anchor = today): SeriesWindow {
   const grain = period === "all" ? "year" : period === "year" ? "month" : "day";
-  return { bounds: overviewPeriodBounds(period, today), grain };
+  return { bounds: overviewPeriodBounds(period, today, anchor), grain };
 }
 
 export function rangesOverlap(

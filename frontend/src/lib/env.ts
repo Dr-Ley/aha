@@ -20,8 +20,12 @@ export function getAuthSecret(): string {
 }
 
 const serverEnvSchema = z.object({
-  MONGODB_URI: z.string().min(1, "MONGODB_URI is required"),
-  MONGODB_DB: z.string().min(1).optional(),
+  DATABASE_URL: z
+    .string()
+    .min(1, "DATABASE_URL is required")
+    .refine((value) => value.startsWith("postgres://") || value.startsWith("postgresql://"), {
+      message: "DATABASE_URL must be a postgres connection string",
+    }),
 });
 
 type ServerEnv = z.infer<typeof serverEnvSchema> & { AUTH_SECRET: string };
@@ -32,8 +36,7 @@ let cached: ServerEnv | null = null;
 export function getServerEnv(): ServerEnv {
   if (cached) return cached;
   const parsed = serverEnvSchema.safeParse({
-    MONGODB_URI: process.env.MONGODB_URI,
-    MONGODB_DB: process.env.MONGODB_DB,
+    DATABASE_URL: process.env.DATABASE_URL,
   });
   if (!parsed.success) {
     throw new Error(

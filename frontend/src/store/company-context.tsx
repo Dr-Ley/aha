@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   COMPANIES,
@@ -13,7 +14,7 @@ import {
   type DashboardModuleId,
   moduleForRevenue,
 } from "@/lib/dashboard-modules";
-import { COMPANY_COOKIE } from "@/lib/company-cookie";
+import { companyIdFromCookieHeader, resolveCompanySelection } from "@/lib/company-cookie";
 import type { PermissionMatrix } from "@/lib/permissions-server";
 
 const STORAGE_KEY = "aha:selected-company";
@@ -38,7 +39,19 @@ type CompanyContextValue = {
 
 const CompanyContext = createContext<CompanyContextValue | undefined>(undefined);
 
+function commitCompany(requestedId: CompanyId, allowedIds: readonly CompanyId[]) {
+  const next = resolveCompanySelection({
+    requestedId,
+    currentCookie: companyIdFromCookieHeader(document.cookie),
+    allowedIds,
+  });
+  window.localStorage.setItem(STORAGE_KEY, next.id);
+  document.cookie = next.cookie;
+  return next;
+}
+
 export function CompanyProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [permissionsLoading, setPermissionsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -52,12 +65,13 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const cached = window.localStorage.getItem(STORAGE_KEY) as CompanyId | null;
     if (cached && COMPANIES.some((company) => company.id === cached)) {
-      setSelectedCompanyIdState(cached);
-      document.cookie = `${COMPANY_COOKIE}=${cached}; path=/; samesite=lax`;
+      const next = commitCompany(cached, COMPANIES.map((company) => company.id));
+      setSelectedCompanyIdState(next.id);
+      if (next.changed) router.refresh();
     }
     const delVisible = window.localStorage.getItem(DELETE_VISIBLE_KEY);
     if (delVisible === "true") setDeleteVisibleForAllState(true);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -106,16 +120,18 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (permissionsLoading) return;
     if (companies.length === 0) return;
-    if (!companies.some((c) => c.id === selectedCompanyId)) {
-      const next = companies[0].id;
-      setSelectedCompanyIdState(next);
-      window.localStorage.setItem(STORAGE_KEY, next);
-    }
-  }, [permissionsLoading, companies, selectedCompanyId]);
+    const next = commitCompany(
+      selectedCompanyId,
+      companies.map((company) => company.id)
+    );
+    if (next.id !== selectedCompanyId) setSelectedCompanyIdState(next.id);
+    if (next.changed) router.refresh();
+  }, [permissionsLoading, companies, selectedCompanyId, router]);
 
   const setCompany = (id: CompanyId) => {
-    setSelectedCompanyIdState(id);
-    window.localStorage.setItem(STORAGE_KEY, id);
+    const allowed = companies.map((company) => company.id);
+    const next = commitCompany(id, allowed.length > 0 ? allowed : COMPANIES.map((company) => company.id));
+    setSelectedCompanyIdState(next.id);
   };
 
   const setDeleteVisibleForAll = (v: boolean) => {

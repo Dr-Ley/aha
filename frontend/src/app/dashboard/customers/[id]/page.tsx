@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { displayCustomerName } from "@/lib/customer-identity";
+import { customersListPath } from "@/lib/customer-paths";
 import { getCustomerWithHistory } from "@/lib/customers";
 import { companyUsesHotelStays, companyUsesSafariTours } from "@/types/company";
 import { updateCustomerNotesAction } from "../actions";
@@ -33,7 +34,7 @@ export default async function CustomerDetailPage({
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/dashboard/customers" className="link link-hover text-sm">
+        <Link href={customersListPath(ctx.companyId)} className="link link-hover text-sm">
           ← Customers
         </Link>
         <h1 className="mt-2 text-2xl font-semibold">{name}</h1>

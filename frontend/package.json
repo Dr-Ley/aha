@@ -11,8 +11,10 @@
     "lint": "eslint",
     "seed": "tsx src/scripts/seed.ts",
     "import:local": "tsx scripts/import-local-mongo.ts",
+    "db:load": "tsx scripts/load-supabase-dump.ts",
+    "indexes:dashboard": "tsx scripts/ensure-dashboard-indexes.ts",
     "typecheck": "tsc --noEmit",
-    "test:tenant": "tsx --test src/lib/tenant.test.ts src/lib/rate-limit.test.ts src/lib/membership.test.ts src/lib/table-tenancy.test.ts src/lib/mongo-query.test.ts src/lib/mongo-client.test.ts src/lib/mongo-ids.test.ts src/lib/customer-identity.test.ts src/lib/travellers.test.ts src/lib/pricing.test.ts src/lib/email/email.test.ts src/lib/payment-service.test.ts src/lib/documents/documents.test.ts src/lib/invoice-balance.test.ts src/server/tenancy/tenant-context.test.ts src/server/services/payments/payment-service.test.ts src/server/services/email/email-service.test.ts src/features/tourism/tourism.test.ts src/server/services/itinerary/itinerary.test.ts src/server/services/ai/factory.test.ts"
+    "test:tenant": "tsx --test src/lib/tenant.test.ts src/lib/rate-limit.test.ts src/lib/membership.test.ts src/lib/table-tenancy.test.ts src/lib/mongo-query.test.ts src/lib/mongo-client.test.ts src/lib/mongo-ids.test.ts src/lib/customer-identity.test.ts src/lib/customer-paths.test.ts src/lib/company-cookie.test.ts src/lib/customers-tenant.test.ts src/lib/nairobi-date.test.ts src/lib/staff-user-summary.test.ts src/lib/travellers.test.ts src/lib/pricing.test.ts src/lib/email/email.test.ts src/lib/payment-service.test.ts src/lib/documents/documents.test.ts src/lib/invoice-balance.test.ts src/server/tenancy/tenant-context.test.ts src/server/services/payments/payment-service.test.ts src/server/services/email/email-service.test.ts src/features/tourism/tourism.test.ts src/server/services/itinerary/itinerary.test.ts src/server/services/ai/factory.test.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",
@@ -24,6 +26,7 @@
     "mongodb": "^6.21.0",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
+    "pg": "^8.23.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "recharts": "^3.8.1",
@@ -35,6 +38,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "daisyui": "^5.5.18",

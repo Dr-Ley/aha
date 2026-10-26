@@ -3,9 +3,11 @@ import { db } from "@/lib/db";
 import { expenses } from "@/lib/schema";
 import { createNotification } from "@/lib/notify";
 import { requireTenantContext } from "@/server/tenancy";
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, isNotNull, isNull, lt, or, sum } from "drizzle-orm";
 import { z } from "zod";
 import { companyIdZod, financialReferenceTypeZod } from "@/lib/schemas/company-id";
+import { readListPage, readYmdParam } from "@/lib/list-page";
+import { utcDayRange } from "@/lib/nairobi-date";
 
 const createSchema = z.object({
   companyId: companyIdZod,
@@ -39,14 +41,85 @@ export async function GET(request: NextRequest) {
     });
     if (!tenant.ok) return tenant.response;
     const companyId = tenant.ctx.companyId;
+    const parsedPage = readListPage(searchParams);
+    if (!parsedPage.ok) return NextResponse.json({ error: parsedPage.error }, { status: 400 });
+    const from = readYmdParam(searchParams.get("from"));
+    const to = readYmdParam(searchParams.get("to"));
+    if (from === "invalid" || to === "invalid") {
+      return NextResponse.json({ error: "from and to must be YYYY-MM-DD" }, { status: 400 });
+    }
+    const category = searchParams.get("category")?.trim() || "";
+    const reference = searchParams.get("reference")?.trim() || "";
+    const sort = searchParams.get("sort") === "amount" || searchParams.get("sort") === "category" ? searchParams.get("sort")! : "date";
+    const direction = searchParams.get("dir") === "asc" ? asc : desc;
+    const searchDeferred = Boolean(searchParams.get("q")?.trim());
 
-    const rows = await db
+    const filters = [eq(expenses.companyId, companyId)];
+    if (category) filters.push(eq(expenses.category, category));
+    if (from || to) {
+      const range = utcDayRange(from ?? "0001-01-01", to ?? "9999-12-31");
+      filters.push(gte(expenses.incurredAt, range.from));
+      filters.push(lt(expenses.incurredAt, range.to));
+    }
+    if (reference === "none") {
+      filters.push(isNull(expenses.referenceType));
+      filters.push(isNull(expenses.bookingId));
+    } else if (reference === "tour") {
+      filters.push(or(eq(expenses.referenceType, "tour"), and(isNull(expenses.referenceType), isNotNull(expenses.bookingId)))!);
+    } else if (reference === "hotel" || reference === "bar" || reference === "restaurant" || reference === "payment") {
+      filters.push(eq(expenses.referenceType, reference));
+    } else if (reference) {
+      return NextResponse.json({ error: "Unknown expense reference filter" }, { status: 400 });
+    }
+    const where = and(...filters);
+    const sortColumn = sort === "amount" ? expenses.amount : sort === "category" ? expenses.category : expenses.incurredAt;
+    const ordered = db
       .select()
       .from(expenses)
-      .where(eq(expenses.companyId, companyId))
-      .orderBy(desc(expenses.incurredAt));
+      .where(where)
+      .orderBy(direction(sortColumn), desc(expenses.id));
 
-    return NextResponse.json({ success: true, expenses: rows });
+    if (!parsedPage.page) {
+      const rows = await ordered;
+      return NextResponse.json({ success: true, expenses: rows });
+    }
+
+    const series = await db
+      .select({
+        incurredAt: expenses.incurredAt,
+        amount: expenses.amount,
+        category: expenses.category,
+        referenceType: expenses.referenceType,
+        referenceId: expenses.referenceId,
+        bookingId: expenses.bookingId,
+      })
+      .from(expenses)
+      .where(eq(expenses.companyId, companyId));
+    const [totals] = await db.select({ total: count(), amount: sum(expenses.amount) }).from(expenses).where(where);
+    const total = Number(totals?.total ?? 0);
+    const summary = {
+      total: Number(totals?.amount ?? 0),
+      count: total,
+      average: total === 0 ? 0 : Math.round(Number(totals?.amount ?? 0) / total),
+    };
+
+    if (searchDeferred) {
+      const rows = await ordered;
+      return NextResponse.json({
+        success: true,
+        expenses: rows,
+        series,
+        summary,
+        page: 1,
+        pageSize: rows.length,
+        total,
+        searchDeferred: true,
+      });
+    }
+
+    const { page, pageSize } = parsedPage.page;
+    const rows = await ordered.limit(pageSize).offset((page - 1) * pageSize);
+    return NextResponse.json({ success: true, expenses: rows, series, summary, page, pageSize, total });
   } catch (error) {
     console.error("Error fetching expenses:", error);
     return NextResponse.json({ error: "Failed to fetch expenses" }, { status: 500 });

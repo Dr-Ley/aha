@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   countConfirmedBookings,
+  countUnpaidOrPartialBookings,
   guestCount,
   openBalance,
   paymentCountsTowardRevenue,
@@ -84,6 +85,20 @@ describe("company overview metrics", () => {
         today
       ),
       1
+    );
+    assert.equal(
+      countUnpaidOrPartialBookings(
+        [
+          { date: "2026-10-02", paymentStatus: "unpaid" },
+          { date: "2026-10-03", paymentStatus: "partial" },
+          { date: "2026-10-04", paymentStatus: "paid" },
+          { date: "2026-10-05", paymentStatus: "partially paid" },
+          { date: "2026-11-02", paymentStatus: "unpaid" },
+        ],
+        "month",
+        today
+      ),
+      3
     );
   });
 

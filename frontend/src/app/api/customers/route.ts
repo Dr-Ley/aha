@@ -124,9 +124,9 @@ export async function POST(request: NextRequest) {
           nationality: parsed.data.nationality ?? undefined,
           updatedAt: new Date(),
         })
-        .where(eq(customers.id, id));
+        .where(and(eq(customers.id, id), eq(customers.companyId, companyId)));
     }
-    const [row] = await db.select().from(customers).where(eq(customers.id, id)).limit(1);
+    const row = await getCustomerForCompany(companyId, id);
     return NextResponse.json({ success: true, customer: row });
   } catch (e) {
     console.error("customers POST", e);

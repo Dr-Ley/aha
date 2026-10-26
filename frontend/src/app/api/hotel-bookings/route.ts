@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import {
-  customers,
   hotelBookings,
   hotelBookingGuests,
   hotelBookingPayments,
@@ -21,7 +20,7 @@ import {
   travellerHeadcount,
 } from "@/lib/travellers";
 import { calcStayNights, quoteAllocatedStay } from "@/lib/pricing";
-import { maybeSendHotelStayConfirmation } from "@/lib/email/hotel-stay-confirmation";
+import { customerDisplayNames } from "@/lib/customers";
 
 function resolveStayCurrency(companyId: string, guestCategory?: string | null): "KES" | "USD" {
   if (companyId === "ewc" && guestCategory === "non_resident") return "USD";
@@ -385,6 +384,76 @@ export async function GET(request: NextRequest) {
     if (!tenant.ok) return tenant.response;
     const companyId = tenant.ctx.companyId;
 
+    if (new URL(request.url).searchParams.get("view") === "link") {
+      const stays = await db
+        .select({
+          id: hotelBookings.id,
+          customerId: hotelBookings.customerId,
+          primaryGuestName: hotelBookings.primaryGuestName,
+          primaryGuestEmail: hotelBookings.primaryGuestEmail,
+          primaryGuestPhone: hotelBookings.primaryGuestPhone,
+          additionalOccupants: hotelBookings.additionalOccupants,
+          totalAmount: hotelBookings.totalAmount,
+          amountPaid: hotelBookings.amountPaid,
+          paymentStatus: hotelBookings.paymentStatus,
+        })
+        .from(hotelBookings)
+        .where(eq(hotelBookings.companyId, companyId));
+      const stayIds = stays.map((stay) => stay.id);
+      const allocated =
+        stayIds.length === 0
+          ? []
+          : await db
+              .select({
+                hotelBookingId: hotelBookingRooms.hotelBookingId,
+                roomId: rooms.id,
+                code: rooms.code,
+                name: rooms.name,
+                quantity: hotelBookingRooms.quantity,
+                roomTypeName: roomTypes.name,
+              })
+              .from(hotelBookingRooms)
+              .innerJoin(rooms, eq(hotelBookingRooms.roomId, rooms.id))
+              .leftJoin(roomTypes, eq(rooms.roomTypeId, roomTypes.id))
+              .where(inArray(hotelBookingRooms.hotelBookingId, stayIds));
+      const roomsByStay = new Map<number, typeof allocated>();
+      for (const row of allocated) {
+        const list = roomsByStay.get(row.hotelBookingId) ?? [];
+        list.push(row);
+        roomsByStay.set(row.hotelBookingId, list);
+      }
+      const customerIds = [...new Set(stays.map((stay) => stay.customerId).filter((id): id is number => id != null))];
+      const customerNames = await customerDisplayNames(db, companyId as CompanyId, customerIds);
+      return NextResponse.json({
+        success: true,
+        hotelBookings: stays.map((stay) => {
+          const occupants = parseOccupantGuests(stay.additionalOccupants);
+          const customerName = stay.customerId != null ? customerNames[stay.customerId] ?? null : null;
+          return {
+            id: stay.id,
+            primaryGuestName: stay.primaryGuestName,
+            customerName,
+            totalAmount: stay.totalAmount,
+            amountPaid: stay.amountPaid,
+            paymentStatus: stay.paymentStatus,
+            guests: [
+              ...(stay.primaryGuestName
+                ? [{ fullName: stay.primaryGuestName, isPrimary: true }]
+                : []),
+              ...occupants.map((guest) => ({ fullName: guest.name, isPrimary: false })),
+            ],
+            rooms: (roomsByStay.get(stay.id) ?? []).map((item) => ({
+              id: item.roomId,
+              code: item.code,
+              name: item.name,
+              quantity: item.quantity,
+              roomTypeName: item.roomTypeName,
+            })),
+          };
+        }),
+      });
+    }
+
     const { ensureArrivalDayNotifications } = await import("@/lib/arrival-day-notifications");
     await ensureArrivalDayNotifications(companyId);
     const { ensureCustomersReady, ensureHotelStayPartyColumns } = await import("@/lib/customers");
@@ -418,20 +487,7 @@ export async function GET(request: NextRequest) {
           .filter((id): id is number => id != null)
       ),
     ];
-    const customerNames: Record<number, string> = {};
-    if (customerIds.length > 0) {
-      const cRows = await db
-        .select({
-          id: customers.id,
-          firstName: customers.firstName,
-          lastName: customers.lastName,
-        })
-        .from(customers)
-        .where(inArray(customers.id, customerIds));
-      for (const row of cRows) {
-        customerNames[row.id] = [row.firstName, row.lastName].filter(Boolean).join(" ").trim();
-      }
-    }
+    const customerNames = await customerDisplayNames(db, companyId, customerIds);
 
     const stayIds = list.map((row) => row.booking.id);
     const allocatedRows =

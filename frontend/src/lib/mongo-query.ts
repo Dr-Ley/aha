@@ -61,8 +61,16 @@ function tableName(table: object): string {
  * Filters and writes name exactly one stored field. They do not $or a
  * camelCase twin, so two disagreeing company fields cannot both match.
  */
+export type FindOptions = {
+  /** Inclusion projection. `_id` is listed explicitly when the caller needs it. */
+  projection?: Record<string, 1>;
+  sort?: Record<string, 1 | -1>;
+  skip?: number;
+  limit?: number;
+};
+
 export type DocumentCollection = {
-  find(filter: Row): { toArray(): Promise<Row[]> };
+  find(filter: Row, options?: FindOptions): { toArray(): Promise<Row[]> };
   insertOne(doc: Row): Promise<unknown>;
   updateOne(
     filter: Row,
@@ -278,17 +286,25 @@ function comparison(op: string, key: string, value: unknown): Row {
   return { __unparsed: normalized };
 }
 
-function arrivalPredicate(node: SqlNode): ((row: Row) => boolean) | null {
+type RowPredicate = ((row: Row) => boolean) & { retainedFields?: string[] };
+
+function arrivalPredicate(node: SqlNode): RowPredicate | null {
   const text = node.queryChunks.map((chunk) => (isStringChunk(chunk) ? chunk.value.join("") : "")).join("");
   if (!text.includes("left(trim")) return null;
-  const param = node.queryChunks.find(isParam);
-  const today = param ? String(param.value) : "";
-  return (row) => {
+  let embedded: unknown;
+  for (const chunk of node.queryChunks) {
+    if (isParam(chunk)) embedded = chunk.value;
+    else if (typeof chunk === "string") embedded = chunk;
+  }
+  const today = embedded == null ? "" : String(embedded);
+  const predicate: RowPredicate = (row) => {
     const start = String(row.startDate ?? "").trim();
     const travel = String(row.travelDate ?? "").trim();
     const day = start.length >= 10 ? start.slice(0, 10) : travel.slice(0, 10);
     return day === today;
   };
+  predicate.retainedFields = ["startDate", "travelDate"];
+  return predicate;
 }
 
 function conditionToFilter(node: unknown): Row | ((row: Row) => boolean) {
@@ -296,19 +312,28 @@ function conditionToFilter(node: unknown): Row | ((row: Row) => boolean) {
   if (!isSql(node)) return {};
   const special = arrivalPredicate(node);
   if (special) return special;
-  const tokens = tokenize(node);
+  let tokens = tokenize(node);
   if (tokens.length === 1 && tokens[0].kind === "sql") return conditionToFilter(tokens[0].node);
   if (tokens.length === 1 && tokens[0].kind === "text") {
     if (tokens[0].text === "false") return () => false;
     if (tokens[0].text === "true") return {};
   }
-  if (tokens[0]?.kind === "text" && tokens[0].text === "(" && tokens.at(-1)?.kind === "text") {
+  const open = tokens[0];
+  const close = tokens.at(-1);
+  if (
+    open?.kind === "text" &&
+    open.text === "(" &&
+    close?.kind === "text" &&
+    close.text === ")"
+  ) {
     const inner = tokens.slice(1, -1);
-    const joiner = inner.find((token) => token.kind === "text" && (token.text === "and" || token.text === "or"));
-    if (joiner && joiner.kind === "text") {
-      const parts = inner.filter((token) => token.kind === "sql").map((token) => conditionToFilter(token.node));
-      return joinFilters(joiner.text === "or" ? "$or" : "$and", parts);
-    }
+    if (inner.length === 1 && inner[0]?.kind === "sql") return conditionToFilter(inner[0].node);
+    tokens = inner;
+  }
+  const joiner = tokens.find((token) => token.kind === "text" && (token.text === "and" || token.text === "or"));
+  if (joiner && joiner.kind === "text") {
+    const parts = tokens.filter((token) => token.kind === "sql").map((token) => conditionToFilter(token.node));
+    if (parts.length > 0) return joinFilters(joiner.text === "or" ? "$or" : "$and", parts);
   }
   if (tokens[0]?.kind === "text" && tokens[0].text === "not" && tokens[1]?.kind === "sql") {
     const inner = conditionToFilter(tokens[1].node);
@@ -343,13 +368,13 @@ function joinFilters(op: "$and" | "$or", parts: Array<Row | ((row: Row) => boole
     if (objects.length === 1) return objects[0];
     return { [op]: objects };
   }
+  // $or cannot drop a branch. $and can send the object branches to MongoDB
+  // and still evaluate functions after the documents are read.
+  if (op === "$and") return { $and: [...objects, ...predicates] };
   return (row) => {
     const objectOk = objects.length === 0 || matches(row, { [op]: objects });
-    const predOk =
-      op === "$or"
-        ? predicates.some((predicate) => predicate(row))
-        : predicates.every((predicate) => predicate(row));
-    return op === "$or" ? objectOk || predOk : objectOk && predOk;
+    const predOk = predicates.some((predicate) => predicate(row));
+    return objectOk || predOk;
   };
 }
 
@@ -381,13 +406,46 @@ function mongoFilter(filter: Row | ((row: Row) => boolean)): Row | null {
   if ("__unparsed" in filter) return null;
   if ("$and" in filter || "$or" in filter) {
     const key = "$and" in filter ? "$and" : "$or";
-    const parts = (filter[key] as Array<Row | ((row: Row) => boolean)>).map((part) =>
-      typeof part === "function" ? null : mongoFilter(part)
-    );
-    if (parts.some((part) => part == null)) return null;
-    return { [key]: parts };
+    const parts = filter[key] as Array<Row | ((row: Row) => boolean)>;
+    if (key === "$or") {
+      const translated = parts.map((part) => (typeof part === "function" ? null : mongoFilter(part)));
+      if (translated.some((part) => part == null)) return null;
+      return { $or: translated };
+    }
+    const pushed: Row[] = [];
+    for (const part of parts) {
+      if (typeof part === "function") continue;
+      const translated = mongoFilter(part);
+      if (translated) pushed.push(translated);
+    }
+    if (pushed.length === 0) return null;
+    if (pushed.length === 1) return pushed[0];
+    return { $and: pushed };
   }
   return filter;
+}
+
+function hasResidualPredicate(filter: Row | ((row: Row) => boolean)): boolean {
+  if (typeof filter === "function") return true;
+  if (!filter || typeof filter !== "object") return false;
+  if ("__unparsed" in filter) return true;
+  for (const [key, value] of Object.entries(filter)) {
+    if ((key === "$and" || key === "$or") && Array.isArray(value)) {
+      if (value.some((part) => hasResidualPredicate(part as Row))) return true;
+    }
+  }
+  return false;
+}
+
+function predicateNeedsFullDocument(filter: Row | RowPredicate): boolean {
+  if (typeof filter === "function") return filter.retainedFields == null;
+  if (!filter || typeof filter !== "object") return false;
+  for (const [key, value] of Object.entries(filter)) {
+    if ((key === "$and" || key === "$or") && Array.isArray(value)) {
+      if (value.some((part) => predicateNeedsFullDocument(part as Row))) return true;
+    }
+  }
+  return false;
 }
 
 function sqlText(node: unknown): string {
@@ -552,11 +610,16 @@ class Query implements Promise<any[]> {
     return this.runDelete();
   }
 
-  private async matchedDocs(): Promise<Row[]> {
+  private async matchedDocs(page: FindOptions | null = null): Promise<Row[]> {
     const collection = await this.collectionFor(this.table!);
     const translated = mongoFilter(this.filter);
     const query = translated ? toStoredFilter(translated, this.table!) : null;
-    const docs = (query ? await collection.find(query).toArray() : await collection.find({}).toArray())
+    const projection =
+      this.mode === "select"
+        ? columnProjection(this.table!, this.selection, this.filter, this.retainedKeys(this.table!))
+        : undefined;
+    const options = findOptions(projection, page);
+    const docs = (query ? await collection.find(query, options).toArray() : await collection.find({}, options).toArray())
       .map((doc) => normalizeDocument(doc, this.table!)!)
       .filter((row) => matches(row, this.filter));
     return docs;
@@ -585,17 +648,108 @@ class Query implements Promise<any[]> {
     return projected;
   }
 
+  /**
+   * Sort, skip, and limit can be sent to MongoDB only when the stored page is
+   * the result page. Joins, aggregates, residual predicates, and calendar-date
+   * sorts are applied after the documents are read. MongoDB orders null below
+   * every other value; the in-memory comparator keeps nulls last either way,
+   * so a calendar-date sort stays here.
+   */
+  private pushedPage(): FindOptions | null {
+    if (this.joins.length > 0) return null;
+    if (this.selection && Object.values(this.selection).some((value) => aggregateOf(value))) return null;
+    if (hasResidualPredicate(this.filter)) return null;
+    if (this.orders.some((order) => tableColumns(this.table!)[order.key]?.columnType === "PgDateString")) return null;
+    const options: FindOptions = {};
+    if (this.orders.length > 0) {
+      const sort: Record<string, 1 | -1> = {};
+      for (const order of this.orders) sort[storedFieldName(this.table!, order.key)] = order.dir;
+      options.sort = sort;
+    }
+    if (this.off > 0) options.skip = this.off;
+    if (this.lim != null) options.limit = this.lim;
+    if (!options.sort && options.skip == null && options.limit == null) return null;
+    return options;
+  }
+
+  private retainedKeys(table: object): string[] {
+    const name = tableName(table);
+    const keys: string[] = [];
+    for (const join of this.joins) {
+      const pair = equalityColumns(join.on);
+      if (!pair) continue;
+      for (const column of pair) {
+        if (tableName(column.table) === name) keys.push(columnKey(column));
+      }
+    }
+    return keys;
+  }
+
+  private async relatedRows(join: Join, bundles: Array<Map<string, Row | null>>): Promise<Row[]> {
+    const collection = await this.collectionFor(join.table);
+    const joinName = tableName(join.table);
+    const pair = equalityColumns(join.on);
+    let filter: Row = {};
+    const child = pair?.find((column) => tableName(column.table) === joinName);
+    const parent = pair?.find((column) => column !== child);
+    if (pair && child && parent) {
+      const values: unknown[] = [];
+      const seen = new Set<unknown>();
+      for (const bundle of bundles) {
+        const value = bundle.get(tableName(parent.table))?.[columnKey(parent)];
+        if (value == null || seen.has(value)) continue;
+        seen.add(value);
+        values.push(value);
+      }
+      filter = { [storedFieldName(join.table, columnKey(child))]: { $in: values } };
+    }
+    const projection = columnProjection(join.table, this.selection, {}, this.retainedKeys(join.table));
+    const docs = await collection.find(filter, findOptions(projection, null)).toArray();
+    return docs.map((doc) => normalizeDocument(doc, join.table)!);
+  }
+
+  /**
+   * count() and sum() cover the filtered set. When the filter translates and
+   * there is no join, MongoDB reduces it. A limit on the query is ignored.
+   * Residual predicates and joins stay on the in-memory path.
+   */
+  private async pushedAggregate(): Promise<Row[] | null> {
+    if (!this.selection || this.joins.length > 0 || hasResidualPredicate(this.filter)) return null;
+    const values = Object.values(this.selection);
+    if (values.length === 0 || values.some((value) => !aggregateOf(value))) return null;
+    const collection = await this.collectionFor(this.table!);
+    if (!collection.aggregate) return null;
+    const translated = mongoFilter(this.filter);
+    const match = translated ? toStoredFilter(translated, this.table!) : {};
+    let sumField: string | null = null;
+    for (const value of values) {
+      if (aggregateOf(value) !== "sum") continue;
+      const column = sumColumn(value);
+      if (!column || tableName(column.table) !== tableName(this.table!)) return null;
+      sumField = storedFieldName(this.table!, columnKey(column));
+    }
+    const group: Row = { _id: null, __count: { $sum: 1 } };
+    if (sumField) group.__sum = { $sum: `$${sumField}` };
+    const [row] = await collection.aggregate([{ $match: match }, { $group: group }]).toArray();
+    const bundle = new Map<string, Row | null>([
+      ["__count", Number(row?.__count ?? 0) as unknown as Row],
+      ["__sum", Number(row?.__sum ?? 0) as unknown as Row],
+    ]);
+    return [this.project(bundle)];
+  }
+
   private async runSelect(): Promise<Row[]> {
+    const aggregated = await this.pushedAggregate();
+    if (aggregated) return aggregated;
+    const page = this.pushedPage();
     const primaryName = tableName(this.table!);
-    let rows = await this.matchedDocs();
+    const rows = await this.matchedDocs(page);
     let bundles = rows.map((row) => new Map<string, Row | null>([[primaryName, row]]));
 
     for (const join of this.joins) {
       const next: Array<Map<string, Row | null>> = [];
       const joinName = tableName(join.table);
-      const related = (await (await this.collectionFor(join.table)).find({}).toArray()).map(
-        (doc) => normalizeDocument(doc, join.table)!
-      );
+      const related = await this.relatedRows(join, bundles);
       for (const bundle of bundles) {
         const matchesRelated = related.filter((row) => {
           const view = new Map(bundle);
@@ -619,7 +773,7 @@ class Query implements Promise<any[]> {
       bundles = next;
     }
 
-    if (this.orders.length > 0) {
+    if (!page && this.orders.length > 0) {
       bundles.sort((a, b) => {
         for (const order of this.orders) {
           const av = this.lookup(a, order.key);
@@ -647,8 +801,9 @@ class Query implements Promise<any[]> {
       ]);
       return [this.project(bundle)];
     }
-    const offset = this.off ?? 0;
-    const sliced = bundles.slice(offset, this.lim == null ? undefined : offset + this.lim);
+    const offset = page ? 0 : (this.off ?? 0);
+    const limit = page ? undefined : this.lim;
+    const sliced = bundles.slice(offset, limit == null ? undefined : offset + limit);
     return sliced.map((bundle) => this.project(bundle));
   }
 
@@ -730,6 +885,90 @@ class Query implements Promise<any[]> {
     }
     return projected;
   }
+}
+
+function findOptions(projection: Record<string, 1> | undefined, page: FindOptions | null): FindOptions | undefined {
+  const options: FindOptions = {};
+  if (projection) options.projection = projection;
+  if (page?.sort) options.sort = page.sort;
+  if (page?.skip != null) options.skip = page.skip;
+  if (page?.limit != null) options.limit = page.limit;
+  return Object.keys(options).length > 0 ? options : undefined;
+}
+
+function equalityColumns(on: unknown): [ColumnLike, ColumnLike] | null {
+  if (!isSql(on)) return null;
+  let tokens = tokenize(on);
+  if (tokens.length === 1 && tokens[0].kind === "sql") return equalityColumns(tokens[0].node);
+  const open = tokens[0];
+  const close = tokens.at(-1);
+  if (
+    open?.kind === "text" &&
+    open.text === "(" &&
+    close?.kind === "text" &&
+    close.text === ")"
+  ) {
+    const inner = tokens.slice(1, -1);
+    if (inner.length === 1 && inner[0]?.kind === "sql") return equalityColumns(inner[0].node);
+    tokens = inner;
+  }
+  const columns = tokens.filter((token) => token.kind === "col");
+  const operator = tokens.find((token) => token.kind === "text");
+  if (
+    columns.length === 2 &&
+    columns[0].kind === "col" &&
+    columns[1].kind === "col" &&
+    operator?.kind === "text" &&
+    operator.text === "="
+  ) {
+    return [columns[0].column, columns[1].column];
+  }
+  return null;
+}
+
+/** Column selections become an inclusion projection. Whole-table and aggregate selects do not. */
+function columnProjection(
+  table: object,
+  selection: Record<string, unknown> | null | undefined,
+  filter: Row | RowPredicate = {},
+  retainKeys: string[] = []
+): Record<string, 1> | undefined {
+  if (!selection) return undefined;
+  if (predicateNeedsFullDocument(filter)) return undefined;
+  const fields: Record<string, 1> = { _id: 1 };
+  let sawColumn = false;
+  for (const value of Object.values(selection)) {
+    if (is(value, Table)) {
+      if (tableName(value as object) === tableName(table)) return undefined;
+      continue;
+    }
+    if (aggregateOf(value) || !isColumn(value)) return undefined;
+    if (tableName(value.table) !== tableName(table)) continue;
+    sawColumn = true;
+    fields[storedFieldName(table, columnKey(value))] = 1;
+  }
+  if (!sawColumn && retainKeys.length === 0 && filterFieldKeys(filter).length === 0) return undefined;
+  for (const key of filterFieldKeys(filter)) fields[storedFieldName(table, key)] = 1;
+  for (const key of retainKeys) fields[storedFieldName(table, key)] = 1;
+  return fields;
+}
+
+function filterFieldKeys(filter: Row | RowPredicate): string[] {
+  if (typeof filter === "function") return filter.retainedFields ?? [];
+  if (!filter) return [];
+  const keys: string[] = [];
+  for (const [key, value] of Object.entries(filter)) {
+    if ((key === "$and" || key === "$or") && Array.isArray(value)) {
+      for (const part of value) keys.push(...filterFieldKeys(part as Row));
+      continue;
+    }
+    if (typeof value === "function") {
+      keys.push(...filterFieldKeys(value as RowPredicate));
+      continue;
+    }
+    if (key !== "__unparsed") keys.push(key);
+  }
+  return keys;
 }
 
 function sqlStatement(query: unknown): string {

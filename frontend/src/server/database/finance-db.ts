@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 
-/** Financial writes use the same MongoDB client as the rest of the app. */
+/** Financial writes use the same Supabase Postgres client as the rest of the app. */
 export function getFinanceDb() {
   return db;
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { displayCustomerName } from "@/lib/customer-identity";
+import { customerDetailPath } from "@/lib/customer-paths";
 import { listCustomersForCompany } from "@/lib/customers";
 import { COMPANIES } from "@/types/company";
 import { createCustomerAction } from "./actions";
@@ -119,7 +120,7 @@ export default async function DashboardCustomersPage({
               paged.map((row) => (
                 <tr key={row.id}>
                   <td className="font-medium">
-                    <Link className="link link-hover" href={`/dashboard/customers/${row.id}`}>
+                    <Link className="link link-hover" href={customerDetailPath(row.id, ctx.companyId)}>
                       {displayName(row)}
                     </Link>
                   </td>

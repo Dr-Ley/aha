@@ -60,6 +60,15 @@ type ExpenseRow = {
   incurredAt: string | null;
 };
 
+type ExpenseSeriesPoint = {
+  incurredAt: string | null;
+  amount: number;
+  category: string;
+  referenceType: ReferenceType | null;
+  referenceId: number | null;
+  bookingId: number | null;
+};
+
 type BookingOpt = { id: number; label: string };
 
 const DATE_PRESETS: { id: WeeklyDatePreset; label: string }[] = [
@@ -111,7 +120,7 @@ function chartCompactFromKes(kes: number): string {
   return `KSh${v}`;
 }
 
-function expenseRefKind(row: ExpenseRow): ReferenceType | "" {
+function expenseRefKind(row: { referenceType?: ReferenceType | null; bookingId?: number | null }): ReferenceType | "" {
   if (row.referenceType) return row.referenceType;
   if (row.bookingId != null) return "tour";
   return "";
@@ -156,6 +165,11 @@ export function ExpensesPanel() {
   const canEdit = canEditModule("expenses");
   const canDelete = canEdit;
   const [rows, setRows] = useState<ExpenseRow[]>([]);
+  const [series, setSeries] = useState<ExpenseSeriesPoint[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [summary, setSummary] = useState({ total: 0, count: 0, average: 0 });
+  const [searchDeferred, setSearchDeferred] = useState(false);
   const [bookings, setBookings] = useState<BookingOpt[]>([]);
   const [sourceLabels, setSourceLabels] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -201,22 +215,49 @@ export function ExpensesPanel() {
     setTimeout(() => setToast(null), 3000);
   }, []);
 
+  const searching = searchF.trim().length > 0;
+  const listKey = `${selectedCompanyId}|${preset}|${customFrom}|${customTo}|${catF}|${refTypeF}|${sortKey}|${sortDir}`;
+  const [seenList, setSeenList] = useState(listKey);
+  if (seenList !== listKey) {
+    setSeenList(listKey);
+    setPage(1);
+  }
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const qs = new URLSearchParams({ companyId: selectedCompanyId });
+      const range = dateRangeForPreset(preset, new Date(), { from: customFrom, to: customTo });
+      const qs = new URLSearchParams({
+        companyId: selectedCompanyId,
+        page: String(page),
+        pageSize: "10",
+        sort: sortKey,
+        dir: sortDir,
+      });
+      if (range) {
+        qs.set("from", range.from);
+        qs.set("to", range.to);
+      }
+      if (catF) qs.set("category", catF);
+      if (refTypeF) qs.set("reference", refTypeF);
+      if (searching) qs.set("q", "1");
+      const lookup = new URLSearchParams({ companyId: selectedCompanyId, view: "link" });
       const parts: Promise<Response>[] = [fetch(`/api/expenses?${qs}`)];
-      if (companyUsesSafariTours(selectedCompanyId)) parts.push(fetch(`/api/bookings?${qs}`));
-      if (companyUsesHotelStays(selectedCompanyId)) parts.push(fetch(`/api/hotel-bookings?${qs}`));
-      if (companyUsesBar(selectedCompanyId)) parts.push(fetch(`/api/bar-orders?${qs}`));
-      if (companyUsesRestaurant(selectedCompanyId)) parts.push(fetch(`/api/restaurant-orders?${qs}`));
+      if (companyUsesSafariTours(selectedCompanyId)) parts.push(fetch(`/api/bookings?${lookup}`));
+      if (companyUsesHotelStays(selectedCompanyId)) parts.push(fetch(`/api/hotel-bookings?${lookup}`));
+      if (companyUsesBar(selectedCompanyId)) parts.push(fetch(`/api/bar-orders?${lookup}`));
+      if (companyUsesRestaurant(selectedCompanyId)) parts.push(fetch(`/api/restaurant-orders?${lookup}`));
 
       const results = await Promise.all(parts);
       const eRes = results[0];
       const eJson = await eRes.json();
       if (!eRes.ok) throw new Error(typeof eJson.error === "string" ? eJson.error : "Failed to load expenses");
       setRows(eJson.expenses ?? []);
+      setSeries(eJson.series ?? []);
+      setTotal(Number(eJson.total ?? eJson.expenses?.length ?? 0));
+      setSummary(eJson.summary ?? { total: 0, count: 0, average: 0 });
+      setSearchDeferred(Boolean(eJson.searchDeferred));
 
       const labels: Record<string, string> = {};
       const bookingOpts: BookingOpt[] = [];
@@ -271,10 +312,11 @@ export function ExpensesPanel() {
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error");
       setRows([]);
+      setSeries([]);
     } finally {
       setLoading(false);
     }
-  }, [selectedCompanyId]);
+  }, [selectedCompanyId, page, preset, customFrom, customTo, catF, refTypeF, sortKey, sortDir, searching]);
 
   useEffect(() => {
     void load();
@@ -289,20 +331,20 @@ export function ExpensesPanel() {
 
   const categories = useMemo(() => {
     const s = new Set<string>();
-    rows.forEach((r) => {
-      if (r.category?.trim()) s.add(r.category);
-    });
+    for (const row of series.length > 0 ? series : rows) {
+      if (row.category?.trim()) s.add(row.category);
+    }
     return [...s].sort((a, b) => a.localeCompare(b));
-  }, [rows]);
+  }, [series, rows]);
 
   const referenceTypes = useMemo(() => {
     const s = new Set<ReferenceType>();
-    rows.forEach((r) => {
-      const kind = expenseRefKind(r);
+    for (const row of series.length > 0 ? series : rows) {
+      const kind = expenseRefKind(row);
       if (kind) s.add(kind);
-    });
+    }
     return [...s].sort((a, b) => REFERENCE_TYPE_LABEL[a].localeCompare(REFERENCE_TYPE_LABEL[b]));
-  }, [rows]);
+  }, [series, rows]);
 
   const displayRows = useMemo<DisplayRow[]>(() => {
     return rows.map((row) => ({
@@ -341,36 +383,67 @@ export function ExpensesPanel() {
     return next;
   }, [displayRows, dateRange, catF, refTypeF, searchF, sortKey, sortDir]);
 
-  const { page, pageCount, setPage, pagedRows } = useDashboardPagination(filtered, 10);
+  const localPaging = useDashboardPagination(searchDeferred ? filtered : [], 10);
+  const pagedRows = searchDeferred ? localPaging.pagedRows : displayRows;
+  const pageCount = searchDeferred ? localPaging.pageCount : Math.max(1, Math.ceil(total / 10));
+  const currentPage = searchDeferred ? localPaging.page : page;
+  const changePage = searchDeferred ? localPaging.setPage : setPage;
+
+  async function loadExpenseExport(): Promise<DisplayRow[]> {
+    const range = dateRangeForPreset(preset, new Date(), { from: customFrom, to: customTo });
+    const qs = new URLSearchParams({ companyId: selectedCompanyId, sort: sortKey, dir: sortDir });
+    if (range) {
+      qs.set("from", range.from);
+      qs.set("to", range.to);
+    }
+    if (catF) qs.set("category", catF);
+    if (refTypeF) qs.set("reference", refTypeF);
+    const res = await fetch(`/api/expenses?${qs}`);
+    const json = await res.json();
+    if (!res.ok) throw new Error(typeof json.error === "string" ? json.error : "Failed to export expenses");
+    const needle = searchF.trim().toLowerCase();
+    return ((json.expenses ?? []) as ExpenseRow[])
+      .map((row) => ({
+        ...row,
+        dateLabel: formatExpenseDate(row.incurredAt),
+        descriptionLabel: descriptionText(row.description),
+        referenceLabel: referenceLabel(row, sourceLabels),
+      }))
+      .filter((row) => {
+        if (!needle) return true;
+        const hay = `${row.category} ${row.descriptionLabel} ${row.referenceLabel}`.toLowerCase();
+        return hay.includes(needle);
+      });
+  }
 
   const kpis = useMemo(() => {
-    const total = filtered.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
-    const count = filtered.length;
-    const average = count === 0 ? 0 : Math.round(total / count);
-    const thisMonth = displayRows.reduce((sum, r) => {
-      const ymd = expenseYmd(r.incurredAt);
+    const thisMonth = series.reduce((sum, row) => {
+      const ymd = expenseYmd(row.incurredAt);
       if (!thisMonthRange || !ymd || ymd < thisMonthRange.from || ymd > thisMonthRange.to) return sum;
-      return sum + (Number(r.amount) || 0);
+      return sum + (Number(row.amount) || 0);
     }, 0);
-    return { total, count, average, thisMonth };
-  }, [filtered, displayRows, thisMonthRange]);
+    if (!searchDeferred) return { ...summary, thisMonth };
+    const amount = filtered.reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
+    const count = filtered.length;
+    return { total: amount, count, average: count === 0 ? 0 : Math.round(amount / count), thisMonth };
+  }, [filtered, series, thisMonthRange, searchDeferred, summary]);
 
   const trendPoints = useMemo(
     () =>
       amountSeries(
-        displayRows
+        (series.length > 0 ? series : displayRows)
           .map((row) => ({ date: expenseYmd(row.incurredAt), amount: Number(row.amount) || 0 }))
           .filter((row) => row.date),
         trendPeriod,
         undefined,
         trendShift
       ),
-    [displayRows, trendPeriod, trendShift]
+    [series, displayRows, trendPeriod, trendShift]
   );
 
   const categoryBreakdown = useMemo(() => {
     const buckets = new Map<string, number>();
-    for (const row of displayRows) {
+    for (const row of series.length > 0 ? series : displayRows) {
       if (!inChartPeriod(expenseYmd(row.incurredAt), categoryPeriod, undefined, categoryShift)) continue;
       const name = row.category?.trim();
       if (!name) continue;
@@ -380,7 +453,7 @@ export function ExpensesPanel() {
       .map(([name, amount]) => ({ name, amount }))
       .filter((row) => row.amount > 0)
       .sort((a, b) => b.amount - a.amount);
-  }, [displayRows, categoryPeriod, categoryShift]);
+  }, [series, displayRows, categoryPeriod, categoryShift]);
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) {
@@ -822,7 +895,7 @@ export function ExpensesPanel() {
                   <span className="loading loading-spinner loading-md" />
                 </td>
               </tr>
-            ) : filtered.length === 0 ? (
+            ) : pagedRows.length === 0 ? (
               <tr>
                 <td colSpan={6} className="py-10 text-center">
                   <p className="font-medium text-base-content">No expenses recorded</p>
@@ -866,7 +939,7 @@ export function ExpensesPanel() {
           <div className="rounded-2xl border border-base-content/10 bg-base-100 py-12 text-center shadow-sm">
             <span className="loading loading-spinner loading-md" />
           </div>
-        ) : filtered.length === 0 ? (
+        ) : pagedRows.length === 0 ? (
           <div className="rounded-2xl border border-base-content/10 bg-base-100 p-8 text-center shadow-sm">
             <p className="font-medium text-base-content">No expenses recorded</p>
             <p className="mt-1 text-sm text-base-content/50">There are no expenses matching the current filters.</p>
@@ -905,8 +978,8 @@ export function ExpensesPanel() {
       </div>
 
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 max-md:flex-col max-md:items-stretch">
-        <DashboardPagination page={page} pageCount={pageCount} setPage={setPage} />
-        <DashboardTableExport title="Expenses" rows={filtered} columns={exportColumns} />
+        <DashboardPagination page={currentPage} pageCount={pageCount} setPage={changePage} />
+        <DashboardTableExport title="Expenses" rows={pagedRows} columns={exportColumns} loadRows={loadExpenseExport} />
       </div>
 
       {!loading ? (

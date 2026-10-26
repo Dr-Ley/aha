@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { userPermissions, users } from "@/lib/schema";
+import { findStaffUserSummary } from "@/lib/staff-user-summary";
 import { requireStaffUser } from "@/server/tenancy";
 import { checkAdminApi } from "@/lib/permissions-server";
 import { isDashboardModuleId, type DashboardModuleId } from "@/lib/dashboard-modules";
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Invalid userId" }, { status: 400 });
     }
 
-    const [user] = await db.select().from(users).where(eq(users.id, uid)).limit(1);
+    const user = await findStaffUserSummary(db, uid);
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -96,7 +97,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Cannot change your own access here" }, { status: 400 });
     }
 
-    const [target] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+    const target = await findStaffUserSummary(db, userId);
     if (!target) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -140,7 +141,7 @@ export async function PUT(request: NextRequest) {
         permissions.filter((p) => p.canView || p.canEdit).map((p) => p.companyId)
       ),
     ];
-    const [updatedUser] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+    const updatedUser = await findStaffUserSummary(db, userId);
     await syncMembershipsFromPermissionCompanies(
       userId,
       memberCompanies,

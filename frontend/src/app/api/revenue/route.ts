@@ -3,9 +3,10 @@ import { db } from "@/lib/db";
 import { revenueEntries } from "@/lib/schema";
 import { moduleForRevenue } from "@/lib/dashboard-modules";
 import { requireTenantContext } from "@/server/tenancy";
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, isNotNull, isNull, or, sum } from "drizzle-orm";
 import { z } from "zod";
 import { companyIdZod, financialReferenceTypeZod } from "@/lib/schemas/company-id";
+import { readListPage } from "@/lib/list-page";
 
 const createSchema = z.object({
   companyId: companyIdZod,
@@ -38,14 +39,67 @@ export async function GET(request: NextRequest) {
     });
     if (!tenant.ok) return tenant.response;
     const companyId = tenant.ctx.companyId;
+    const parsedPage = readListPage(searchParams);
+    if (!parsedPage.ok) return NextResponse.json({ error: parsedPage.error }, { status: 400 });
+    const month = searchParams.get("month")?.trim() || "";
+    if (month && !/^\d{4}-\d{2}$/.test(month)) {
+      return NextResponse.json({ error: "month must be YYYY-MM" }, { status: 400 });
+    }
+    const linked = searchParams.get("linked")?.trim() || "";
+    if (linked && linked !== "linked" && linked !== "none") {
+      return NextResponse.json({ error: "linked must be linked or none" }, { status: 400 });
+    }
 
-    const rows = await db
+    const filters = [eq(revenueEntries.companyId, companyId)];
+    if (month) filters.push(eq(revenueEntries.periodMonth, month));
+    if (linked === "linked") {
+      filters.push(
+        or(isNotNull(revenueEntries.bookingId), and(isNotNull(revenueEntries.referenceType), isNotNull(revenueEntries.referenceId)))!
+      );
+    } else if (linked === "none") {
+      filters.push(isNull(revenueEntries.bookingId));
+      filters.push(or(isNull(revenueEntries.referenceType), isNull(revenueEntries.referenceId))!);
+    }
+    const where = and(...filters);
+    const ordered = db
       .select()
       .from(revenueEntries)
-      .where(eq(revenueEntries.companyId, companyId))
-      .orderBy(desc(revenueEntries.recognizedAt));
+      .where(where)
+      .orderBy(desc(revenueEntries.recognizedAt), desc(revenueEntries.id));
 
-    return NextResponse.json({ success: true, revenue: rows });
+    if (!parsedPage.page) {
+      const rows = await ordered;
+      return NextResponse.json({ success: true, revenue: rows });
+    }
+
+    const { page, pageSize } = parsedPage.page;
+    const [rows, totals, series] = await Promise.all([
+      ordered.limit(pageSize).offset((page - 1) * pageSize),
+      db.select({ total: count(), amount: sum(revenueEntries.amount) }).from(revenueEntries).where(where),
+      db
+        .select({
+          amount: revenueEntries.amount,
+          packageLabel: revenueEntries.packageLabel,
+          periodMonth: revenueEntries.periodMonth,
+          recognizedAt: revenueEntries.recognizedAt,
+        })
+        .from(revenueEntries)
+        .where(eq(revenueEntries.companyId, companyId)),
+    ]);
+    const total = Number(totals[0]?.total ?? 0);
+    return NextResponse.json({
+      success: true,
+      revenue: rows,
+      series,
+      summary: {
+        total: Number(totals[0]?.amount ?? 0),
+        count: total,
+        average: total === 0 ? 0 : Math.round(Number(totals[0]?.amount ?? 0) / total),
+      },
+      page,
+      pageSize,
+      total,
+    });
   } catch (error) {
     console.error("Error fetching revenue:", error);
     return NextResponse.json({ error: "Failed to fetch revenue" }, { status: 500 });

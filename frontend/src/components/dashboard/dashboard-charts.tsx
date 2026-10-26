@@ -126,14 +126,17 @@ function ChartCard({
 export function DashboardCharts({
   facts,
   period,
+  anchor,
   stacked = false,
 }: {
   facts: OverviewChartFacts;
   period: OverviewPeriod;
+  anchor?: string;
   stacked?: boolean;
 }) {
   const today = nairobiYmd();
-  const window = useMemo(() => overviewWindow(period, today), [period, today]);
+  const focus = anchor ?? today;
+  const window = useMemo(() => overviewWindow(period, today, focus), [period, today, focus]);
 
   const revenueLine = useMemo(
     () => amountSeriesWindow(facts.revenue, window, today),
@@ -249,16 +252,19 @@ export function DashboardCharts({
 export function HospitalityCharts({
   facts,
   period,
+  anchor,
   showRestaurant = false,
   showDepartment = false,
 }: {
   facts: OverviewChartFacts;
   period: OverviewPeriod;
+  anchor?: string;
   showRestaurant?: boolean;
   showDepartment?: boolean;
 }) {
   const today = nairobiYmd();
-  const window = useMemo(() => overviewWindow(period, today), [period, today]);
+  const focus = anchor ?? today;
+  const window = useMemo(() => overviewWindow(period, today, focus), [period, today, focus]);
 
   const department = useMemo(
     () =>
