@@ -9,6 +9,7 @@ import {
   createCustomerFromStaff,
   ensureCustomersReady,
   findOrCreateCustomerFromGuest,
+  getCustomerForCompany,
   listCustomersForCompany,
   suggestCustomersForGuest,
 } from "@/lib/customers";

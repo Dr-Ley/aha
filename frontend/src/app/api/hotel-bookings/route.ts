@@ -21,6 +21,7 @@ import {
 } from "@/lib/travellers";
 import { calcStayNights, quoteAllocatedStay } from "@/lib/pricing";
 import { customerDisplayNames } from "@/lib/customers";
+import { maybeSendHotelStayConfirmation } from "@/lib/email/hotel-stay-confirmation";
 
 function resolveStayCurrency(companyId: string, guestCategory?: string | null): "KES" | "USD" {
   if (companyId === "ewc" && guestCategory === "non_resident") return "USD";

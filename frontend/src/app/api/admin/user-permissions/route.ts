@@ -142,10 +142,13 @@ export async function PUT(request: NextRequest) {
       ),
     ];
     const updatedUser = await findStaffUserSummary(db, userId);
+    const updatedRole = typeof updatedUser?.role === "string" ? updatedUser.role : undefined;
+    const previousRole = typeof target.role === "string" ? target.role : undefined;
+    const globalRole = updatedRole ?? role ?? previousRole;
     await syncMembershipsFromPermissionCompanies(
       userId,
       memberCompanies,
-      updatedUser?.role ?? role ?? target.role,
+      globalRole,
       memberships?.filter((m) => memberCompanies.includes(m.companyId))
     );
 

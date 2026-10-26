@@ -16,7 +16,7 @@
  *   npm run indexes:dashboard -- --staging --uri mongodb://host/aha_staging
  *   npm run indexes:dashboard -- --allow-database aha_dev --uri mongodb://127.0.0.1:27017/aha_dev
  */
-import { MongoClient, type Collection, type Document, type IndexSpecification } from "mongodb";
+import { MongoClient, type Collection, type Document, type IndexSpecification, type Sort } from "mongodb";
 import { databaseNameFromUri, isLocalMongoHost, mongoHosts } from "../src/lib/mongo-client";
 
 const LOCAL_DATABASE = "aha_dev";
@@ -150,7 +150,7 @@ async function explainQuery(
   collection: Collection,
   label: string,
   filter: Document,
-  sort?: Document,
+  sort?: Sort,
   limit?: number
 ): Promise<ExplainSummary> {
   let cursor = collection.find(filter);

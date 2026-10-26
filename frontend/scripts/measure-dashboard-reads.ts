@@ -2,7 +2,7 @@
  * Local aha_dev measurements for the dashboard read path.
  * These are MongoDB driver timings, not authenticated HTTP latency.
  */
-import { MongoClient, type Document } from "mongodb";
+import { MongoClient, type Collection, type Document, type Sort } from "mongodb";
 
 const URI = "mongodb://127.0.0.1:27017/aha_dev";
 const COMPANIES = ["aha", "ewc", "bth"] as const;
@@ -29,7 +29,7 @@ async function timed(run: () => Promise<unknown>): Promise<number[]> {
   return samples;
 }
 
-async function explain(collection: ReturnType<MongoClient["db"]>["collection"] extends never ? never : import("mongodb").Collection, filter: Document, sort?: Document, limit?: number) {
+async function explain(collection: Collection, filter: Document, sort?: Sort, limit?: number) {
   let cursor = collection.find(filter);
   if (sort) cursor = cursor.sort(sort);
   if (limit != null) cursor = cursor.limit(limit);
@@ -67,8 +67,8 @@ async function main() {
       const payments = db.collection("payments");
       const revenue = db.collection("revenue_entries");
       const filter = { company_id: company };
-      const paymentSort = { recorded_at: -1, _id: -1 };
-      const revenueSort = { recognized_at: -1, _id: -1 };
+      const paymentSort: Sort = { recorded_at: -1, _id: -1 };
+      const revenueSort: Sort = { recognized_at: -1, _id: -1 };
       const [paymentExplain, paymentPageExplain, revenueExplain, revenuePageExplain] = await Promise.all([
         explain(payments, filter, paymentSort),
         explain(payments, filter, paymentSort, 10),

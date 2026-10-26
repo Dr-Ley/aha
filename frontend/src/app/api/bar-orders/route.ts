@@ -63,49 +63,53 @@ export async function GET(request: NextRequest) {
     if (ids.length === 0) {
       return NextResponse.json({ success: true, orders: [] as unknown[] });
     }
+    const lineFilter = and(eq(barOrderItems.companyId, companyId), inArray(barOrderItems.orderId, ids));
+    if (linkView) {
+      const lines = await db
+        .select({ orderId: barOrderItems.orderId, lineTotal: barOrderItems.lineTotal })
+        .from(barOrderItems)
+        .where(lineFilter);
+      const totals = new Map<number, number>();
+      for (const line of lines) {
+        totals.set(line.orderId, (totals.get(line.orderId) ?? 0) + line.lineTotal);
+      }
+      return NextResponse.json({
+        success: true,
+        orders: orderRows.map((o) => ({ ...o, total: totals.get(o.id) ?? 0 })),
+      });
+    }
+
     const lines = await db
-      .select(
-        linkView
-          ? { orderId: barOrderItems.orderId, lineTotal: barOrderItems.lineTotal }
-          : {
-              orderId: barOrderItems.orderId,
-              quantity: barOrderItems.quantity,
-              unitPrice: barOrderItems.unitPrice,
-              lineTotal: barOrderItems.lineTotal,
-              notes: barOrderItems.notes,
-              itemName: barItems.name,
-            }
-      )
+      .select({
+        orderId: barOrderItems.orderId,
+        quantity: barOrderItems.quantity,
+        unitPrice: barOrderItems.unitPrice,
+        lineTotal: barOrderItems.lineTotal,
+        notes: barOrderItems.notes,
+        itemName: barItems.name,
+      })
       .from(barOrderItems)
       .leftJoin(barItems, eq(barOrderItems.itemId, barItems.id))
-      .where(and(eq(barOrderItems.companyId, companyId), inArray(barOrderItems.orderId, ids)));
-    const byOrder: Record<number, (typeof lines)[number][]> = {};
+      .where(lineFilter);
+    const byOrder = new Map<number, typeof lines>();
     for (const line of lines) {
-      (byOrder[line.orderId] = byOrder[line.orderId] || []).push(line);
+      const bucket = byOrder.get(line.orderId) ?? [];
+      bucket.push(line);
+      byOrder.set(line.orderId, bucket);
     }
     return NextResponse.json({
       success: true,
       orders: orderRows.map((o) => {
-        const itemLines = byOrder[o.id] || [];
-        const total = itemLines.reduce((s, l) => s + l.lineTotal, 0);
-        if (linkView) {
-          return { ...o, total };
-        }
-        const detailed = itemLines as Array<{
-          itemName: string | null;
-          quantity: number;
-          unitPrice: number;
-          lineTotal: number;
-          notes: string | null;
-        }>;
-        const lineItems = detailed.map((line) => ({
+        const itemLines = byOrder.get(o.id) ?? [];
+        const total = itemLines.reduce((sum, line) => sum + line.lineTotal, 0);
+        const lineItems = itemLines.map((line) => ({
           itemName: line.itemName ?? "Product",
           quantity: line.quantity,
           unitPrice: line.unitPrice,
           lineTotal: line.lineTotal,
           notes: line.notes,
         }));
-        const itemsSold = lineItems.reduce((s, l) => s + l.quantity, 0);
+        const itemsSold = lineItems.reduce((sum, line) => sum + line.quantity, 0);
         return { ...o, lineItems, total, itemsSold };
       }),
     });
