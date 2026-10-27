@@ -56,7 +56,7 @@ export function mergeMemberships(args: {
   });
 }
 
-/** Owner and company admin have full module access for that tenant. */
+/** Owner and company admin memberships. Module checkboxes still decide what they can open. */
 export function membershipGrantsFullCompanyAccess(
   role: MembershipRole | null | undefined,
   status: MembershipStatus | null | undefined
@@ -65,9 +65,9 @@ export function membershipGrantsFullCompanyAccess(
 }
 
 /**
- * Tenant API / UI access for one company.
+ * Tenant API access for one company.
  * Platform `users.role = admin` remains a superuser.
- * Company owner/admin membership is enough without module permission rows.
+ * Every other active member, including company owner and company admin, needs the module permission.
  */
 export function canProceedTenantAccess(args: {
   isPlatformAdmin: boolean;
@@ -76,8 +76,5 @@ export function canProceedTenantAccess(args: {
 }): boolean {
   if (args.isPlatformAdmin) return true;
   if (!args.membership || args.membership.status !== "active") return false;
-  if (membershipGrantsFullCompanyAccess(args.membership.role, args.membership.status)) {
-    return true;
-  }
   return args.hasModuleAccess;
 }

@@ -4,11 +4,13 @@
  */
 export const DASHBOARD_MODULE_IDS = [
   "overview",
+  "bookings",
+  "itineraries",
   "tours",
+  "customers",
   "accommodation",
   "restaurant",
   "bar",
-  "bookings",
   "payments",
   "expenses",
   "enquiries",

@@ -13,7 +13,9 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
-    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), { overview: true });
+    const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), {
+      module: "overview",
+    });
     if (!tenant.ok) return tenant.response;
     const companyId = tenant.ctx.companyId as CompanyId;
     const periodParam = request.nextUrl.searchParams.get("period");

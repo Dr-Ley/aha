@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: false, error: "companyId is required" }, { status: 400 });
   }
   const tenant = await requireTenantContext(parsed.data.companyId, {
-    module: ["bookings", "tours"],
+    module: "itineraries",
   });
   if (!tenant.ok) return tenant.response;
   const rows = await listItinerariesForCompany(tenant.ctx.companyId);
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
   const staff = session ? await canAccessDashboardFromSession(session) : false;
   if (staff) {
     const tenant = await requireTenantContext(parsed.data.companyId, {
-      module: ["bookings", "tours"],
+      module: "itineraries",
       requireEdit: true,
     });
     if (!tenant.ok) return tenant.response;

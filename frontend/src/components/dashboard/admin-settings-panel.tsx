@@ -14,11 +14,13 @@ import {
 
 const MODULE_LABELS: Record<DashboardModuleId, string> = {
   overview: "Overview",
-  tours: "Tours",
+  bookings: "Safari bookings",
+  itineraries: "Itineraries",
+  tours: "Safari tours",
+  customers: "Customers",
   accommodation: "Accommodation",
   restaurant: "Restaurant",
   bar: "Bar",
-  bookings: "Bookings",
   payments: "Payments",
   expenses: "Expenses",
   enquiries: "Enquiries",
@@ -291,9 +293,9 @@ export function AdminSettingsPanel() {
       </div>
 
       <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
-        <h3 className="text-base font-semibold text-base-content">Delete button visibility</h3>
+        <h3 className="text-base font-semibold text-base-content">Delete and download visibility</h3>
         <p className="mt-1 text-sm text-base-content/60">
-          When enabled, non-admin users will also see the delete button and be able to delete entries across panels.
+          When enabled, non-admin users can see the delete button and the Download XLS button. When off, only admins see them.
         </p>
         <div className="mt-4 flex items-center gap-3">
           <input
@@ -303,7 +305,9 @@ export function AdminSettingsPanel() {
             onChange={(e) => setDeleteVisibleForAll(e.target.checked)}
           />
           <span className="text-sm text-base-content/80">
-            {deleteVisibleForAll ? "All users can see the delete button" : "Only admins can see the delete button"}
+            {deleteVisibleForAll
+              ? "All users can see delete and Download XLS"
+              : "Only admins can see delete and Download XLS"}
           </span>
         </div>
       </div>

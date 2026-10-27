@@ -53,6 +53,6 @@ describe("overview query boundaries", () => {
     assert.equal(aggregate.includes("hb.company_id = ${companyId}"), true);
     assert.equal(route.includes("invoices"), false);
     assert.equal(route.includes("requireTenantContext"), true);
-    assert.equal(route.includes('overview: true'), true);
+    assert.equal(route.includes('module: "overview"'), true);
   });
 });

@@ -41,7 +41,7 @@ const createSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     const tenant = await requireTenantContext(request.nextUrl.searchParams.get("companyId"), {
-      module: ["bookings", "tours", "accommodation"],
+      module: ["customers", "accommodation"],
       requireEdit: false,
     });
     if (!tenant.ok) return tenant.response;
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
     const tenant = await requireTenantContext(parsed.data.companyId, {
-      module: ["bookings", "tours", "accommodation"],
+      module: "customers",
       requireEdit: true,
     });
     if (!tenant.ok) return tenant.response;
@@ -142,7 +142,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
     const tenant = await requireTenantContext(parsed.data.companyId, {
-      module: ["bookings", "tours", "accommodation"],
+      module: "customers",
       requireEdit: true,
     });
     if (!tenant.ok) return tenant.response;

@@ -67,7 +67,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: message }, { status: 400 });
     }
     const tenant = await requireTenantContext(parsed.data.companyId, {
-      module: ["tours", "bookings"],
+      module: "tours",
       requireEdit: true,
     });
     if (!tenant.ok) return tenant.response;
@@ -94,7 +94,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "id and valid companyId required" }, { status: 400 });
     }
     const tenant = await requireTenantContext(searchParams.get("companyId"), {
-      module: ["tours", "bookings"],
+      module: "tours",
       requireEdit: true,
     });
     if (!tenant.ok) return tenant.response;

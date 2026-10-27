@@ -20,7 +20,8 @@ type Row = {
 };
 
 export function ItinerariesPanel() {
-  const { selectedCompanyId } = useCompany();
+  const { selectedCompanyId, canViewModule, permissionsLoading } = useCompany();
+  const canView = canViewModule("itineraries");
   const [rows, setRows] = useState<Row[]>([]);
   const [error, setError] = useState("");
   const [busyToken, setBusyToken] = useState<string | null>(null);
@@ -33,8 +34,9 @@ export function ItinerariesPanel() {
   }, [selectedCompanyId]);
 
   useEffect(() => {
+    if (permissionsLoading || !canView) return;
     void load().catch((e) => setError(e instanceof Error ? e.message : "Could not load itineraries"));
-  }, [load]);
+  }, [load, permissionsLoading, canView]);
 
   async function act(row: Row, path: "approve" | "convert-to-booking") {
     setBusyToken(row.publicToken);
@@ -52,6 +54,14 @@ export function ItinerariesPanel() {
     } finally {
       setBusyToken(null);
     }
+  }
+
+  if (!permissionsLoading && !canView) {
+    return (
+      <div className="rounded-2xl border border-base-content/10 bg-base-100 p-6 text-sm text-base-content/80 shadow-sm">
+        You do not have permission to view itineraries for this company.
+      </div>
+    );
   }
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useCompany } from "@/store/company-context";
 
 export type ExportColumn<T> = {
   key: string;
@@ -48,7 +49,9 @@ export function DashboardTableExport<T>({
   /** Loads the filtered set for export when the table is showing one page. */
   loadRows?: () => Promise<T[]>;
 }) {
+  const { isAdmin, deleteVisibleForAll } = useCompany();
   const [busy, setBusy] = useState(false);
+  if (!isAdmin && !deleteVisibleForAll) return null;
 
   async function exportXls() {
     setBusy(true);

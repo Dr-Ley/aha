@@ -54,18 +54,26 @@ describe("mergeMemberships", () => {
 });
 
 describe("canProceedTenantAccess", () => {
-  it("lets a company owner through without module permissions", () => {
+  it("requires a module permission for a company owner", () => {
     assert.equal(
       canProceedTenantAccess({
         isPlatformAdmin: false,
         membership: { role: "owner", status: "active" },
         hasModuleAccess: false,
       }),
+      false
+    );
+    assert.equal(
+      canProceedTenantAccess({
+        isPlatformAdmin: false,
+        membership: { role: "owner", status: "active" },
+        hasModuleAccess: true,
+      }),
       true
     );
   });
 
-  it("lets a company admin through without module permissions", () => {
+  it("requires a module permission for a company admin and a finance member", () => {
     assert.equal(
       canProceedTenantAccess({
         isPlatformAdmin: false,
@@ -80,7 +88,7 @@ describe("canProceedTenantAccess", () => {
         membership: { role: "admin", status: "active" },
         hasModuleAccess: false,
       }),
-      true
+      false
     );
   });
 

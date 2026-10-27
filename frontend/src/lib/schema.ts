@@ -56,6 +56,8 @@ export const permissionModuleEnum = pgEnum("permission_module", [
   "restaurant",
   "bar",
   "bookings",
+  "itineraries",
+  "customers",
   "payments",
   "expenses",
   "enquiries",

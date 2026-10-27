@@ -65,7 +65,7 @@ const navItems: {
     label: "Itineraries",
     icon: Map,
     companyOk: companyUsesSafariTours,
-    moduleKey: "bookings",
+    moduleKey: "itineraries",
   },
   {
     href: "/dashboard/tours",
@@ -162,7 +162,6 @@ export function DashboardSidebar({ collapsed, isMobile, onToggle, onNavigate }: 
     isAdmin,
     canViewModule,
     canViewRevenue,
-    hasOverviewAccess,
   } = useCompany();
 
   const links = useMemo(() => {
@@ -170,26 +169,14 @@ export function DashboardSidebar({ collapsed, isMobile, onToggle, onNavigate }: 
     return navItems.filter((item) => {
       if (!item.companyOk(selectedCompanyId)) return false;
       if (item.moduleKey === "settings") return isAdmin;
-      if (item.moduleKey === "overview")
-        return canViewModule("overview") || hasOverviewAccess;
+      if (item.moduleKey === "overview") return canViewModule("overview");
       if (item.moduleKey === "revenue") return canViewRevenue();
-      if (item.moduleKey === "bookings" || item.moduleKey === "tours") {
-        return canViewModule("bookings") || canViewModule("tours");
-      }
-      if (item.moduleKey === "customers") {
-        return (
-          canViewModule("bookings") ||
-          canViewModule("tours") ||
-          canViewModule("accommodation")
-        );
-      }
       return canViewModule(item.moduleKey);
     });
   }, [
     permissionsLoading,
     selectedCompanyId,
     isAdmin,
-    hasOverviewAccess,
     canViewRevenue,
     canViewModule,
   ]);

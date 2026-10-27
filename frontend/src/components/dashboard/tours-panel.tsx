@@ -107,8 +107,9 @@ function effectiveHint(draft: RateDraft): string {
 }
 
 export function ToursPanel() {
-  const { selectedCompanyId, canEditModule } = useCompany();
-  const canEdit = canEditModule("tours") || canEditModule("bookings");
+  const { selectedCompanyId, canViewModule, canEditModule, permissionsLoading } = useCompany();
+  const canEdit = canEditModule("tours");
+  const canView = canViewModule("tours");
   const [rows, setRows] = useState<TourRateRow[]>([]);
   const [drafts, setDrafts] = useState<Record<string, RateDraft>>({});
   const [loading, setLoading] = useState(true);
@@ -138,8 +139,9 @@ export function ToursPanel() {
   }, [selectedCompanyId]);
 
   useEffect(() => {
+    if (permissionsLoading || !canView) return;
     void load();
-  }, [load]);
+  }, [load, permissionsLoading, canView]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -243,6 +245,14 @@ export function ToursPanel() {
     } finally {
       setDeletingId(null);
     }
+  }
+
+  if (!permissionsLoading && !canView) {
+    return (
+      <div className="rounded-2xl border border-base-content/10 bg-base-100 p-6 text-sm text-base-content/80 shadow-sm">
+        You do not have permission to view safari tours for this company.
+      </div>
+    );
   }
 
   return (

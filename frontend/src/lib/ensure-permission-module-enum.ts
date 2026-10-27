@@ -7,7 +7,7 @@ let permissionModuleEnumsEnsured = false;
 /** Postgres requires enum labels added before inserts reference them. Safe to call repeatedly. */
 export async function ensureOverviewPermissionModuleEnum(): Promise<void> {
   if (permissionModuleEnumsEnsured) return;
-  for (const label of ["overview", "enquiries"]) {
+  for (const label of ["overview", "enquiries", "itineraries", "customers"]) {
     try {
       await db.execute(sql.raw(`ALTER TYPE permission_module ADD VALUE '${label}'`));
     } catch (e) {

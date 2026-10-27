@@ -16,7 +16,7 @@ export async function POST(
     return NextResponse.json({ success: false, error: "Staff only" }, { status: 403 });
   }
   const tenant = await requireTenantContext(loaded.row.companyId, {
-    module: ["bookings", "tours"],
+    module: "itineraries",
     requireEdit: true,
   });
   if (!tenant.ok) return tenant.response;

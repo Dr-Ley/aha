@@ -9,11 +9,7 @@ import {
   type Company,
   type CompanyId,
 } from "@/types/company";
-import {
-  DASHBOARD_MODULE_IDS,
-  type DashboardModuleId,
-  moduleForRevenue,
-} from "@/lib/dashboard-modules";
+import { type DashboardModuleId, moduleForRevenue } from "@/lib/dashboard-modules";
 import { companyIdFromCookieHeader, resolveCompanySelection } from "@/lib/company-cookie";
 import type { PermissionMatrix } from "@/lib/permissions-server";
 
@@ -57,7 +53,6 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [matrix, setMatrix] = useState<PermissionMatrix>({});
   const [accessibleIds, setAccessibleIds] = useState<CompanyId[]>([]);
-  const [companyAdminIds, setCompanyAdminIds] = useState<CompanyId[]>([]);
   const [selectedCompanyId, setSelectedCompanyIdState] =
     useState<CompanyId>(DEFAULT_COMPANY_ID);
   const [deleteVisibleForAll, setDeleteVisibleForAllState] = useState(false);
@@ -80,7 +75,6 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
       setIsAdmin(false);
       setMatrix({});
       setAccessibleIds([]);
-      setCompanyAdminIds([]);
       return;
     }
 
@@ -93,14 +87,12 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
         setIsAdmin(!!d.isAdmin);
         setMatrix(d.matrix ?? {});
         setAccessibleIds((d.companyIds ?? []) as CompanyId[]);
-        setCompanyAdminIds((d.companyAdminIds ?? []) as CompanyId[]);
       })
       .catch(() => {
         if (!cancelled) {
           setIsAdmin(false);
           setMatrix({});
           setAccessibleIds([]);
-          setCompanyAdminIds([]);
         }
       })
       .finally(() => {
@@ -139,23 +131,21 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     window.localStorage.setItem(DELETE_VISIBLE_KEY, v ? "true" : "false");
   };
 
-  const isCompanyAdmin = companyAdminIds.includes(selectedCompanyId);
-
   const canViewModule = useCallback(
     (module: DashboardModuleId): boolean => {
-      if (isAdmin || isCompanyAdmin) return true;
+      if (isAdmin) return true;
       const cell = matrix[selectedCompanyId]?.[module];
       return !!(cell?.view || cell?.edit);
     },
-    [isAdmin, isCompanyAdmin, matrix, selectedCompanyId]
+    [isAdmin, matrix, selectedCompanyId]
   );
 
   const canEditModule = useCallback(
     (module: DashboardModuleId): boolean => {
-      if (isAdmin || isCompanyAdmin) return true;
+      if (isAdmin) return true;
       return matrix[selectedCompanyId]?.[module]?.edit === true;
     },
-    [isAdmin, isCompanyAdmin, matrix, selectedCompanyId]
+    [isAdmin, matrix, selectedCompanyId]
   );
 
   const canViewRevenue = useCallback(
@@ -168,14 +158,7 @@ export function CompanyProvider({ children }: { children: React.ReactNode }) {
     [canEditModule]
   );
 
-  const hasOverviewAccess = useMemo(() => {
-    if (isAdmin || companyAdminIds.includes(selectedCompanyId)) return true;
-    for (const m of DASHBOARD_MODULE_IDS) {
-      const cell = matrix[selectedCompanyId]?.[m];
-      if (cell?.view || cell?.edit) return true;
-    }
-    return false;
-  }, [isAdmin, companyAdminIds, matrix, selectedCompanyId]);
+  const hasOverviewAccess = canViewModule("overview");
 
   const selectedCompany = useMemo(
     () => companies.find((company) => company.id === selectedCompanyId) ?? companies[0] ?? COMPANIES[0],

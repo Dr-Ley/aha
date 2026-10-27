@@ -21,7 +21,7 @@ export async function loadItinerary(idOrToken: string): Promise<ItineraryRow | n
 
 async function staffActor(companyId: string, needEdit: boolean): Promise<ItineraryActor | null> {
   const tenant = await requireTenantContext(companyId, {
-    module: ["bookings", "tours"],
+    module: "itineraries",
     requireEdit: needEdit,
   });
   if (!tenant.ok) return null;

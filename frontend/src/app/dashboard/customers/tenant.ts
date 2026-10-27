@@ -6,7 +6,7 @@ import { listActiveMemberships } from "@/lib/membership";
 import { parseCompanyId } from "@/lib/tenant";
 import { requireStaffUser, requireTenantContext } from "@/server/tenancy";
 
-export const CUSTOMER_MODULES: DashboardModuleId[] = ["bookings", "tours", "accommodation"];
+export const CUSTOMER_MODULES: DashboardModuleId[] = ["customers"];
 
 export async function requireCustomersTenant(
   searchCompanyId?: string | null,

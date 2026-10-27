@@ -14,7 +14,6 @@ import {
 } from "@/lib/membership";
 import {
   canProceedTenantAccess,
-  membershipGrantsFullCompanyAccess,
 } from "@/lib/membership-role";
 
 export type PermissionMatrix = Record<
@@ -158,13 +157,11 @@ async function tenantAccessGate(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   const membership = await getActiveMembership(userId, companyId);
-  const fullCompanyAccess =
-    isAdminRole(role) ||
-    membershipGrantsFullCompanyAccess(membership?.role, membership?.status);
+  const platformAdmin = isAdminRole(role);
   const allowed = canProceedTenantAccess({
-    isPlatformAdmin: isAdminRole(role),
+    isPlatformAdmin: platformAdmin,
     membership,
-    hasModuleAccess: fullCompanyAccess ? true : await hasModuleAccess(),
+    hasModuleAccess: platformAdmin ? true : await hasModuleAccess(),
   });
   if (!allowed) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });

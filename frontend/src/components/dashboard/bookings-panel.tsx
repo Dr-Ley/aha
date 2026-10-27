@@ -193,7 +193,7 @@ export function BookingsPanel() {
   const [countryF, setCountryF] = useState<string>("");
   const [fromF, setFromF] = useState("");
   const [toF, setToF] = useState("");
-  const [startSort, setStartSort] = useState<"asc" | "desc">("asc");
+  const [startSort, setStartSort] = useState<"asc" | "desc">("desc");
 
   const [modal, setModal] = useState<"create" | "edit" | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
