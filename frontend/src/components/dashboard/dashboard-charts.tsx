@@ -10,6 +10,7 @@ import {
 } from "@/lib/chart-period";
 import { nairobiYmd } from "@/lib/nairobi-date";
 import { overviewWindow, type OverviewPeriod } from "@/lib/overview-period";
+import type { OverviewCharts } from "@/lib/overview-view";
 import {
   ResponsiveContainer,
   LineChart,
@@ -123,26 +124,37 @@ function ChartCard({
   );
 }
 
+const EMPTY_FACTS: OverviewChartFacts = {
+  revenue: [],
+  safariBookings: [],
+  hotelStays: [],
+  barOrders: [],
+  restaurantOrders: [],
+};
+
 export function DashboardCharts({
-  facts,
+  facts = EMPTY_FACTS,
   period,
   anchor,
   stacked = false,
+  series,
 }: {
-  facts: OverviewChartFacts;
+  facts?: OverviewChartFacts;
   period: OverviewPeriod;
   anchor?: string;
   stacked?: boolean;
+  series?: Pick<OverviewCharts, "revenueLine" | "revenueStack" | "countries" | "safariSlices">;
 }) {
   const today = nairobiYmd();
   const focus = anchor ?? today;
   const window = useMemo(() => overviewWindow(period, today, focus), [period, today, focus]);
 
-  const revenueLine = useMemo(
+  const computedRevenueLine = useMemo(
     () => amountSeriesWindow(facts.revenue, window, today),
     [facts.revenue, window, today]
   );
-  const revenueStack = useMemo(
+  const revenueLine = series?.revenueLine ?? computedRevenueLine;
+  const computedRevenueStack = useMemo(
     () =>
       stackedSeriesWindow(
         [
@@ -162,7 +174,8 @@ export function DashboardCharts({
       ),
     [facts.safariBookings, facts.hotelStays, facts.barOrders, window, today]
   );
-  const countries = useMemo(() => {
+  const revenueStack = series?.revenueStack ?? computedRevenueStack;
+  const computedCountries = useMemo(() => {
     const rows = namedAmountSeriesWindow(
       facts.safariBookings.map((booking) => ({
         date: booking.date,
@@ -173,7 +186,8 @@ export function DashboardCharts({
     ).map((row) => ({ country: row.name, amount: row.amount }));
     return rows.length > 0 ? rows : [{ country: "No bookings", amount: 0 }];
   }, [facts.safariBookings, window]);
-  const safariSlices = useMemo(() => {
+  const countries = series?.countries ?? computedCountries;
+  const computedSafariSlices = useMemo(() => {
     const rows = countByNameWindow(
       facts.safariBookings
         .filter((booking) => booking.days != null)
@@ -185,6 +199,7 @@ export function DashboardCharts({
     );
     return rows.length > 0 ? rows : [{ name: "No bookings", value: 1 }];
   }, [facts.safariBookings, window]);
+  const safariSlices = series?.safariSlices ?? computedSafariSlices;
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
@@ -250,23 +265,28 @@ export function DashboardCharts({
 }
 
 export function HospitalityCharts({
-  facts,
+  facts = EMPTY_FACTS,
   period,
   anchor,
   showRestaurant = false,
   showDepartment = false,
+  series,
 }: {
-  facts: OverviewChartFacts;
+  facts?: OverviewChartFacts;
   period: OverviewPeriod;
   anchor?: string;
   showRestaurant?: boolean;
   showDepartment?: boolean;
+  series?: Pick<
+    OverviewCharts,
+    "department" | "stays" | "barSales" | "barProducts" | "restaurantSales" | "restaurantProducts"
+  >;
 }) {
   const today = nairobiYmd();
   const focus = anchor ?? today;
   const window = useMemo(() => overviewWindow(period, today, focus), [period, today, focus]);
 
-  const department = useMemo(
+  const computedDepartment = useMemo(
     () =>
       stackedSeriesWindow(
         [
@@ -286,19 +306,23 @@ export function HospitalityCharts({
       ),
     [facts.hotelStays, facts.barOrders, facts.restaurantOrders, window, today]
   );
-  const stays = useMemo(
+  const department = series?.department ?? computedDepartment;
+  const computedStays = useMemo(
     () => amountSeriesWindow(facts.hotelStays.map((stay) => ({ date: stay.date, amount: stay.amount })), window, today),
     [facts.hotelStays, window, today]
   );
-  const barSales = useMemo(
+  const stays = series?.stays ?? computedStays;
+  const computedBarSales = useMemo(
     () => amountSeriesWindow(facts.barOrders.map((order) => ({ date: order.date, amount: order.amount })), window, today),
     [facts.barOrders, window, today]
   );
-  const barProducts = useMemo(() => {
+  const barSales = series?.barSales ?? computedBarSales;
+  const computedBarProducts = useMemo(() => {
     const rows = productSeriesWindow(orderProductLines(facts.barOrders), window);
     return rows.length > 0 ? rows : [EMPTY_PRODUCT];
   }, [facts.barOrders, window]);
-  const restaurantSales = useMemo(
+  const barProducts = series?.barProducts ?? computedBarProducts;
+  const computedRestaurantSales = useMemo(
     () =>
       amountSeriesWindow(
         facts.restaurantOrders.map((order) => ({ date: order.date, amount: order.amount })),
@@ -307,10 +331,12 @@ export function HospitalityCharts({
       ),
     [facts.restaurantOrders, window, today]
   );
-  const restaurantProducts = useMemo(() => {
+  const restaurantSales = series?.restaurantSales ?? computedRestaurantSales;
+  const computedRestaurantProducts = useMemo(() => {
     const rows = productSeriesWindow(orderProductLines(facts.restaurantOrders), window);
     return rows.length > 0 ? rows : [EMPTY_PRODUCT];
   }, [facts.restaurantOrders, window]);
+  const restaurantProducts = series?.restaurantProducts ?? computedRestaurantProducts;
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">

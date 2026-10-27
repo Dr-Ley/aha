@@ -9,7 +9,6 @@ import { isDashboardModuleId } from "@/lib/dashboard-modules";
 import { COMPANY_IDS, type CompanyId } from "@/types/company";
 import {
   companyAdminIdsFromMemberships,
-  ensureMembershipsReady,
   getActiveMembership,
   listActiveMemberships,
 } from "@/lib/membership";
@@ -101,7 +100,6 @@ export async function loadUserPermissionPayload(
   matrix: PermissionMatrix;
 }> {
   const role = resolvedRole ?? (await getEffectiveUserRole(userId, sessionRole));
-  await ensureMembershipsReady();
   if (isAdminRole(role)) {
     return {
       isAdmin: true,
@@ -159,7 +157,6 @@ async function tenantAccessGate(
   if (!canAccessDashboard(role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
-  await ensureMembershipsReady();
   const membership = await getActiveMembership(userId, companyId);
   const fullCompanyAccess =
     isAdminRole(role) ||

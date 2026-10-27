@@ -111,7 +111,6 @@ export async function getActiveMembership(
   userId: number,
   companyId: string
 ): Promise<{ id: number; role: MembershipRole; status: MembershipStatus } | null> {
-  await ensureCompanyMembershipsTable();
   const [row] = await db
     .select({
       id: companyMemberships.id,
@@ -138,7 +137,6 @@ export async function getActiveMembershipCompanyIds(userId: number): Promise<Com
 export async function listActiveMemberships(
   userId: number
 ): Promise<{ companyId: CompanyId; role: MembershipRole; status: MembershipStatus }[]> {
-  await ensureCompanyMembershipsTable();
   const rows = await db
     .select({
       companyId: companyMemberships.companyId,
@@ -163,7 +161,6 @@ export function companyAdminIdsFromMemberships(
 }
 
 export async function listMembershipsForUser(userId: number): Promise<MembershipDraft[]> {
-  await ensureCompanyMembershipsTable();
   const rows = await db
     .select({
       companyId: companyMemberships.companyId,

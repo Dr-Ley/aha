@@ -5,7 +5,6 @@ import { notifications, users } from "@/lib/schema";
 import { isAdminRole } from "@/lib/roles";
 import { getEffectiveUserRole } from "@/lib/permissions-server";
 import { requireStaffUser, requireTenantContext } from "@/server/tenancy";
-import { ensureEnquiryNotificationEnum } from "@/lib/ensure-notification-entity-enum";
 import { z } from "zod";
 
 const patchSchema = z.object({
@@ -13,17 +12,6 @@ const patchSchema = z.object({
   markAllRead: z.boolean().optional(),
   companyId: z.string().min(1).max(32).optional(),
 });
-
-let dashboardNotificationsColumnEnsured = false;
-
-async function ensureDashboardNotificationsColumn(): Promise<void> {
-  if (dashboardNotificationsColumnEnsured) return;
-  await db.execute(sql`
-    ALTER TABLE "users"
-    ADD COLUMN IF NOT EXISTS "dashboard_notifications_enabled" boolean DEFAULT true NOT NULL
-  `);
-  dashboardNotificationsColumnEnsured = true;
-}
 
 export async function GET(request: NextRequest) {
   try {
@@ -34,9 +22,6 @@ export async function GET(request: NextRequest) {
     const companyId = tenant.ctx.companyId;
     const userId = tenant.ctx.userId;
     const role = await getEffectiveUserRole(userId, tenant.ctx.session.user?.role);
-
-    await ensureDashboardNotificationsColumn();
-    await ensureEnquiryNotificationEnum();
 
     const [pref] = await db
       .select({ dashboardNotificationsEnabled: users.dashboardNotificationsEnabled })

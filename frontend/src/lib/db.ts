@@ -1,5 +1,6 @@
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import { poolSettingsForDatabaseUrl } from "@/lib/db-pool";
 import * as schema from "@/lib/schema";
 
 type Database = NodePgDatabase<typeof schema>;
@@ -24,11 +25,13 @@ function createPool(connectionString: string): Pool {
   const url = new URL(connectionString);
   // Current node-pg treats sslmode=require as verify-full, which rejects Supabase's chain.
   url.searchParams.delete("sslmode");
+  const settings = poolSettingsForDatabaseUrl(connectionString);
   return new Pool({
     connectionString: url.toString(),
-    max: 10,
-    idleTimeoutMillis: 20_000,
-    connectionTimeoutMillis: 10_000,
+    max: settings.max,
+    idleTimeoutMillis: settings.idleTimeoutMillis,
+    connectionTimeoutMillis: settings.connectionTimeoutMillis,
+    allowExitOnIdle: settings.allowExitOnIdle,
     ssl: { rejectUnauthorized: false },
   });
 }
@@ -50,9 +53,11 @@ function getDatabase(): Database {
 }
 
 /**
- * Server-side Supabase Postgres client. The pool talks to the transaction
- * pooler as the database owner, which bypasses RLS. The publishable key must
- * not be used to query these tables; RLS blocks the Data API.
+ * Server-side Supabase Postgres client. The Pool is created on first use and
+ * kept on globalThis, so a warm serverless instance reuses it. The production
+ * URL is the shared transaction pooler (port 6543). The pool talks to Postgres
+ * as the database owner, which bypasses RLS. The publishable key must not be
+ * used to query these tables; RLS blocks the Data API.
  */
 export const db: Database = new Proxy({} as Database, {
   get(_target, prop) {

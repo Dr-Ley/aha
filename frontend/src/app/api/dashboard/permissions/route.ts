@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireStaffUser } from "@/server/tenancy";
 import { loadUserPermissionPayload } from "@/lib/permissions-server";
-import { ensureOverviewPermissionModuleEnum } from "@/lib/ensure-permission-module-enum";
 
 export async function GET() {
   try {
-    await ensureOverviewPermissionModuleEnum();
     const staff = await requireStaffUser();
     if (!staff.ok) return staff.response;
     const payload = await loadUserPermissionPayload(staff.userId, staff.session.user?.role);

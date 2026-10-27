@@ -2,7 +2,6 @@ import { and, eq, notInArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { bookings, hotelBookings, notifications } from "@/lib/schema";
 import { nairobi001HasPassedOnCalendarDate, nairobiWallClock001, nairobiYmd } from "@/lib/nairobi-date";
-import { ensureBookingCustomerColumn, ensureBookingTravellerColumns, ensureHotelStayPartyColumns } from "@/lib/customers";
 
 function safariStartYmd(b: { startDate: string | null; travelDate: string }): string | null {
   const raw = (b.startDate || b.travelDate || "").trim();
@@ -54,9 +53,6 @@ export async function ensureArrivalDayNotifications(companyId: string): Promise<
 }
 
 async function scanArrivalDayNotifications(companyId: string): Promise<void> {
-  await ensureBookingCustomerColumn();
-  await ensureBookingTravellerColumns();
-  await ensureHotelStayPartyColumns();
   const todayYmd = nairobiYmd();
   if (!nairobi001HasPassedOnCalendarDate(todayYmd)) return;
 

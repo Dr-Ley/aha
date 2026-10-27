@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useDeferredValue, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   BedDouble,
   CalendarRange,
@@ -17,28 +17,14 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCompany } from "@/store/company-context";
-import type { OverviewChartFacts } from "@/components/dashboard/dashboard-charts";
 import { EntityViewModal } from "@/components/dashboard/entity-view-modal";
 import { useCurrency } from "@/lib/currency-context";
 import { formatKesForDisplay } from "@/lib/data";
 import { nairobiYmd } from "@/lib/nairobi-date";
-import {
-  countInPeriod,
-  countUnpaidOrPartialBookings,
-  guestCount,
-  openBalance,
-  recognizedRevenue,
-  sumAmountsInPeriod,
-  upcomingArrivals,
-  type HotelStayFact,
-  type OrderFact,
-  type RevenueEntryFact,
-  type RevenuePaymentFact,
-} from "@/lib/overview-metrics";
+import type { OverviewCharts, OverviewMetrics } from "@/lib/overview-view";
 import {
   DEFAULT_OVERVIEW_PERIOD,
   OVERVIEW_PERIODS,
-  inOverviewPeriod,
   isOverviewPeriod,
   overviewPeriodStorageKey,
   overviewRangeCaption,
@@ -67,32 +53,13 @@ const HospitalityCharts = dynamic(
   { ssr: false, loading: () => chartLoading }
 );
 
-type OverviewLedger = {
-  bookings: { date: string; status: string; paymentStatus: string }[];
-  payments: RevenuePaymentFact[];
-  revenue: RevenueEntryFact[];
-  enquiries: { date: string }[];
-  outstandingBalance: number;
-  hotelStays: HotelStayFact[];
-  barOrders: OrderFact[];
-  restaurantOrders: OrderFact[];
-};
-
-const EMPTY_LEDGER: OverviewLedger = {
-  bookings: [],
-  payments: [],
-  revenue: [],
-  enquiries: [],
-  outstandingBalance: 0,
-  hotelStays: [],
-  barOrders: [],
-  restaurantOrders: [],
-};
-
 type OverviewPayload = {
+  companyId: string;
+  period: OverviewPeriod;
+  anchor: string;
   counts?: { payments: number; bookings: number; stays: number };
-  chartFacts: OverviewChartFacts;
-  ledger: OverviewLedger;
+  metrics: OverviewMetrics;
+  charts: OverviewCharts;
   recentStays: Array<{
     id: number;
     guest: string;
@@ -121,10 +88,6 @@ type OverviewPayload = {
     sourceLabel?: string;
   }>;
 };
-
-function emptyChartFacts(): OverviewChartFacts {
-  return { revenue: [], safariBookings: [], hotelStays: [], barOrders: [], restaurantOrders: [] };
-}
 
 export function DashboardOverview() {
   const { formatMoney } = useCurrency();
@@ -167,45 +130,31 @@ export function DashboardOverview() {
       return;
     }
     let cancelled = false;
-    const qs = new URLSearchParams({ companyId: selectedCompanyId, period: "all" });
+    const requestedCompany = selectedCompanyId;
+    const qs = new URLSearchParams({ companyId: requestedCompany, period, anchor });
+    setData((current) => (current && current.companyId !== requestedCompany ? null : current));
+    setLoading(true);
+    setError(null);
 
     async function load() {
-      setLoading(true);
-      setData(null);
-      setError(null);
       try {
         const res = await fetch(`/api/dashboard/overview?${qs}`);
         const json = await res.json();
         if (!res.ok) throw new Error(json.error ?? "Failed to load");
         if (cancelled) return;
         setData({
+          companyId: json.companyId,
+          period: isOverviewPeriod(json.period) ? json.period : period,
+          anchor: typeof json.anchor === "string" ? json.anchor : anchor,
           counts: json.counts,
-          chartFacts: {
-            revenue: json.chartFacts?.revenue ?? [],
-            safariBookings: json.chartFacts?.safariBookings ?? [],
-            hotelStays: json.chartFacts?.hotelStays ?? [],
-            barOrders: json.chartFacts?.barOrders ?? [],
-            restaurantOrders: json.chartFacts?.restaurantOrders ?? [],
-          },
-          ledger: {
-            bookings: json.ledger?.bookings ?? [],
-            payments: json.ledger?.payments ?? [],
-            revenue: json.ledger?.revenue ?? [],
-            enquiries: json.ledger?.enquiries ?? [],
-            outstandingBalance: Number(json.ledger?.outstandingBalance) || 0,
-            hotelStays: json.ledger?.hotelStays ?? [],
-            barOrders: json.ledger?.barOrders ?? [],
-            restaurantOrders: json.ledger?.restaurantOrders ?? [],
-          },
+          metrics: json.metrics,
+          charts: json.charts,
           recentBookings: json.recentBookings ?? [],
           recentStays: json.recentStays ?? [],
           recentPayments: json.recentPayments ?? [],
         });
       } catch (e) {
-        if (!cancelled) {
-          setData(null);
-          setError(e instanceof Error ? e.message : "Failed to load overview");
-        }
+        if (!cancelled) setError(e instanceof Error ? e.message : "Failed to load overview");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -215,20 +164,17 @@ export function DashboardOverview() {
     return () => {
       cancelled = true;
     };
-  }, [selectedCompanyId, permissionsLoading, hasOverviewAccess, periodReady]);
+  }, [selectedCompanyId, period, anchor, permissionsLoading, hasOverviewAccess, periodReady]);
 
-  const ledger = data?.ledger ?? EMPTY_LEDGER;
-  const scope = overviewScopeLabel(period, today, anchor);
+  const viewPeriod = data?.period ?? period;
+  const viewAnchor = data?.anchor ?? anchor;
+  const scope = overviewScopeLabel(viewPeriod, today, viewAnchor);
   const cards = useMemo(() => {
-    const hotelRevenue = sumAmountsInPeriod(
-      ledger.hotelStays.map((stay) => ({ date: stay.checkIn, amount: stay.amount })),
-      period,
-      today,
-      anchor
-    );
-    const barSales = sumAmountsInPeriod(ledger.barOrders, period, today, anchor);
-    const restaurantSales = sumAmountsInPeriod(ledger.restaurantOrders, period, today, anchor);
-    const unpaid = openBalance([...ledger.hotelStays, ...ledger.barOrders, ...ledger.restaurantOrders]);
+    const metrics = data?.metrics;
+    const hotelRevenue = metrics?.hotelRevenue ?? 0;
+    const barSales = metrics?.barSales ?? 0;
+    const restaurantSales = metrics?.restaurantSales ?? 0;
+    const unpaid = metrics?.unpaidBalance ?? 0;
     if (selectedCompanyId === "bth") {
       return [
         { key: "hotel", label: "Hotel revenue", scope, value: formatKesForDisplay(hotelRevenue), hint: "Stay totals by check-in", icon: "bed" as const },
@@ -241,31 +187,25 @@ export function DashboardOverview() {
       return [
         { key: "hotel", label: "Hotel revenue", scope, value: formatKesForDisplay(hotelRevenue), hint: "Stay totals by check-in", icon: "bed" as const },
         { key: "bar", label: "Bar sales", scope, value: formatKesForDisplay(barSales), hint: "Orders in this range", icon: "bar" as const },
-        { key: "guests", label: "Guests", scope, value: String(guestCount(ledger.hotelStays, period, today, anchor)), hint: "People on stays in this range", icon: "guests" as const },
-        { key: "arrivals", label: "Upcoming arrivals", scope: upcomingScopeLabel(period, today, anchor), value: String(upcomingArrivals(ledger.hotelStays, period, today, anchor)), hint: "Confirmed or pending check-ins", icon: "calendar" as const },
+        { key: "guests", label: "Guests", scope, value: String(metrics?.guests ?? 0), hint: "People on stays in this range", icon: "guests" as const },
+        { key: "arrivals", label: "Upcoming arrivals", scope: upcomingScopeLabel(viewPeriod, today, viewAnchor), value: String(metrics?.upcomingArrivals ?? 0), hint: "Confirmed or pending check-ins", icon: "calendar" as const },
       ];
     }
     return [
-      { key: "bookings", label: "Total bookings", scope, value: String(countInPeriod(ledger.bookings, period, today, anchor)), hint: "All bookings in this range", icon: "clipboard" as const },
-      { key: "revenue", label: "Revenue", scope, value: formatKesForDisplay(recognizedRevenue(ledger.payments, ledger.revenue, period, today, anchor)), hint: "Paid and partial payments, plus recognized revenue", icon: "money" as const },
-      { key: "outstanding", label: "Unpaid/partially paid bookings", scope, value: String(countUnpaidOrPartialBookings(ledger.bookings, period, today, anchor)), hint: "Payment status unpaid or partial", icon: "warning" as const },
-      { key: "enquiries", label: "Total enquiries", scope, value: String(countInPeriod(ledger.enquiries, period, today, anchor)), hint: "Contact form submissions", icon: "mail" as const },
+      { key: "bookings", label: "Total bookings", scope, value: String(metrics?.bookingCount ?? 0), hint: "All bookings in this range", icon: "clipboard" as const },
+      { key: "revenue", label: "Revenue", scope, value: formatKesForDisplay(metrics?.revenue ?? 0), hint: "Paid and partial payments, plus recognized revenue", icon: "money" as const },
+      { key: "outstanding", label: "Unpaid/partially paid bookings", scope, value: String(metrics?.unpaidBookings ?? 0), hint: "Payment status unpaid or partial", icon: "warning" as const },
+      { key: "enquiries", label: "Total enquiries", scope, value: String(metrics?.enquiryCount ?? 0), hint: "Contact form submissions", icon: "mail" as const },
     ];
-  }, [ledger, period, today, anchor, scope, selectedCompanyId]);
+  }, [data?.metrics, scope, selectedCompanyId, today, viewAnchor, viewPeriod]);
 
   const canShiftPeriod = period !== "all";
-  const chartPeriod = useDeferredValue(period);
-  const chartAnchor = useDeferredValue(anchor);
-  const staysInPeriod = (data?.recentStays ?? []).filter((stay) => inOverviewPeriod(stay.checkInDate, period, today, anchor));
-  const bookingsInPeriod = (data?.recentBookings ?? []).filter((booking) =>
-    inOverviewPeriod(booking.startDate, period, today, anchor)
-  );
-  const paymentsInPeriod = (data?.recentPayments ?? []).filter((payment) =>
-    inOverviewPeriod(payment.recordedAt ? nairobiYmd(new Date(payment.recordedAt)) : null, period, today, anchor)
-  );
+  const staysInPeriod = data?.recentStays ?? [];
+  const bookingsInPeriod = data?.recentBookings ?? [];
+  const paymentsInPeriod = data?.recentPayments ?? [];
   const showInitialSkeleton = permissionsLoading || !periodReady;
-  const showOverviewSkeleton = hasOverviewAccess && loading;
-  const showOverviewError = hasOverviewAccess && !loading && (error || !data);
+  const showOverviewSkeleton = hasOverviewAccess && loading && !data;
+  const showOverviewError = hasOverviewAccess && !loading && Boolean(error) && !data;
 
   return (
     <div className="flex flex-col gap-10">
@@ -313,7 +253,7 @@ export function DashboardOverview() {
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
-        <p className="mt-2 text-xs text-base-content/60">{overviewRangeCaption(period, today, anchor)}</p>
+        <p className="mt-2 text-xs text-base-content/60">{overviewRangeCaption(viewPeriod, today, viewAnchor)}</p>
       </div>
 
       {showInitialSkeleton || showOverviewSkeleton ? (
@@ -342,20 +282,21 @@ export function DashboardOverview() {
         ))}
       </div>
 
+      {error && data ? <p className="text-sm text-error">{error}</p> : null}
       {companyUsesHotelStays(selectedCompanyId) ? (
         <HospitalityCharts
-          facts={data.chartFacts}
-          period={chartPeriod}
-          anchor={chartAnchor}
+          period={viewPeriod}
+          anchor={viewAnchor}
+          series={data.charts}
           showRestaurant={companyUsesRestaurant(selectedCompanyId)}
           showDepartment={selectedCompanyId === "bth"}
         />
       ) : (
-        <DashboardCharts facts={data.chartFacts ?? emptyChartFacts()} period={chartPeriod} anchor={chartAnchor} />
+        <DashboardCharts period={viewPeriod} anchor={viewAnchor} series={data.charts} />
       )}
 
       {companyUsesSafariTours(selectedCompanyId) && companyUsesHotelStays(selectedCompanyId) ? (
-        <DashboardCharts facts={data.chartFacts} period={chartPeriod} anchor={chartAnchor} stacked />
+        <DashboardCharts period={viewPeriod} anchor={viewAnchor} series={data.charts} stacked />
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
