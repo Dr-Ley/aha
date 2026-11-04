@@ -33,7 +33,13 @@ import {
   upcomingScopeLabel,
   type OverviewPeriod,
 } from "@/lib/overview-period";
-import { companyUsesHotelStays, companyUsesRestaurant, companyUsesSafariTours } from "@/types/company";
+import {
+  companyUsesBar,
+  companyUsesHotelStays,
+  companyUsesRestaurant,
+  companyUsesSafariTours,
+  type CompanyId,
+} from "@/types/company";
 
 const chartLoading = (
   <div className="grid gap-6 lg:grid-cols-2">
@@ -52,6 +58,27 @@ const HospitalityCharts = dynamic(
   () => import("@/components/dashboard/dashboard-charts").then((m) => m.HospitalityCharts),
   { ssr: false, loading: () => chartLoading }
 );
+
+const FinanceTrendChart = dynamic(
+  () => import("@/components/dashboard/dashboard-charts").then((m) => m.FinanceTrendChart),
+  { ssr: false, loading: () => <div className="skeleton h-96 rounded-2xl" /> }
+);
+
+function operatingRevenueCaption(companyId: CompanyId): string {
+  const sources = [
+    companyUsesHotelStays(companyId) ? "hotel stays" : null,
+    companyUsesBar(companyId) ? "bar" : null,
+    companyUsesRestaurant(companyId) ? "restaurant" : null,
+    companyUsesSafariTours(companyId) ? "safari bookings" : null,
+  ].filter((source): source is string => source != null);
+  const listed =
+    sources.length <= 1
+      ? (sources[0] ?? "recorded sales")
+      : sources.length === 2
+        ? `${sources[0]} and ${sources[1]}`
+        : `${sources.slice(0, -1).join(", ")}, and ${sources[sources.length - 1]}`;
+  return `Revenue ${sources.length <= 1 ? "is" : "adds"} ${listed}. Profit is revenue minus expenses.`;
+}
 
 type OverviewPayload = {
   companyId: string;
@@ -281,6 +308,8 @@ export function DashboardOverview() {
           <KpiCard key={card.key} label={card.label} scope={card.scope} value={card.value} hint={card.hint} icon={card.icon} />
         ))}
       </div>
+
+      <FinanceTrendChart points={data.charts.finance ?? []} subtitle={operatingRevenueCaption(selectedCompanyId)} />
 
       {error && data ? <p className="text-sm text-error">{error}</p> : null}
       {companyUsesHotelStays(selectedCompanyId) ? (

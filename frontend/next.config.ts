@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["@react-pdf/renderer", "mongodb", "pg"],
+  experimental: {
+    // Next 16 writes .next/dev/logs on every message. On Windows that file
+    // stays locked, and the failed flush retries until the terminal fills.
+    mcpServer: false,
+  },
+  serverExternalPackages: ["@react-pdf/renderer", "@react-email/render", "mongodb", "pg", "prismjs", "react-email"],
   outputFileTracingIncludes: {
     "/sitemap.xml": ["./src/app/**/page.tsx", "./src/app/**/layout.tsx", "./src/app/home-page.tsx"],
   },

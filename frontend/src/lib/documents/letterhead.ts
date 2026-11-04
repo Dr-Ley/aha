@@ -18,16 +18,13 @@ export type CompanyLetterhead = {
 export const COMPANY_LETTERHEADS: Record<"aha" | "ewc" | "bth", CompanyLetterhead> = {
   aha: {
     companyId: "aha",
-    legalName: "African Home Adventure Ltd.",
+    legalName: "African Home Adventure Safaris",
     tagline: "Tours, Safaris & Car Hire",
-    lines: [
-      "Nairobi International Youth Hostel, Ralph Bunche Road",
-      "P.O. Box 4473-00200 Nairobi, Kenya",
-    ],
-    phones: ["254-020-2726011 / 2738046 / 2723012", "Hot line: 0722 760 661 / 0737 596879"],
+    lines: ["YWCA Parkview Suites Ground Floor, Nyerere Road, Nairobi, Kenya"],
+    phones: ["+254 722 760 661 / +254 793852450"],
     email: "info@africahomeadventure.com",
-    website: "www.africahomeadventure.com",
-    logo: null,
+    website: "www.africanhomeadventure.com",
+    logo: "/AHA_STATIC.png",
   },
   ewc: {
     companyId: "ewc",
@@ -42,14 +39,14 @@ export const COMPANY_LETTERHEADS: Record<"aha" | "ewc" | "bth", CompanyLetterhea
     website: "www.enchorowildlifecamp.com",
     whatsapp: "+254 793 852 450",
     reservationEmail: "reservation@enchorowildlifecamp.com",
-    logo: null,
+    logo: "/EWClogo.png",
   },
   bth: {
     companyId: "bth",
     legalName: "Bondo Travellers Hotel",
     tagline: "Hotel stays & hospitality",
     lines: ["Bondo, Kenya"],
-    phones: [],
+    phones: ["+254 740751127"],
     email: "info@bondotravelershotel.com",
     website: "www.bondotravelershotel.com",
     logo: null,
@@ -64,8 +61,8 @@ export function getCompanyLetterhead(
     companyId === "ewc" || companyId === "bth" || companyId === "aha"
       ? COMPANY_LETTERHEADS[companyId]
       : COMPANY_LETTERHEADS.aha;
-  const logo = options?.logo?.trim() || null;
-  return { ...base, logo };
+  const override = options?.logo?.trim();
+  return { ...base, logo: override || base.logo };
 }
 
 /** Amount in words for receipt forms (KES whole shillings, simple). */

@@ -17,9 +17,11 @@ describe("overview charts from aggregated points", () => {
       {
         revenue: rows,
         safariPaid: [],
+        safariAll: [],
         hotelPaid: [],
         hotelAll: [],
         barChart: [],
+        barLedger: [],
         barPaid: [],
         restaurantAll: [],
         restaurantPaid: [],
@@ -27,6 +29,7 @@ describe("overview charts from aggregated points", () => {
         durations: [],
         barProducts: [],
         restaurantProducts: [],
+        expenses: [],
       },
       "month",
       today,
@@ -40,6 +43,46 @@ describe("overview charts from aggregated points", () => {
     assert.equal(charts.revenueLine.at(-1)?.amount, 0);
     assert.deepEqual(charts.countries, [{ country: "No bookings", amount: 0 }]);
     assert.deepEqual(charts.safariSlices, [{ name: "No bookings", value: 1 }]);
+    assert.equal(charts.finance[1]?.revenue, 0);
+    assert.equal(charts.finance[1]?.profit, 0);
+  });
+
+  it("adds only the modules the company uses, then subtracts expenses", () => {
+    const today = "2026-10-27";
+    const charts = chartsFromPoints(
+      {
+        revenue: [],
+        safariPaid: [],
+        safariAll: [{ date: "2026-10-02", amount: 1000 }],
+        hotelPaid: [],
+        hotelAll: [{ date: "2026-10-02", amount: 400 }],
+        barChart: [],
+        barLedger: [{ date: "2026-10-03", amount: 50 }],
+        barPaid: [],
+        restaurantAll: [{ date: "2026-10-03", amount: 25 }],
+        restaurantPaid: [],
+        countries: [],
+        durations: [],
+        barProducts: [],
+        restaurantProducts: [],
+        expenses: [
+          { date: "2026-10-02", amount: 200 },
+          { date: "2026-10-03", amount: 80 },
+        ],
+      },
+      "month",
+      today,
+      today,
+      { safari: true, hotel: true, bar: true, restaurant: false }
+    );
+    const oct2 = charts.finance.find((row) => row.label === "2 Oct");
+    const oct3 = charts.finance.find((row) => row.label === "3 Oct");
+    assert.equal(oct2?.revenue, 1400);
+    assert.equal(oct2?.expenses, 200);
+    assert.equal(oct2?.profit, 1200);
+    assert.equal(oct3?.revenue, 50);
+    assert.equal(oct3?.expenses, 80);
+    assert.equal(oct3?.profit, -30);
   });
 });
 

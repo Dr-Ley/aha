@@ -20,6 +20,7 @@ import {
   barOrders,
   bookings,
   contactSubmissions,
+  expenses,
   hotelBookingRooms,
   hotelBookings,
   invoices,
@@ -40,6 +41,7 @@ import {
 import {
   amountSeriesWindow,
   countByNameWindow,
+  financeSeriesWindow,
   namedAmountSeriesWindow,
   productSeriesWindow,
   stackedSeriesWindow,
@@ -108,7 +110,7 @@ export async function loadLegacyOverview(input: {
     return rows;
   };
 
-  const [bookingRows, revenueRows, recentPaymentRows, hotelRows, barOrderRows, restaurantOrderRows, enquiryRows, invoiceRows, paymentCountRows, bookingCountRows, stayCountRows] =
+  const [bookingRows, revenueRows, recentPaymentRows, hotelRows, barOrderRows, restaurantOrderRows, enquiryRows, invoiceRows, paymentCountRows, bookingCountRows, stayCountRows, expenseRows] =
     await Promise.all([
       input.safari
         ? db
@@ -220,6 +222,11 @@ export async function loadLegacyOverview(input: {
       input.hotel
         ? db.select({ c: count() }).from(hotelBookings).where(eq(hotelBookings.companyId, companyId)).then(track)
         : Promise.resolve([{ c: 0 }]),
+      db
+        .select({ amount: expenses.amount, incurredAt: expenses.incurredAt })
+        .from(expenses)
+        .where(eq(expenses.companyId, companyId))
+        .then(track),
     ]);
 
   const barIds = barOrderRows.map((order) => order.id);
@@ -550,6 +557,26 @@ export async function loadLegacyOverview(input: {
     window
   );
   const charts: OverviewCharts = {
+    finance: financeSeriesWindow(
+      [
+        ...(input.safari ? scopedFacts.safariBookings.map((row) => ({ date: row.date, amount: row.amount })) : []),
+        ...(input.hotel ? scopedFacts.hotelStays.map((row) => ({ date: row.date, amount: row.amount })) : []),
+        ...(input.bar
+          ? barOrderRows
+              .map((order) => ({
+                date: barOrderYmd(order) ?? "",
+                amount: (barByOrder.get(order.id) ?? []).reduce((sum, line) => sum + line.sales, 0),
+              }))
+              .filter((row) => keep(row.date))
+          : []),
+        ...(input.restaurant ? scopedFacts.restaurantOrders.map((row) => ({ date: row.date, amount: row.amount })) : []),
+      ],
+      expenseRows
+        .map((row) => ({ date: row.incurredAt ? nairobiYmd(row.incurredAt) : "", amount: row.amount ?? 0 }))
+        .filter((row) => keep(row.date)),
+      window,
+      today
+    ),
     revenueLine: amountSeriesWindow(scopedFacts.revenue, window, today),
     revenueStack: stackedSeriesWindow(
       [

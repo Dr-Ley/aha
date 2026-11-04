@@ -31,7 +31,7 @@ function LetterheadBlock({ letterhead }: { letterhead: CompanyLetterhead }) {
         <img
           src={letterhead.logo}
           alt={letterhead.legalName}
-          className="h-16 w-auto max-w-[180px] object-contain shrink-0"
+          className="h-20 w-auto max-w-[200px] object-contain shrink-0"
         />
       ) : null}
     </header>

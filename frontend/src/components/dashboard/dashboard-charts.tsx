@@ -25,8 +25,10 @@ import {
   Pie,
   Cell,
   Legend,
+  ReferenceLine,
 } from "recharts";
 import { formatKesForDisplay } from "@/lib/data";
+import type { FinancePoint } from "@/lib/overview-view";
 
 const COLORS = ["#2d5a3d", "#d4a84b", "#5a7d6a", "#8b6914", "#4a7c59", "#6b6560"];
 
@@ -425,6 +427,32 @@ export function HospitalityCharts({
           </ChartCard>
         </>
       ) : null}
+    </div>
+  );
+}
+
+export function FinanceTrendChart({ points, subtitle }: { points: FinancePoint[]; subtitle?: string }) {
+  return (
+    <div className="rounded-2xl border border-base-content/10 bg-base-100 p-4 shadow-sm">
+      <div className="mb-4">
+        <h2 className="text-sm font-semibold text-base-content">Revenue, expenses, and profit</h2>
+        {subtitle ? <p className="mt-1 text-xs text-base-content/60">{subtitle}</p> : null}
+      </div>
+      <div className="h-96 w-full min-w-0 overflow-hidden">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={points} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-base-content/10" />
+            <XAxis dataKey="label" {...timeAxis(points.length)} />
+            <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => chartCompactFromKes(Number(v) || 0)} />
+            <Tooltip formatter={(value, name) => moneyTooltip(value, String(name))} />
+            <Legend />
+            <ReferenceLine y={0} stroke="#6b6560" strokeOpacity={0.35} />
+            <Line type="monotone" dataKey="revenue" name="Revenue" stroke="#2d5a3d" strokeWidth={2.5} dot={false} activeDot={{ r: 5 }} />
+            <Line type="monotone" dataKey="expenses" name="Expenses" stroke="#9c4a3c" strokeWidth={2} dot={false} activeDot={{ r: 5 }} />
+            <Line type="monotone" dataKey="profit" name="Profit" stroke="#d4a84b" strokeWidth={2.5} dot={false} activeDot={{ r: 5 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

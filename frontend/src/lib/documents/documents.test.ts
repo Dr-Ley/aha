@@ -20,13 +20,14 @@ describe("getCompanyLetterhead", () => {
     assert.match(getCompanyLetterhead("aha").legalName, /African Home Adventure/i);
     assert.match(getCompanyLetterhead("ewc").legalName, /Enchoro/i);
     assert.match(getCompanyLetterhead("ewc").email, /enchorowildlifecamp/i);
-    assert.equal(getCompanyLetterhead("aha").logo, null);
+    assert.equal(getCompanyLetterhead("aha").logo, "/AHA_STATIC.png");
+    assert.equal(getCompanyLetterhead("ewc").logo, "/EWClogo.png");
   });
 
   it("attaches companies.logo image link onto the letterhead", () => {
     const headed = getCompanyLetterhead("aha", { logo: " /AHA_logo.png " });
     assert.equal(headed.logo, "/AHA_logo.png");
-    assert.equal(getCompanyLetterhead("ewc", { logo: "" }).logo, null);
+    assert.equal(getCompanyLetterhead("ewc", { logo: "" }).logo, "/EWClogo.png");
   });
 });
 
@@ -51,7 +52,7 @@ describe("buildBookingVoucherModel", () => {
     assert.equal(model.clientCategory, "non_resident");
     assert.match(model.partySizeLabel ?? "", /35/);
     assert.match(model.instructions, /Carnivore/);
-    assert.equal(model.letterhead.logo, null);
+    assert.equal(model.letterhead.logo, "/AHA_STATIC.png");
   });
 
   it("passes company logo through to the voucher letterhead", () => {

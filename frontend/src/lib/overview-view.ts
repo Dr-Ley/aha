@@ -12,6 +12,7 @@ export type OverviewMetrics = {
 };
 
 export type LabeledAmount = { label: string; amount: number };
+export type FinancePoint = { label: string; revenue: number; expenses: number; profit: number };
 export type StackedSafari = { label: string; safari: number; hotel: number; bar: number };
 export type StackedHospitality = { label: string; hotel: number; bar: number; restaurant: number };
 export type NamedAmount = { name: string; amount: number };
@@ -19,6 +20,7 @@ export type NamedCount = { name: string; value: number };
 export type ProductTotal = { name: string; quantity: number; amount: number };
 
 export type OverviewCharts = {
+  finance: FinancePoint[];
   revenueLine: LabeledAmount[];
   revenueStack: StackedSafari[];
   countries: { country: string; amount: number }[];

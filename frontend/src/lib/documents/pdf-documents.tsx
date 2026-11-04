@@ -1,10 +1,22 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import fs from "node:fs";
+import path from "node:path";
+import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import type { DocumentModel } from "@/lib/documents/models";
 import type { CompanyLetterhead } from "@/lib/documents/letterhead";
 
 const styles = StyleSheet.create({
   page: { padding: 36, fontSize: 10, fontFamily: "Helvetica", color: "#171717" },
-  header: { borderBottomWidth: 2, borderBottomColor: "#171717", paddingBottom: 8, marginBottom: 12 },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    borderBottomWidth: 2,
+    borderBottomColor: "#171717",
+    paddingBottom: 8,
+    marginBottom: 12,
+  },
+  headerCopy: { flexGrow: 1, flexShrink: 1, paddingRight: 12 },
+  logo: { width: 92, height: 64, objectFit: "contain" },
   title: { fontSize: 16, fontFamily: "Helvetica-Bold", textTransform: "uppercase" },
   tagline: { fontSize: 10, marginTop: 2 },
   muted: { color: "#404040", marginTop: 2 },
@@ -19,23 +31,41 @@ const styles = StyleSheet.create({
   bold: { fontFamily: "Helvetica-Bold" },
 });
 
+/** Same-origin public files are read into a buffer. Windows paths are fetched as URLs and fail. */
+function resolvePdfLogo(logo: string | null): string | { data: Buffer; format: "png" | "jpg" } | null {
+  const value = logo?.trim();
+  if (!value) return null;
+  if (/^(https?:|data:)/i.test(value)) return value;
+  const rel = value.replace(/^\/+/, "");
+  const file = [path.join(process.cwd(), "public", rel), path.join(process.cwd(), "frontend", "public", rel)].find(
+    (candidate) => fs.existsSync(candidate)
+  );
+  if (!file) return null;
+  const format = file.toLowerCase().endsWith(".png") ? "png" : "jpg";
+  return { data: fs.readFileSync(file), format };
+}
+
 function Letterhead({ letterhead }: { letterhead: CompanyLetterhead }) {
+  const logo = resolvePdfLogo(letterhead.logo);
   return (
     <View style={styles.header}>
-      <Text style={styles.title}>{letterhead.legalName}</Text>
-      {letterhead.tagline ? <Text style={styles.tagline}>{letterhead.tagline}</Text> : null}
-      {letterhead.lines.map((line) => (
-        <Text key={line} style={styles.muted}>
-          {line}
-        </Text>
-      ))}
-      {letterhead.phones.map((p) => (
-        <Text key={p} style={styles.muted}>
-          Tel: {p}
-        </Text>
-      ))}
-      <Text style={styles.muted}>Email: {letterhead.email}</Text>
-      <Text style={styles.muted}>Web: {letterhead.website}</Text>
+      <View style={styles.headerCopy}>
+        <Text style={styles.title}>{letterhead.legalName}</Text>
+        {letterhead.tagline ? <Text style={styles.tagline}>{letterhead.tagline}</Text> : null}
+        {letterhead.lines.map((line) => (
+          <Text key={line} style={styles.muted}>
+            {line}
+          </Text>
+        ))}
+        {letterhead.phones.map((p) => (
+          <Text key={p} style={styles.muted}>
+            Tel: {p}
+          </Text>
+        ))}
+        <Text style={styles.muted}>Email: {letterhead.email}</Text>
+        <Text style={styles.muted}>Web: {letterhead.website}</Text>
+      </View>
+      {logo ? <Image src={logo} style={styles.logo} /> : null}
     </View>
   );
 }

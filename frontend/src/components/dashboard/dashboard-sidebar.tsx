@@ -21,6 +21,7 @@ import {
   Users,
   LogOut,
   Map,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCompany } from "@/store/company-context";
@@ -41,6 +42,7 @@ type NavKey =
   | "enquiries"
   | "revenue"
   | "customers"
+  | "emails"
   | DashboardModuleId;
 
 const navItems: {
@@ -131,6 +133,13 @@ const navItems: {
     moduleKey: "enquiries",
   },
   {
+    href: "/dashboard/emails",
+    label: "Emails",
+    icon: Mail,
+    companyOk: () => true,
+    moduleKey: "emails",
+  },
+  {
     href: "/dashboard/settings",
     label: "Settings",
     icon: Settings,
@@ -169,6 +178,7 @@ export function DashboardSidebar({ collapsed, isMobile, onToggle, onNavigate }: 
     return navItems.filter((item) => {
       if (!item.companyOk(selectedCompanyId)) return false;
       if (item.moduleKey === "settings") return isAdmin;
+      if (item.moduleKey === "emails") return canViewModule("overview");
       if (item.moduleKey === "overview") return canViewModule("overview");
       if (item.moduleKey === "revenue") return canViewRevenue();
       return canViewModule(item.moduleKey);

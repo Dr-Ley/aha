@@ -4,6 +4,7 @@ import { LogOut, Search } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getCompanyLetterhead } from "@/lib/documents/letterhead";
 import { useCompany } from "@/store/company-context";
 import { NotificationBell } from "@/components/dashboard/notification-bell";
 
@@ -11,6 +12,7 @@ export function DashboardTopbar() {
   const router = useRouter();
   const { data: session } = useSession();
   const { selectedCompanyId, setSelectedCompanyId, companies } = useCompany();
+  const letterhead = getCompanyLetterhead(selectedCompanyId);
   const [showDesktopBell, setShowDesktopBell] = useState(false);
 
   useEffect(() => {
@@ -24,9 +26,18 @@ export function DashboardTopbar() {
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-base-content/10 bg-base-100 px-4 md:px-6">
       <div className="flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary font-bold text-primary-content">
-          AHA
-        </div>
+        {letterhead.logo ? (
+          // eslint-disable-next-line @next/next/no-img-element -- company mark is a public static file
+          <img
+            src={letterhead.logo}
+            alt={letterhead.legalName}
+            className="h-9 w-auto max-w-18 object-contain"
+          />
+        ) : (
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary font-bold text-primary-content">
+            {letterhead.legalName.slice(0, 1)}
+          </div>
+        )}
         <span className="hidden font-semibold md:inline">Staff Console</span>
       </div>
 

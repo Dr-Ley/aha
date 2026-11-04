@@ -86,8 +86,11 @@ async function seedCompanies() {
       await db.insert(companies).values(row);
       console.log(`Created company: ${row.name}`);
     } else {
-      if (!existing[0].logo?.trim() && row.logo) {
-        await db.update(companies).set({ logo: row.logo }).where(eq(companies.id, row.id));
+      const current = existing[0].logo?.trim() ?? "";
+      const next = row.logo?.trim() ?? "";
+      const stale = !current || current === "/AHA_logo.png";
+      if (stale && next && current !== next) {
+        await db.update(companies).set({ logo: next }).where(eq(companies.id, row.id));
         console.log(`Updated company logo: ${row.name}`);
       } else {
         console.log(`Company exists: ${row.name}`);

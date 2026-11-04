@@ -434,6 +434,27 @@ export function productSeriesWindow(
     .sort((a, b) => b.quantity - a.quantity || b.amount - a.amount);
 }
 
+export type FinancePoint = { label: string; revenue: number; expenses: number; profit: number };
+
+/** Align revenue and expenses on one window, then derive profit per bucket. */
+export function financeSeriesWindow(
+  revenue: { date: string; amount: number }[],
+  expenses: { date: string; amount: number }[],
+  window: SeriesWindow,
+  today = nairobiYmd()
+): FinancePoint[] {
+  const rows = [
+    ...revenue.map((row) => ({ date: row.date, revenue: Number(row.amount) || 0, expenses: 0 })),
+    ...expenses.map((row) => ({ date: row.date, revenue: 0, expenses: Number(row.amount) || 0 })),
+  ];
+  return stackedSeriesWindow(rows, ["revenue", "expenses"] as const, window, today).map((row) => ({
+    label: row.label,
+    revenue: row.revenue,
+    expenses: row.expenses,
+    profit: row.revenue - row.expenses,
+  }));
+}
+
 export function countByNameWindow(
   rows: { date: string; name: string }[],
   window: SeriesWindow

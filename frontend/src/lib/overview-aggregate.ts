@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   amountSeriesWindow,
   countByNameWindow,
+  financeSeriesWindow,
   namedAmountSeriesWindow,
   productSeriesWindow,
   stackedSeriesWindow,
@@ -48,9 +49,11 @@ type AggregatePayload = {
   points: {
     revenue: Point[];
     safariPaid: Point[];
+    safariAll: Point[];
     hotelPaid: Point[];
     hotelAll: Point[];
     barChart: Point[];
+    barLedger: Point[];
     barPaid: Point[];
     restaurantAll: Point[];
     restaurantPaid: Point[];
@@ -58,6 +61,7 @@ type AggregatePayload = {
     durations: DurationPoint[];
     barProducts: ProductPoint[];
     restaurantProducts: ProductPoint[];
+    expenses: Point[];
   };
   recentBookings: OverviewRecentBooking[];
   recentStays: Array<
@@ -110,12 +114,15 @@ export function chartsFromPoints(
   const window = overviewWindow(period, today, anchor);
   const revenue = modules.safari || modules.hotel || modules.bar || modules.restaurant ? list<Point>(points.revenue) : [];
   const safariPaid = modules.safari ? list<Point>(points.safariPaid) : [];
+  const safariAll = modules.safari ? list<Point>(points.safariAll) : [];
   const hotelPaid = modules.hotel ? list<Point>(points.hotelPaid) : [];
   const hotelAll = modules.hotel ? list<Point>(points.hotelAll) : [];
   const barChart = modules.bar ? list<Point>(points.barChart) : [];
+  const barLedger = modules.bar ? list<Point>(points.barLedger) : [];
   const barPaid = modules.bar ? list<Point>(points.barPaid) : [];
   const restaurantAll = modules.restaurant ? list<Point>(points.restaurantAll) : [];
   const restaurantPaid = modules.restaurant ? list<Point>(points.restaurantPaid) : [];
+  const expensePoints = list<Point>(points.expenses);
   const countries = namedAmountSeriesWindow(
     (modules.safari ? list<NamedPoint>(points.countries) : []).map((row) => ({
       date: anchor,
@@ -150,6 +157,12 @@ export function chartsFromPoints(
   );
 
   return {
+    finance: financeSeriesWindow(
+      [...safariAll, ...hotelAll, ...barLedger, ...restaurantAll],
+      expensePoints,
+      window,
+      today
+    ),
     revenueLine: amountSeriesWindow(revenue, window, today),
     revenueStack: stackedSeriesWindow(
       [
@@ -443,6 +456,16 @@ export async function loadOverviewAggregate(input: {
         END AS activity_date
       FROM contact_submissions c
       WHERE c.company_id = ${companyId}
+    ),
+    exp AS MATERIALIZED (
+      SELECT
+        e.amount::int AS amount,
+        CASE
+          WHEN e.incurred_at IS NULL THEN NULL
+          ELSE to_char(e.incurred_at AT TIME ZONE 'UTC' AT TIME ZONE 'Africa/Nairobi', 'YYYY-MM-DD')
+        END AS activity_date
+      FROM expenses e
+      WHERE e.company_id = ${companyId}
     )
     SELECT jsonb_build_object(
       'counts', jsonb_build_object(
@@ -604,6 +627,24 @@ export async function loadOverviewAggregate(input: {
             GROUP BY 1
           ) s
         ),
+        'safariAll', (
+          SELECT coalesce(jsonb_agg(jsonb_build_object('date', d, 'amount', amount) ORDER BY d), '[]'::jsonb)
+          FROM (
+            SELECT
+              CASE ${grain}
+                WHEN 'year' THEN left(activity_date, 4) || '-01-01'
+                WHEN 'month' THEN left(activity_date, 7) || '-01'
+                ELSE activity_date
+              END AS d,
+              sum(total_price)::int AS amount
+            FROM books
+            WHERE ${showSafari}::boolean
+              AND coalesce(status, '') <> 'cancelled'
+              AND activity_date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+              AND (${periodStart}::date IS NULL OR activity_date::date BETWEEN ${periodStart}::date AND ${periodEnd}::date)
+            GROUP BY 1
+          ) s
+        ),
         'hotelPaid', (
           SELECT coalesce(jsonb_agg(jsonb_build_object('date', d, 'amount', amount) ORDER BY d), '[]'::jsonb)
           FROM (
@@ -656,6 +697,22 @@ export async function loadOverviewAggregate(input: {
             GROUP BY 1
           ) s
         ),
+        'barLedger', (
+          SELECT coalesce(jsonb_agg(jsonb_build_object('date', d, 'amount', amount) ORDER BY d), '[]'::jsonb)
+          FROM (
+            SELECT
+              CASE ${grain}
+                WHEN 'year' THEN left(activity_date, 4) || '-01-01'
+                WHEN 'month' THEN left(activity_date, 7) || '-01'
+                ELSE activity_date
+              END AS d,
+              sum(ledger_amount)::int AS amount
+            FROM bar
+            WHERE activity_date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+              AND (${periodStart}::date IS NULL OR activity_date::date BETWEEN ${periodStart}::date AND ${periodEnd}::date)
+            GROUP BY 1
+          ) s
+        ),
         'barPaid', (
           SELECT coalesce(jsonb_agg(jsonb_build_object('date', d, 'amount', amount) ORDER BY d), '[]'::jsonb)
           FROM (
@@ -703,6 +760,22 @@ export async function loadOverviewAggregate(input: {
             FROM rest
             WHERE is_paid
               AND activity_date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+              AND (${periodStart}::date IS NULL OR activity_date::date BETWEEN ${periodStart}::date AND ${periodEnd}::date)
+            GROUP BY 1
+          ) s
+        ),
+        'expenses', (
+          SELECT coalesce(jsonb_agg(jsonb_build_object('date', d, 'amount', amount) ORDER BY d), '[]'::jsonb)
+          FROM (
+            SELECT
+              CASE ${grain}
+                WHEN 'year' THEN left(activity_date, 4) || '-01-01'
+                WHEN 'month' THEN left(activity_date, 7) || '-01'
+                ELSE activity_date
+              END AS d,
+              sum(amount)::int AS amount
+            FROM exp
+            WHERE activity_date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
               AND (${periodStart}::date IS NULL OR activity_date::date BETWEEN ${periodStart}::date AND ${periodEnd}::date)
             GROUP BY 1
           ) s

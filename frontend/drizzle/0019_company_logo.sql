@@ -2,5 +2,9 @@
 ALTER TABLE "companies" ADD COLUMN IF NOT EXISTS "logo" varchar(1024);
 
 UPDATE "companies"
-SET "logo" = '/AHA_logo.png'
-WHERE "id" = 'aha' AND ("logo" IS NULL OR "logo" = '');
+SET "logo" = '/AHA_STATIC.png'
+WHERE "id" = 'aha' AND ("logo" IS NULL OR "logo" = '' OR "logo" = '/AHA_logo.png');
+
+UPDATE "companies"
+SET "logo" = '/EWClogo.png'
+WHERE "id" = 'ewc' AND ("logo" IS NULL OR "logo" = '');
