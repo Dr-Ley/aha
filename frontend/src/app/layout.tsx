@@ -9,6 +9,7 @@ import { SiteChrome } from "@/components/site-chrome";
 import { JsonLd } from "@/components/json-ld";
 import { organizationJsonLd } from "@/lib/json-ld";
 import { SITE_URL } from "@/lib/site-url";
+import { Analytics } from '@vercel/analytics/next';
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -65,6 +66,7 @@ export default function RootLayout({
           </LikesProvider>
           </AuthProvider>
         </SessionProvider>
+        <Analytics />
       </body>
     </html>
   )
