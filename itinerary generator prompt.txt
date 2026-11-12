@@ -1,0 +1,75 @@
+You are building a client-facing itinerary template inside my existing Next.js app (App Router) using Tailwind CSS and DaisyUI. It should replicate the look and structure of a Safari Portal shared itinerary (https://itineraries.safariportal.app/...). First inspect my existing itineraries module and database schema (lib/schema.ts) and reuse existing tables, types, components and DaisyUI theme setup. Do not invent new data models if the existing ones already cover it. If something is ambiguous, ask me rather than guessing.
+
+
+
+## 1. Route and data
+
+- Public, read-only, shareable page at /itineraries/[slug]/[id] (slug = guest names, id = itinerary id). No login required.
+
+- Server component fetches the itinerary with its days, accommodations, flights, transfers, activities, inclusions/exclusions and costs. 404 if not found or not published.
+
+- Support a "hidden" flag per page/section so it is omitted from the client view but still visible in the editor.
+
+
+
+## 2. Layout
+
+- Desktop: sticky left sidebar table of contents (cover, overview, trip table, each day, map, costs, practical info, next steps). The active item highlights on scroll (IntersectionObserver) and clicking smooth-scrolls to it.
+
+- Mobile: sidebar collapses into a DaisyUI drawer opened from a sticky top bar.
+
+- Content is a vertical sequence of full-width "pages" (sections), each with generous whitespace, a clear title and a consistent max width.
+
+- Print-friendly (@media print): hide the sidebar, one page per section, and add a "Download PDF" button.
+
+
+
+## 3. Pages / sections (in order)
+
+1. Cover: full-bleed hero image, trip title, guest names, travel dates, number of nights, optional operator logo. The image has no text overlay in the split layout; text sits on the opposite side.
+
+2. Overview / Travel Brief: a summary of dates, destinations, guests, rooms (count per room type) and meal basis per stay, plus a short welcome message.
+
+3. Trip at a glance: a table of the whole trip with DaisyUI tabs to filter All / Flights / Accommodation. Columns: date, nights, location, property, room type, meal plan.
+
+4. Day pages: one per day (or group of days). Each has a split layout with a large image on the left and content on the right: day number and date, title, location, narrative description, activities (time + title + description), accommodation card for that night (name, room type, meal basis, check-in/out), transfers, and an "Overnight" stay block at the bottom of the page.
+
+5. Map: a map of the route/stops (use whatever mapping library the project already uses, otherwise a simple static or Leaflet map with numbered pins).
+
+6. Costs: price breakdown table, inclusions, exclusions, payment terms and a total.
+
+7. Practical info / Next steps / Closing page: free-text rich content blocks.
+
+
+
+## 4. Visual style (fill from screenshots; keep as design tokens)
+
+- Overall feel: [elegant, editorial, airy, photography-led]
+
+- Primary colour: [#____]  Accent: [#____]  Background: [#____]  Text: [#____]
+
+- Headings font: [serif, e.g. ____]  Body font: [sans, e.g. ____]  via next/font
+
+- Cards: [rounded-xl, soft shadow, thin border]  Buttons: [pill / square]
+
+- Define a custom DaisyUI theme in tailwind config using these tokens (no hard-coded colours in components) so each company/brand can swap theme.
+
+
+
+## 5. Components to create
+
+CoverHero, ItinerarySidebar (TOC + active state), OverviewCard, TripTable (with tabs), DayPage, AccommodationCard, ActivityList, TransferRow, OvernightBlock, MapSection, CostsTable, ContentBlock, PrintButton. Keep them presentational, typed with TypeScript, and fed by a single typed Itinerary object.
+
+
+
+## 6. Requirements
+
+- Responsive, accessible (semantic headings, alt text, keyboard navigable TOC, sufficient contrast).
+
+- Images via next/image with sensible sizes and blur placeholders.
+
+- No hard-coded sample data in components; add a seed/mock itinerary only for local preview.
+
+- Reuse existing utilities, formatting helpers and DaisyUI components; don't add new dependencies without telling me.
+
+- Output: list the files you will create or change before coding, then implement, then summarise what changed and any assumptions.

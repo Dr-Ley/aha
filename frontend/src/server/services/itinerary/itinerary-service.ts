@@ -11,22 +11,19 @@ import {
   itineraryGenerationLogs,
   itineraryVersions,
 } from "@/lib/schema";
-import {
-  AIProviderNotConfiguredError,
-  createAIItineraryProvider,
-  type AIProvider,
-} from "@/server/services/ai";
+import { createAIItineraryProvider, type AIProvider } from "@/server/services/ai";
 import { ensureSprint7Schema } from "@/server/database/ensure-sprint7";
 import { itineraryAccess, type ItineraryActor } from "@/server/services/itinerary/access";
-import { parseAiItineraryOutput } from "@/server/services/itinerary/plan-schema";
-import { quoteItineraryPlan } from "@/server/services/itinerary/pricing";
-import { ITINERARY_SYSTEM_INSTRUCTION } from "@/server/services/itinerary/prompt";
+import { parseAiItineraryOutput, planToAiShape } from "@/server/services/itinerary/plan-schema";
+import { assessItineraryQuote } from "@/server/services/itinerary/planner/price-assessment";
+import { planItinerary } from "@/server/services/itinerary/planner/plan";
+import { applyNarrative, ITINERARY_NARRATIVE_INSTRUCTION } from "@/server/services/itinerary/planner/narrative";
+import { listDestinations } from "@/server/services/tourism/tourism-service";
 import {
   normalizeItineraryRequirements,
-  requirementsForPrompt,
   type ItineraryRequirementsInput,
 } from "@/server/services/itinerary/requirements";
-import { catalogForPrompt, retrieveTourismCatalog } from "@/server/services/itinerary/retrieval";
+import { retrieveTourismCatalog } from "@/server/services/itinerary/retrieval";
 import type {
   ItineraryPlan,
   ItineraryQuoteSnapshot,
@@ -279,7 +276,7 @@ async function persistPricedPlan(input: {
 }): Promise<ItineraryRow> {
   const markupPercent = await getCompanyMarkupPercent(input.row.companyId);
   const currency = (input.row.currency as CurrencyCode) || input.requirements.currency || "USD";
-  const quote = quoteItineraryPlan({
+  const quote = assessItineraryQuote({
     plan: input.plan,
     catalog: input.catalog,
     requirements: input.requirements,
@@ -338,106 +335,114 @@ export async function generateItinerary(input: {
     throw error;
   }
 
+  const hubRows = await listDestinations(requirements.country ?? undefined);
+  const routeNodes = hubRows.map((row) => ({
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    country: row.country,
+    region: row.region,
+    description: row.description,
+  }));
+  const planned = planItinerary({ requirements, catalog, routeNodes });
   const provider = input.provider ?? createAIItineraryProvider();
   const requestId = randomUUID();
   const started = Date.now();
-  let retryCount = 0;
-  let lastFailure = "Generation failed";
-  const maxAttempts = 2;
-
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    retryCount = attempt;
-    try {
-      const result = await provider.generateStructured({
-        systemInstruction: ITINERARY_SYSTEM_INSTRUCTION,
-        userPayload: {
-          requirements: requirementsForPrompt(requirements),
-          catalog: catalogForPrompt(catalog),
-        },
-      });
-      const parsed = parseAiItineraryOutput(result.parsed);
-      if (!parsed.ok) {
-        lastFailure = `invalid_schema: ${parsed.issues.join("; ")}`;
-        await writeGenerationLog({
-          itineraryId: existing.id,
-          companyId: existing.companyId,
-          requestId,
-          provider: result.provider,
-          model: result.model,
-          status: "invalid_schema",
-          validationStatus: "rejected",
-          failureReason: lastFailure,
-          durationMs: Date.now() - started,
-          retryCount,
-          estimatedCostUsd: result.estimatedCostUsd,
-        });
-        continue;
-      }
-      const validated = validateItineraryPlan(parsed.plan, catalog, requirements);
-      if (!validated.ok) {
-        lastFailure = `invalid_business: ${validated.issues.map((i) => i.message).join("; ")}`;
-        await writeGenerationLog({
-          itineraryId: existing.id,
-          companyId: existing.companyId,
-          requestId,
-          provider: result.provider,
-          model: result.model,
-          status: "invalid_business",
-          validationStatus: "rejected",
-          failureReason: lastFailure,
-          durationMs: Date.now() - started,
-          retryCount,
-          estimatedCostUsd: result.estimatedCostUsd,
-        });
-        continue;
-      }
-      const row = await persistPricedPlan({
-        row: existing,
-        plan: validated.plan,
-        catalog,
-        requirements,
-        status: existing.status === "draft" ? "generated" : "modified",
-        changeSummary: attempt === 0 ? "AI-generated itinerary" : `AI-generated itinerary (retry ${attempt})`,
-      });
-      await writeGenerationLog({
-        itineraryId: existing.id,
-        companyId: existing.companyId,
-        requestId,
-        provider: result.provider,
-        model: result.model,
-        status: "succeeded",
-        validationStatus: "accepted",
-        durationMs: Date.now() - started,
-        retryCount,
-        estimatedCostUsd: result.estimatedCostUsd,
-      });
-      return { row, catalog, retryCount };
-    } catch (e) {
-      lastFailure = e instanceof Error ? e.message : String(e);
-      await writeGenerationLog({
-        itineraryId: existing.id,
-        companyId: existing.companyId,
-        requestId,
-        provider: provider.name,
-        status: "failed",
-        validationStatus: "error",
-        failureReason: lastFailure,
-        durationMs: Date.now() - started,
-        retryCount,
-      });
-      if (e instanceof AIProviderNotConfiguredError) {
-        const error = new Error(
-          `${provider.name} is not configured. Add the API key in .env.local and restart the server.`
-        );
-        (error as Error & { status: number }).status = 503;
-        throw error;
-      }
-    }
+  if (!planned.ok) {
+    const failure = planned.issues.map((item) => item.message).join(" ");
+    await writeGenerationLog({
+      itineraryId: existing.id,
+      companyId: existing.companyId,
+      requestId,
+      provider: "enzi-planner",
+      status: "no_route",
+      validationStatus: "rejected",
+      failureReason: failure,
+      durationMs: Date.now() - started,
+      retryCount: 0,
+    });
+    const error = new Error(failure);
+    (error as Error & { status: number }).status = 422;
+    throw error;
   }
 
-  const error = new Error(lastFailure);
-  (error as Error & { status: number }).status = 422;
-  throw error;
+  const pricedCatalog: TourismCatalog = {
+    ...catalog,
+    destinations: [
+      ...catalog.destinations,
+      ...routeNodes.filter((node) => !catalog.destinations.some((row) => row.id === node.id)),
+    ],
+  };
+
+  let plan = planned.plan;
+  let narrativeProvider = "enzi-planner";
+  let narrativeModel: string | null = null;
+  try {
+    const result = await provider.generateStructured({
+      systemInstruction: ITINERARY_NARRATIVE_INSTRUCTION,
+      userPayload: {
+        mode: "narrative",
+        lockedPlan: planToAiShape(planned.plan),
+        preferences: requirements.notes ?? null,
+      },
+    });
+    plan = applyNarrative(planned.plan, result.parsed);
+    narrativeProvider = result.provider;
+    narrativeModel = result.model;
+  } catch (e) {
+    const failure = e instanceof Error ? e.message : String(e);
+    await writeGenerationLog({
+      itineraryId: existing.id,
+      companyId: existing.companyId,
+      requestId,
+      provider: provider.name,
+      status: "narrative_skipped",
+      validationStatus: "planner_kept",
+      failureReason: failure,
+      durationMs: Date.now() - started,
+      retryCount: 0,
+    });
+  }
+
+  const validated = validateItineraryPlan(plan, pricedCatalog, requirements);
+  if (!validated.ok) {
+    const failure = validated.issues.map((item) => item.message).join("; ");
+    await writeGenerationLog({
+      itineraryId: existing.id,
+      companyId: existing.companyId,
+      requestId,
+      provider: "enzi-planner",
+      status: "invalid_business",
+      validationStatus: "rejected",
+      failureReason: failure,
+      durationMs: Date.now() - started,
+      retryCount: 0,
+    });
+    const error = new Error(failure);
+    (error as Error & { status: number }).status = 422;
+    throw error;
+  }
+
+  const row = await persistPricedPlan({
+    row: existing,
+    plan: validated.plan,
+    catalog: pricedCatalog,
+    requirements,
+    status: existing.status === "draft" ? "generated" : "modified",
+    changeSummary: "Planner itinerary with separate narrative wording",
+  });
+  await writeGenerationLog({
+    itineraryId: existing.id,
+    companyId: existing.companyId,
+    requestId,
+    provider: narrativeProvider,
+    model: narrativeModel,
+    status: "succeeded",
+    validationStatus: "accepted",
+    durationMs: Date.now() - started,
+    retryCount: 0,
+  });
+  return { row, catalog: pricedCatalog, retryCount: 0 };
 }
 
 export async function modifyItineraryDay(input: {

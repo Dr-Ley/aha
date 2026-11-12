@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { CurrencyProvider } from '@/lib/currency-context'
+import { CurrencyProvider } from "@/lib/currency-context";
 import { SessionProvider } from "@/components/session-provider";
 import { AuthProvider } from "@/lib/auth-context";
 import { LikesProvider } from "@/lib/likes-context";
-import { SiteChrome } from "@/components/site-chrome";
-import { JsonLd } from "@/components/json-ld";
-import { organizationJsonLd } from "@/lib/json-ld";
 import { SITE_URL } from "@/lib/site-url";
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/next";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -25,20 +22,9 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "African Home Adventure Safaris| Kenya & Tanzania Safari Tours",
-  description:
-    "Premium safari tours in Kenya and Tanzania. Over 25 years of experience creating unforgettable African wildlife adventures. KATO certified tour operator.",
-  keywords:
-    "Kenya safari, Tanzania safari, Masai Mara, Serengeti, African adventure, wildlife tours, safari booking",
-  openGraph: {
-    type: "website",
-    siteName: "African Home Adventure",
-    images: [{ url: "/AHA_logo.png", alt: "African Home Adventure" }],
-  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2D5A3D",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -47,27 +33,26 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-      <html
+    <html
       lang="en"
       data-theme="aha"
       className={`${dmSans.variable} ${playfair.variable}`}
     >
       <body className="font-sans antialiased flex min-h-screen min-w-0 flex-col">
-        <JsonLd data={organizationJsonLd()} />
         <SessionProvider>
           <AuthProvider>
-          <LikesProvider>
-            <CurrencyProvider>
-              <SiteChrome>{children}</SiteChrome>
-            </CurrencyProvider>
-          </LikesProvider>
+            <LikesProvider>
+              <CurrencyProvider>
+                <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col">{children}</div>
+              </CurrencyProvider>
+            </LikesProvider>
           </AuthProvider>
         </SessionProvider>
         <Analytics />
       </body>
     </html>
-  )
+  );
 }

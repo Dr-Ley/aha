@@ -63,7 +63,16 @@ export class HeuristicItineraryProvider implements AIProvider {
   readonly model = "enzi-heuristic-v1";
 
   async generateStructured(request: AIStructuredRequest): Promise<AIStructuredResult> {
-    const payload = request.userPayload as { requirements?: unknown; catalog?: unknown };
+    const payload = request.userPayload as { mode?: string; requirements?: unknown; catalog?: unknown };
+    if (payload.mode === "narrative") {
+      return {
+        rawText: "{}",
+        parsed: {},
+        provider: this.name,
+        model: this.model,
+        estimatedCostUsd: 0,
+      };
+    }
     const requirements = isRequirements(payload.requirements) ? payload.requirements : null;
     const catalog = isCatalog(payload.catalog) ? payload.catalog : null;
     if (!requirements || !catalog) {

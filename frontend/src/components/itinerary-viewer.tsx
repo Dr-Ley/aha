@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { ItineraryDocument, type ItineraryDocumentModel } from "@/components/itinerary/document";
 import { formatPaymentAmountLabel } from "@/lib/email/payment-acknowledgement-template";
 
 type EditOptions = {
@@ -22,18 +23,84 @@ type DayPlan = {
   notes?: string | null;
 };
 
+type QuoteLine = { label?: string; cost?: number; type?: string };
+
 type ItineraryDto = {
   publicToken: string;
   status: string;
   title: string | null;
   summary: string | null;
+  guestName: string | null;
   startDate: string | null;
   durationDays: number | null;
+  adults: number;
+  children: number;
+  infants: number;
   sellingPrice: number | null;
   currency: string;
   plan: { days: DayPlan[]; recommendations?: string[]; assumptions?: string[] } | null;
+  quote?: { pricingStatus?: string; confirmationReasons?: string[]; components?: QuoteLine[] } | null;
   editOptions?: EditOptions;
 };
+
+function shiftDate(ymd: string, days: number): string {
+  const date = new Date(`${ymd}T12:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+}
+
+function buildDocument(itinerary: ItineraryDto): ItineraryDocumentModel {
+  const options = itinerary.editOptions;
+  const nameOf = {
+    destination: (id: number) => options?.destinations.find((row) => row.id === id)?.name ?? `Destination ${id}`,
+    accommodation: (id: number) => options?.accommodations.find((row) => row.id === id)?.name ?? `Stay ${id}`,
+    activity: (id: number) => options?.activities.find((row) => row.id === id)?.name ?? `Activity ${id}`,
+    transport: (id: number) => options?.transport.find((row) => row.id === id)?.name ?? `Vehicle ${id}`,
+    transfer: (id: number) => options?.transfers.find((row) => row.id === id)?.name ?? `Transfer ${id}`,
+  };
+  const days = (itinerary.plan?.days ?? []).map((day) => ({
+    day: day.day,
+    dateLabel: itinerary.startDate ? shiftDate(itinerary.startDate, day.day - 1) : `Day ${day.day}`,
+    destination: nameOf.destination(day.destinationId),
+    title: day.notes?.split(".")[0] || nameOf.destination(day.destinationId),
+    notes: day.notes ?? null,
+    activities: day.activityIds.map((id) => ({ id, name: nameOf.activity(id) })),
+    accommodation: day.accommodationId != null ? nameOf.accommodation(day.accommodationId) : null,
+    transfer: day.transferId != null ? nameOf.transfer(day.transferId) : null,
+    transport: day.transportId != null ? nameOf.transport(day.transportId) : null,
+  }));
+  const stops: string[] = [];
+  for (const day of days) {
+    if (stops[stops.length - 1] !== day.destination) stops.push(day.destination);
+  }
+  const end = itinerary.startDate && itinerary.durationDays
+    ? shiftDate(itinerary.startDate, Math.max(0, itinerary.durationDays - 1))
+    : null;
+  const status = itinerary.quote?.pricingStatus === "confirmed" ? "confirmed" : itinerary.quote ? "quote_required" : "unknown";
+  return {
+    title: itinerary.title || "Safari itinerary",
+    summary: itinerary.summary,
+    guestName: itinerary.guestName,
+    dateRange: itinerary.startDate ? `${shiftDate(itinerary.startDate, 0)}${end ? ` – ${end}` : ""}` : "Dates to be confirmed",
+    nights: Math.max(0, (itinerary.durationDays ?? days.length) - 1),
+    adults: itinerary.adults ?? 0,
+    children: itinerary.children ?? 0,
+    infants: itinerary.infants ?? 0,
+    days,
+    stops,
+    currency: itinerary.currency,
+    pricingStatus: status,
+    workingTotal:
+      itinerary.sellingPrice != null ? formatPaymentAmountLabel(itinerary.currency, itinerary.sellingPrice) : null,
+    costLines: (itinerary.quote?.components ?? []).map((line) => ({
+      label: line.label || line.type || "Item",
+      amountLabel: line.cost != null ? formatPaymentAmountLabel(itinerary.currency, line.cost) : "—",
+    })),
+    assumptions: itinerary.plan?.assumptions ?? [],
+    recommendations: itinerary.plan?.recommendations ?? [],
+    confirmationReasons: itinerary.quote?.confirmationReasons ?? [],
+  };
+}
 
 export function ItineraryViewer({ token }: { token: string }) {
   const [itinerary, setItinerary] = useState<ItineraryDto | null>(null);
@@ -96,14 +163,17 @@ export function ItineraryViewer({ token }: { token: string }) {
 
   const options = itinerary.editOptions;
   const editable = itinerary.status === "generated" || itinerary.status === "modified" || itinerary.status === "draft";
+  const documentModel = buildDocument(itinerary);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-3">
+    <div className="space-y-10">
+      <ItineraryDocument model={documentModel} />
+      <div className="no-print mx-auto grid max-w-5xl gap-8 px-4 lg:grid-cols-3">
       <div className="space-y-6 lg:col-span-2">
         <div>
           <p className="text-xs uppercase tracking-widest text-primary">{itinerary.status}</p>
-          <h1 className="mt-1 font-serif text-3xl font-bold">{itinerary.title || "Safari itinerary"}</h1>
-          <p className="mt-2 text-base-content/70">{itinerary.summary}</p>
+          <h2 className="mt-1 font-serif text-2xl font-bold">Adjust this plan</h2>
+          <p className="mt-2 text-sm text-base-content/70">Changes are checked against the catalog and the price is recalculated. They are still not a confirmed selling rate.</p>
         </div>
         {error ? <p className="text-sm text-error">{error}</p> : null}
         <ol className="space-y-4">
@@ -177,13 +247,17 @@ export function ItineraryViewer({ token }: { token: string }) {
         </ol>
       </div>
       <aside className="h-fit space-y-4 rounded-2xl border border-base-content/10 bg-base-100 p-6 shadow-sm">
-        <p className="text-sm text-base-content/60">Quoted total</p>
+        <p className="text-sm text-base-content/60">Working total</p>
         <p className="font-serif text-3xl font-bold">
-          {itinerary.sellingPrice != null
-            ? formatPaymentAmountLabel(itinerary.currency, itinerary.sellingPrice)
-            : "—"}
+          {documentModel.pricingStatus === "confirmed"
+            ? documentModel.workingTotal ?? "—"
+            : "Request a quote"}
         </p>
-        <p className="text-xs text-base-content/60">Priced by Enzi. Changing a lodge or activity recalculates this total.</p>
+        <p className="text-xs text-base-content/60">
+          {documentModel.workingTotal
+            ? `Enzi working figure ${documentModel.workingTotal}. It is not confirmed until every rate has a validity window and a selling confirmation.`
+            : "Enzi has not calculated a working figure yet."}
+        </p>
         {editable ? (
           <button className="btn btn-primary w-full" disabled={busy} onClick={() => void accept()}>
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
@@ -195,6 +269,7 @@ export function ItineraryViewer({ token }: { token: string }) {
           </p>
         )}
       </aside>
+      </div>
     </div>
   );
 }

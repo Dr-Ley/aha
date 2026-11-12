@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   },
   serverExternalPackages: ["@react-pdf/renderer", "@react-email/render", "mongodb", "pg", "prismjs", "react-email"],
   outputFileTracingIncludes: {
-    "/sitemap.xml": ["./src/app/**/page.tsx", "./src/app/**/layout.tsx", "./src/app/home-page.tsx"],
+    "/sitemap.xml": ["./src/app/**/page.tsx", "./src/app/**/layout.tsx", "./src/app/(aha)/home-page.tsx"],
   },
   images: {
     remotePatterns: [
