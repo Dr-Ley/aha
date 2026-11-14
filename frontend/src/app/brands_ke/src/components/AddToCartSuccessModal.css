@@ -1,0 +1,273 @@
+.success-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 3000;
+}
+
+.success-modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 3001;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.success-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+
+.success-modal-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+}
+
+.success-modal-header .close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.success-modal-content {
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.success-product-image-container {
+  flex-shrink: 0;
+  width: 150px;
+  position: relative;
+}
+
+.success-product-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.success-brand-logo {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #dc2626;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.success-product-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.success-product-name {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #000;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.success-product-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.original-price {
+  font-size: 0.95rem;
+  color: #000;
+  text-decoration: line-through;
+}
+
+.discounted-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+.current-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.success-product-info {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #000;
+}
+
+.info-label {
+  font-weight: 400;
+}
+
+.info-value {
+  font-weight: 500;
+}
+
+.success-modal-actions {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.shopping-cart-button,
+.checkout-button {
+  flex: 1;
+  padding: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.shopping-cart-button {
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+
+.shopping-cart-button:hover {
+  background: #f9f9f9;
+}
+
+.checkout-button {
+  background: #000;
+  color: #fff;
+}
+
+.checkout-button:hover {
+  background: #333;
+}
+
+.express-checkout-section {
+  padding: 0 1.5rem 1.5rem;
+  text-align: center;
+}
+
+.express-checkout-label {
+  font-size: 0.875rem;
+  color: #000;
+  margin: 0 0 1rem;
+}
+
+.express-checkout-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.express-checkout-btn {
+  flex: 1;
+  max-width: 150px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.express-checkout-btn:hover {
+  border-color: #000;
+  background: #f9f9f9;
+}
+
+.mpesa-btn {
+  background: #00a859;
+  color: #fff;
+  border-color: #00a859;
+}
+
+.mpesa-btn:hover {
+  background: #008a4a;
+  border-color: #008a4a;
+}
+
+.paypal-btn {
+  background: #0070ba;
+  color: #fff;
+  border-color: #0070ba;
+}
+
+.paypal-btn:hover {
+  background: #005a94;
+  border-color: #005a94;
+}
+
+@media (max-width: 768px) {
+  .success-modal {
+    max-height: 85vh;
+    width: 100%;
+  }
+
+  .success-modal-header,
+  .success-modal-content,
+  .success-modal-actions,
+  .express-checkout-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .success-product-image-container {
+    width: 120px;
+  }
+
+  .success-product-name {
+    font-size: 0.875rem;
+  }
+
+  .success-modal-actions {
+    flex-direction: column;
+  }
+
+  .express-checkout-buttons {
+    flex-direction: column;
+  }
+
+  .express-checkout-btn {
+    max-width: 100%;
+  }
+}
+

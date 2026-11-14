@@ -1,0 +1,154 @@
+/* Sticky floating header */
+.floating-nav-panel {
+  position: sticky;
+  top: 90px;
+  z-index: 50;
+
+  /* Large margins so it sits centered, narrow */
+  max-width: 900px;          /* adjust width */
+  margin: 3rem auto 0 auto;  /* HUGE margin at the top + centered */
+
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 1rem 1.25rem;
+
+  transition: all 0.25s ease;
+}
+
+.floating-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT SECTION */
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Brand selector */
+.brand-selector-wrapper {
+  position: relative;
+}
+
+.brand-selector-btn {
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.brand-dropdown {
+  position: absolute;
+  top: 2.3rem;
+  left: 0;
+  width: 190px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #f4f4f4;
+}
+
+.dropdown-item.active {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Item count */
+.item-count {
+  font-size: 0.7rem;
+  color: #444;
+}
+
+/* RIGHT SECTION */
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Filter button */
+.filter-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+
+/* Sort button */
+.sort-wrapper {
+  position: relative;
+}
+
+.sort-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+
+.sort-dropdown {
+  position: absolute;
+  top: 2.3rem;
+  right: 0;
+  width: 180px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 100;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .floating-nav-panel {
+    max-width: 95%;
+    margin: 1rem auto 0 auto;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+  }
+
+  .floating-nav-inner {
+    padding: 0;
+  }
+
+  .left-section,
+  .right-section {
+    gap: 0.75rem;
+  }
+}

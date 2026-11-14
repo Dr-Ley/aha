@@ -1,0 +1,51 @@
+.announcement-banner {
+  background: #000;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  overflow: hidden;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.announcement-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcement-text {
+  display: inline-block;
+}
+
+.announcement-link {
+  color: #fff;
+  text-decoration: underline;
+  margin-left: 0.25rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.announcement-link:hover {
+  opacity: 0.8;
+}
+
+.announcement-link-text {
+  text-decoration: underline;
+  margin-left: 0.25rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .announcement-banner {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    height: 36px;
+  }
+}
+

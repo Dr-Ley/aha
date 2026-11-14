@@ -15,7 +15,7 @@ export type SiteId = "aha" | "portfolio";
 
 const RESERVED_AHA_HOSTS = new Set<string>(AHA_HOSTS);
 
-const SHARED_PREFIXES = ["/dashboard", "/print", "/login", "/api", "/portfolio", "/shop"] as const;
+const SHARED_PREFIXES = ["/dashboard", "/print", "/login", "/api", "/portfolio", "/shop", "/brands_ke"] as const;
 
 export function hostnameFromHeader(hostHeader: string | null): string {
   const first = (hostHeader ?? "").split(",")[0] ?? "";

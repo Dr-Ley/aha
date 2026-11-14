@@ -11,30 +11,20 @@ import { focusRingDark, primaryButton, sectionClass, wrapClass } from "./styles"
 import { cn } from "@/lib/utils";
 
 const enquirySchema = z.object({
-  fullName: z.string().trim().min(2, "Enter your full name."),
-  businessName: z.string().trim().min(2, "Enter your business name."),
-  email: z.string().trim().email("Enter a valid email address."),
-  presence: z
-    .string()
-    .trim()
-    .min(3, "Enter a website or social media URL.")
-    .refine(
-      (value) => /^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(value) || /^@?[\w.]{2,}$/i.test(value),
-      "Enter a website, Facebook page, or Instagram address."
-    ),
-  message: z.string().trim().min(12, "Tell me briefly what you need help with."),
+  fullName: z.string().trim().max(160),
+  businessName: z.string().trim().min(2, "Enter your business name.").max(160),
+  email: z.string().trim().email("Enter a valid email address.").max(255),
+  presence: z.string().trim().max(512),
+  message: z.string().trim().min(2, "Tell me what you need help with.").max(4000),
 });
 
 type EnquiryInput = z.infer<typeof enquirySchema>;
 
 type EnquiryResult =
   | { ok: false; fieldErrors: Partial<Record<keyof EnquiryInput, string>> }
-  | { ok: true; status: "unconnected" };
+  | { ok: true; value: EnquiryInput };
 
-const UNCONNECTED_NOTICE =
-  "This form is not connected yet. Nothing was saved or emailed. Use the email, phone, or LinkedIn links until a backend is connected.";
-
-/** Validates the enquiry and stops. Replace the success branch with a real endpoint later. */
+/** Validates the enquiry before it is saved for Solutions Architect. */
 export function submitEnquiry(input: EnquiryInput): EnquiryResult {
   const parsed = enquirySchema.safeParse(input);
   if (!parsed.success) {
@@ -47,7 +37,7 @@ export function submitEnquiry(input: EnquiryInput): EnquiryResult {
     }
     return { ok: false, fieldErrors };
   }
-  return { ok: true, status: "unconnected" };
+  return { ok: true, value: parsed.data };
 }
 
 const fieldClass = cn(
@@ -85,8 +75,9 @@ function Field({
 export function ContactSection() {
   const [errors, setErrors] = useState<Partial<Record<keyof EnquiryInput, string>>>({});
   const [notice, setNotice] = useState("");
+  const [sending, setSending] = useState(false);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -101,13 +92,31 @@ export function ContactSection() {
     if (!result.ok) {
       setNotice("");
       setErrors(result.fieldErrors);
-      const order = ["fullName", "businessName", "email", "presence", "message"] as const;
+      const order = ["businessName", "email", "message"] as const;
       const firstKey = order.find((key) => result.fieldErrors[key]);
       if (firstKey) form.querySelector<HTMLElement>(`[name="${firstKey}"]`)?.focus();
       return;
     }
     setErrors({});
-    setNotice(UNCONNECTED_NOTICE);
+    setSending(true);
+    try {
+      const response = await fetch("/api/portfolio/enquiries", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(result.value),
+      });
+      const body = (await response.json().catch(() => null)) as { error?: string } | null;
+      if (!response.ok) {
+        setNotice(body?.error ?? "Could not save your note. Try email instead.");
+        return;
+      }
+      form.reset();
+      setNotice("Thanks. Your note is with Solutions Architect.");
+    } catch {
+      setNotice("Could not save your note. Try email instead.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -136,8 +145,8 @@ export function ContactSection() {
                 className={cn(focusRingDark, "inline-flex min-h-11 items-center gap-3 text-[#F5F0E6] transition-colors duration-200 hover:text-[#4E8774]")}
               >
                 <Mail className="size-4 text-[#4E8774]" aria-hidden="true" />
-                <span>
-                  Email <span className="text-[#B9B2A6]">{contactChannels.email}</span>
+                <span >
+                  Email
                 </span>
               </a>
             </li>
@@ -158,14 +167,12 @@ export function ContactSection() {
               >
                 <Phone className="size-4 text-[#4E8774]" aria-hidden="true" />
                 <span>
-                  Phone <span className="text-[#B9B2A6]">{contactChannels.phoneDisplay}</span>
+                  Phone 
                 </span>
               </a>
             </li>
           </ul>
-          <p className="mt-6 max-w-md text-sm leading-relaxed text-[#8A8478]">
-            Email, phone, and LinkedIn are placeholders until your own details are added.
-          </p>
+         
         </SectionReveal>
 
         <SectionReveal delay={0.08}>
@@ -182,13 +189,12 @@ export function ContactSection() {
                   name="fullName"
                   type="text"
                   autoComplete="name"
-                  required
                   aria-invalid={errors.fullName ? true : undefined}
                   aria-describedby={errors.fullName ? "full-name-error" : undefined}
                   className={fieldClass}
                 />
               </Field>
-              <Field id="business-name" label="Business name" error={errors.businessName}>
+              <Field id="business-name" label="Business name*" error={errors.businessName}>
                 <input
                   id="business-name"
                   name="businessName"
@@ -200,7 +206,7 @@ export function ContactSection() {
                   className={fieldClass}
                 />
               </Field>
-              <Field id="email" label="Email address" error={errors.email}>
+              <Field id="email" label="Email address*" error={errors.email}>
                 <input
                   id="email"
                   name="email"
@@ -220,13 +226,12 @@ export function ContactSection() {
                   inputMode="url"
                   autoComplete="url"
                   placeholder="facebook.com/your-page"
-                  required
                   aria-invalid={errors.presence ? true : undefined}
                   aria-describedby={errors.presence ? "presence-error" : undefined}
                   className={fieldClass}
                 />
               </Field>
-              <Field id="message" label="What do you need help with?" error={errors.message}>
+              <Field id="message" label="What do you need help with?*" error={errors.message}>
                 <textarea
                   id="message"
                   name="message"
@@ -238,8 +243,8 @@ export function ContactSection() {
                 />
               </Field>
             </div>
-            <button type="submit" className={cn(primaryButton, "mt-6 w-full sm:w-auto")}>
-              Book a Free Website Audit
+            <button type="submit" className={cn(primaryButton, "mt-6 w-full sm:w-auto")} disabled={sending}>
+              {sending ? "Sending…" : "Book a Free Website Audit"}
             </button>
             {notice ? (
               <p id="enquiry-notice" role="status" className="mt-4 text-sm leading-relaxed text-[#F5F0E6]/80">

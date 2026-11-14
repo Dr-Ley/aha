@@ -45,5 +45,7 @@ describe("site host map", () => {
     assert.equal(rewritePathForSite("portfolio", "/api/contact"), null);
     assert.equal(rewritePathForSite("portfolio", "/shop"), null);
     assert.equal(rewritePathForSite("portfolio", "/shop/manage"), null);
+    assert.equal(rewritePathForSite("portfolio", "/brands_ke"), null);
+    assert.equal(rewritePathForSite("portfolio", "/brands_ke/manage"), null);
   });
 });

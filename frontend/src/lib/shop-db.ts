@@ -1,6 +1,7 @@
 import { Pool, type PoolClient } from "pg";
 
 const SHOP_ID = "demo";
+export const BRANDS_KE_SHOP_ID = "brands_ke";
 
 export type ShopRecord = {
   id: string;
@@ -164,6 +165,21 @@ async function ready(): Promise<void> {
             "Complimentary delivery over KSh 10,000",
           ]
         );
+        await client.query(
+          `INSERT INTO shops (id, name, announcement, city, email, instagram, hero_image, delivery_note)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+           ON CONFLICT (id) DO NOTHING`,
+          [
+            BRANDS_KE_SHOP_ID,
+            "Brands KE",
+            "Discover the best of global style curated for Kenya.",
+            "Nairobi, Kenya",
+            "hello@brandske.co.ke",
+            "https://instagram.com",
+            "",
+            "Delivery across Kenya",
+          ]
+        );
         const count = await client.query("SELECT COUNT(*)::int AS n FROM products WHERE shop_id = $1", [SHOP_ID]);
         if (Number(count.rows[0].n) === 0) {
           const seed = [
@@ -191,32 +207,34 @@ async function ready(): Promise<void> {
   await g.__shopReady;
 }
 
-export async function getCatalog(): Promise<{ shop: ShopRecord; products: ProductRecord[] }> {
+export async function getCatalog(shopId = SHOP_ID): Promise<{ shop: ShopRecord; products: ProductRecord[] }> {
   await ready();
-  const shop = await pool().query("SELECT * FROM shops WHERE id = $1", [SHOP_ID]);
+  const shop = await pool().query("SELECT * FROM shops WHERE id = $1", [shopId]);
   const products = await pool().query(
     "SELECT * FROM products WHERE shop_id = $1 ORDER BY id",
-    [SHOP_ID]
+    [shopId]
   );
+  if (!shop.rows[0]) throw new Error("Shop catalog is unavailable");
   return { shop: mapShop(shop.rows[0]), products: products.rows.map(mapProduct) };
 }
 
-export async function createProduct(input: Omit<ProductRecord, "id">): Promise<ProductRecord> {
+export async function createProduct(input: Omit<ProductRecord, "id">, shopId = SHOP_ID): Promise<ProductRecord> {
   await ready();
   const result = await pool().query(
     `INSERT INTO products (shop_id, name, category, price, image, images, tag, description)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-    [SHOP_ID, input.name, input.category, input.price, input.images[0], input.images, input.tag, input.description]
+    [shopId, input.name, input.category, input.price, input.images[0], input.images, input.tag, input.description]
   );
   return mapProduct(result.rows[0]);
 }
 
 export async function updateProduct(
   id: number,
-  input: Omit<ProductRecord, "id">
+  input: Omit<ProductRecord, "id">,
+  shopId = SHOP_ID
 ): Promise<{ product: ProductRecord; removed: string[] } | null> {
   await ready();
-  const current = await pool().query("SELECT image, images FROM products WHERE id = $1 AND shop_id = $2", [id, SHOP_ID]);
+  const current = await pool().query("SELECT image, images FROM products WHERE id = $1 AND shop_id = $2", [id, shopId]);
   if (!current.rows[0]) return null;
   const previous = imageList(current.rows[0]);
   const result = await pool().query(
@@ -224,28 +242,28 @@ export async function updateProduct(
      SET name = $2, category = $3, price = $4, image = $5, images = $6, tag = $7, description = $8
      WHERE id = $1 AND shop_id = $9
      RETURNING *`,
-    [id, input.name, input.category, input.price, input.images[0], input.images, input.tag, input.description, SHOP_ID]
+    [id, input.name, input.category, input.price, input.images[0], input.images, input.tag, input.description, shopId]
   );
   const removed = previous.filter((key) => !input.images.includes(key));
   return { product: mapProduct(result.rows[0]), removed };
 }
 
-export async function deleteProduct(id: number): Promise<string[] | null> {
+export async function deleteProduct(id: number, shopId = SHOP_ID): Promise<string[] | null> {
   await ready();
-  const current = await pool().query("SELECT image, images FROM products WHERE id = $1 AND shop_id = $2", [id, SHOP_ID]);
+  const current = await pool().query("SELECT image, images FROM products WHERE id = $1 AND shop_id = $2", [id, shopId]);
   if (!current.rows[0]) return null;
-  await pool().query("DELETE FROM products WHERE id = $1 AND shop_id = $2", [id, SHOP_ID]);
+  await pool().query("DELETE FROM products WHERE id = $1 AND shop_id = $2", [id, shopId]);
   return imageList(current.rows[0]);
 }
 
-async function ensureCart(client: PoolClient, cartId: string) {
+async function ensureCart(client: PoolClient, cartId: string, shopId: string) {
   await client.query(
     "INSERT INTO carts (id, shop_id) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING",
-    [cartId, SHOP_ID]
+    [cartId, shopId]
   );
 }
 
-export async function getCart(cartId: string): Promise<CartLine[]> {
+export async function getCart(cartId: string, shopId = SHOP_ID): Promise<CartLine[]> {
   await ready();
   const result = await pool().query(
     `SELECT p.*, c.quantity
@@ -254,7 +272,7 @@ export async function getCart(cartId: string): Promise<CartLine[]> {
      JOIN carts cart ON cart.id = c.cart_id
      WHERE c.cart_id = $1 AND cart.shop_id = $2 AND p.shop_id = $2
      ORDER BY p.id`,
-    [cartId, SHOP_ID]
+    [cartId, shopId]
   );
   return result.rows.map((row) => ({
     product: mapProduct(row),
@@ -262,13 +280,13 @@ export async function getCart(cartId: string): Promise<CartLine[]> {
   }));
 }
 
-export async function addToCart(cartId: string, productId: number, quantity = 1): Promise<CartLine[]> {
+export async function addToCart(cartId: string, productId: number, quantity = 1, shopId = SHOP_ID): Promise<CartLine[]> {
   await ready();
   const client = await pool().connect();
   try {
     await client.query("BEGIN");
-    await ensureCart(client, cartId);
-    const product = await client.query("SELECT id FROM products WHERE id = $1 AND shop_id = $2", [productId, SHOP_ID]);
+    await ensureCart(client, cartId, shopId);
+    const product = await client.query("SELECT id FROM products WHERE id = $1 AND shop_id = $2", [productId, shopId]);
     if (!product.rows[0]) throw new Error("Product not found");
     await client.query(
       `INSERT INTO cart_items (cart_id, product_id, quantity)
@@ -284,32 +302,41 @@ export async function addToCart(cartId: string, productId: number, quantity = 1)
   } finally {
     client.release();
   }
-  return getCart(cartId);
+  return getCart(cartId, shopId);
 }
 
-export async function setQuantity(cartId: string, productId: number, quantity: number): Promise<CartLine[]> {
+export async function setQuantity(cartId: string, productId: number, quantity: number, shopId = SHOP_ID): Promise<CartLine[]> {
   await ready();
   if (quantity <= 0) {
-    await pool().query("DELETE FROM cart_items WHERE cart_id = $1 AND product_id = $2", [cartId, productId]);
+    await pool().query(
+      `DELETE FROM cart_items WHERE cart_id = $1 AND product_id = $2
+       AND EXISTS (SELECT 1 FROM carts WHERE id = $1 AND shop_id = $3)`,
+      [cartId, productId, shopId]
+    );
   } else {
     await pool().query(
       `UPDATE cart_items SET quantity = $3
        WHERE cart_id = $1 AND product_id = $2
          AND EXISTS (SELECT 1 FROM carts WHERE id = $1 AND shop_id = $4)`,
-      [cartId, productId, quantity, SHOP_ID]
+      [cartId, productId, quantity, shopId]
     );
   }
-  return getCart(cartId);
+  return getCart(cartId, shopId);
 }
 
-export async function clearCart(cartId: string): Promise<void> {
+export async function clearCart(cartId: string, shopId = SHOP_ID): Promise<void> {
   await ready();
-  await pool().query("DELETE FROM cart_items WHERE cart_id = $1", [cartId]);
+  await pool().query(
+    `DELETE FROM cart_items WHERE cart_id = $1
+     AND EXISTS (SELECT 1 FROM carts WHERE id = $1 AND shop_id = $2)`,
+    [cartId, shopId]
+  );
 }
 
 export async function placeOrder(
   cartId: string,
-  customer: { name: string; email: string; phone: string; address: string }
+  customer: { name: string; email: string; phone: string; address: string },
+  shopId = SHOP_ID
 ): Promise<{ orderNumber: string; subtotal: number; items: CartLine[] }> {
   await ready();
   const client = await pool().connect();
@@ -322,16 +349,16 @@ export async function placeOrder(
        JOIN carts cart ON cart.id = c.cart_id
        WHERE c.cart_id = $1 AND cart.shop_id = $2
        FOR UPDATE`,
-      [cartId, SHOP_ID]
+      [cartId, shopId]
     );
     if (lines.rows.length === 0) throw new Error("Cart is empty");
     const items = lines.rows.map((row) => ({ product: mapProduct(row), quantity: Number(row.quantity) }));
     const subtotal = items.reduce((sum, line) => sum + line.product.price * line.quantity, 0);
-    const orderNumber = `${SHOP_ID.toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
+    const orderNumber = `${shopId.toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
     const order = await client.query(
       `INSERT INTO orders (shop_id, order_number, customer_name, email, phone, address, subtotal)
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-      [SHOP_ID, orderNumber, customer.name, customer.email, customer.phone, customer.address, subtotal]
+      [shopId, orderNumber, customer.name, customer.email, customer.phone, customer.address, subtotal]
     );
     for (const line of items) {
       await client.query(

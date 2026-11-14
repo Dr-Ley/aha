@@ -1,0 +1,24 @@
+.brand-page-layout {
+  min-height: 100vh;
+  background: #fff;
+}
+
+.header-sections {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
+}
+
+.brand-page-content {
+  margin-top: 150px;
+}
+
+@media (max-width: 768px) {
+  .brand-page-content {
+    margin-top: 140px;
+  }
+}
+

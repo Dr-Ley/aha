@@ -7,7 +7,19 @@ import type { ProductRecord } from "@/lib/shop-db";
 
 const empty = { name: "", category: "", price: "", tag: "", description: "" };
 
-export function CatalogEditor({ shopName, products }: { shopName: string; products: ProductRecord[] }) {
+export function CatalogEditor({
+  shopName,
+  products,
+  apiBase = "/api/shop",
+  shopHref = "/shop",
+  mediaBase = "/api/shop/media",
+}: {
+  shopName: string;
+  products: ProductRecord[];
+  apiBase?: string;
+  shopHref?: string;
+  mediaBase?: string;
+}) {
   const [rows, setRows] = useState(products);
   const [draft, setDraft] = useState(empty);
   const [kept, setKept] = useState<string[]>([]);
@@ -48,7 +60,7 @@ export function CatalogEditor({ shopName, products }: { shopName: string; produc
       if (pending.length > 0) {
         const body = new FormData();
         for (const file of pending) body.append("files", await compressImage(file));
-        const response = await fetch("/api/shop/images", { method: "POST", body });
+        const response = await fetch(`${apiBase}/images`, { method: "POST", body });
         const data = (await response.json()) as { keys?: string[]; error?: string };
         if (!response.ok || !data.keys) throw new Error(data.error ?? "Could not store the images.");
         uploaded = data.keys;
@@ -61,7 +73,7 @@ export function CatalogEditor({ shopName, products }: { shopName: string; produc
         tag: String(fields.get("tag") ?? "") || null,
         description: String(fields.get("description") ?? ""),
       };
-      const response = await fetch(editing ? `/api/shop/products/${editing}` : "/api/shop/products", {
+      const response = await fetch(editing ? `${apiBase}/products/${editing}` : `${apiBase}/products`, {
         method: editing ? "PATCH" : "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(payload),
@@ -69,7 +81,7 @@ export function CatalogEditor({ shopName, products }: { shopName: string; produc
       const data = (await response.json()) as { product?: ProductRecord; error?: string };
       if (!response.ok || !data.product) {
         if (uploaded.length > 0) {
-          await fetch("/api/shop/images", {
+          await fetch(`${apiBase}/images`, {
             method: "DELETE",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ keys: uploaded }),
@@ -83,7 +95,7 @@ export function CatalogEditor({ shopName, products }: { shopName: string; produc
       resetForm(form);
     } catch (caught) {
       if (uploaded.length > 0) {
-        await fetch("/api/shop/images", {
+        await fetch(`${apiBase}/images`, {
           method: "DELETE",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ keys: uploaded }),
@@ -96,7 +108,7 @@ export function CatalogEditor({ shopName, products }: { shopName: string; produc
   }
 
   async function remove(id: number) {
-    const response = await fetch(`/api/shop/products/${id}`, { method: "DELETE" });
+    const response = await fetch(`${apiBase}/products/${id}`, { method: "DELETE" });
     if (!response.ok) {
       setError("Could not delete the product.");
       return;
@@ -114,7 +126,7 @@ export function CatalogEditor({ shopName, products }: { shopName: string; produc
     <section className="catalog">
       <p className="eyebrow">{shopName}</p>
       <h1>Catalog</h1>
-      <a className="text-link" href="/shop">Back to the shop</a>
+      <a className="text-link" href={shopHref}>Back to the shop</a>
       <form onSubmit={save}>
         {error ? <p className="form-error">{error}</p> : null}
         <label>Name<input name="name" required defaultValue={draft.name} key={`name-${editing ?? "new"}`} /></label>
@@ -136,7 +148,7 @@ export function CatalogEditor({ shopName, products }: { shopName: string; produc
           <div className="image-picks">
             {kept.map((key) => (
               <figure key={key}>
-                <img src={imageSrc(key)} alt="" />
+                <img src={imageSrc(key, mediaBase)} alt="" />
                 <button type="button" onClick={() => setKept((current) => current.filter((item) => item !== key))}>Remove</button>
               </figure>
             ))}

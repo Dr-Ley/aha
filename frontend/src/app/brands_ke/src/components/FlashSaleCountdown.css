@@ -1,0 +1,84 @@
+.flash-sale-countdown {
+  background: #dc2626;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.countdown-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+}
+
+.countdown-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 40px;
+}
+
+.countdown-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.countdown-label-small {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-top: 0.125rem;
+}
+
+.countdown-separator {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .flash-sale-countdown {
+    height: 36px;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .countdown-content {
+    gap: 0.5rem;
+  }
+
+  .countdown-label {
+    font-size: 0.75rem;
+  }
+
+  .countdown-value {
+    font-size: 1rem;
+  }
+
+  .countdown-label-small {
+    font-size: 0.5rem;
+  }
+
+  .countdown-separator {
+    font-size: 1rem;
+  }
+}
+

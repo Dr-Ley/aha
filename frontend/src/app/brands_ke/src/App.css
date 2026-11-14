@@ -1,0 +1,30 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 80px; /* Space for bottom navigation */
+  padding-top: 60px; /* Space for top navbar */
+}
+
+.main-content.homepage-main {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Mobile-first responsive */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .main-content.homepage-main {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+

@@ -39,11 +39,11 @@ export function ProjectsSection() {
         </SectionReveal>
         <div className="mt-16 space-y-20">
           {projects.map((project, index) => (
-            <article key={project.variant} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <article key={project.title} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
               <SectionReveal className={cn(index % 2 === 1 && "lg:order-2")} delay={0.05}>
                 <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-[#66615B]">
                   <span aria-hidden="true" className="size-1.5 rounded-full bg-[#2F5D50]" />
-                  Concept project
+                  {project.label}
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold tracking-tight text-[#171717] sm:text-3xl">
                   {project.title}
@@ -63,7 +63,7 @@ export function ProjectsSection() {
               </SectionReveal>
               <SectionReveal delay={0.12} className={cn(index % 2 === 1 && "lg:order-1")}>
                 <motion.div style={reduce ? undefined : { y: index % 2 === 0 ? yA : yB }}>
-                  <ProjectMockup variant={project.variant} url={project.url} title={project.title} />
+                  <ProjectMockup url={project.url} title={project.title} videos={project.videos} />
                 </motion.div>
               </SectionReveal>
             </article>

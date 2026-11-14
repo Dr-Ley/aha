@@ -16,9 +16,8 @@ export function ProblemSection() {
             <MaskReveal delay={0.08}>Can They Find You?</MaskReveal>
           </h2>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#66615B]">
-            Social media is a great place to build an audience. But when potential customers want to learn more about
-            your business, a professional website gives them a place to find your services, build confidence and get in
-            touch.
+            Customers should not have to scroll through everything you sell to find what they want. A website makes that
+            search simple.
           </p>
         </SectionReveal>
         <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -53,8 +52,7 @@ export function ProblemSection() {
         </ul>
         <SectionReveal delay={0.15}>
           <p className="mt-12 max-w-2xl border-l-2 border-[#2F5D50] pl-5 text-lg leading-relaxed text-[#171717]">
-            If people are asking &ldquo;Do you have a website?&rdquo;, it may be time to give your business a stronger
-            online presence.
+            A website keeps working for your business, even when you are not there to reply.
           </p>
         </SectionReveal>
       </div>

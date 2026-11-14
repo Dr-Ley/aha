@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { portfolioBrandsKeVideos, portfolioDemoVideos } from "@/lib/shop-images";
 import {
   Briefcase,
   Building2,
@@ -41,10 +42,10 @@ export type PortfolioSectionId = (typeof navItems)[number]["id"];
 
 /** Placeholder channels until personal contact details are supplied. */
 export const contactChannels = {
-  email: "hello@example.com",
+  email: "bradleyouko911@gmail.com",
   phoneDisplay: "+254 700 000 000",
-  phoneHref: "tel:+254700000000",
-  linkedin: "https://www.linkedin.com/in/your-profile",
+  phoneHref: "tel:+447887258617",
+  linkedin: "https://www.linkedin.com/in/bradley-ouko-59626123b/",
 };
 
 export const problemPoints: { label: string; icon: LucideIcon; accent?: boolean }[] = [
@@ -88,49 +89,44 @@ export const whyReasons: { title: string; icon: LucideIcon }[] = [
   { title: "Direct collaboration without unnecessary agency overhead.", icon: Handshake },
 ];
 
-export type ProjectVariant = "local-service" | "recruitment" | "consultant";
-
 export const projects: {
-  variant: ProjectVariant;
+  label: string;
   title: string;
   concept: string;
   shows: string[];
   url: string;
+  videos: { desktop: string; mobile: string };
 }[] = [
   {
-    variant: "local-service",
-    title: "Local Service Business",
-    concept: "Transforming a Facebook-based local service business into a professional website.",
+    label: "Client demo project",
+    title: "Lad & Lass",
+    concept: "A clothing store for a Nairobi label, with the shop laid out for desktop and mobile.",
     shows: [
-      "Professional homepage mockup.",
-      "Clear service presentation.",
-      "Contact and enquiry form.",
-      "Mobile-responsive layout.",
+      "Desktop storefront.",
+      "Mobile shopping layout.",
+      "Product browsing and cart.",
+      "Checkout on the same site.",
     ],
-    url: "local-service.example",
+    url: "ladandlass.co.ke",
+    videos: {
+      desktop: `/api/shop/media/${portfolioDemoVideos.desktop}`,
+      mobile: `/api/shop/media/${portfolioDemoVideos.mobile}`,
+    },
   },
   {
-    variant: "recruitment",
-    title: "Recruitment Agency",
-    concept: "Transforming a basic social media presence into a professional recruitment website.",
+    label: "Client demo project",
+    title: "Brands KE",
+    concept: "A clothing shop curated for Kenya, with the same store laid out for desktop and mobile.",
     shows: [
-      "Corporate-style homepage.",
-      "Candidate and employer enquiry pathways.",
-      "Clear service presentation.",
-      "Professional branding.",
+      "Desktop storefront.",
+      "Mobile shopping layout.",
+      "Product browsing and cart.",
+      "Checkout on the same site.",
     ],
-    url: "recruitment.example",
-  },
-  {
-    variant: "consultant",
-    title: "Independent Consultant",
-    concept: "Creating a professional online presence for an independent consultant.",
-    shows: [
-      "Personal brand website.",
-      "Services and expertise.",
-      "Professional introduction.",
-      "Consultation booking CTA.",
-    ],
-    url: "consultant.example",
+    url: "brandske.co.ke",
+    videos: {
+      desktop: `/api/shop/media/${portfolioBrandsKeVideos.desktop}`,
+      mobile: `/api/shop/media/${portfolioBrandsKeVideos.mobile}`,
+    },
   },
 ];

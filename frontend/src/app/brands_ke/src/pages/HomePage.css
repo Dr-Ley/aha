@@ -1,0 +1,23 @@
+.homepage {
+  min-height: 100vh;
+  background: #fff;
+}
+
+.header-sections {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
+}
+
+.homepage-content {
+  margin-top: 150px; /* Adjust based on header height */
+}
+
+@media (max-width: 768px) {
+  .homepage-content {
+    margin-top: 140px;
+  }
+}

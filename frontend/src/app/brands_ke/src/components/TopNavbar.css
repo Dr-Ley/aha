@@ -1,0 +1,325 @@
+:root {
+  --brand-top-navbar-bg: #dc2626;
+  --brand-top-navbar-text: #fff;
+  --brand-accent: #f97316;
+  --navbar-shadow: rgba(0,0,0,0.15);
+}
+
+.top-navbar {
+  background: var(--brand-top-navbar-bg);
+  color: var(--brand-top-navbar-text);
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 3px 8px var(--navbar-shadow);
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.3s ease;
+}
+
+.top-navbar-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+/* Center logo without blocking clicks */
+.top-navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* allows clicks to pass through the logo container */
+}
+
+.brand-logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: auto; /* if you want the logo clickable */
+}
+
+/* Logo */
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--brand-top-navbar-text);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.logo img {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-text {
+  display: inline-block;
+}
+
+/* Expanded Logo */
+.expanded-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.expanded-logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.expanded-logo span {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--brand-top-navbar-text);
+}
+
+/* Hamburger / Menu */
+.menu-toggle {
+  background: none;
+  border: none;
+  color: var(--brand-top-navbar-text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1003;
+}
+
+/* Expanded Menu */
+.expanded-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 45%;         /* reduced from 60% */
+  max-width: 250px; 
+  background: var(--brand-top-navbar-bg);
+  box-shadow: 2px 0 12px var(--navbar-shadow);
+  overflow-y: auto;
+  z-index: 1002;
+  padding-top: 60px;
+}
+
+.expanded-menu-content {
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 1.5rem;
+  gap: 2rem;
+}
+
+/* Dropdown Sections */
+.dropdown-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Center brand logo */
+.top-navbar-brand-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: none; /* no border */
+}
+
+
+.topnav-dropdown-toggle {
+  background: none;
+  border: none;
+  color: var(--brand-top-navbar-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.topnav-dropdown-toggle.open svg {
+  transform: rotate(-180deg);
+}
+
+.topnav-dropdown-underline {
+  width: 100%;
+  height: 1px;
+  background: var(--brand-top-navbar-text);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.topnav-dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.topnav-dropdown-list li button {
+  background: none;
+  border: none;
+  color: var(--brand-top-navbar-text);
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.topnav-dropdown-list li button:hover {
+  color: var(--brand-accent);
+}
+
+/* Quick Links */
+.expanded-quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.quick-link {
+  background: none;
+  border: none;
+  color: var(--brand-top-navbar-text);
+  text-align: left;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.quick-link:hover {
+  color: var(--brand-accent);
+}
+
+/* Navbar Actions */
+.top-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-icon {
+  background: none;
+  border: none;
+  color: var(--brand-top-navbar-text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.nav-icon:hover {
+  color: var(--brand-accent);
+}
+
+/* Cart Badge */
+.cart-icon-wrapper {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #fff;
+  color: var(--brand-top-navbar-bg);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--brand-top-navbar-bg);
+}
+
+/* Search Overlay */
+.search-overlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 1003;
+}
+
+.search-form {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto;
+  gap: 0.5rem;
+}
+
+.search-input-expanded {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-input-expanded:focus {
+  border-color: var(--brand-top-navbar-bg);
+}
+
+.search-submit {
+  padding: 0.75rem 1.5rem;
+  background: var(--brand-top-navbar-bg);
+  color: var(--brand-top-navbar-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-submit:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .top-navbar {
+    height: 56px;
+  }
+  .nav-icon {
+    font-size: 1.25rem;
+  }
+  .expanded-menu {
+    width: 75%;
+    max-width: 300px;
+  }
+}

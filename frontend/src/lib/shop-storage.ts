@@ -1,5 +1,7 @@
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { isStoredImage } from "@/lib/shop-images";
+import { isPortfolioVideo, isStoredImage } from "@/lib/shop-images";
+
+export type ShopImagePrefix = "demo" | "brands_ke";
 
 const BUCKET = "shop-images";
 
@@ -50,8 +52,12 @@ export function shopStorage(): S3Client {
   return g.__shopStorage;
 }
 
-export async function putShopImage(body: Uint8Array, contentType: "image/webp" | "image/jpeg"): Promise<string> {
-  const key = `demo/${crypto.randomUUID()}.${contentType === "image/webp" ? "webp" : "jpg"}`;
+export async function putShopImage(
+  body: Uint8Array,
+  contentType: "image/webp" | "image/jpeg",
+  prefix: ShopImagePrefix = "demo"
+): Promise<string> {
+  const key = `${prefix}/${crypto.randomUUID()}.${contentType === "image/webp" ? "webp" : "jpg"}`;
   await shopStorage().send(
     new PutObjectCommand({
       Bucket: shopBucket(),
@@ -64,8 +70,11 @@ export async function putShopImage(body: Uint8Array, contentType: "image/webp" |
   return key;
 }
 
-export async function readShopImage(key: string): Promise<{ bytes: Uint8Array; contentType: string } | null> {
-  if (!isStoredImage(key)) return null;
+export async function readShopImage(
+  key: string,
+  accept: (value: string) => boolean = isStoredImage
+): Promise<{ bytes: Uint8Array; contentType: string } | null> {
+  if (!accept(key)) return null;
   try {
     const result = await shopStorage().send(new GetObjectCommand({ Bucket: shopBucket(), Key: key }));
     if (!result.Body) return null;
@@ -80,8 +89,30 @@ export async function readShopImage(key: string): Promise<{ bytes: Uint8Array; c
   }
 }
 
-export async function deleteShopImages(keys: string[]): Promise<void> {
-  const stored = [...new Set(keys.filter(isStoredImage))];
+export async function openPortfolioVideo(key: string, range?: string) {
+  if (!isPortfolioVideo(key)) return null;
+  try {
+    const result = await shopStorage().send(
+      new GetObjectCommand({
+        Bucket: shopBucket(),
+        Key: key,
+        ...(range ? { Range: range } : {}),
+      })
+    );
+    if (!result.Body) return null;
+    return result;
+  } catch (error) {
+    const name = error instanceof Error ? error.name : "";
+    if (name === "NoSuchKey" || name === "NotFound") return null;
+    throw error;
+  }
+}
+
+export async function deleteShopImages(
+  keys: string[],
+  accept: (value: string) => boolean = isStoredImage
+): Promise<void> {
+  const stored = [...new Set(keys.filter(accept))];
   if (stored.length === 0) return;
   const client = shopStorage();
   const bucket = shopBucket();

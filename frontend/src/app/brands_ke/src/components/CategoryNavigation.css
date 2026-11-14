@@ -1,0 +1,143 @@
+.category-navigation {
+  padding: 1.5rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.category-scroll-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.category-scroll-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.category-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.category-scroll-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.category-scroll {
+  display: flex;
+  gap: 1.5rem;
+  padding-bottom: 0.5rem;
+  min-width: fit-content;
+}
+
+
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  min-width: 70px;
+  transition: opacity 0.2s;
+}
+
+.category-item:hover {
+  opacity: 0.7;
+}
+
+.category-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  transition: all 0.2s;
+  font-size: 1.5rem;
+  color: #666;
+  overflow: hidden;
+}
+
+.category-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.category-item.active .category-icon {
+  border-color: var(--brand-accent-color, #dc2626);
+  background: var(--brand-accent-color, #dc2626);
+  color: #fff;
+}
+
+.category-placeholder-icon {
+  width: 30px;
+  height: 30px;
+  background: #e5e5e5;
+  border-radius: 50%;
+}
+
+.category-item.active .category-placeholder-icon {
+  background: #fff;
+}
+
+.category-name {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.category-item.active .category-name {
+  color: var(--brand-accent-color, #dc2626);
+  font-weight: 600;
+}
+
+.category-item.skeleton {
+  pointer-events: none;
+}
+
+.category-item.skeleton .category-icon {
+  background: #f0f0f0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-navigation {
+    padding: 1rem 0.75rem;
+  }
+
+  .category-scroll {
+    gap: 1rem;
+  }
+
+  .category-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+
+  .category-name {
+    font-size: 12px;
+  }
+}
+

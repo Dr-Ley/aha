@@ -1,0 +1,54 @@
+.you-may-also-like {
+  padding: 3rem 1.5rem;
+  background: #fff;
+}
+
+.you-may-also-like-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.you-may-also-like .section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.you-may-also-like .products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .you-may-also-like .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .you-may-also-like .products-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.product-tile-skeleton {
+  aspect-ratio: 2 / 3;
+  background: #f5f5f5;
+  border-radius: 8px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
